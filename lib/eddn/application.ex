@@ -12,7 +12,9 @@ defmodule Eddn.Application do
       # {Eddn.Worker, arg}
       Eddn.Repo,
       {Registry, name: Eddn.Registry, keys: :unique},
-      {DynamicSupervisor, name: Eddn.DynamicSupervisor, strategy: :one_for_one}
+      {DynamicSupervisor, name: Eddn.DynamicSupervisor, strategy: :one_for_one},
+      # Uncomment to start Eddn.Listener on application startup
+      # Eddn.Listener
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

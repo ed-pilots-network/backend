@@ -19,6 +19,6 @@ Dependencies
 4. Run `Eddn.start_listener()` in the Elixir CLI to start the listener.
 
 ## Todos
-1. Currently focusing on getting the `lib/eddn/listener.ex` GenServer to be non-blocking when consuming ZMQ messages.
+1. Currently focusing on getting the `lib/eddn/listener.ex` GenServer to store incoming ZMQ messages to Postgres
 2. Need Ecto Schemas and Migrations for the shapes of data being messaged across EDDN.
 3. `lib/eddn/listener.ex` should be storing EDDN messages to Postgres.
