@@ -1,5 +1,6 @@
-package io.eddb.eddb2backend.core;
+package io.eddb.eddb2backend.configuration;
 
+import io.eddb.eddb2backend.infrastructure.external.EddnMessageHandler;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.zip.DataFormatException;
@@ -31,22 +32,8 @@ public class ZeromqConfig {
 
     @Bean
     @ServiceActivator(inputChannel = "zeroMqChannel")
-    public MessageHandler subscribe() {
-
-        return message -> {
-            byte[] output = new byte[256 * 1024];
-            byte[] payload = (byte[]) message.getPayload();
-            Inflater inflater = new Inflater();
-            inflater.setInput(payload);
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream(payload.length);
-            try {
-                int outputLength = inflater.inflate(output);
-                String outputString = new String(output, 0, outputLength, StandardCharsets.UTF_8);
-                System.out.println(outputString);
-            } catch (DataFormatException e) {
-                e.printStackTrace();
-            }
-        };
+    public EddnMessageHandler eddnMessageHandler() {
+        return new EddnMessageHandler();
     }
 
 }
