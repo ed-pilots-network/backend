@@ -1,7 +1,7 @@
 package io.eddb.eddb2backend.configuration;
 
+import io.eddb.eddb2backend.application.service.GetStationService;
 import io.eddb.eddb2backend.application.usecase.GetStationUsecase;
-import io.eddb.eddb2backend.application.usecase.impl.GetStationUsecaseImpl;
 import io.eddb.eddb2backend.domain.repository.StationRepository;
 import io.eddb.eddb2backend.infrastructure.persistence.StationRepositoryAdapter;
 import io.eddb.eddb2backend.infrastructure.persistence.postgresql.PostgresqlStationRepository;
@@ -16,7 +16,12 @@ public class BeanConfiguration {
     }
 
     @Bean
-    public GetStationUsecase getStationUsecase(StationRepository stationRepository) {
-        return new GetStationUsecaseImpl(stationRepository);
+    public GetStationService getStationService(StationRepository stationRepository) {
+        return new GetStationService(stationRepository);
+    }
+
+    @Bean
+    public GetStationUsecase getStationUsecase(GetStationService getStationService) {
+        return getStationService;
     }
 }

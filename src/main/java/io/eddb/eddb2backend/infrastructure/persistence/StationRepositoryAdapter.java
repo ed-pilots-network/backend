@@ -3,7 +3,7 @@ package io.eddb.eddb2backend.infrastructure.persistence;
 import io.eddb.eddb2backend.domain.model.Station;
 import io.eddb.eddb2backend.domain.repository.StationRepository;
 import io.eddb.eddb2backend.infrastructure.persistence.postgresql.PostgresqlStationRepository;
-import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.StationEntity;
+import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.PostgresStationEntity;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,44 +15,33 @@ public class StationRepositoryAdapter implements StationRepository {
 
     @Override
     public Station save(Station station) {
-        StationEntity entity = toEntity(station);
-        StationEntity savedEntity = jpaStationRepository.save(entity);
-        return toDomain(savedEntity);
+        PostgresStationEntity entity = PostgresStationEntity.Mapper.map(station);
+        PostgresStationEntity savedEntity = jpaStationRepository.save(entity);
+        return PostgresStationEntity.Mapper.map(savedEntity);
     }
 
     @Override
     public Optional<Station> findById(Long id) {
-        return jpaStationRepository.findById(id).map(this::toDomain);
+        return jpaStationRepository.findById(id).map(PostgresStationEntity.Mapper::map);
     }
 
     @Override
     public Collection<Station> findByName(String name) {
         return jpaStationRepository.findByNameContainingIgnoreCase(name)
                 .stream()
-                .map(this::toDomain)
+                .map(PostgresStationEntity.Mapper::map)
                 .toList();
     }
 
     @Override
     public Collection<Station> findAll() {
         return jpaStationRepository.findAll().stream()
-                .map(this::toDomain)
+                .map(PostgresStationEntity.Mapper::map)
                 .collect(Collectors.toList());
     }
 
     @Override
     public void deleteById(Long id) {
         jpaStationRepository.deleteById(id);
-    }
-
-    private StationEntity toEntity(Station station) {
-        StationEntity entity = new StationEntity();
-        entity.setId(station.id());
-        entity.setName(station.name());
-        return entity;
-    }
-
-    private Station toDomain(StationEntity entity) {
-        return new Station(entity.getId(), entity.getName());
     }
 }
