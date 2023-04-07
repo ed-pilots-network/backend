@@ -1,4 +1,4 @@
-package io.eddb.eddb2backend.application.station;
+package io.eddb.eddb2backend.application.controller.station;
 
 import io.eddb.eddb2backend.application.dto.station.GetStationResponse;
 import io.eddb.eddb2backend.application.usecase.GetStationUsecase;
