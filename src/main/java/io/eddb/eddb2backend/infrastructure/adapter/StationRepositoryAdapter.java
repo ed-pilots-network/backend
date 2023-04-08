@@ -1,4 +1,4 @@
-package io.eddb.eddb2backend.infrastructure.persistence;
+package io.eddb.eddb2backend.infrastructure.adapter;
 
 import io.eddb.eddb2backend.domain.model.Station;
 import io.eddb.eddb2backend.domain.repository.StationRepository;

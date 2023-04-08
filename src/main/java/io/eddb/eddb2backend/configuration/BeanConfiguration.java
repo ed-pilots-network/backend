@@ -3,7 +3,7 @@ package io.eddb.eddb2backend.configuration;
 import io.eddb.eddb2backend.application.service.GetStationService;
 import io.eddb.eddb2backend.application.usecase.GetStationUsecase;
 import io.eddb.eddb2backend.domain.repository.StationRepository;
-import io.eddb.eddb2backend.infrastructure.persistence.StationRepositoryAdapter;
+import io.eddb.eddb2backend.infrastructure.adapter.StationRepositoryAdapter;
 import io.eddb.eddb2backend.infrastructure.persistence.postgresql.PostgresqlStationRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
