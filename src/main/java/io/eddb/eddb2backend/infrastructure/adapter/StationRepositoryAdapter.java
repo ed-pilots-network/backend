@@ -1,6 +1,6 @@
 package io.eddb.eddb2backend.infrastructure.adapter;
 
-import io.eddb.eddb2backend.domain.model.Station;
+import io.eddb.eddb2backend.domain.model.station.Station;
 import io.eddb.eddb2backend.domain.repository.StationRepository;
 import io.eddb.eddb2backend.infrastructure.persistence.postgresql.PostgresqlStationRepository;
 import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.PostgresStationEntity;

@@ -26,13 +26,4 @@ public class StationController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
-    @GetMapping
-    public ResponseEntity<Collection<GetStationResponse>> getAllStations() {
-        var responseList = getStationUsecase.getAll()
-                .stream()
-                .map(StationMapper::map)
-                .toList();
-        return ResponseEntity.ok(responseList);
-    }
 }

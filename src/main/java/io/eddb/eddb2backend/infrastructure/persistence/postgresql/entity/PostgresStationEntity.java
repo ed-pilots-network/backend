@@ -1,6 +1,6 @@
 package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity;
 
-import io.eddb.eddb2backend.domain.model.Station;
+import io.eddb.eddb2backend.domain.model.station.Station;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

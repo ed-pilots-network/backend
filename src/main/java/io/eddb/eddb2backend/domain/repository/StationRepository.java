@@ -1,6 +1,6 @@
 package io.eddb.eddb2backend.domain.repository;
 
-import io.eddb.eddb2backend.domain.model.Station;
+import io.eddb.eddb2backend.domain.model.station.Station;
 import java.util.Collection;
 import java.util.Optional;
 
