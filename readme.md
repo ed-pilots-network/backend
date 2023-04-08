@@ -1,10 +1,13 @@
 # EDDB.IO 2
 
-## Stations Service
+## Purpose and architecture 
 
-This project is a Spring Boot application that implements a simple RESTful API for managing "Stations." The project follows a hexagonal architecture pattern and adheres to Domain-Driven Design (DDD) principles.
+This project is a Spring Boot application that receives data in the form of messages form [EDDN](https://github.com/EDCD/EDDN). These messages are transformed and store in a database. This project also implements a RESTful API for retrieving this stored data stored.  
 
-### Project Structure
+The project follows a hexagonal architecture pattern and adheres to Domain-Driven Design (DDD) principles.
+
+---
+## Project Structure
 
 The project is structured into the following packages:
 
@@ -35,7 +38,8 @@ src
 └── ...
 ```
 
-#### Application Layer
+---
+### Application Layer
 
 The application layer contains the following components:
 
@@ -45,18 +49,21 @@ The application layer contains the following components:
 - **service**: This package the implementations of the use cases.
 - **usecase**: This package contains use case classes that represent the core business logic of the application.
 
-#### Configuration Layer
+---
+### Configuration Layer
 
 The config layer contains all the Bean configurations and annotations need to instantiate the beans and bootstrap the Spring boot application
 
-#### Domain Layer
+---
+### Domain Layer
 
 The domain layer contains the following components:
 
 - **model**: This package contains the domain models (entities and value objects) that represent the core concepts of the problem domain.
 - **repository**: This package contains the repository interfaces that define the contract for persisting and retrieving domain models.
 
-#### Infrastructure Layer
+---
+### Infrastructure Layer
 
 The infrastructure layer contains the following components:
 
@@ -80,6 +87,7 @@ To run the application, execute the following command in the project's root dire
 
 The application will start and expose the RESTful API endpoints at `http://localhost:8080/api/stations`.
 
+---
 ## API Endpoints (this section needs work as this is example code)
 
 The following endpoints are available:
