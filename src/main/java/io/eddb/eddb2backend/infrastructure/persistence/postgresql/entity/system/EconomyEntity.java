@@ -9,38 +9,30 @@ import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 
-@Entity
+@Entity(name = "economy")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostgresEconomyEntity {
+public class EconomyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
     private String name;
     
-    @OneToMany
-    private Collection<PostgresSystemEntity> postgresSystemEntities;
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
-    public Long getId() {
-        return id;
-    }
+    @OneToMany(mappedBy = "primaryEconomyEntity")
+    private Collection<SystemEntity> systemEntities;
     
     public static class Mapper {
-        public static PostgresEconomyEntity map(Economy economy) {
-            return PostgresEconomyEntity.builder()
+        public static EconomyEntity map(Economy economy) {
+            return EconomyEntity.builder()
                     .id(economy.id())
                     .name(economy.name())
                     .build();
         }
         
-        public static Economy map(PostgresEconomyEntity entity) {
+        public static Economy map(EconomyEntity entity) {
             return Economy.builder()
                     .id(entity.getId())
                     .name(entity.getName())

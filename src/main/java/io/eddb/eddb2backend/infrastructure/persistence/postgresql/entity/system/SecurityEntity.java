@@ -1,6 +1,6 @@
 package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.system;
 
-import io.eddb.eddb2backend.domain.model.system.ReserveType;
+import io.eddb.eddb2backend.domain.model.system.Security;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 
-@Entity
+@Entity(name = "security")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostgresReserveTypeEntity {
+public class SecurityEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -22,26 +22,18 @@ public class PostgresReserveTypeEntity {
     private String name;
     
     @OneToMany
-    private Collection<PostgresSystemEntity> postgresSystemEntities;
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
-    public Long getId() {
-        return id;
-    }
+    private Collection<SystemEntity> systemEntities;
     
     public static class Mapper {
-        public static PostgresReserveTypeEntity map(ReserveType reserveType) {
-            return PostgresReserveTypeEntity.builder()
-                    .id(reserveType.id())
-                    .name(reserveType.name())
+        public static SecurityEntity map(Security security) {
+            return SecurityEntity.builder()
+                    .id(security.id())
+                    .name(security.name())
                     .build();
         }
         
-        public static ReserveType map(PostgresReserveTypeEntity entity) {
-            return ReserveType.builder()
+        public static Security map(SecurityEntity entity) {
+            return Security.builder()
                     .id(entity.getId())
                     .name(entity.getName())
                     .build();

@@ -9,38 +9,30 @@ import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 
-@Entity
+@Entity(name = "faction")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostgresFactionEntity {
+public class FactionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
     private String name;
     
-    @OneToMany
-    private Collection<PostgresSystemEntity> postgresSystemEntities;
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
-    public Long getId() {
-        return id;
-    }
+    @OneToMany(mappedBy = "controllingMinorFactionEntity")
+    private Collection<SystemEntity> systemEntities;
     
     public static class Mapper {
-        public static PostgresFactionEntity map(Faction faction) {
-            return PostgresFactionEntity.builder()
+        public static FactionEntity map(Faction faction) {
+            return FactionEntity.builder()
                     .id(faction.id())
                     .name(faction.name())
                     .build();
         }
         
-        public static Faction map(PostgresFactionEntity entity) {
+        public static Faction map(FactionEntity entity) {
             return Faction.builder()
                     .id(entity.getId())
                     .name(entity.getName())

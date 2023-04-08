@@ -1,6 +1,6 @@
 package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.system;
 
-import io.eddb.eddb2backend.domain.model.system.PowerState;
+import io.eddb.eddb2backend.domain.model.system.Allegiance;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,39 +9,31 @@ import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 
-@Entity
+@Entity(name = "allegiance")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostgresPowerStateEntity {
+public class AllegianceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
     private String name;
     
-    @OneToMany
-    private Collection<PostgresSystemEntity> postgresSystemEntities;
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
-    public Long getId() {
-        return id;
-    }
+    @OneToMany(mappedBy = "allegianceEntity")
+    private Collection<SystemEntity> systemEntities;
     
     public static class Mapper {
-        public static PostgresPowerStateEntity map(PowerState powerState) {
-            return PostgresPowerStateEntity.builder()
-                    .id(powerState.id())
-                    .name(powerState.name())
+        public static AllegianceEntity map(Allegiance allegiance) {
+            return AllegianceEntity.builder()
+                    .id(allegiance.id())
+                    .name(allegiance.name())
                     .build();
         }
         
-        public static PowerState map(PostgresPowerStateEntity entity) {
-            return PowerState.builder()
+        public static Allegiance map(AllegianceEntity entity) {
+            return Allegiance.builder()
                     .id(entity.getId())
                     .name(entity.getName())
                     .build();

@@ -1,6 +1,6 @@
 package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.system;
 
-import io.eddb.eddb2backend.domain.model.system.Government;
+import io.eddb.eddb2backend.domain.model.system.Power;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 
-@Entity
+@Entity(name = "power")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostgresGovernmentEntity {
+public class PowerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -22,26 +22,18 @@ public class PostgresGovernmentEntity {
     private String name;
     
     @OneToMany
-    private Collection<PostgresSystemEntity> postgresSystemEntities;
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
-    public Long getId() {
-        return id;
-    }
+    private Collection<SystemEntity> postgresSystemEntities;
     
     public static class Mapper {
-        public static PostgresGovernmentEntity map(Government government) {
-            return PostgresGovernmentEntity.builder()
-                    .id(government.id())
-                    .name(government.name())
+        public static PowerEntity map(Power power) {
+            return PowerEntity.builder()
+                    .id(power.id())
+                    .name(power.name())
                     .build();
         }
         
-        public static Government map(PostgresGovernmentEntity entity) {
-            return Government.builder()
+        public static Power map(PowerEntity entity) {
+            return Power.builder()
                     .id(entity.getId())
                     .name(entity.getName())
                     .build();

@@ -1,6 +1,6 @@
 package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.system;
 
-import io.eddb.eddb2backend.domain.model.system.Security;
+import io.eddb.eddb2backend.domain.model.system.PowerState;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 
-@Entity
+@Entity(name = "powerState")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostgresSecurityEntity {
+public class PowerStateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -22,26 +22,18 @@ public class PostgresSecurityEntity {
     private String name;
     
     @OneToMany
-    private Collection<PostgresSystemEntity> postgresSystemEntities;
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
-    public Long getId() {
-        return id;
-    }
+    private Collection<SystemEntity> systemEntities;
     
     public static class Mapper {
-        public static PostgresSecurityEntity map(Security security) {
-            return PostgresSecurityEntity.builder()
-                    .id(security.id())
-                    .name(security.name())
+        public static PowerStateEntity map(PowerState powerState) {
+            return PowerStateEntity.builder()
+                    .id(powerState.id())
+                    .name(powerState.name())
                     .build();
         }
         
-        public static Security map(PostgresSecurityEntity entity) {
-            return Security.builder()
+        public static PowerState map(PowerStateEntity entity) {
+            return PowerState.builder()
                     .id(entity.getId())
                     .name(entity.getName())
                     .build();
