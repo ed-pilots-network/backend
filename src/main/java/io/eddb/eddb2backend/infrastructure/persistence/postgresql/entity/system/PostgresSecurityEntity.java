@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Collection;
+
 @Entity
 @Data
 @Builder
@@ -20,7 +22,7 @@ public class PostgresSecurityEntity {
     private String name;
     
     @OneToMany
-    private PostgresSystemEntity postgresSystemEntity;
+    private Collection<PostgresSystemEntity> postgresSystemEntities;
     
     public void setId(Long id) {
         this.id = id;
