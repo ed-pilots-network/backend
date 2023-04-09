@@ -1,6 +1,7 @@
-package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.system;
+package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity;
 
-import io.eddb.eddb2backend.domain.model.system.Allegiance;
+import io.eddb.eddb2backend.domain.model.Economy;
+import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.system.SystemEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,31 +10,31 @@ import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 
-@Entity(name = "allegiance")
+@Entity(name = "economy")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AllegianceEntity {
+public class EconomyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
     private String name;
     
-    @OneToMany(mappedBy = "allegianceEntity")
+    @OneToMany(mappedBy = "primaryEconomyEntity")
     private Collection<SystemEntity> systemEntities;
     
     public static class Mapper {
-        public static AllegianceEntity map(Allegiance allegiance) {
-            return AllegianceEntity.builder()
-                    .id(allegiance.id())
-                    .name(allegiance.name())
+        public static EconomyEntity map(Economy economy) {
+            return EconomyEntity.builder()
+                    .id(economy.id())
+                    .name(economy.name())
                     .build();
         }
         
-        public static Allegiance map(AllegianceEntity entity) {
-            return Allegiance.builder()
+        public static Economy map(EconomyEntity entity) {
+            return Economy.builder()
                     .id(entity.getId())
                     .name(entity.getName())
                     .build();

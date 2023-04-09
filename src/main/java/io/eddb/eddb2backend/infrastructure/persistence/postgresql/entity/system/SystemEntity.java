@@ -2,19 +2,23 @@ package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.system
 
 import io.eddb.eddb2backend.domain.model.system.Coordinate;
 import io.eddb.eddb2backend.domain.model.system.System;
+import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.AllegianceEntity;
+import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.EconomyEntity;
+import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.GovernmentEntity;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Entity(name = "system")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Transactional
 public class SystemEntity {
     
     @Id
@@ -24,33 +28,41 @@ public class SystemEntity {
     private String name;
     private Long population;
     private boolean needsPermit;
-    private Date lastUpdated;
+    private LocalDateTime lastUpdated;
     private Long edSystemAddress;
     
     @Embedded
     private Coordinate coordinate;
-    @ManyToOne
+    
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "government_id")
     private GovernmentEntity governmentEntity;
-    @ManyToOne
+    
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "allegiance_id")
     private AllegianceEntity allegianceEntity;
-    @ManyToOne
+    
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "security_id")
     private SecurityEntity securityEntity;
-    @ManyToOne
+    
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "primary_economy_id")
     private EconomyEntity primaryEconomyEntity;
-    @ManyToOne
+    
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "power_id")
     private PowerEntity powerEntity;
-    @ManyToOne
+    
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "power_state_id")
     private PowerStateEntity powerStateEntity;
-    @ManyToOne
+    
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "controlling_minor_faction_id")
     private FactionEntity controllingMinorFactionEntity;
-    @ManyToOne
+    
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reserve_type_id")
     private ReserveTypeEntity reserveTypeEntity;
     

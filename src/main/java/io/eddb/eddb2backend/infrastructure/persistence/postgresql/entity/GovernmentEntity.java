@@ -1,12 +1,12 @@
-package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.system;
+package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity;
 
-import io.eddb.eddb2backend.domain.model.system.Government;
+import io.eddb.eddb2backend.domain.model.Government;
+import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.system.SystemEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.Collection;
 
 @Entity(name = "government")

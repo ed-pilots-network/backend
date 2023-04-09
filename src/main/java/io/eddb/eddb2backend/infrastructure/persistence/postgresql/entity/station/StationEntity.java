@@ -1,22 +1,28 @@
-package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity;
+package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.station;
 
+import io.eddb.eddb2backend.domain.model.Government;
+import io.eddb.eddb2backend.domain.model.station.LandingPad;
 import io.eddb.eddb2backend.domain.model.station.Station;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 
-@Entity
+@Entity(name = "station")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostgresStationEntity {
+@Transactional
+//TODO: Update to match new domain Station
+public class StationEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,23 +30,15 @@ public class PostgresStationEntity {
 
     private String name;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
     public static class Mapper {
-        public static PostgresStationEntity map(Station station) {
-            return PostgresStationEntity.builder()
+        public static StationEntity map(Station station) {
+            return StationEntity.builder()
                     .id(station.id())
                     .name(station.name())
                     .build();
         }
 
-        public static Station map(PostgresStationEntity entity) {
+        public static Station map(StationEntity entity) {
             return Station.builder()
                     .id(entity.getId())
                     .name(entity.getName())
