@@ -157,8 +157,6 @@ This coding guide is based on the best practices described in the article: [Lomb
 
 This guide provides best practices for using the Java Persistence API (JPA) to handle entities, manage relationships, and avoid common pitfalls such as detached entities and lazy loading issues.
 
-In general preference goes to annotating the method which initiates 'a unit of work', which opens a connection to the database during which the connection should not be closed. In most cases this is a service or facade that fetches, updates entities. A service might touch on multiple entities, should the method fail, all of the changes should be rolled back in one DB transaction.
-
 ### Table of Contents
 
 1. [Entity Relationships](#entity-relationships)
@@ -202,7 +200,7 @@ JPA provides two fetching strategies: `FetchType.LAZY` and `FetchType.EAGER`. Us
 
 A detached entity is an instance that is no longer associated with the persistence context (EntityManager). Detached entities can lead to issues like the LazyInitializationException when trying to access lazy-loaded relationships or potential loss of updates if detached entities are modified outside of the persistence context.
 
-Here are some ways to handle or prevent detached entities:
+In general preference goes to annotating the method which initiates 'a unit of work' with `@Transactional`, which opens a connection to the database during which the connection should not be closed. In most cases this is a service or facade that fetches, updates entities. A service might touch on multiple entities, should the method fail, all of the changes should be rolled back in one DB transaction.
 
 #### 1. Use extended persistence context
 
