@@ -5,8 +5,8 @@
 1. [purpose and architecture](#purpose-and-architecture)
 2. [project structure](#project-structure)
 3. [API Endpoints](#api-endpoints)
-4. [Lombok and JPA Best Practices Coding Guide](#Lombok and JPA Best Practices Coding Guide)
-5. [JPA entity management Best Practices and guidelines](#JPA entity management Best Practices and guidelines)
+4. [Lombok and JPA Best Practices Coding Guide](#Lombok-and-JPA-Best-Practices-Coding-Guide)
+5. [JPA entity management Best Practices and guidelines](#JPA-entity-management-Best-Practices-and-guidelines)
 
 ---
 ## Purpose and architecture 
