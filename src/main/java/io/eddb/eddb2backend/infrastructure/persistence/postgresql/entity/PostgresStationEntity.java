@@ -5,31 +5,48 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.util.Optional;
 
 
 @Entity
-@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+@ToString(onlyExplicitlyIncluded = true)
 public class PostgresStationEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @ToString.Include
     private Long id;
 
+    @ToString.Include
     private String name;
 
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PostgresStationEntity that = (PostgresStationEntity) o;
+
+        return new EqualsBuilder().append(id, that.id).isEquals();
     }
 
-    public Long getId() {
-        return id;
+    @Override
+    public int hashCode() {
+        return Optional.ofNullable(id)
+                .map(id -> new HashCodeBuilder(17, 37)
+                        .append(id)
+                        .toHashCode())
+                .orElse(0);
     }
 
     public static class Mapper {
