@@ -1,5 +1,13 @@
 # EDDB.IO 2
 
+## Table of Contents
+
+1. [purpose and architecture](#purpose-and-architecture)
+2. [project structure](#project-structure)
+3. [API Endpoints](#api-endpoints)
+4. [Lombok and JPA Best Practices Coding Guide](#Lombok and JPA Best Practices Coding Guide)
+5. [JPA entity management Best Practices and guidelines](#JPA entity management Best Practices and guidelines)
+
 ## Purpose and architecture 
 
 This project is a Spring Boot application that receives data in the form of messages form [EDDN](https://github.com/EDCD/EDDN). These messages are transformed and store in a database. This project also implements a RESTful API for retrieving this stored data stored.  
@@ -88,7 +96,9 @@ To run the application, execute the following command in the project's root dire
 The application will start and expose the RESTful API endpoints at `http://localhost:8080/api/stations`.
 
 ---
-## API Endpoints (this section needs work as this is example code)
+## API Endpoints
+
+todo: this section needs work as this is example code
 
 The following endpoints are available:
 
