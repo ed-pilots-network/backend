@@ -1,6 +1,6 @@
-package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.system;
+package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.station;
 
-import io.eddb.eddb2backend.domain.model.system.Security;
+import io.eddb.eddb2backend.domain.model.station.Commodity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -9,14 +9,14 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.util.Collection;
 import java.util.Optional;
 
-@Entity(name = "security")
+@Entity(name = "commodity")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
-public class SecurityEntity {
+public class CommodityEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @ToString.Include
@@ -25,8 +25,17 @@ public class SecurityEntity {
     @ToString.Include
     private String name;
     
-    @OneToMany
-    private Collection<SystemEntity> systemEntities;
+    @ManyToMany(mappedBy = "importCommodities",fetch = FetchType.LAZY)
+    @JoinColumn(name = "station_id")
+    private Collection<StationEntity> importingStationEntities;
+    
+    @ManyToMany(mappedBy = "exportCommodities",fetch = FetchType.LAZY)
+    @JoinColumn(name = "station_id")
+    private Collection<StationEntity> exportingStationEntities;
+    
+    @ManyToMany(mappedBy = "prohibitedCommodities",fetch = FetchType.LAZY)
+    @JoinColumn(name = "station_id")
+    private Collection<StationEntity> prohibitingStationEntities;
     
     @Override
     public boolean equals(Object o){
@@ -34,7 +43,7 @@ public class SecurityEntity {
         
         if (o == null || getClass() != o.getClass()) return false;
         
-        SecurityEntity that = (SecurityEntity) o;
+        CommodityEntity that = (CommodityEntity) o;
         
         return new EqualsBuilder().append(id, that.id).isEquals();
     }
@@ -49,15 +58,15 @@ public class SecurityEntity {
     }
     
     public static class Mapper {
-        public static SecurityEntity map(Security security) {
-            return SecurityEntity.builder()
-                    .id(security.id())
-                    .name(security.name())
+        public static CommodityEntity map(Commodity commodity) {
+            return CommodityEntity.builder()
+                    .id(commodity.id())
+                    .name(commodity.name())
                     .build();
         }
         
-        public static Security map(SecurityEntity entity) {
-            return Security.builder()
+        public static Commodity map(CommodityEntity entity) {
+            return Commodity.builder()
                     .id(entity.getId())
                     .name(entity.getName())
                     .build();

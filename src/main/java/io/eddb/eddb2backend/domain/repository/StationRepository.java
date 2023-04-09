@@ -9,9 +9,7 @@ public interface StationRepository {
 
     Optional<Station> findById(Long id);
     
-    Collection<Station> findByName(String id);
-
-    Collection<Station> findAll();
+    Collection<Station> findByName(String name);
 
     void deleteById(Long id);
 }

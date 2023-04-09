@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface GetStationUsecase {
 
-    Optional<Station> getById(Long id);
+    Optional<Station> findById(Long id);
 }

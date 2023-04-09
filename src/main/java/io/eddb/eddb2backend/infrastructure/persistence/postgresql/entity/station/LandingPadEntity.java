@@ -1,6 +1,6 @@
-package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.system;
+package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.station;
 
-import io.eddb.eddb2backend.domain.model.system.Security;
+import io.eddb.eddb2backend.domain.model.station.LandingPad;
 import jakarta.persistence.*;
 import lombok.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -9,24 +9,24 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.util.Collection;
 import java.util.Optional;
 
-@Entity(name = "security")
+@Entity(name = "landingPad")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
-public class SecurityEntity {
+public class LandingPadEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @ToString.Include
     private Long id;
     
     @ToString.Include
-    private String name;
+    private char size;
     
-    @OneToMany
-    private Collection<SystemEntity> systemEntities;
+    @OneToMany(mappedBy = "maxSizeLandingPadEntity")
+    private Collection<StationEntity> stationEntities;
     
     @Override
     public boolean equals(Object o){
@@ -34,7 +34,7 @@ public class SecurityEntity {
         
         if (o == null || getClass() != o.getClass()) return false;
         
-        SecurityEntity that = (SecurityEntity) o;
+        LandingPadEntity that = (LandingPadEntity) o;
         
         return new EqualsBuilder().append(id, that.id).isEquals();
     }
@@ -49,17 +49,17 @@ public class SecurityEntity {
     }
     
     public static class Mapper {
-        public static SecurityEntity map(Security security) {
-            return SecurityEntity.builder()
-                    .id(security.id())
-                    .name(security.name())
+        public static LandingPadEntity map(LandingPad landingPad) {
+            return LandingPadEntity.builder()
+                    .id(landingPad.id())
+                    .size(landingPad.size())
                     .build();
         }
         
-        public static Security map(SecurityEntity entity) {
-            return Security.builder()
+        public static LandingPad map(LandingPadEntity entity) {
+            return LandingPad.builder()
                     .id(entity.getId())
-                    .name(entity.getName())
+                    .size(entity.getSize())
                     .build();
         }
     }

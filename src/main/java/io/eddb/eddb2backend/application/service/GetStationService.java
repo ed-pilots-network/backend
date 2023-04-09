@@ -12,7 +12,7 @@ public class GetStationService implements GetStationUsecase {
     private final StationRepository stationRepository;
 
     @Override
-    public Optional<Station> getById(Long id) {
+    public Optional<Station> findById(Long id) {
         return stationRepository.findById(id);
     }
 }

@@ -1,22 +1,23 @@
-package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.system;
+package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.body;
 
-import io.eddb.eddb2backend.domain.model.system.Security;
+import io.eddb.eddb2backend.domain.model.body.Body;
+import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.system.SystemEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.util.Collection;
 import java.util.Optional;
 
-@Entity(name = "security")
+@Entity(name = "body")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
-public class SecurityEntity {
+public class BodyEntity {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @ToString.Include
@@ -25,8 +26,9 @@ public class SecurityEntity {
     @ToString.Include
     private String name;
     
-    @OneToMany
-    private Collection<SystemEntity> systemEntities;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "system_id")
+    private SystemEntity systemEntity;
     
     @Override
     public boolean equals(Object o){
@@ -34,7 +36,7 @@ public class SecurityEntity {
         
         if (o == null || getClass() != o.getClass()) return false;
         
-        SecurityEntity that = (SecurityEntity) o;
+        BodyEntity that = (BodyEntity) o;
         
         return new EqualsBuilder().append(id, that.id).isEquals();
     }
@@ -49,19 +51,20 @@ public class SecurityEntity {
     }
     
     public static class Mapper {
-        public static SecurityEntity map(Security security) {
-            return SecurityEntity.builder()
-                    .id(security.id())
-                    .name(security.name())
+        public static BodyEntity map(Body body) {
+            return BodyEntity.builder()
+                    .id(body.id())
+                    .name(body.name())
+                    .systemEntity(SystemEntity.Mapper.map(body.system()))
                     .build();
         }
         
-        public static Security map(SecurityEntity entity) {
-            return Security.builder()
+        public static Body map(BodyEntity entity) {
+            return Body.builder()
                     .id(entity.getId())
                     .name(entity.getName())
+                    .system(SystemEntity.Mapper.map(entity.getSystemEntity()))
                     .build();
         }
     }
-    
 }

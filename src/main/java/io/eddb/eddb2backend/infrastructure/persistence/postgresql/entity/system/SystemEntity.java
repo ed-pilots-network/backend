@@ -2,29 +2,34 @@ package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.system
 
 import io.eddb.eddb2backend.domain.model.system.Coordinate;
 import io.eddb.eddb2backend.domain.model.system.System;
-import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.AllegianceEntity;
-import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.EconomyEntity;
-import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.GovernmentEntity;
+import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.body.BodyEntity;
+import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.common.AllegianceEntity;
+import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.common.EconomyEntity;
+import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.common.GovernmentEntity;
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Entity(name = "system")
-@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Transactional
+@Getter
+@Setter
+@ToString(onlyExplicitlyIncluded = true)
 public class SystemEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @ToString.Include
     private Long id;
     
+    @ToString.Include
     private String name;
     private Long population;
     private boolean needsPermit;
@@ -66,6 +71,29 @@ public class SystemEntity {
     @JoinColumn(name = "reserve_type_id")
     private ReserveTypeEntity reserveTypeEntity;
     
+    @OneToMany(mappedBy = "systemEntity")
+    private Collection<BodyEntity> bodies;
+    
+    @Override
+    public boolean equals(Object o){
+        if (this == o) return  true;
+        
+        if (o == null || getClass() != o.getClass()) return false;
+        
+        SystemEntity that = (SystemEntity) o;
+        
+        return new EqualsBuilder().append(id, that.id).isEquals();
+    }
+    
+    @Override
+    public int hashCode() {
+        return Optional.ofNullable(id)
+                .map(id -> new HashCodeBuilder(17, 37)
+                        .append(id)
+                        .toHashCode())
+                .orElse(0);
+    }
+    
     public static class Mapper {
         public static SystemEntity map(System system){
             return SystemEntity.builder()
@@ -84,6 +112,7 @@ public class SystemEntity {
                     .powerStateEntity(PowerStateEntity.Mapper.map(system.powerState()))
                     .controllingMinorFactionEntity(FactionEntity.Mapper.map(system.controllingMinorFaction()))
                     .reserveTypeEntity(ReserveTypeEntity.Mapper.map(system.reserveType()))
+                    .bodies(system.bodies().stream().map(BodyEntity.Mapper::map).collect(Collectors.toSet()))
                     .build();
             
         }
@@ -105,6 +134,7 @@ public class SystemEntity {
                     .powerState(PowerStateEntity.Mapper.map(entity.getPowerStateEntity()))
                     .controllingMinorFaction(FactionEntity.Mapper.map(entity.getControllingMinorFactionEntity()))
                     .reserveType(ReserveTypeEntity.Mapper.map(entity.getReserveTypeEntity()))
+                    .bodies(entity.getBodies().stream().map(BodyEntity.Mapper::map).collect(Collectors.toSet()))
                     .build();
         }
     }

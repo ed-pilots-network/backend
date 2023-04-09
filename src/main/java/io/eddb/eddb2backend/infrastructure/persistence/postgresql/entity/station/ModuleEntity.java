@@ -1,6 +1,6 @@
-package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.system;
+package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.station;
 
-import io.eddb.eddb2backend.domain.model.system.Security;
+import io.eddb.eddb2backend.domain.model.station.Module;
 import jakarta.persistence.*;
 import lombok.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -9,14 +9,14 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.util.Collection;
 import java.util.Optional;
 
-@Entity(name = "security")
+@Entity(name = "module")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
-public class SecurityEntity {
+public class ModuleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @ToString.Include
@@ -25,8 +25,8 @@ public class SecurityEntity {
     @ToString.Include
     private String name;
     
-    @OneToMany
-    private Collection<SystemEntity> systemEntities;
+    @OneToMany(mappedBy = "moduleEntities")
+    private Collection<StationEntity> stationEntities;
     
     @Override
     public boolean equals(Object o){
@@ -34,7 +34,7 @@ public class SecurityEntity {
         
         if (o == null || getClass() != o.getClass()) return false;
         
-        SecurityEntity that = (SecurityEntity) o;
+        ModuleEntity that = (ModuleEntity) o;
         
         return new EqualsBuilder().append(id, that.id).isEquals();
     }
@@ -49,15 +49,15 @@ public class SecurityEntity {
     }
     
     public static class Mapper {
-        public static SecurityEntity map(Security security) {
-            return SecurityEntity.builder()
-                    .id(security.id())
-                    .name(security.name())
+        public static ModuleEntity map(Module module) {
+            return ModuleEntity.builder()
+                    .id(module.id())
+                    .name(module.name())
                     .build();
         }
         
-        public static Security map(SecurityEntity entity) {
-            return Security.builder()
+        public static Module map(ModuleEntity entity) {
+            return Module.builder()
                     .id(entity.getId())
                     .name(entity.getName())
                     .build();
