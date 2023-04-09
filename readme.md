@@ -8,6 +8,7 @@
 4. [Lombok and JPA Best Practices Coding Guide](#Lombok and JPA Best Practices Coding Guide)
 5. [JPA entity management Best Practices and guidelines](#JPA entity management Best Practices and guidelines)
 
+---
 ## Purpose and architecture 
 
 This project is a Spring Boot application that receives data in the form of messages form [EDDN](https://github.com/EDCD/EDDN). These messages are transformed and store in a database. This project also implements a RESTful API for retrieving this stored data stored.  
