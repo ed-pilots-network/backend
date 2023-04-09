@@ -1,23 +1,20 @@
+# Use Alpine-based OpenJDK 17 image as the base container
 FROM openjdk:17-alpine
 
+# Set working directory
 WORKDIR /app
 
+# Copy Maven wrapper, pom.xml, and source files to the working directory
 COPY mvnw ./
 COPY .mvn .mvn
 COPY pom.xml ./
-COPY src/main/resources/app.properties app.properties
-
-RUN ./mvnw dependency:go-offline
-
 COPY src src
 
-RUN ./mvnw clean package -DskipTests
+# Install dependencies and build the application
+RUN ./mvnw clean install -DskipTests
 
-# Extract jar.name and jar.version from the app.properties file
-RUN jar_name=$(grep -oP 'jar.name=\K.*' app.properties) && \
-    jar_version=$(grep -oP 'jar.version=\K.*' app.properties) && \
-    echo "export JAR_NAME=${jar_name}-${jar_version}.jar" > env.sh && \
-    chmod +x env.sh
+# Copy the executable JAR file
+RUN cp target/*.jar app.jar
 
-# Execute env.sh to set JAR_NAME environment variable
-ENTRYPOINT ["/bin/sh", "-c", "source env.sh && java -jar ${JAR_NAME}"]
+# Set the entrypoint
+ENTRYPOINT ["java", "-jar", "app.jar"]
