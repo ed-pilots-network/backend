@@ -61,7 +61,7 @@ The application layer contains the following components:
 ---
 ### Configuration Layer
 
-The config layer contains all the Bean configurations and annotations need to instantiate the beans and bootstrap the Spring boot application
+The config layer contains all the Bean configurations and annotations needed to instantiate the beans and bootstrap the Spring boot application
 
 ---
 ### Domain Layer
