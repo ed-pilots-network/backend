@@ -25,7 +25,7 @@ public class ShipEntity {
     @ToString.Include
     private String name;
     
-    @OneToMany(mappedBy = "sellingShipEntities")
+    @ManyToMany(mappedBy = "sellingShipEntities")
     private Collection<StationEntity> stationEntities;
     
     @Override

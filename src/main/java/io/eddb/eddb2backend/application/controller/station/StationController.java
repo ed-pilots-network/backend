@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
-
 @RestController
 @RequestMapping("/api/stations")
 @RequiredArgsConstructor
@@ -21,7 +19,7 @@ public class StationController {
 
     @GetMapping("/{id}")
     public ResponseEntity<GetStationResponse> getStation(@PathVariable Long id) {
-        return getStationUsecase.getById(id)
+        return getStationUsecase.findById(id)
                 .map(StationMapper::map)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

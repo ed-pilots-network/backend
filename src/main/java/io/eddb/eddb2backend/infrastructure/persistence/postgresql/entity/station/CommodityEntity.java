@@ -26,15 +26,12 @@ public class CommodityEntity {
     private String name;
     
     @ManyToMany(mappedBy = "importCommodities",fetch = FetchType.LAZY)
-    @JoinColumn(name = "station_id")
     private Collection<StationEntity> importingStationEntities;
     
     @ManyToMany(mappedBy = "exportCommodities",fetch = FetchType.LAZY)
-    @JoinColumn(name = "station_id")
     private Collection<StationEntity> exportingStationEntities;
     
     @ManyToMany(mappedBy = "prohibitedCommodities",fetch = FetchType.LAZY)
-    @JoinColumn(name = "station_id")
     private Collection<StationEntity> prohibitingStationEntities;
     
     @Override

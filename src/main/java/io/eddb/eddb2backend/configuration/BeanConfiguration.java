@@ -2,16 +2,17 @@ package io.eddb.eddb2backend.configuration;
 
 import io.eddb.eddb2backend.application.service.GetStationService;
 import io.eddb.eddb2backend.application.usecase.GetStationUsecase;
+import io.eddb.eddb2backend.domain.repository.StationRepository;
 import io.eddb.eddb2backend.infrastructure.adapter.StationRepositoryAdapter;
-import io.eddb.eddb2backend.infrastructure.persistence.postgresql.StationRepository;
+import io.eddb.eddb2backend.infrastructure.persistence.postgresql.PostgresStationRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class BeanConfiguration {
     @Bean
-    public io.eddb.eddb2backend.domain.repository.StationRepository stationRepository(StationRepository postgresqlStationRepository) {
-        return new StationRepositoryAdapter(postgresqlStationRepository);
+    public StationRepository stationRepository(PostgresStationRepository postgresqlPostgresStationRepository) {
+        return new StationRepositoryAdapter(postgresqlPostgresStationRepository);
     }
 
     @Bean
