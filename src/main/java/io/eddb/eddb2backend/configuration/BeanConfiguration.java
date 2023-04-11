@@ -4,9 +4,13 @@ import io.eddb.eddb2backend.application.service.GetStationService;
 import io.eddb.eddb2backend.application.usecase.GetStationUsecase;
 import io.eddb.eddb2backend.domain.repository.StationRepository;
 import io.eddb.eddb2backend.infrastructure.adapter.StationRepositoryAdapter;
+import io.eddb.eddb2backend.infrastructure.eddn.EddnMessageHandler;
 import io.eddb.eddb2backend.infrastructure.persistence.postgresql.PostgresStationRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.retry.support.RetryTemplate;
 
 @Configuration
 public class BeanConfiguration {
@@ -23,5 +27,10 @@ public class BeanConfiguration {
     @Bean
     public GetStationUsecase getStationUsecase(GetStationService getStationService) {
         return getStationService;
+    }
+
+    @Bean
+    public EddnMessageHandler eddnMessageHandler(@Qualifier("eddnTaskExecutor") TaskExecutor taskExecutor, @Qualifier("eddnRetryTemplate")RetryTemplate retryTemplate) {
+        return new EddnMessageHandler(taskExecutor, retryTemplate);
     }
 }

@@ -4,13 +4,18 @@ FROM openjdk:17-alpine
 # Set working directory
 WORKDIR /app
 
-# Copy Maven wrapper, pom.xml, and source files to the working directory
+# Copy Maven wrapper and pom.xml to the working directory
 COPY mvnw ./
 COPY .mvn .mvn
 COPY pom.xml ./
+
+# Download dependencies
+RUN ./mvnw dependency:go-offline -B
+
+# Copy source files
 COPY src src
 
-# Install dependencies and build the application
+# Build the application
 RUN ./mvnw clean install -DskipTests
 
 # Copy the executable JAR file
