@@ -36,6 +36,7 @@ src
 │               ├── domain
 │               │   ├── model
 │               │   └── repository
+│               │   └── util
 │               ├── infrastructure
 │               │   ├── adapter
 │               │   └── persistence
@@ -70,6 +71,7 @@ The domain layer contains the following components:
 
 - **model**: This package contains the domain models (entities and value objects) that represent the core concepts of the problem domain.
 - **repository**: This package contains the repository interfaces that define the contract for persisting and retrieving domain models.
+- **repository**: This package contains utility classes and interfaces that do not directly relate to the program functionality, like custom map or list implementations.
 
 ---
 ### Infrastructure Layer

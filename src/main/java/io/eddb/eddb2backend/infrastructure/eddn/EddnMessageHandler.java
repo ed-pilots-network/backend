@@ -1,8 +1,10 @@
 package io.eddb.eddb2backend.infrastructure.eddn;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.messaging.Message;
@@ -17,17 +19,15 @@ public class EddnMessageHandler implements MessageHandler {
     private final RetryTemplate retryTemplate;
 
     @Override
-    public void handleMessage(Message<?> message) throws MessagingException {
-        while (!Thread.currentThread().isInterrupted()) {
-            try {
-                retryTemplate.execute(retryContext -> {
-                    taskExecutor.execute(() -> processMessage(message));
-                    return null;
-                });
-            } catch (Throwable e) {
-                System.err.println("message could not be handled in time, dropping");
-                e.printStackTrace(System.err);
-            }
+    public void handleMessage(@NonNull Message<?> message) throws MessagingException {
+        try {
+            retryTemplate.execute(retryContext -> {
+                taskExecutor.execute(() -> processMessage(message));
+                return null;
+            });
+        } catch (Throwable e) {
+            System.err.println("message could not be handled in time, dropping");
+            e.printStackTrace(System.err);
         }
     }
 
@@ -42,11 +42,12 @@ public class EddnMessageHandler implements MessageHandler {
         inflater.setInput(payload);
         try {
             int outputLength = inflater.inflate(output);
+            String messageId = Objects.requireNonNull(message.getHeaders().getId()).toString();
+
             String outputString = new String(output, 0, outputLength, StandardCharsets.UTF_8);
-            System.out.println(outputString);
+            System.out.println(messageId + ": " + outputString);
         } catch (DataFormatException dfe) {
             dfe.printStackTrace();
         }
     }
-
 }
