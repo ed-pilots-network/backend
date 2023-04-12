@@ -71,7 +71,7 @@ public class StationEntity {
     @JoinColumn(name = "landing_pad_id")
     private LandingPadEntity maxSizeLandingPadEntity;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "allegiance_id")
     private AllegianceEntity allegianceEntity;
     
@@ -264,7 +264,7 @@ public class StationEntity {
                                             .collect(Collectors.toSet()))
                                     .orElse(null))
                     .modules(
-                            Optional.of(e.getModuleEntities())
+                            Optional.ofNullable(e.getModuleEntities())
                                     .map(m -> m.stream()
                                             .map(ModuleEntity.Mapper::map)
                                             .map(element -> element.orElse(null))
