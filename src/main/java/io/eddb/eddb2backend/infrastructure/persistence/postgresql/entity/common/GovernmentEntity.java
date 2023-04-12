@@ -19,14 +19,14 @@ import java.util.Optional;
 @ToString(onlyExplicitlyIncluded = true)
 public class GovernmentEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @ToString.Include
     private Long id;
     
     @ToString.Include
     private String name;
     
-    @OneToMany(mappedBy = "governmentEntity")
+    @OneToMany(mappedBy = "governmentEntity", fetch = FetchType.LAZY)
     private Collection<SystemEntity> postgresSystemEntities;
     
     @Override
@@ -50,18 +50,20 @@ public class GovernmentEntity {
     }
     
     public static class Mapper {
-        public static GovernmentEntity map(Government government) {
-            return GovernmentEntity.builder()
-                    .id(government.id())
-                    .name(government.name())
-                    .build();
+        public static Optional<GovernmentEntity> map(Government government) {
+            return Optional.ofNullable(government)
+                    .map(g -> GovernmentEntity.builder()
+                    .id(g.id().describeConstable().orElse(null))
+                    .name(g.name().describeConstable().orElse(null))
+                    .build());
         }
         
-        public static Government map(GovernmentEntity entity) {
-            return Government.builder()
-                    .id(entity.getId())
-                    .name(entity.getName())
-                    .build();
+        public static Optional<Government> map(GovernmentEntity entity) {
+            return Optional.ofNullable(entity)
+                    .map(e -> Government.builder()
+                    .id(e.getId().describeConstable().orElse(null))
+                    .name(e.getName().describeConstable().orElse(null))
+                    .build());
         }
     }
     

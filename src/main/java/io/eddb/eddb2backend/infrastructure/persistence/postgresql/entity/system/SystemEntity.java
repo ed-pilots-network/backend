@@ -5,6 +5,7 @@ import io.eddb.eddb2backend.domain.model.system.System;
 import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.body.BodyEntity;
 import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.common.AllegianceEntity;
 import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.common.EconomyEntity;
+import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.common.FactionEntity;
 import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.common.GovernmentEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -95,47 +96,61 @@ public class SystemEntity {
     }
     
     public static class Mapper {
-        public static SystemEntity map(System system){
-            return SystemEntity.builder()
-                    .id(system.id())
-                    .name(system.name())
-                    .population(system.population())
-                    .needsPermit(system.needsPermit())
-                    .lastUpdated(system.lastUpdated())
-                    .edSystemAddress(system.edSystemAddress())
-                    .coordinate(system.coordinate())
-                    .governmentEntity(GovernmentEntity.Mapper.map(system.government()))
-                    .allegianceEntity(AllegianceEntity.Mapper.map(system.allegiance()))
-                    .securityEntity(SecurityEntity.Mapper.map(system.security()))
-                    .primaryEconomyEntity(EconomyEntity.Mapper.map(system.primaryEconomy()))
-                    .powerEntity(PowerEntity.Mapper.map(system.power()))
-                    .powerStateEntity(PowerStateEntity.Mapper.map(system.powerState()))
-                    .controllingMinorFactionEntity(FactionEntity.Mapper.map(system.controllingMinorFaction()))
-                    .reserveTypeEntity(ReserveTypeEntity.Mapper.map(system.reserveType()))
-                    .bodies(system.bodies().stream().map(BodyEntity.Mapper::map).collect(Collectors.toSet()))
-                    .build();
+        public static Optional<SystemEntity> map(System system){
+            return Optional.ofNullable(system)
+                    .map(s -> SystemEntity.builder()
+                    .id(s.id())
+                    .name(s.name())
+                    .population(s.population())
+                    .needsPermit(s.needsPermit())
+                    .lastUpdated(s.lastUpdated())
+                    .edSystemAddress(s.edSystemAddress())
+                    .coordinate(s.coordinate())
+                    .governmentEntity(GovernmentEntity.Mapper.map(s.government()).orElse(null))
+                    .allegianceEntity(AllegianceEntity.Mapper.map(s.allegiance()).orElse(null))
+                    .securityEntity(SecurityEntity.Mapper.map(s.security()).orElse(null))
+                    .primaryEconomyEntity(EconomyEntity.Mapper.map(s.primaryEconomy()).orElse(null))
+                    .powerEntity(PowerEntity.Mapper.map(s.power()).orElse(null))
+                    .powerStateEntity(PowerStateEntity.Mapper.map(s.powerState()).orElse(null))
+                    .controllingMinorFactionEntity(FactionEntity.Mapper.map(s.controllingMinorFaction()).orElse(null))
+                    .reserveTypeEntity(ReserveTypeEntity.Mapper.map(s.reserveType()).orElse(null))
+                    .bodies(
+                            Optional.ofNullable(s.bodies())
+                                    .map(b ->b.stream()
+                                            .map(BodyEntity.Mapper::map)
+                                            .map(entity -> entity.orElse(null))
+                                            .collect(Collectors.toSet()))
+                                    .orElse(null))
+                    .build());
             
         }
         
-        public static System map(SystemEntity entity){
-            return System.builder()
-                    .id(entity.getId())
-                    .name(entity.getName())
-                    .population(entity.getPopulation())
-                    .needsPermit(entity.isNeedsPermit())
-                    .lastUpdated(entity.getLastUpdated())
-                    .edSystemAddress(entity.getEdSystemAddress())
-                    .coordinate(entity.getCoordinate())
-                    .government(GovernmentEntity.Mapper.map(entity.getGovernmentEntity()))
-                    .allegiance(AllegianceEntity.Mapper.map(entity.getAllegianceEntity()))
-                    .security(SecurityEntity.Mapper.map(entity.getSecurityEntity()))
-                    .primaryEconomy(EconomyEntity.Mapper.map(entity.getPrimaryEconomyEntity()))
-                    .power(PowerEntity.Mapper.map(entity.getPowerEntity()))
-                    .powerState(PowerStateEntity.Mapper.map(entity.getPowerStateEntity()))
-                    .controllingMinorFaction(FactionEntity.Mapper.map(entity.getControllingMinorFactionEntity()))
-                    .reserveType(ReserveTypeEntity.Mapper.map(entity.getReserveTypeEntity()))
-                    .bodies(entity.getBodies().stream().map(BodyEntity.Mapper::map).collect(Collectors.toSet()))
-                    .build();
+        public static Optional<System> map(SystemEntity entity){
+            return Optional.ofNullable(entity)
+                    .map(e -> System.builder()
+                    .id(e.getId())
+                    .name(e.getName())
+                    .population(e.getPopulation())
+                    .needsPermit(e.isNeedsPermit())
+                    .lastUpdated(e.getLastUpdated())
+                    .edSystemAddress(e.getEdSystemAddress())
+                    .coordinate(e.getCoordinate())
+                    .government(GovernmentEntity.Mapper.map(e.getGovernmentEntity()).orElse(null))
+                    .allegiance(AllegianceEntity.Mapper.map(e.getAllegianceEntity()).orElse(null))
+                    .security(SecurityEntity.Mapper.map(e.getSecurityEntity()).orElse(null))
+                    .primaryEconomy(EconomyEntity.Mapper.map(e.getPrimaryEconomyEntity()).orElse(null))
+                    .power(PowerEntity.Mapper.map(e.getPowerEntity()).orElse(null))
+                    .powerState(PowerStateEntity.Mapper.map(e.getPowerStateEntity()).orElse(null))
+                    .controllingMinorFaction(FactionEntity.Mapper.map(e.getControllingMinorFactionEntity()).orElse(null))
+                    .reserveType(ReserveTypeEntity.Mapper.map(e.getReserveTypeEntity()).orElse(null))
+                    .bodies(
+                            Optional.ofNullable(e.getBodies())
+                                    .map(b -> b.stream()
+                                            .map(BodyEntity.Mapper::map)
+                                            .map(element -> element.orElse(null))
+                                            .collect(Collectors.toSet()))
+                                    .orElse(null))
+                    .build());
         }
     }
 }

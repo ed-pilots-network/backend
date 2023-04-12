@@ -25,7 +25,7 @@ public class SecurityEntity {
     @ToString.Include
     private String name;
     
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     private Collection<SystemEntity> systemEntities;
     
     @Override
@@ -49,18 +49,20 @@ public class SecurityEntity {
     }
     
     public static class Mapper {
-        public static SecurityEntity map(Security security) {
-            return SecurityEntity.builder()
-                    .id(security.id())
-                    .name(security.name())
-                    .build();
+        public static Optional<SecurityEntity> map(Security security) {
+            return Optional.ofNullable(security)
+                    .map(s -> SecurityEntity.builder()
+                        .id(s.id())
+                        .name(s.name())
+                        .build());
         }
         
-        public static Security map(SecurityEntity entity) {
-            return Security.builder()
-                    .id(entity.getId())
-                    .name(entity.getName())
-                    .build();
+        public static Optional<Security> map(SecurityEntity entity) {
+            return Optional.ofNullable(entity)
+                    .map(e -> Security.builder()
+                        .id(e.getId())
+                        .name(e.getName())
+                        .build());
         }
     }
     

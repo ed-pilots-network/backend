@@ -1,11 +1,13 @@
-package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.system;
+package io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.common;
 
 import io.eddb.eddb2backend.domain.model.common.Faction;
+import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.system.SystemEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import javax.swing.text.html.Option;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -25,7 +27,7 @@ public class FactionEntity {
     @ToString.Include
     private String name;
     
-    @OneToMany(mappedBy = "controllingMinorFactionEntity")
+    @OneToMany(mappedBy = "controllingMinorFactionEntity", fetch = FetchType.LAZY)
     private Collection<SystemEntity> systemEntities;
     
     @Override
@@ -49,18 +51,20 @@ public class FactionEntity {
     }
     
     public static class Mapper {
-        public static FactionEntity map(Faction faction) {
-            return FactionEntity.builder()
-                    .id(faction.id())
-                    .name(faction.name())
-                    .build();
+        public static Optional<FactionEntity> map(Faction faction) {
+            return Optional.ofNullable(faction)
+                    .map(f -> FactionEntity.builder()
+                        .id(f.id())
+                        .name(f.name())
+                        .build());
         }
         
-        public static Faction map(FactionEntity entity) {
-            return Faction.builder()
-                    .id(entity.getId())
-                    .name(entity.getName())
-                    .build();
+        public static Optional<Faction> map(FactionEntity entity) {
+            return Optional.ofNullable(entity)
+                    .map(e -> Faction.builder()
+                        .id(e.getId())
+                        .name(e.getName())
+                        .build());
         }
     }
     

@@ -18,7 +18,7 @@ import java.util.Optional;
 @ToString(onlyExplicitlyIncluded = true)
 public class CommodityEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @ToString.Include
     private Long id;
     
@@ -55,18 +55,20 @@ public class CommodityEntity {
     }
     
     public static class Mapper {
-        public static CommodityEntity map(Commodity commodity) {
-            return CommodityEntity.builder()
-                    .id(commodity.id())
-                    .name(commodity.name())
-                    .build();
+        public static Optional<CommodityEntity> map(Commodity commodity) {
+            return Optional.ofNullable(commodity)
+                    .map(c -> CommodityEntity.builder()
+                    .id(c.id().describeConstable().orElse(null))
+                    .name(c.name().describeConstable().orElse(null))
+                    .build());
         }
         
-        public static Commodity map(CommodityEntity entity) {
-            return Commodity.builder()
-                    .id(entity.getId())
-                    .name(entity.getName())
-                    .build();
+        public static Optional<Commodity> map(CommodityEntity entity) {
+            return Optional.ofNullable(entity)
+                    .map(e -> Commodity.builder()
+                    .id(e.getId().describeConstable().orElse(null))
+                    .name(e.getName().describeConstable().orElse(null))
+                    .build());
         }
     }
     

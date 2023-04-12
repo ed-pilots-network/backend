@@ -18,14 +18,14 @@ import java.util.Optional;
 @ToString(onlyExplicitlyIncluded = true)
 public class ModuleEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @ToString.Include
     private Long id;
     
     @ToString.Include
     private String name;
     
-    @ManyToMany(mappedBy = "moduleEntities")
+    @ManyToMany(mappedBy = "moduleEntities", fetch = FetchType.LAZY)
     private Collection<StationEntity> stationEntities;
     
     @Override
@@ -49,18 +49,20 @@ public class ModuleEntity {
     }
     
     public static class Mapper {
-        public static ModuleEntity map(Module module) {
-            return ModuleEntity.builder()
-                    .id(module.id())
-                    .name(module.name())
-                    .build();
+        public static Optional<ModuleEntity> map(Module module) {
+            return Optional.ofNullable(module)
+                    .map(m -> ModuleEntity.builder()
+                    .id(m.id())
+                    .name(m.name())
+                    .build());
         }
         
-        public static Module map(ModuleEntity entity) {
-            return Module.builder()
-                    .id(entity.getId())
-                    .name(entity.getName())
-                    .build();
+        public static Optional<Module> map(ModuleEntity entity) {
+            return Optional.ofNullable(entity)
+                    .map(e -> Module.builder()
+                    .id(e.getId())
+                    .name(e.getName())
+                    .build());
         }
     }
     

@@ -51,20 +51,24 @@ public class BodyEntity {
     }
     
     public static class Mapper {
-        public static BodyEntity map(Body body) {
-            return BodyEntity.builder()
-                    .id(body.id())
-                    .name(body.name())
-                    .systemEntity(SystemEntity.Mapper.map(body.system()))
-                    .build();
+        public static Optional<BodyEntity> map(Body body) {
+            return Optional.ofNullable(body)
+                    .map( b ->
+                    BodyEntity.builder()
+                    .id(b.id())
+                    .name(b.name())
+                    .systemEntity(SystemEntity.Mapper.map(b.system()).orElse(null))
+                    .build());
         }
         
-        public static Body map(BodyEntity entity) {
-            return Body.builder()
-                    .id(entity.getId())
-                    .name(entity.getName())
-                    .system(SystemEntity.Mapper.map(entity.getSystemEntity()))
-                    .build();
+        public static Optional<Body> map(BodyEntity entity) {
+            return Optional.ofNullable(entity)
+                    .map(e ->
+                    Body.builder()
+                    .id(e.getId())
+                    .name(e.getName())
+                    .system(SystemEntity.Mapper.map(entity.getSystemEntity()).orElse(null))
+                    .build());
         }
     }
 }

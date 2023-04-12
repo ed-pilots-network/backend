@@ -19,14 +19,14 @@ import java.util.Optional;
 @ToString(onlyExplicitlyIncluded = true)
 public class AllegianceEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @ToString.Include
     private Long id;
     
     @ToString.Include
     private String name;
     
-    @OneToMany(mappedBy = "allegianceEntity")
+    @OneToMany(mappedBy = "allegianceEntity", fetch = FetchType.LAZY)
     private Collection<SystemEntity> systemEntities;
     
     @Override
@@ -50,18 +50,20 @@ public class AllegianceEntity {
     }
     
     public static class Mapper {
-        public static AllegianceEntity map(Allegiance allegiance) {
-            return AllegianceEntity.builder()
-                    .id(allegiance.id())
-                    .name(allegiance.name())
-                    .build();
+        public static Optional<AllegianceEntity> map(Allegiance allegiance) {
+            return Optional.ofNullable(allegiance)
+                    .map(a -> AllegianceEntity.builder()
+                    .id(a.id())
+                    .name(a.name())
+                    .build());
         }
         
-        public static Allegiance map(AllegianceEntity entity) {
-            return Allegiance.builder()
-                    .id(entity.getId())
-                    .name(entity.getName())
-                    .build();
+        public static Optional<Allegiance> map(AllegianceEntity entity) {
+            return Optional.ofNullable(entity)
+                    .map(e -> Allegiance.builder()
+                    .id(e.getId())
+                    .name(e.getName())
+                    .build());
         }
     }
     

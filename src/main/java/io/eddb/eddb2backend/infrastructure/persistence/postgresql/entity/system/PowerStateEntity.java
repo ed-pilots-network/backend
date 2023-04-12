@@ -25,7 +25,7 @@ public class PowerStateEntity {
     @ToString.Include
     private String name;
     
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     private Collection<SystemEntity> systemEntities;
     
     @Override
@@ -49,18 +49,20 @@ public class PowerStateEntity {
     }
     
     public static class Mapper {
-        public static PowerStateEntity map(PowerState powerState) {
-            return PowerStateEntity.builder()
-                    .id(powerState.id())
-                    .name(powerState.name())
-                    .build();
+        public static Optional<PowerStateEntity> map(PowerState powerState) {
+            return Optional.ofNullable(powerState)
+                    .map(p -> PowerStateEntity.builder()
+                        .id(p.id())
+                        .name(p.name())
+                        .build());
         }
         
-        public static PowerState map(PowerStateEntity entity) {
-            return PowerState.builder()
-                    .id(entity.getId())
-                    .name(entity.getName())
-                    .build();
+        public static Optional<PowerState> map(PowerStateEntity entity) {
+            return Optional.ofNullable(entity)
+                    .map(e -> PowerState.builder()
+                        .id(e.getId())
+                        .name(e.getName())
+                        .build());
         }
     }
     

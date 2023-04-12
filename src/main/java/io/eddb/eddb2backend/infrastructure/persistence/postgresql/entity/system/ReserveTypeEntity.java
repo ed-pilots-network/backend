@@ -25,7 +25,7 @@ public class ReserveTypeEntity {
     @ToString.Include
     private String name;
     
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     private Collection<SystemEntity> systemEntities;
     
     @Override
@@ -49,18 +49,20 @@ public class ReserveTypeEntity {
     }
     
     public static class Mapper {
-        public static ReserveTypeEntity map(ReserveType reserveType) {
-            return ReserveTypeEntity.builder()
-                    .id(reserveType.id())
-                    .name(reserveType.name())
-                    .build();
+        public static Optional<ReserveTypeEntity> map(ReserveType reserveType) {
+            return Optional.ofNullable(reserveType)
+                    .map(r -> ReserveTypeEntity.builder()
+                        .id(r.id())
+                        .name(r.name())
+                        .build());
         }
         
-        public static ReserveType map(ReserveTypeEntity entity) {
-            return ReserveType.builder()
-                    .id(entity.getId())
-                    .name(entity.getName())
-                    .build();
+        public static Optional<ReserveType> map(ReserveTypeEntity entity) {
+            return Optional.ofNullable(entity)
+                    .map(e -> ReserveType.builder()
+                        .id(e.getId())
+                        .name(e.getName())
+                        .build());
         }
     }
     

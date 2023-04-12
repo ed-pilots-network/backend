@@ -18,14 +18,14 @@ import java.util.Optional;
 @ToString(onlyExplicitlyIncluded = true)
 public class LandingPadEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @ToString.Include
     private Long id;
     
     @ToString.Include
     private char size;
     
-    @OneToMany(mappedBy = "maxSizeLandingPadEntity")
+    @OneToMany(mappedBy = "maxSizeLandingPadEntity", fetch = FetchType.LAZY)
     private Collection<StationEntity> stationEntities;
     
     @Override
@@ -49,18 +49,20 @@ public class LandingPadEntity {
     }
     
     public static class Mapper {
-        public static LandingPadEntity map(LandingPad landingPad) {
-            return LandingPadEntity.builder()
-                    .id(landingPad.id())
-                    .size(landingPad.size())
-                    .build();
+        public static Optional<LandingPadEntity> map(LandingPad landingPad) {
+            return Optional.ofNullable(landingPad)
+                    .map(lp -> LandingPadEntity.builder()
+                    .id(lp.id())
+                    .size(lp.size())
+                    .build());
         }
         
-        public static LandingPad map(LandingPadEntity entity) {
-            return LandingPad.builder()
-                    .id(entity.getId())
-                    .size(entity.getSize())
-                    .build();
+        public static Optional<LandingPad> map(LandingPadEntity entity) {
+            return Optional.ofNullable(entity)
+                    .map(e -> LandingPad.builder()
+                    .id(e.getId())
+                    .size(e.getSize())
+                    .build());
         }
     }
     

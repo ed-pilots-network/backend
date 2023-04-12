@@ -18,14 +18,14 @@ import java.util.Optional;
 @ToString(onlyExplicitlyIncluded = true)
 public class ShipEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @ToString.Include
     private Long id;
     
     @ToString.Include
     private String name;
     
-    @ManyToMany(mappedBy = "sellingShipEntities")
+    @ManyToMany(mappedBy = "sellingShipEntities", fetch = FetchType.LAZY)
     private Collection<StationEntity> stationEntities;
     
     @Override
@@ -49,18 +49,20 @@ public class ShipEntity {
     }
     
     public static class Mapper {
-        public static ShipEntity map(Ship ship) {
-            return ShipEntity.builder()
-                    .id(ship.id())
-                    .name(ship.name())
-                    .build();
+        public static Optional<ShipEntity> map(Ship ship) {
+            return Optional.ofNullable(ship)
+                    .map(s -> ShipEntity.builder()
+                    .id(s.id().describeConstable().orElse(null))
+                    .name(s.name().describeConstable().orElse(null))
+                    .build());
         }
         
-        public static Ship map(ShipEntity entity) {
-            return Ship.builder()
-                    .id(entity.getId())
-                    .name(entity.getName())
-                    .build();
+        public static Optional<Ship> map(ShipEntity entity) {
+            return Optional.ofNullable(entity)
+                    .map(e -> Ship.builder()
+                    .id(e.getId().describeConstable().orElse(null))
+                    .name(e.getName().describeConstable().orElse(null))
+                    .build());
         }
     }
     

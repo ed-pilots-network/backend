@@ -19,14 +19,14 @@ import java.util.Optional;
 @ToString(onlyExplicitlyIncluded = true)
 public class EconomyEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @ToString.Include
     private Long id;
     
     @ToString.Include
     private String name;
     
-    @OneToMany(mappedBy = "primaryEconomyEntity")
+    @OneToMany(mappedBy = "primaryEconomyEntity", fetch = FetchType.LAZY)
     private Collection<SystemEntity> systemEntities;
     
     @Override
@@ -50,18 +50,20 @@ public class EconomyEntity {
     }
     
     public static class Mapper {
-        public static EconomyEntity map(Economy economy) {
-            return EconomyEntity.builder()
-                    .id(economy.id())
-                    .name(economy.name())
-                    .build();
+        public static Optional<EconomyEntity> map(Economy economy) {
+            return Optional.ofNullable(economy)
+                    .map(e ->  EconomyEntity.builder()
+                    .id(e.id().describeConstable().orElse(null))
+                    .name(e.name().describeConstable().orElse(null))
+                    .build());
         }
         
-        public static Economy map(EconomyEntity entity) {
-            return Economy.builder()
-                    .id(entity.getId())
-                    .name(entity.getName())
-                    .build();
+        public static Optional<Economy> map(EconomyEntity entity) {
+            return Optional.ofNullable(entity)
+                    .map(e -> Economy.builder()
+                    .id(e.getId())
+                    .name(e.getName())
+                    .build());
         }
     }
     

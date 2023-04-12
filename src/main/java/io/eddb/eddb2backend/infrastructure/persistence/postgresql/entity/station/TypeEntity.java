@@ -18,18 +18,18 @@ import java.util.Optional;
 @ToString(onlyExplicitlyIncluded = true)
 public class TypeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @ToString.Include
     private Long id;
     
     @ToString.Include
     private String name;
     
-    @OneToMany(mappedBy = "typeEntity")
+    @OneToMany(mappedBy = "typeEntity", fetch = FetchType.LAZY)
     private Collection<StationEntity> stationEntities;
     
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (this == o) return true;
         
         if (o == null || getClass() != o.getClass()) return false;
@@ -49,18 +49,20 @@ public class TypeEntity {
     }
     
     public static class Mapper {
-        public static TypeEntity map(Type type) {
-            return TypeEntity.builder()
-                    .id(type.id())
-                    .name(type.name())
-                    .build();
+        public static Optional<TypeEntity> map(Type type) {
+            return Optional.ofNullable(type)
+                    .map(t -> TypeEntity.builder()
+                            .id(t.id())
+                            .name(t.name())
+                            .build());
         }
         
-        public static Type map(TypeEntity entity) {
-            return Type.builder()
-                    .id(entity.getId())
-                    .name(entity.getName())
-                    .build();
+        public static Optional<Type> map(TypeEntity entity) {
+            return Optional.ofNullable(entity)
+                    .map(e -> Type.builder()
+                            .id(e.getId())
+                            .name(e.getName())
+                            .build());
         }
     }
     
