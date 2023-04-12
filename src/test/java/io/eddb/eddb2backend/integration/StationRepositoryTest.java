@@ -55,13 +55,13 @@ public class StationRepositoryTest {
                 .outfittingUpdatedAt(LocalDateTime.now())
                 .marketUpdatedAt(LocalDateTime.now())
                 .edMarketId(2L)
-                .maxLandingPadSize(new LandingPad(3L, 'M'))
-                .allegiance(new Allegiance(4L, "IMPERIAL"))
-                .body(new Body(5L, "Earth", System.builder().id(6L).name("Sol").build()))
+                .maxLandingPadSize(LandingPad.builder().size('M').build())
+                .allegiance(Allegiance.builder().name("IMPERIAL").build())
+                .body(Body.builder().name("Earth").system(System.builder().name("Sol").build()).build())
                 .build();
         
         java.lang.System.out.println(station);
-        java.lang.System.out.println(StationEntity.Mapper.map(station));
+        java.lang.System.out.println(StationEntity.Mapper.map(station).orElse(null));
 
         postgresStationRepository.save(StationEntity.Mapper.map(station).orElse(new StationEntity()));
 
