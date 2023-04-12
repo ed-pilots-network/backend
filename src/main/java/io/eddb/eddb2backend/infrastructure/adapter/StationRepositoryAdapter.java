@@ -14,14 +14,16 @@ public class StationRepositoryAdapter implements io.eddb.eddb2backend.domain.rep
 
     @Override
     public Station save(Station station) {
-        StationEntity entity = StationEntity.Mapper.map(station);
-        StationEntity savedEntity = jpaPostgresStationRepository.save(entity);
-        return StationEntity.Mapper.map(savedEntity);
+        return StationEntity.Mapper.map(station)
+                .map(jpaPostgresStationRepository::save)
+                .flatMap(StationEntity.Mapper::map)
+                .orElseThrow(() -> new RuntimeException("could not save Station")); // TODO create better exception
     }
 
     @Override
     public Optional<Station> findById(Long id) {
-        return jpaPostgresStationRepository.findById(id).map(StationEntity.Mapper::map);
+        return jpaPostgresStationRepository.findById(id)
+                .flatMap(StationEntity.Mapper::map);
     }
 
     @Override
@@ -29,6 +31,8 @@ public class StationRepositoryAdapter implements io.eddb.eddb2backend.domain.rep
         return jpaPostgresStationRepository.findByNameContainingIgnoreCase(name)
                 .stream()
                 .map(StationEntity.Mapper::map)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .toList();
     }
 
