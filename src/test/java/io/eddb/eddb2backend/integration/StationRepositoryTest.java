@@ -7,12 +7,9 @@ import io.eddb.eddb2backend.domain.model.station.Station;
 import io.eddb.eddb2backend.domain.model.system.Coordinate;
 import io.eddb.eddb2backend.domain.model.system.System;
 import io.eddb.eddb2backend.infrastructure.persistence.postgresql.PostgresStationRepository;
-
-import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.station.*;
-
+import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.station.StationEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -23,13 +20,13 @@ import java.time.LocalDateTime;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class StationRepositoryTest {
-    
+
     @Autowired
     private PostgresStationRepository postgresStationRepository;
-    
+
     @Test
-    void findByNameIgnoreCaseTest(){
-        Station station =  Station.builder()
+    void findByNameIgnoreCaseTest() {
+        Station station = Station.builder()
                 .name("TestStation")
                 .lastUpdated(LocalDateTime.now())
                 .distanceToStar(300L)
@@ -61,15 +58,15 @@ public class StationRepositoryTest {
                                 .build())
                         .build())
                 .build();
-        
+
         java.lang.System.out.println(station);
         java.lang.System.out.println(StationEntity.Mapper.map(station).orElse(null));
 
         postgresStationRepository.save(StationEntity.Mapper.map(station).orElse(new StationEntity()));
 
         Station returnedStation = StationEntity.Mapper.map(postgresStationRepository
-                .findByNameContainingIgnoreCase("teststation")
-                .iterator().next())
+                        .findByNameContainingIgnoreCase("teststation")
+                        .iterator().next())
                 .orElse(null);
         java.lang.System.out.println(station.equals(returnedStation));
         Assertions.assertEquals(station, returnedStation);
