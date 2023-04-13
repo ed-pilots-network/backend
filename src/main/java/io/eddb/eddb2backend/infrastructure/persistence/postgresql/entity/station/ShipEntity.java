@@ -18,7 +18,7 @@ import java.util.Optional;
 @ToString(onlyExplicitlyIncluded = true)
 public class ShipEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ToString.Include
     private Long id;
     
@@ -29,21 +29,21 @@ public class ShipEntity {
     private Collection<StationEntity> stationEntities;
     
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (this == o) return true;
         
         if (o == null || getClass() != o.getClass()) return false;
         
         ShipEntity that = (ShipEntity) o;
         
-        return new EqualsBuilder().append(id, that.id).isEquals();
+        return new EqualsBuilder().append(name, that.name).isEquals();
     }
     
     @Override
     public int hashCode() {
-        return Optional.ofNullable(id)
-                .map(id -> new HashCodeBuilder(17, 37)
-                        .append(id)
+        return Optional.ofNullable(name)
+                .map(name -> new HashCodeBuilder(15, 29)
+                        .append(name)
                         .toHashCode())
                 .orElse(0);
     }
@@ -52,17 +52,17 @@ public class ShipEntity {
         public static Optional<ShipEntity> map(Ship ship) {
             return Optional.ofNullable(ship)
                     .map(s -> ShipEntity.builder()
-                    .id(s.id().describeConstable().orElse(null))
-                    .name(s.name().describeConstable().orElse(null))
-                    .build());
+                            .id(s.id())
+                            .name(s.name())
+                            .build());
         }
         
         public static Optional<Ship> map(ShipEntity entity) {
             return Optional.ofNullable(entity)
                     .map(e -> Ship.builder()
-                    .id(e.getId().describeConstable().orElse(null))
-                    .name(e.getName().describeConstable().orElse(null))
-                    .build());
+                            .id(e.getId())
+                            .name(e.getName())
+                            .build());
         }
     }
     

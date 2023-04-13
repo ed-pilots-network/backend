@@ -18,7 +18,7 @@ import java.util.Optional;
 @ToString(onlyExplicitlyIncluded = true)
 public class TypeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ToString.Include
     private Long id;
     
@@ -36,14 +36,14 @@ public class TypeEntity {
         
         TypeEntity that = (TypeEntity) o;
         
-        return new EqualsBuilder().append(id, that.id).isEquals();
+        return new EqualsBuilder().append(name, that.name).isEquals();
     }
     
     @Override
     public int hashCode() {
-        return Optional.ofNullable(id)
-                .map(id -> new HashCodeBuilder(17, 37)
-                        .append(id)
+        return Optional.ofNullable(name)
+                .map(name -> new HashCodeBuilder(17, 23)
+                        .append(name)
                         .toHashCode())
                 .orElse(0);
     }

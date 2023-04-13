@@ -19,7 +19,7 @@ import java.util.Optional;
 @ToString(onlyExplicitlyIncluded = true)
 public class EconomyEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ToString.Include
     private Long id;
     
@@ -30,21 +30,21 @@ public class EconomyEntity {
     private Collection<SystemEntity> systemEntities;
     
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (this == o) return true;
         
         if (o == null || getClass() != o.getClass()) return false;
         
         EconomyEntity that = (EconomyEntity) o;
         
-        return new EqualsBuilder().append(id, that.id).isEquals();
+        return new EqualsBuilder().append(name, that.name).isEquals();
     }
     
     @Override
     public int hashCode() {
-        return Optional.ofNullable(id)
-                .map(id -> new HashCodeBuilder(17, 37)
-                        .append(id)
+        return Optional.ofNullable(name)
+                .map(name -> new HashCodeBuilder(11, 39)
+                        .append(name)
                         .toHashCode())
                 .orElse(0);
     }
@@ -52,18 +52,18 @@ public class EconomyEntity {
     public static class Mapper {
         public static Optional<EconomyEntity> map(Economy economy) {
             return Optional.ofNullable(economy)
-                    .map(e ->  EconomyEntity.builder()
-                    .id(e.id().describeConstable().orElse(null))
-                    .name(e.name().describeConstable().orElse(null))
-                    .build());
+                    .map(e -> EconomyEntity.builder()
+                            .id(e.id())
+                            .name(e.name())
+                            .build());
         }
         
         public static Optional<Economy> map(EconomyEntity entity) {
             return Optional.ofNullable(entity)
                     .map(e -> Economy.builder()
-                    .id(e.getId())
-                    .name(e.getName())
-                    .build());
+                            .id(e.getId())
+                            .name(e.getName())
+                            .build());
         }
     }
     

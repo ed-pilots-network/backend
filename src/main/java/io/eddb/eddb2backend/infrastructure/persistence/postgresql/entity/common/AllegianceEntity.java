@@ -19,7 +19,7 @@ import java.util.Optional;
 @ToString(onlyExplicitlyIncluded = true)
 public class AllegianceEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ToString.Include
     private Long id;
     
@@ -30,21 +30,21 @@ public class AllegianceEntity {
     private Collection<SystemEntity> systemEntities;
     
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (this == o) return true;
         
         if (o == null || getClass() != o.getClass()) return false;
         
         AllegianceEntity that = (AllegianceEntity) o;
         
-        return new EqualsBuilder().append(id, that.id).isEquals();
+        return new EqualsBuilder().append(name, that.name).isEquals();
     }
     
     @Override
     public int hashCode() {
-        return Optional.ofNullable(id)
-                .map(id -> new HashCodeBuilder(17, 37)
-                        .append(id)
+        return Optional.ofNullable(name)
+                .map(name -> new HashCodeBuilder(3, 31)
+                        .append(name)
                         .toHashCode())
                 .orElse(0);
     }
@@ -53,17 +53,17 @@ public class AllegianceEntity {
         public static Optional<AllegianceEntity> map(Allegiance allegiance) {
             return Optional.ofNullable(allegiance)
                     .map(a -> AllegianceEntity.builder()
-                    .id(a.id())
-                    .name(a.name())
-                    .build());
+                            .id(a.id())
+                            .name(a.name())
+                            .build());
         }
         
         public static Optional<Allegiance> map(AllegianceEntity entity) {
             return Optional.ofNullable(entity)
                     .map(e -> Allegiance.builder()
-                    .id(e.getId())
-                    .name(e.getName())
-                    .build());
+                            .id(e.getId())
+                            .name(e.getName())
+                            .build());
         }
     }
     

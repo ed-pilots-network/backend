@@ -19,33 +19,33 @@ import java.util.Optional;
 public class BodyEntity {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ToString.Include
     private Long id;
     
     @ToString.Include
     private String name;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "system_id")
     private SystemEntity systemEntity;
     
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (this == o) return true;
         
         if (o == null || getClass() != o.getClass()) return false;
         
         BodyEntity that = (BodyEntity) o;
         
-        return new EqualsBuilder().append(id, that.id).isEquals();
+        return new EqualsBuilder().append(name, that.name).isEquals();
     }
     
     @Override
     public int hashCode() {
-        return Optional.ofNullable(id)
-                .map(id -> new HashCodeBuilder(17, 37)
-                        .append(id)
+        return Optional.ofNullable(name)
+                .map(name -> new HashCodeBuilder(1, 11)
+                        .append(name)
                         .toHashCode())
                 .orElse(0);
     }
@@ -53,22 +53,20 @@ public class BodyEntity {
     public static class Mapper {
         public static Optional<BodyEntity> map(Body body) {
             return Optional.ofNullable(body)
-                    .map( b ->
-                    BodyEntity.builder()
-                    .id(b.id())
-                    .name(b.name())
-                    .systemEntity(SystemEntity.Mapper.map(b.system()).orElse(null))
-                    .build());
+                    .map(b -> BodyEntity.builder()
+                            .id(b.id())
+                            .name(b.name())
+                            .systemEntity(SystemEntity.Mapper.map(b.system()).orElse(null))
+                            .build());
         }
         
         public static Optional<Body> map(BodyEntity entity) {
             return Optional.ofNullable(entity)
-                    .map(e ->
-                    Body.builder()
-                    .id(e.getId())
-                    .name(e.getName())
-                    .system(SystemEntity.Mapper.map(entity.getSystemEntity()).orElse(null))
-                    .build());
+                    .map(e -> Body.builder()
+                            .id(e.getId())
+                            .name(e.getName())
+                            .system(SystemEntity.Mapper.map(e.getSystemEntity()).orElse(null))
+                            .build());
         }
     }
 }

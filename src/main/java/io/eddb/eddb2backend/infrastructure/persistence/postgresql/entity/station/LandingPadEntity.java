@@ -18,7 +18,7 @@ import java.util.Optional;
 @ToString(onlyExplicitlyIncluded = true)
 public class LandingPadEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ToString.Include
     private Long id;
     
@@ -29,21 +29,21 @@ public class LandingPadEntity {
     private Collection<StationEntity> stationEntities;
     
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (this == o) return true;
         
         if (o == null || getClass() != o.getClass()) return false;
         
         LandingPadEntity that = (LandingPadEntity) o;
         
-        return new EqualsBuilder().append(id, that.id).isEquals();
+        return new EqualsBuilder().append(size, that.size).isEquals();
     }
     
     @Override
     public int hashCode() {
-        return Optional.ofNullable(id)
-                .map(id -> new HashCodeBuilder(17, 37)
-                        .append(id)
+        return Optional.ofNullable(size)
+                .map(size -> new HashCodeBuilder(11, 41)
+                        .append(size)
                         .toHashCode())
                 .orElse(0);
     }
@@ -52,17 +52,17 @@ public class LandingPadEntity {
         public static Optional<LandingPadEntity> map(LandingPad landingPad) {
             return Optional.ofNullable(landingPad)
                     .map(lp -> LandingPadEntity.builder()
-                    .id(lp.id())
-                    .size(lp.size())
-                    .build());
+                            .id(lp.id())
+                            .size(lp.size())
+                            .build());
         }
         
         public static Optional<LandingPad> map(LandingPadEntity entity) {
             return Optional.ofNullable(entity)
                     .map(e -> LandingPad.builder()
-                    .id(e.getId())
-                    .size(e.getSize())
-                    .build());
+                            .id(e.getId())
+                            .size(e.getSize())
+                            .build());
         }
     }
     

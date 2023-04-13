@@ -5,13 +5,11 @@ import io.eddb.eddb2backend.application.usecase.GetStationUsecase;
 import io.eddb.eddb2backend.domain.repository.StationRepository;
 import io.eddb.eddb2backend.infrastructure.adapter.StationRepositoryAdapter;
 import io.eddb.eddb2backend.infrastructure.eddn.EddnMessageHandler;
-import io.eddb.eddb2backend.infrastructure.eddn.OnlyNewMessageSelector;
 import io.eddb.eddb2backend.infrastructure.persistence.postgresql.PostgresStationRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.integration.core.MessageSelector;
 import org.springframework.retry.support.RetryTemplate;
 
 @Configuration

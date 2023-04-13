@@ -18,7 +18,7 @@ import java.util.Optional;
 @ToString(onlyExplicitlyIncluded = true)
 public class PowerEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ToString.Include
     private Long id;
     
@@ -29,21 +29,21 @@ public class PowerEntity {
     private Collection<SystemEntity> postgresSystemEntities;
     
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (this == o) return true;
         
         if (o == null || getClass() != o.getClass()) return false;
         
         PowerEntity that = (PowerEntity) o;
         
-        return new EqualsBuilder().append(id, that.id).isEquals();
+        return new EqualsBuilder().append(name, that.name).isEquals();
     }
     
     @Override
     public int hashCode() {
-        return Optional.ofNullable(id)
-                .map(id -> new HashCodeBuilder(17, 37)
-                        .append(id)
+        return Optional.ofNullable(name)
+                .map(name-> new HashCodeBuilder(17, 45)
+                        .append(name)
                         .toHashCode())
                 .orElse(0);
     }
@@ -52,17 +52,17 @@ public class PowerEntity {
         public static Optional<PowerEntity> map(Power power) {
             return Optional.ofNullable(power)
                     .map(p -> PowerEntity.builder()
-                    .id(p.id())
-                    .name(p.name())
-                    .build());
+                            .id(p.id())
+                            .name(p.name())
+                            .build());
         }
         
         public static Optional<Power> map(PowerEntity entity) {
             return Optional.ofNullable(entity)
                     .map(e -> Power.builder()
-                    .id(e.getId())
-                    .name(e.getName())
-                    .build());
+                            .id(e.getId())
+                            .name(e.getName())
+                            .build());
         }
     }
     

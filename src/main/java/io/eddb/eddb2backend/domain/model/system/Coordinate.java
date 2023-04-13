@@ -1,4 +1,14 @@
 package io.eddb.eddb2backend.domain.model.system;
 
-public record Coordinate(double x, double y, double z) {
+import lombok.*;
+
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class Coordinate {
+    private double x;
+    private double y;
+    private double z;
 }

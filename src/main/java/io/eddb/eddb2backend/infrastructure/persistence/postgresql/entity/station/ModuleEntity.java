@@ -18,7 +18,7 @@ import java.util.Optional;
 @ToString(onlyExplicitlyIncluded = true)
 public class ModuleEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ToString.Include
     private Long id;
     
@@ -29,21 +29,21 @@ public class ModuleEntity {
     private Collection<StationEntity> stationEntities;
     
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (this == o) return true;
         
         if (o == null || getClass() != o.getClass()) return false;
         
         ModuleEntity that = (ModuleEntity) o;
         
-        return new EqualsBuilder().append(id, that.id).isEquals();
+        return new EqualsBuilder().append(name, that.name).isEquals();
     }
     
     @Override
     public int hashCode() {
-        return Optional.ofNullable(id)
-                .map(id -> new HashCodeBuilder(17, 37)
-                        .append(id)
+        return Optional.ofNullable(name)
+                .map(name -> new HashCodeBuilder(13, 43)
+                        .append(name)
                         .toHashCode())
                 .orElse(0);
     }
@@ -52,17 +52,17 @@ public class ModuleEntity {
         public static Optional<ModuleEntity> map(Module module) {
             return Optional.ofNullable(module)
                     .map(m -> ModuleEntity.builder()
-                    .id(m.id())
-                    .name(m.name())
-                    .build());
+                            .id(m.id())
+                            .name(m.name())
+                            .build());
         }
         
         public static Optional<Module> map(ModuleEntity entity) {
             return Optional.ofNullable(entity)
                     .map(e -> Module.builder()
-                    .id(e.getId())
-                    .name(e.getName())
-                    .build());
+                            .id(e.getId())
+                            .name(e.getName())
+                            .build());
         }
     }
     

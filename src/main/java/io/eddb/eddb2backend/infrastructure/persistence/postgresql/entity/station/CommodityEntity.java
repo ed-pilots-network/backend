@@ -18,38 +18,38 @@ import java.util.Optional;
 @ToString(onlyExplicitlyIncluded = true)
 public class CommodityEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ToString.Include
     private Long id;
     
     @ToString.Include
     private String name;
     
-    @ManyToMany(mappedBy = "importCommodities",fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "importCommodities", fetch = FetchType.LAZY)
     private Collection<StationEntity> importingStationEntities;
     
-    @ManyToMany(mappedBy = "exportCommodities",fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "exportCommodities", fetch = FetchType.LAZY)
     private Collection<StationEntity> exportingStationEntities;
     
-    @ManyToMany(mappedBy = "prohibitedCommodities",fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "prohibitedCommodities", fetch = FetchType.LAZY)
     private Collection<StationEntity> prohibitingStationEntities;
     
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (this == o) return true;
         
         if (o == null || getClass() != o.getClass()) return false;
         
         CommodityEntity that = (CommodityEntity) o;
         
-        return new EqualsBuilder().append(id, that.id).isEquals();
+        return new EqualsBuilder().append(name, that.name).isEquals();
     }
     
     @Override
     public int hashCode() {
-        return Optional.ofNullable(id)
-                .map(id -> new HashCodeBuilder(17, 37)
-                        .append(id)
+        return Optional.ofNullable(name)
+                .map(name -> new HashCodeBuilder(17, 41)
+                        .append(name)
                         .toHashCode())
                 .orElse(0);
     }
@@ -58,17 +58,17 @@ public class CommodityEntity {
         public static Optional<CommodityEntity> map(Commodity commodity) {
             return Optional.ofNullable(commodity)
                     .map(c -> CommodityEntity.builder()
-                    .id(c.id().describeConstable().orElse(null))
-                    .name(c.name().describeConstable().orElse(null))
-                    .build());
+                            .id(c.id())
+                            .name(c.name())
+                            .build());
         }
         
         public static Optional<Commodity> map(CommodityEntity entity) {
             return Optional.ofNullable(entity)
                     .map(e -> Commodity.builder()
-                    .id(e.getId().describeConstable().orElse(null))
-                    .name(e.getName().describeConstable().orElse(null))
-                    .build());
+                            .id(e.getId())
+                            .name(e.getName())
+                            .build());
         }
     }
     

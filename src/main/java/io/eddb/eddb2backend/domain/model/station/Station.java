@@ -5,7 +5,9 @@ import io.eddb.eddb2backend.domain.model.common.Allegiance;
 import io.eddb.eddb2backend.domain.model.common.Economy;
 import io.eddb.eddb2backend.domain.model.common.Faction;
 import io.eddb.eddb2backend.domain.model.common.Government;
+import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.station.StationEntity;
 import lombok.Builder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -24,4 +26,15 @@ public record Station(Long id, String name, LocalDateTime lastUpdated, LandingPa
                       Collection<Economy> economies, LocalDateTime shipYardUpdatedAt, LocalDateTime outfittingUpdatedAt,
                       LocalDateTime marketUpdatedAt, boolean isPlanetary, Collection<Ship> sellingShips,
                       Collection<Module> modules, Body body, Faction controllingMinorFaction, Long edMarketId){
+    
+    @Override
+    public boolean equals(Object o){
+        if (this == o) return true;
+        
+        if (o == null || getClass() != o.getClass()) return false;
+        
+        Station that = (Station) o;
+        
+        return new EqualsBuilder().append(name, that.name).isEquals();
+    }
 }

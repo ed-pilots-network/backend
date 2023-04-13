@@ -4,6 +4,7 @@ import io.eddb.eddb2backend.domain.model.body.Body;
 import io.eddb.eddb2backend.domain.model.common.Allegiance;
 import io.eddb.eddb2backend.domain.model.station.LandingPad;
 import io.eddb.eddb2backend.domain.model.station.Station;
+import io.eddb.eddb2backend.domain.model.system.Coordinate;
 import io.eddb.eddb2backend.domain.model.system.System;
 import io.eddb.eddb2backend.infrastructure.persistence.postgresql.PostgresStationRepository;
 
@@ -17,9 +18,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 
 @DataJpaTest
@@ -32,7 +30,6 @@ public class StationRepositoryTest {
     @Test
     void findByNameIgnoreCaseTest(){
         Station station =  Station.builder()
-                .id(1L)
                 .name("TestStation")
                 .lastUpdated(LocalDateTime.now())
                 .distanceToStar(300L)
@@ -57,7 +54,12 @@ public class StationRepositoryTest {
                 .edMarketId(2L)
                 .maxLandingPadSize(LandingPad.builder().size('M').build())
                 .allegiance(Allegiance.builder().name("IMPERIAL").build())
-                .body(Body.builder().name("Earth").system(System.builder().name("Sol").build()).build())
+                .body(Body.builder().name("Earth").
+                        system(System.builder().name("Sol")
+                                .coordinate(Coordinate.builder().x(0).y(0).z(0)
+                                        .build())
+                                .build())
+                        .build())
                 .build();
         
         java.lang.System.out.println(station);
@@ -65,8 +67,11 @@ public class StationRepositoryTest {
 
         postgresStationRepository.save(StationEntity.Mapper.map(station).orElse(new StationEntity()));
 
-        Station returnedStation = StationEntity.Mapper.map(postgresStationRepository.findByNameContainingIgnoreCase("teststation").iterator().next()).orElse(null);
-
+        Station returnedStation = StationEntity.Mapper.map(postgresStationRepository
+                .findByNameContainingIgnoreCase("teststation")
+                .iterator().next())
+                .orElse(null);
+        java.lang.System.out.println(station.equals(returnedStation));
         Assertions.assertEquals(station, returnedStation);
     }
 }
