@@ -1,5 +1,6 @@
 package io.eddb.eddb2backend.configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.eddb.eddb2backend.application.service.GetStationService;
 import io.eddb.eddb2backend.application.usecase.GetStationUsecase;
 import io.eddb.eddb2backend.domain.repository.StationRepository;
@@ -30,7 +31,12 @@ public class BeanConfiguration {
     }
 
     @Bean
-    public EddnMessageHandler eddnMessageHandler(@Qualifier("eddnTaskExecutor") TaskExecutor taskExecutor, @Qualifier("eddnRetryTemplate")RetryTemplate retryTemplate) {
-        return new EddnMessageHandler(taskExecutor, retryTemplate);
+    public EddnMessageHandler eddnMessageHandler(@Qualifier("eddnTaskExecutor") TaskExecutor taskExecutor, @Qualifier("eddnRetryTemplate")RetryTemplate retryTemplate,  ObjectMapper objectMapper) {
+        return new EddnMessageHandler(taskExecutor, retryTemplate, objectMapper);
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 }

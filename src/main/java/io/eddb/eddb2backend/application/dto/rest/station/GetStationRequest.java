@@ -1,4 +1,4 @@
-package io.eddb.eddb2backend.application.dto.station;
+package io.eddb.eddb2backend.application.dto.rest.station;
 
 import java.util.Optional;
 import lombok.Builder;

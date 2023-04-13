@@ -1,9 +1,9 @@
 package io.eddb.eddb2backend.infrastructure.eddn;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
-import java.util.zip.DataFormatException;
-import java.util.zip.Inflater;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.eddb.eddb2backend.domain.exception.UnsupportedSchemaException;
+import io.eddb.eddb2backend.infrastructure.eddn.processor.CommodityV3MessageProcessor;
+import io.eddb.eddb2backend.infrastructure.eddn.processor.EddnMessageProcessor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.task.TaskExecutor;
@@ -12,11 +12,23 @@ import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
 import org.springframework.retry.support.RetryTemplate;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
+
 @RequiredArgsConstructor
 public class EddnMessageHandler implements MessageHandler {
 
     private final TaskExecutor taskExecutor;
     private final RetryTemplate retryTemplate;
+    private final ObjectMapper objectMapper;
+    private final Map<String, EddnMessageProcessor<?>> schemaRefToProcessorMap = Map.of(
+            "https://eddn.edcd.io/schemas/commodity/3", new CommodityV3MessageProcessor() //TODO maybe add as beans?
+    );
 
     @Override
     public void handleMessage(@NonNull Message<?> message) throws MessagingException {
@@ -32,22 +44,26 @@ public class EddnMessageHandler implements MessageHandler {
     }
 
     private void processMessage(Message<?> message) throws MessagingException {
-        /* TODO create and inject MessageHandlers for each relevant schema type to transform the messages to domain types.
-         * then pass these domain types to persistence layer to save
-         */
-
-        byte[] output = new byte[256 * 1024];
-        byte[] payload = (byte[]) message.getPayload();
-        Inflater inflater = new Inflater();
-        inflater.setInput(payload);
         try {
-            int outputLength = inflater.inflate(output);
-            String messageId = Objects.requireNonNull(message.getHeaders().getId()).toString();
+            byte[] output = new byte[256 * 1024];
+            byte[] payload = (byte[]) message.getPayload();
+            Inflater inflater = new Inflater();
+            inflater.setInput(payload);
+            String json = new String(output, 0, inflater.inflate(output), StandardCharsets.UTF_8);
+            String schemaRef = objectMapper.readTree(json).get("$schemaRef").asText();
 
-            String outputString = new String(output, 0, outputLength, StandardCharsets.UTF_8);
-            System.out.println(messageId + ": " + outputString);
+            Optional.ofNullable(schemaRefToProcessorMap.get(schemaRef))
+                    .orElseThrow(() -> new UnsupportedSchemaException(schemaRef))
+                    .handle(json);
         } catch (DataFormatException dfe) {
             dfe.printStackTrace();
+            //TODO add some damn logging framework!!!
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+            //TODO add some damn logging framework!!!
+        } catch (UnsupportedSchemaException use) {
+            //noop
+            System.out.println(use.getMessage());
         }
     }
 }

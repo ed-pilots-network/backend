@@ -1,6 +1,6 @@
 package io.eddb.eddb2backend.application.controller.station;
 
-import io.eddb.eddb2backend.application.dto.station.GetStationResponse;
+import io.eddb.eddb2backend.application.dto.rest.station.GetStationResponse;
 import io.eddb.eddb2backend.application.mapper.StationMapper;
 import io.eddb.eddb2backend.application.usecase.GetStationUsecase;
 import lombok.RequiredArgsConstructor;
