@@ -5,7 +5,7 @@ import io.eddb.eddb2backend.domain.model.common.Allegiance;
 import io.eddb.eddb2backend.domain.model.common.Economy;
 import io.eddb.eddb2backend.domain.model.common.Faction;
 import io.eddb.eddb2backend.domain.model.common.Government;
-import io.eddb.eddb2backend.infrastructure.persistence.postgresql.entity.station.StationEntity;
+import io.eddb.eddb2backend.infrastructure.persistence.mybatis.entity.station.StationEntity;
 import lombok.Builder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 

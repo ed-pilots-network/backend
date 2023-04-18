@@ -1,0 +1,9 @@
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeHandlers>
+        <typeHandler handler="io.eddb.eddb2backend.infrastructure.persistence.mybatis.util.StringTrimmingTypeHandler" />
+    </typeHandlers>
+    <mappers>
+        <mapper resource="mybatis/mappers/CommodityMapper.xml"/>
+    </mappers>
+</configuration>

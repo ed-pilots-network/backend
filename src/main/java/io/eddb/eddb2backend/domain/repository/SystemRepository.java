@@ -1,14 +1,16 @@
 package io.eddb.eddb2backend.domain.repository;
 
+import io.eddb.eddb2backend.application.dto.persistence.SystemEntity;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface SystemRepository {
-    System save(System system);
+    UUID save(SystemEntity entity);
     
-    Optional<System> findById(Long id);
+    Optional<SystemEntity> findById(UUID id);
     
-    Collection<System> findByName(String name);
-    
-    void deleteById(Long id);
+    Optional<SystemEntity> findByName(String name);
+
+    Collection<SystemEntity> findByNameStartsWith(String name);
 }

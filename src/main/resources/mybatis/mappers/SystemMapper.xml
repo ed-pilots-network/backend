@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.eddb.eddb2backend.infrastructure.persistence.mybatis.mappers.SystemMapper">
+    <select id="findAll" resultType="io.eddb.eddb2backend.application.dto.persistence.SystemEntity">
+        SELECT *
+        FROM systems
+    </select>
+
+    <insert id="save" parameterType="io.eddb.eddb2backend.application.dto.persistence.SystemEntity" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO systems (id, name)
+        VALUES (#{id}, #{name})
+    </insert>
+
+    <select id="findByName" resultType="java.lang.String">
+        SELECT *
+        FROM systems
+        WHERE name = "#{name}"
+    </select>
+
+    <select id="findByNameStartingWith" resultType="java.lang.String">
+        SELECT *
+        FROM systems
+        WHERE name LIKE "#{name}%"
+    </select>
+
+    <insert id="addStation">
+        INSERT INTO system_station (system_id, station_id)
+        VALUES (#{systemId}, #{stationId})
+    </insert>
+</mapper>

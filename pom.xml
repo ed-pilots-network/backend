@@ -19,34 +19,30 @@
         <lang3.version>3.12.0</lang3.version>
         <spring-integration-zeromq.version>6.0.4</spring-integration-zeromq.version>
         <jackson.version>2.14.2</jackson.version>
-        <h2.version>2.1.214</h2.version>
         <hamcrest.version>2.2</hamcrest.version>
+        <mybatis.version>3.0.0</mybatis.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-integration</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.integration</groupId>
-            <artifactId>spring-integration-zeromq</artifactId>
-            <version>${spring-integration-zeromq.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.integration</groupId>
-            <artifactId>spring-integration-http</artifactId>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>${mybatis.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.integration</groupId>
-            <artifactId>spring-integration-jpa</artifactId>
+            <artifactId>spring-integration-http</artifactId>
         </dependency>
 
         <dependency>
@@ -71,13 +67,15 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>org.springframework.integration</groupId>
+            <artifactId>spring-integration-zeromq</artifactId>
+            <version>${spring-integration-zeromq.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${lang3.version}</version>
         </dependency>
-
-
-        <!-- jackson -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
@@ -101,16 +99,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest</artifactId>
-            <version>${hamcrest.version}</version>
+            <groupId>org.springframework.integration</groupId>
+            <artifactId>spring-integration-test</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
-            <scope>runtime,test</scope>
         </dependency>
     </dependencies>
 
