@@ -6,6 +6,7 @@ import io.eddb.eddb2backend.application.usecase.ReceiveCommodityMessageUsecase;
 import io.eddb.eddb2backend.domain.util.TimestampConverter;
 import io.eddb.eddb2backend.infrastructure.persistence.mappers.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ public class ReceiveCommodityMessageService implements ReceiveCommodityMessageUs
     private final HistoricStationCommodityEntityMapper historicStationCommodityEntityMapper;
 
     @Override
+    @Transactional
     public void receive(CommodityMessage.V3 commodityMessage) {
         System.out.println("ReceiveCommodityMessageService.receive -> commodityMessage: " + commodityMessage);
 
@@ -60,7 +62,7 @@ public class ReceiveCommodityMessageService implements ReceiveCommodityMessageUs
                     StationEntity s = StationEntity.builder()
                             .id(new StationEntity.Id(UUID.randomUUID()))
                             .edMarketId(marketId)
-                            .name(systemName)
+                            .name(stationName)
                             .build();
                     stationEntityMapper.insert(s);
 
@@ -79,30 +81,33 @@ public class ReceiveCommodityMessageService implements ReceiveCommodityMessageUs
                 .map(economy -> {
                     EconomyEntity.Id id = economyEntityMapper.findByName(economy.getName())//TODO make findOrCreate
                             .map(EconomyEntity::getId)
-                            .orElse(null);
+                            .orElseThrow(() -> new RuntimeException("economy was not found"));
                     double proportion = economy.getProportion();
                     return new AbstractMap.SimpleEntry<>(id, proportion);
                 })
                 .filter(entry -> Objects.nonNull(entry.getKey()))
                 .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue, (o1, o2) -> o1));
 
+        //delete old station commodity info
+        stationCommodityEntityMapper.deleteByIdStationId(station.getId().getValue());
+
         List<StationCommodityEntity.Id> stationCommodities = Arrays.stream(commodities)
-                .map(c -> {
-                    CommodityEntity.Id commodityId = commodityEntityMapper.findByName(c.getName())  //TODO make findOrCreate
+                .map(commodity -> {
+                    CommodityEntity.Id commodityId = commodityEntityMapper.findByName(commodity.getName())  //TODO make findOrCreate
                             .map(CommodityEntity::getId)
-                            .orElse(null);
+                            .orElseThrow(() -> new RuntimeException("commodityId was not found"));
 
                     HistoricStationCommodityEntity.Id hid = new HistoricStationCommodityEntity.Id(station.getId(), commodityId, updateTimestamp);
                     var hsce = HistoricStationCommodityEntity.builder()
                             .id(hid)
-                            .meanPrice(c.getMeanPrice())
-                            .buyPrice(c.getBuyPrice())
-                            .sellPrice(c.getSellPrice())
-                            .stock(c.getStock())
-                            .stockBracket(c.getStockBracket())
-                            .demand(c.getDemand())
-                            .demandBracket(c.getDemandBracket())
-                            .statusFlags(toList(c.getStatusFlags()))
+                            .meanPrice(commodity.getMeanPrice())
+                            .buyPrice(commodity.getBuyPrice())
+                            .sellPrice(commodity.getSellPrice())
+                            .stock(commodity.getStock())
+                            .stockBracket(commodity.getStockBracket())
+                            .demand(commodity.getDemand())
+                            .demandBracket(commodity.getDemandBracket())
+                            .statusFlags(toList(commodity.getStatusFlags()))
                             .build();
 
                     historicStationCommodityEntityMapper.insert(hsce);
@@ -110,17 +115,16 @@ public class ReceiveCommodityMessageService implements ReceiveCommodityMessageUs
                     StationCommodityEntity.Id id = new StationCommodityEntity.Id(station.getId(), commodityId);
                     var sce = StationCommodityEntity.builder()
                             .id(id)
-                            .meanPrice(c.getMeanPrice())
-                            .buyPrice(c.getBuyPrice())
-                            .sellPrice(c.getSellPrice())
-                            .stock(c.getStock())
-                            .stockBracket(c.getStockBracket())
-                            .demand(c.getDemand())
-                            .demandBracket(c.getDemandBracket())
-                            .statusFlags(toList(c.getStatusFlags()))
+                            .meanPrice(commodity.getMeanPrice())
+                            .buyPrice(commodity.getBuyPrice())
+                            .sellPrice(commodity.getSellPrice())
+                            .stock(commodity.getStock())
+                            .stockBracket(commodity.getStockBracket())
+                            .demand(commodity.getDemand())
+                            .demandBracket(commodity.getDemandBracket())
+                            .statusFlags(toList(commodity.getStatusFlags()))
                             .build();
 
-                    //TODO remove old sce
                     stationCommodityEntityMapper.insert(sce);
 
                     return sce.getId();

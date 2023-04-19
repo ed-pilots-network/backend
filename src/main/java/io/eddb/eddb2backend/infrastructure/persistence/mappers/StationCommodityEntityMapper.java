@@ -43,4 +43,6 @@ public interface StationCommodityEntityMapper {
 
     @Delete("DELETE FROM station_commodities WHERE station_id = #{stationId} AND commodity_id = #{commodityId}")
     int deleteById(@Param("stationId") UUID stationId, @Param("commodityId") UUID commodityId);
+    @Delete("DELETE FROM station_commodities WHERE station_id = #{stationId}")
+    int deleteByIdStationId(@Param("stationId") UUID stationId);
 }
