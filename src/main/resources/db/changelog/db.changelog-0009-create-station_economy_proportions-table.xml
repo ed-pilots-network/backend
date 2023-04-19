@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="320f5745-af9e-41d2-98f9-4cd023e69064" author="pveeckhout">
+        <createTable tableName="station_economy_proportions">
+            <column name="station_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="fk_station_economy_proportions_station_id" referencedTableName="stations" referencedColumnNames="id"/>
+            </column>
+            <column name="economy_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="fk_station_economy_proportions_economy_id" referencedTableName="economies" referencedColumnNames="id"/>
+            </column>
+            <column name="proportion" type="double">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="station_economy_proportions" columnNames="station_id, economy_id" constraintName="pk_station_economy_proportions" />
+    </changeSet>
+
+</databaseChangeLog>

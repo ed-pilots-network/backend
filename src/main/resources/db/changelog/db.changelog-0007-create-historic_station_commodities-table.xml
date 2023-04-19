@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="494a57e6-0abf-4e39-b4f9-377f5c1aab17" author="pveeckhout">
+        <createTable tableName="historic_station_commodities">
+            <column name="station_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="fk_station_commodities_station_id" referencedTableName="stations" referencedColumnNames="id"/>
+            </column>
+            <column name="commodity_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="fk_station_commodities_commodity_id" referencedTableName="commodities" referencedColumnNames="id"/>
+            </column>
+            <column name="timestamp" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mean_price" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="buy_price" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="stock" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="stock_bracket" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="sell_price" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="demand" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="demand_bracket" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="status_flags" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="historic_station_commodities" columnNames="station_id, commodity_id, timestamp" constraintName="pk_historic_station_commodities" />
+    </changeSet>
+
+</databaseChangeLog>

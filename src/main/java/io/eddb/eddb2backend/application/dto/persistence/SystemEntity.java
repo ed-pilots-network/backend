@@ -13,7 +13,7 @@ public class SystemEntity {
     private Id id;
     private String name;
 
-    @Value(staticConstructor = "of")
+    @Value
     public static class Id {
         UUID value;
     }

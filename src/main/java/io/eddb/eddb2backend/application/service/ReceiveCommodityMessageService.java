@@ -38,9 +38,12 @@ public class ReceiveCommodityMessageService implements ReceiveCommodityMessageUs
         //convert timestamp to localDateTime
         var updateTimestamp = TimestampConverter.convertToLocalDateTime(timestamp);
         // find system, if not found create
-        var system = systemEntityMapper.findByName(systemName)
+        var system = systemEntityMapper.findByName(systemName) // TODO find or create
                 .orElseGet(() -> {
-                    SystemEntity s = SystemEntity.builder().name(systemName).build();
+                    SystemEntity s = SystemEntity.builder()
+                            .id(new SystemEntity.Id(UUID.randomUUID()))
+                            .name(systemName)
+                            .build();
                     systemEntityMapper.insert(s);
 
                     return s;
@@ -55,6 +58,7 @@ public class ReceiveCommodityMessageService implements ReceiveCommodityMessageUs
         var station = stationEntityMapper.findByMarketId(marketId)
                 .orElseGet(() -> {
                     StationEntity s = StationEntity.builder()
+                            .id(new StationEntity.Id(UUID.randomUUID()))
                             .edMarketId(marketId)
                             .name(systemName)
                             .build();

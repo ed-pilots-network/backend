@@ -22,7 +22,7 @@ public class StationEntity {
     private Map<EconomyEntity.Id, Double> economyEntityIdProportionMap;
     private Collection<StationCommodityEntity.Id> commodities;
 
-    @Value(staticConstructor = "of")
+    @Value
     public static class Id {
         UUID value;
     }
