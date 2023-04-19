@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static io.eddb.eddb2backend.domain.util.CollectionUtil.toList;
+
 @RequiredArgsConstructor
 public class ReceiveCommodityMessageService implements ReceiveCommodityMessageUsecase {
 
@@ -96,7 +98,7 @@ public class ReceiveCommodityMessageService implements ReceiveCommodityMessageUs
                             .stockBracket(c.getStockBracket())
                             .demand(c.getDemand())
                             .demandBracket(c.getDemandBracket())
-                            .statusFlags(c.getStatusFlags())
+                            .statusFlags(toList(c.getStatusFlags()))
                             .build();
 
                     historicStationCommodityEntityMapper.insert(hsce);
@@ -111,7 +113,7 @@ public class ReceiveCommodityMessageService implements ReceiveCommodityMessageUs
                             .stockBracket(c.getStockBracket())
                             .demand(c.getDemand())
                             .demandBracket(c.getDemandBracket())
-                            .statusFlags(c.getStatusFlags())
+                            .statusFlags(toList(c.getStatusFlags()))
                             .build();
 
                     //TODO remove old sce

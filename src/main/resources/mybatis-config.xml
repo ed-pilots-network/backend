@@ -1,0 +1,21 @@
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeHandlers>
+        <typeHandler handler="io.eddb.eddb2backend.infrastructure.persistence.util.UuidTypeHandler"
+                     javaType="java.util.UUID"/>
+        <typeHandler handler="io.eddb.eddb2backend.infrastructure.persistence.util.StringTrimmingTypeHandler"
+                     javaType="java.lang.String"/>
+        <typeHandler handler="io.eddb.eddb2backend.infrastructure.persistence.util.StringListTypeHandler"
+                     javaType="java.util.List"/>
+    </typeHandlers>
+
+    <mappers>
+        <mapper class="io.eddb.eddb2backend.infrastructure.persistence.mappers.CommodityEntityMapper"/>
+        <mapper class="io.eddb.eddb2backend.infrastructure.persistence.mappers.EconomyEntityMapper"/>
+        <mapper class="io.eddb.eddb2backend.infrastructure.persistence.mappers.HistoricStationCommodityEntityMapper"/>
+        <mapper class="io.eddb.eddb2backend.infrastructure.persistence.mappers.StationCommodityEntityMapper"/>
+        <mapper class="io.eddb.eddb2backend.infrastructure.persistence.mappers.StationEntityMapper"/>
+        <mapper class="io.eddb.eddb2backend.infrastructure.persistence.mappers.StationTypeEntityMapper"/>
+        <mapper class="io.eddb.eddb2backend.infrastructure.persistence.mappers.SystemEntityMapper"/>
+    </mappers>
+</configuration>

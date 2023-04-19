@@ -18,7 +18,7 @@ public interface StationCommodityEntityMapper {
             @Result(property = "sellPrice", column = "sell_price"),
             @Result(property = "demand", column = "demand"),
             @Result(property = "demandBracket", column = "demand_bracket"),
-            @Result(property = "statusFlags", column = "status_flags", javaType = String[].class, typeHandler = org.apache.ibatis.type.ArrayTypeHandler.class)
+            @Result(property = "statusFlags", column = "status_flags")
     })
     @Select("SELECT station_id, commodity_id, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags FROM station_commodities")
     List<StationCommodityEntity> findAll();
@@ -35,10 +35,10 @@ public interface StationCommodityEntityMapper {
     @Select("SELECT station_id, commodity_id, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags FROM station_commodities WHERE commodity_id = #{commodityId}")
     List<StationCommodityEntity> findByIdCommodityId(@Param("commodityId") UUID commodityId);
 
-    @Insert("INSERT INTO station_commodities (station_id, commodity_id, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags) VALUES (#{id.stationId.value}, #{id.commodityId.value}, #{meanPrice}, #{buyPrice}, #{stock}, #{stockBracket}, #{sellPrice}, #{demand}, #{demandBracket}, #{statusFlags, javaType = String[].class, typeHandler = org.apache.ibatis.type.ArrayTypeHandler.class})")
+    @Insert("INSERT INTO station_commodities (station_id, commodity_id, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags) VALUES (#{id.stationId.value}, #{id.commodityId.value}, #{meanPrice}, #{buyPrice}, #{stock}, #{stockBracket}, #{sellPrice}, #{demand}, #{demandBracket}, #{statusFlags})")
     int insert(StationCommodityEntity stationCommodityEntity);
 
-    @Update("UPDATE station_commodities SET mean_price = #{meanPrice}, buy_price = #{buyPrice}, stock = #{stock}, stock_bracket = #{stockBracket}, sell_price = #{sellPrice}, demand = #{demand}, demand_bracket = #{demandBracket}, status_flags = #{statusFlags, javaType = String[].class, typeHandler = org.apache.ibatis.type.ArrayTypeHandler.class} WHERE station_id = #{id.stationId.value} AND commodity_id = #{id.commodityId.value}")
+    @Update("UPDATE station_commodities SET mean_price = #{meanPrice}, buy_price = #{buyPrice}, stock = #{stock}, stock_bracket = #{stockBracket}, sell_price = #{sellPrice}, demand = #{demand}, demand_bracket = #{demandBracket}, status_flags = #{statusFlags} WHERE station_id = #{id.stationId.value} AND commodity_id = #{id.commodityId.value}")
     int update(StationCommodityEntity stationCommodityEntity);
 
     @Delete("DELETE FROM station_commodities WHERE station_id = #{stationId} AND commodity_id = #{commodityId}")

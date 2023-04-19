@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Value;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -18,7 +19,7 @@ public class HistoricStationCommodityEntity {
     private int sellPrice;
     private int demand;
     private int demandBracket;
-    private String[] statusFlags;
+    private List<String> statusFlags;
 
     @Value
     public static class Id {

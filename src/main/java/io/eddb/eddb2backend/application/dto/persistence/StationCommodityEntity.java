@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Value;
 
+import java.util.List;
+
 @Data
 @Builder
 public class StationCommodityEntity {
@@ -16,7 +18,7 @@ public class StationCommodityEntity {
     private int sellPrice;
     private int demand;
     private int demandBracket;
-    private String[] statusFlags;
+    private List<String> statusFlags;
 
     @Value
     public static class Id {

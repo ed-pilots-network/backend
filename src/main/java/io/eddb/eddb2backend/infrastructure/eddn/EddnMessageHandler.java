@@ -17,7 +17,6 @@ import org.springframework.retry.support.RetryTemplate;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.Optional;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
@@ -27,11 +26,7 @@ public class EddnMessageHandler implements MessageHandler {
     private final TaskExecutor taskExecutor;
     private final RetryTemplate retryTemplate;
     private final ObjectMapper objectMapper;
-    @Getter(AccessLevel.PRIVATE)
     private final CommodityV3MessageProcessor commodityV3MessageProcessor;
-    private final Map<String, EddnMessageProcessor<?>> schemaRefToProcessorMap = Map.of(
-            "https://eddn.edcd.io/schemas/commodity/3", getCommodityV3MessageProcessor()
-    );
 
     @Override
     public void handleMessage(@NonNull Message<?> message) throws MessagingException {
@@ -55,9 +50,12 @@ public class EddnMessageHandler implements MessageHandler {
             String json = new String(output, 0, inflater.inflate(output), StandardCharsets.UTF_8);
             String schemaRef = objectMapper.readTree(json).get("$schemaRef").asText();
 
-            Optional.ofNullable(schemaRefToProcessorMap.get(schemaRef))
-                    .orElseThrow(() -> new UnsupportedSchemaException(schemaRef))
-                    .handle(json);
+            EddnMessageProcessor<?> processor = switch (schemaRef) {
+                case "https://eddn.edcd.io/schemas/commodity/3" -> commodityV3MessageProcessor;
+                default -> throw new UnsupportedSchemaException(schemaRef);
+            };
+            processor.handle(json);
+
         } catch (DataFormatException dfe) {
             dfe.printStackTrace();
             //TODO add some damn logging framework!!!
