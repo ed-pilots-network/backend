@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface HistoricStationCommodityEntityMapper {
@@ -27,7 +28,7 @@ public interface HistoricStationCommodityEntityMapper {
 
     @ResultMap("HistoricStationCommodityResult")
     @Select("SELECT station_id, commodity_id, timestamp, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags FROM historic_station_commodities WHERE station_id = #{stationId} AND commodity_id = #{commodityId} AND timestamp = #{timestamp}")
-    HistoricStationCommodityEntity findById(@Param("stationId") UUID stationId, @Param("commodityId") UUID commodityId, @Param("timestamp") LocalDateTime timestamp);
+    Optional<HistoricStationCommodityEntity> findById(@Param("stationId") UUID stationId, @Param("commodityId") UUID commodityId, @Param("timestamp") LocalDateTime timestamp);
 
     @ResultMap("HistoricStationCommodityResult")
     @Select("SELECT station_id, commodity_id, timestamp, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags FROM historic_station_commodities WHERE commodity_id = #{commodityId} AND timestamp BETWEEN #{startTimestamp} AND #{endTimestamp}")
@@ -36,6 +37,14 @@ public interface HistoricStationCommodityEntityMapper {
     @ResultMap("HistoricStationCommodityResult")
     @Select("SELECT station_id, commodity_id, timestamp, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags FROM historic_station_commodities WHERE station_id = #{stationId} AND timestamp BETWEEN #{startTimestamp} AND #{endTimestamp}")
     List<HistoricStationCommodityEntity> findByIdStationIdAndTimestampBetween(@Param("stationId") UUID stationId, @Param("startTimestamp") LocalDateTime startTimestamp, @Param("endTimestamp") LocalDateTime endTimestamp);
+
+    @ResultMap("HistoricStationCommodityResult")
+    @Select("SELECT station_id, commodity_id, timestamp, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags FROM historic_station_commodities WHERE commodity_id = #{commodityId} AND timestamp = (SELECT MAX(timestamp) FROM historic_station_commodities WHERE commodity_id = #{commodityId})")
+    List<HistoricStationCommodityEntity> findLatestByIdCommodityId(@Param("commodityId") UUID commodityId);
+
+    @ResultMap("HistoricStationCommodityResult")
+    @Select("SELECT station_id, commodity_id, timestamp, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags FROM historic_station_commodities WHERE station_id = #{stationId} AND timestamp = (SELECT MAX(timestamp) FROM historic_station_commodities WHERE station_id = #{stationId})")
+    List<HistoricStationCommodityEntity> findLatestByIdStationId(@Param("stationId") UUID stationId);
 
     @Insert("INSERT INTO historic_station_commodities (station_id, commodity_id, timestamp, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags) VALUES (#{id.stationId.value}, #{id.commodityId.value}, #{id.timestamp}, #{meanPrice}, #{buyPrice}, #{stock}, #{stockBracket}, #{sellPrice}, #{demand}, #{demandBracket}, #{statusFlags})")
     int insert(HistoricStationCommodityEntity historicStationCommodityEntity);

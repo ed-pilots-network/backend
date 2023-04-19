@@ -1,6 +1,9 @@
 package io.eddb.eddb2backend.infrastructure.persistence.mappers;
 
 import io.eddb.eddb2backend.application.dto.persistence.SystemEntity;
+import io.eddb.eddb2backend.infrastructure.persistence.util.AbstractEntityIdTypeHandler;
+import io.eddb.eddb2backend.infrastructure.persistence.util.StationTypeEntityIdTypeHandler;
+import io.eddb.eddb2backend.infrastructure.persistence.util.SystemEntityIdTypeHandler;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -10,7 +13,7 @@ import java.util.UUID;
 public interface SystemEntityMapper {
 
     @Results(id = "SystemEntityResult", value = {
-            @Result(property = "id.value", column = "id"),
+            @Result(property = "id", column = "id", javaType = SystemEntity.Id.class, typeHandler = SystemEntityIdTypeHandler.class),
             @Result(property = "name", column = "name")
     })
     @Select("SELECT id, name FROM systems")

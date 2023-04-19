@@ -2,27 +2,29 @@ package io.eddb.eddb2backend.infrastructure.persistence.mappers;
 
 import io.eddb.eddb2backend.application.dto.persistence.CommodityEntity;
 import io.eddb.eddb2backend.application.dto.persistence.EconomyEntity;
-import io.eddb.eddb2backend.application.dto.persistence.StationCommodityEntity;
 import io.eddb.eddb2backend.application.dto.persistence.StationEntity;
+import io.eddb.eddb2backend.infrastructure.persistence.util.StationEntityIdTypeHandler;
 import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface StationEntityMapper {
-
     @Results(id = "StationEntityResult", value = {
-            @Result(property = "id.value", column = "id"),
+            @Result(property = "id", column = "id", javaType = StationEntity.Id.class, typeHandler = StationEntityIdTypeHandler.class),
             @Result(property = "name", column = "name"),
             @Result(property = "edMarketId", column = "ed_market_id"),
             @Result(property = "marketUpdatedAt", column = "market_updated_at", javaType = LocalDateTime.class),
             @Result(property = "hasCommodities", column = "has_commodities"),
             @Result(property = "prohibitedCommodityIds", column = "id", many = @Many(select = "findProhibitedCommodityIdsByStationId")),
             @Result(property = "economyEntityIdProportionMap", column = "id", many = @Many(select = "findEconomyProportionsByStationId")),
-            @Result(property = "commodities", column = "id", many = @Many(select = "findStationCommodityIdsByStationId")),
     })
     @Select("SELECT id, name, ed_market_id, market_updated_at, has_commodities FROM stations")
     List<StationEntity> findAll();
+
 
     // Add additional methods for handling the complex relationships.
     @Select("SELECT commodity_id FROM station_prohibited_commodities WHERE station_id = #{stationId}")
@@ -31,12 +33,9 @@ public interface StationEntityMapper {
     @Select("SELECT economy_id, proportion FROM station_economy_proportions WHERE station_id = #{stationId}")
     List<Map.Entry<EconomyEntity.Id, Double>> findEconomyProportionsByStationId(UUID stationId);
 
-    @Select("SELECT station_commodity_id FROM station_commodities WHERE station_id = #{stationId}")
-    List<StationCommodityEntity.Id> findStationCommodityIdsByStationId(UUID stationId);
-
     @ResultMap("StationEntityResult")
-    @Select("SELECT id, name, ed_market_id, market_updated_at, has_commodities FROM stations WHERE station_id = #{stationId}")
-    List<StationEntity> findById(@Param("stationId") UUID stationId);
+    @Select("SELECT id, name, ed_market_id, market_updated_at, has_commodities FROM stations WHERE id = #{stationId}")
+    Optional<StationEntity> findById(@Param("stationId") UUID stationId);
 
     @ResultMap("StationEntityResult")
     @Select("SELECT id, name, ed_market_id, market_updated_at, has_commodities FROM stations WHERE ed_market_id = #{marketId}")
@@ -50,6 +49,5 @@ public interface StationEntityMapper {
 
     @Delete("DELETE FROM stations WHERE id = #{id}")
     int deleteById(UUID id);
-
 
 }

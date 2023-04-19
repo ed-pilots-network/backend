@@ -1,6 +1,10 @@
 package io.eddb.eddb2backend.configuration;
 
+import io.eddb.eddb2backend.application.dto.persistence.*;
 import io.eddb.eddb2backend.infrastructure.persistence.mappers.*;
+import io.eddb.eddb2backend.infrastructure.persistence.util.CommodityEntityIdTypeHandler;
+import io.eddb.eddb2backend.infrastructure.persistence.util.AbstractEntityIdTypeHandler;
+import io.eddb.eddb2backend.infrastructure.persistence.util.EconomyEntityIdTypeHandler;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
@@ -40,11 +44,6 @@ public class MyBatisConfiguration {
     @Bean
     public HistoricStationCommodityEntityMapper historicStationCommodityEntityMapper(@Qualifier("sqlSessionTemplate") SqlSessionTemplate sqlSessionTemplate) {
         return sqlSessionTemplate.getMapper(HistoricStationCommodityEntityMapper.class);
-    }
-
-    @Bean
-    public StationCommodityEntityMapper stationCommodityEntityMapper(@Qualifier("sqlSessionTemplate") SqlSessionTemplate sqlSessionTemplate) {
-        return sqlSessionTemplate.getMapper(StationCommodityEntityMapper.class);
     }
 
     @Bean

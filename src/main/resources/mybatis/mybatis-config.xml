@@ -7,13 +7,22 @@
                      javaType="java.lang.String"/>
         <typeHandler handler="io.eddb.eddb2backend.infrastructure.persistence.util.StringListTypeHandler"
                      javaType="java.util.List"/>
+        <typeHandler handler="io.eddb.eddb2backend.infrastructure.persistence.util.CommodityEntityIdTypeHandler"
+                     javaType="io.eddb.eddb2backend.application.dto.persistence.CommodityEntity$Id"/>
+        <typeHandler handler="io.eddb.eddb2backend.infrastructure.persistence.util.EconomyEntityIdTypeHandler"
+                     javaType="io.eddb.eddb2backend.application.dto.persistence.EconomyEntity$Id"/>
+        <typeHandler handler="io.eddb.eddb2backend.infrastructure.persistence.util.StationEntityIdTypeHandler"
+                     javaType="io.eddb.eddb2backend.application.dto.persistence.StationEntity$Id"/>
+        <typeHandler handler="io.eddb.eddb2backend.infrastructure.persistence.util.StationTypeEntityIdTypeHandler"
+                     javaType="io.eddb.eddb2backend.application.dto.persistence.StationTypeEntity$Id"/>
+        <typeHandler handler="io.eddb.eddb2backend.infrastructure.persistence.util.SystemEntityIdTypeHandler"
+                     javaType="io.eddb.eddb2backend.application.dto.persistence.SystemEntity$Id"/>
     </typeHandlers>
 
     <mappers>
         <mapper class="io.eddb.eddb2backend.infrastructure.persistence.mappers.CommodityEntityMapper"/>
         <mapper class="io.eddb.eddb2backend.infrastructure.persistence.mappers.EconomyEntityMapper"/>
         <mapper class="io.eddb.eddb2backend.infrastructure.persistence.mappers.HistoricStationCommodityEntityMapper"/>
-        <mapper class="io.eddb.eddb2backend.infrastructure.persistence.mappers.StationCommodityEntityMapper"/>
         <mapper class="io.eddb.eddb2backend.infrastructure.persistence.mappers.StationEntityMapper"/>
         <mapper class="io.eddb.eddb2backend.infrastructure.persistence.mappers.StationTypeEntityMapper"/>
         <mapper class="io.eddb.eddb2backend.infrastructure.persistence.mappers.SystemEntityMapper"/>

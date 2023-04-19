@@ -1,13 +1,15 @@
 package io.eddb.eddb2backend.application.dto.persistence;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Value;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class HistoricStationCommodityEntity {
 
@@ -21,10 +23,15 @@ public class HistoricStationCommodityEntity {
     private int demandBracket;
     private List<String> statusFlags;
 
-    @Value
+    @Getter
+    @Setter
+    @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Id {
         StationEntity.Id stationId;
         CommodityEntity.Id commodityId;
         LocalDateTime timestamp;
     }
+
 }

@@ -1,11 +1,10 @@
 package io.eddb.eddb2backend.infrastructure.persistence.mappers;
 
-import io.eddb.eddb2backend.application.dto.persistence.StationEntity;
 import io.eddb.eddb2backend.application.dto.persistence.StationTypeEntity;
-import io.eddb.eddb2backend.application.dto.persistence.SystemEntity;
+import io.eddb.eddb2backend.infrastructure.persistence.util.AbstractEntityIdTypeHandler;
+import io.eddb.eddb2backend.infrastructure.persistence.util.StationTypeEntityIdTypeHandler;
 import org.apache.ibatis.annotations.*;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -13,7 +12,7 @@ import java.util.UUID;
 public interface StationTypeEntityMapper {
 
     @Results(id = "StationTypeEntityResult", value = {
-            @Result(property = "id.value", column = "id"),
+            @Result(property = "id", column = "id", javaType = StationTypeEntity.Id.class, typeHandler = StationTypeEntityIdTypeHandler.class),
             @Result(property = "name", column = "name")
     })
     @Select("SELECT id, name FROM station_types")

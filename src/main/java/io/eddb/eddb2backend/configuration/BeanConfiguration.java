@@ -5,9 +5,9 @@ import io.eddb.eddb2backend.application.service.GetStationService;
 import io.eddb.eddb2backend.application.service.ReceiveCommodityMessageService;
 import io.eddb.eddb2backend.application.usecase.GetStationUsecase;
 import io.eddb.eddb2backend.application.usecase.ReceiveCommodityMessageUsecase;
+import io.eddb.eddb2backend.domain.repository.*;
 import io.eddb.eddb2backend.infrastructure.eddn.EddnMessageHandler;
 import io.eddb.eddb2backend.infrastructure.eddn.processor.CommodityV3MessageProcessor;
-import io.eddb.eddb2backend.infrastructure.persistence.mappers.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,13 +38,12 @@ public class BeanConfiguration {
 
     @Bean
     public ReceiveCommodityMessageUsecase receiveCommodityMessageService(
-            SystemEntityMapper systemEntityMapper,
-            StationEntityMapper stationEntityMapper,
-            CommodityEntityMapper commodityEntityMapper,
-            EconomyEntityMapper economyEntityMapper,
-            StationCommodityEntityMapper stationCommodityEntityMapper,
-            HistoricStationCommodityEntityMapper historicStationCommodityEntityMapper) {
-        return new ReceiveCommodityMessageService(systemEntityMapper, stationEntityMapper, commodityEntityMapper, economyEntityMapper, stationCommodityEntityMapper, historicStationCommodityEntityMapper);
+            CommodityRepository commodityRepository,
+            EconomyRepository economyRepository,
+            HistoricStationCommodityRepository historicStationCommodityRepository,
+            StationRepository stationRepository,
+            SystemRepository systemRepository) {
+        return new ReceiveCommodityMessageService(systemRepository, stationRepository, commodityRepository, economyRepository, historicStationCommodityRepository);
     }
 
     @Bean

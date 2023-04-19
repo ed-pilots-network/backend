@@ -1,19 +1,25 @@
 package io.eddb.eddb2backend.application.dto.persistence;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Value;
+import lombok.*;
 
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class StationTypeEntity {
 
     private Id id;
     private String name;
 
-    @Value(staticConstructor = "of")
+    @Getter
+    @Setter
+    @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Id {
         UUID value;
     }

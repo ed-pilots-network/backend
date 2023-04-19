@@ -11,9 +11,8 @@
     <include file="db/changelog/db.changelog-0003-create-economies-table.xml"/>
     <include file="db/changelog/db.changelog-0004-create-station_types-table.xml"/>
     <include file="db/changelog/db.changelog-0005-create-stations-table.xml"/>
-    <include file="db/changelog/db.changelog-0006-create-station_commodities-table.xml"/>
-    <include file="db/changelog/db.changelog-0007-create-historic_station_commodities-table.xml"/>
-    <include file="db/changelog/db.changelog-0008-create-station_prohibited_commodities-table.xml"/>
-    <include file="db/changelog/db.changelog-0009-create-station_economy_proportions-table.xml"/>
+    <include file="db/changelog/db.changelog-0006-create-historic_station_commodities-table.xml"/>
+    <include file="db/changelog/db.changelog-0007-create-station_prohibited_commodities-table.xml"/>
+    <include file="db/changelog/db.changelog-0008-create-station_economy_proportions-table.xml"/>
 
 </databaseChangeLog>

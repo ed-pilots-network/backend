@@ -1,10 +1,12 @@
 package io.eddb.eddb2backend.infrastructure.persistence.mappers;
 
+import io.eddb.eddb2backend.application.dto.persistence.CommodityEntity;
 import io.eddb.eddb2backend.application.dto.persistence.EconomyEntity;
-import io.eddb.eddb2backend.application.dto.persistence.SystemEntity;
+import io.eddb.eddb2backend.infrastructure.persistence.util.AbstractEntityIdTypeHandler;
+import io.eddb.eddb2backend.infrastructure.persistence.util.CommodityEntityIdTypeHandler;
+import io.eddb.eddb2backend.infrastructure.persistence.util.EconomyEntityIdTypeHandler;
 import org.apache.ibatis.annotations.*;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -12,7 +14,7 @@ import java.util.UUID;
 public interface EconomyEntityMapper {
 
     @Results(id = "EconomyEntityResult", value = {
-            @Result(property = "id.value", column = "id"),
+            @Result(property = "id", column = "id", javaType = EconomyEntity.Id.class, typeHandler = EconomyEntityIdTypeHandler.class),
             @Result(property = "name", column = "name")
     })
     @Select("SELECT id, name FROM economies")
