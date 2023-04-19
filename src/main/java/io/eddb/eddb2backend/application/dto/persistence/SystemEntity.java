@@ -1,17 +1,22 @@
 package io.eddb.eddb2backend.application.dto.persistence;
 
-import java.util.Set;
-import java.util.UUID;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Value;
+
+import java.util.UUID;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class SystemEntity extends BaseEntity {
+@Builder
+public class SystemEntity {
 
+    private Id id;
     private String name;
 
-    private Set<UUID> stationIds;
+    @Value(staticConstructor = "of")
+    public static class Id {
+        UUID value;
+    }
 }
 
 

@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class CommodityEntity {
+public class EconomyEntity {
 
     private Id id;
     private String name;

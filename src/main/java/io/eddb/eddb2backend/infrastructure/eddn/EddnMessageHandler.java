@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.eddb.eddb2backend.domain.exception.UnsupportedSchemaException;
 import io.eddb.eddb2backend.infrastructure.eddn.processor.CommodityV3MessageProcessor;
 import io.eddb.eddb2backend.infrastructure.eddn.processor.EddnMessageProcessor;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.task.TaskExecutor;
@@ -15,7 +17,6 @@ import org.springframework.retry.support.RetryTemplate;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
@@ -26,8 +27,10 @@ public class EddnMessageHandler implements MessageHandler {
     private final TaskExecutor taskExecutor;
     private final RetryTemplate retryTemplate;
     private final ObjectMapper objectMapper;
+    @Getter(AccessLevel.PRIVATE)
+    private final CommodityV3MessageProcessor commodityV3MessageProcessor;
     private final Map<String, EddnMessageProcessor<?>> schemaRefToProcessorMap = Map.of(
-            "https://eddn.edcd.io/schemas/commodity/3", new CommodityV3MessageProcessor() //TODO maybe add as beans?
+            "https://eddn.edcd.io/schemas/commodity/3", getCommodityV3MessageProcessor()
     );
 
     @Override

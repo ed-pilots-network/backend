@@ -1,4 +1,4 @@
-package io.eddb.eddb2backend.infrastructure.persistence.mybatis.util;
+package io.eddb.eddb2backend.infrastructure.persistence.util;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
