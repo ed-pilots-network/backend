@@ -1,7 +1,7 @@
 package io.eddb.eddb2backend.configuration;
 
-import io.eddb.eddb2backend.infrastructure.eddn.EddnMessageHandler;
-import io.eddb.eddb2backend.infrastructure.eddn.OnlyNewMessageSelector;
+import io.eddb.eddb2backend.infrastructure.zmq.EddnMessageHandler;
+import io.eddb.eddb2backend.infrastructure.zmq.OnlyNewMessageSelector;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

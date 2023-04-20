@@ -1,14 +1,17 @@
-package io.eddb.eddb2backend.infrastructure.eddn;
+package io.eddb.eddb2backend.infrastructure.zmq;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.eddb.eddb2backend.domain.exception.UnsupportedSchemaException;
-import io.eddb.eddb2backend.infrastructure.eddn.processor.CommodityV3MessageProcessor;
-import io.eddb.eddb2backend.infrastructure.eddn.processor.EddnMessageProcessor;
+import io.eddb.eddb2backend.infrastructure.kafka.KafkaTopicHandler;
+import io.eddb.eddb2backend.infrastructure.kafka.processor.CommodityV3MessageProcessor;
+import io.eddb.eddb2backend.infrastructure.kafka.processor.EddnMessageProcessor;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
@@ -17,6 +20,7 @@ import org.springframework.retry.support.RetryTemplate;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Objects;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
@@ -26,6 +30,8 @@ public class EddnMessageHandler implements MessageHandler {
     private final TaskExecutor taskExecutor;
     private final RetryTemplate retryTemplate;
     private final ObjectMapper objectMapper;
+    private final KafkaTopicHandler kafkaTopicHandler;
+    private final KafkaTemplate<String, JsonNode> jsonNodekafkaTemplate;
     private final CommodityV3MessageProcessor commodityV3MessageProcessor;
 
     @Override
@@ -48,13 +54,26 @@ public class EddnMessageHandler implements MessageHandler {
             Inflater inflater = new Inflater();
             inflater.setInput(payload);
             String json = new String(output, 0, inflater.inflate(output), StandardCharsets.UTF_8);
-            String schemaRef = objectMapper.readTree(json).get("$schemaRef").asText();
+            JsonNode jsonNode = objectMapper.readTree(json);
+            String schemaRef = jsonNode.get("$schemaRef").asText();
+            String sanitizedTopicName = sanitizeTopicName(schemaRef);
 
-            EddnMessageProcessor<?> processor = switch (schemaRef) {
-                case "https://eddn.edcd.io/schemas/commodity/3" -> commodityV3MessageProcessor;
-                default -> throw new UnsupportedSchemaException(schemaRef);
-            };
-            processor.handle(json);
+            kafkaTopicHandler.createTopicIfNotExists(sanitizedTopicName)
+                    .whenComplete((topicName, kafkaTopicCreateException) -> {
+                        if (Objects.isNull(kafkaTopicCreateException)) {
+                            jsonNodekafkaTemplate.send(topicName, jsonNode).whenComplete(
+                                    (kafkaResult, kafkaSendException) -> {
+                                        if (Objects.nonNull(kafkaSendException)) {
+                                            //TODO log and handle kafka exception
+                                            throw new RuntimeException(kafkaSendException.getMessage());
+                                        }
+                                    }
+                            );
+                        } else {
+                            //TODO log and handle kafka exception
+                            throw new RuntimeException(kafkaTopicCreateException.getMessage());
+                        }
+                    });
 
         } catch (DataFormatException dfe) {
             dfe.printStackTrace();
@@ -66,5 +85,9 @@ public class EddnMessageHandler implements MessageHandler {
             //noop
             System.out.println(use.getMessage());
         }
+    }
+
+    public String sanitizeTopicName(String schemaRef) {
+        return schemaRef.replaceAll("[^A-Za-z0-9._\\-]", "_");
     }
 }

@@ -4,3 +4,5 @@ spring:
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
+  kafka:
+    bootstrap-servers: localhost:9092

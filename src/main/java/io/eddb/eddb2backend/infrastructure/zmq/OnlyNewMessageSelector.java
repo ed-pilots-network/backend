@@ -1,4 +1,4 @@
-package io.eddb.eddb2backend.infrastructure.eddn;
+package io.eddb.eddb2backend.infrastructure.zmq;
 
 import io.eddb.eddb2backend.domain.util.LRUSetCache;
 import java.util.Objects;
