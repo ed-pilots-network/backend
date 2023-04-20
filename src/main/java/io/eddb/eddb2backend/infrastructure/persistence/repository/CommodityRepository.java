@@ -27,19 +27,19 @@ public class CommodityRepository implements io.eddb.eddb2backend.domain.reposito
     public CommodityEntity update(CommodityEntity commodity) {
         commodityEntityMapper.update(commodity);
         return findById(commodity.getId())
-                .orElseThrow(() -> new RuntimeException("commodity with id: " + commodity.getId().getValue() + " could not be found after update"));
+                .orElseThrow(() -> new RuntimeException("commodity with id: " + commodity.getId() + " could not be found after update"));
     }
 
     @Override
     public CommodityEntity create(CommodityEntity entity) {
-        entity.setId(new CommodityEntity.Id(UUID.randomUUID()));
+        entity.setId(UUID.randomUUID());
         commodityEntityMapper.insert(entity);
         return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("commodity with id: " + entity.getId().getValue() + " could not be found after create"));
+                .orElseThrow(() -> new RuntimeException("commodity with id: " + entity.getId() + " could not be found after create"));
     }
 
     @Override
-    public Optional<CommodityEntity> findById(CommodityEntity.Id id) {
-        return commodityEntityMapper.findById(id.getValue());
+    public Optional<CommodityEntity> findById(UUID id) {
+        return commodityEntityMapper.findById(id);
     }
 }

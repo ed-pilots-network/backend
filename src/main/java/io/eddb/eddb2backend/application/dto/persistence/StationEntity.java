@@ -15,20 +15,11 @@ import java.util.UUID;
 @Builder
 public class StationEntity {
 
-    private Id id;
+    private UUID id;
     private String name;
     private Long edMarketId;
     private LocalDateTime marketUpdatedAt;
     private boolean hasCommodities;
-    private Collection<CommodityEntity.Id> prohibitedCommodityIds;
-    private Map<EconomyEntity.Id, Double> economyEntityIdProportionMap;
-
-    @Getter
-    @Setter
-    @ToString
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class Id {
-        UUID value;
-    }
+    private Collection<UUID> prohibitedCommodityIds;
+    private Map<UUID, Double> economyEntityIdProportionMap;
 }

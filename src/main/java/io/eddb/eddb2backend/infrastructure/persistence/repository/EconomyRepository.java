@@ -27,19 +27,19 @@ public class EconomyRepository implements io.eddb.eddb2backend.domain.repository
     public EconomyEntity update(EconomyEntity entity) {
         economyEntityMapper.update(entity);
         return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("economy with id: " + entity.getId().getValue() + " could not be found after update"));
+                .orElseThrow(() -> new RuntimeException("economy with id: " + entity.getId() + " could not be found after update"));
     }
 
     @Override
     public EconomyEntity create(EconomyEntity entity) {
-        entity.setId(new EconomyEntity.Id(UUID.randomUUID()));
+        entity.setId(UUID.randomUUID());
         economyEntityMapper.insert(entity);
         return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("economy with id: " + entity.getId().getValue() + " could not be found after create"));
+                .orElseThrow(() -> new RuntimeException("economy with id: " + entity.getId() + " could not be found after create"));
     }
 
     @Override
-    public Optional<EconomyEntity> findById(EconomyEntity.Id id) {
-        return economyEntityMapper.findById(id.getValue());
+    public Optional<EconomyEntity> findById(UUID id) {
+        return economyEntityMapper.findById(id);
     }
 }

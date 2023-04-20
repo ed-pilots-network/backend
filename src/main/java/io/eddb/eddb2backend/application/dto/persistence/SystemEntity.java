@@ -2,6 +2,7 @@ package io.eddb.eddb2backend.application.dto.persistence;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -12,17 +13,9 @@ import java.util.UUID;
 @Builder
 public class SystemEntity {
 
-    private Id id;
+    private UUID id;
     private String name;
 
-    @Getter
-    @Setter
-    @ToString
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class Id {
-        UUID value;
-    }
 }
 
 

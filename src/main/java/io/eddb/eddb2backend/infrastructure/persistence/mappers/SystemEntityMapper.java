@@ -1,19 +1,18 @@
 package io.eddb.eddb2backend.infrastructure.persistence.mappers;
 
 import io.eddb.eddb2backend.application.dto.persistence.SystemEntity;
-import io.eddb.eddb2backend.infrastructure.persistence.util.AbstractEntityIdTypeHandler;
-import io.eddb.eddb2backend.infrastructure.persistence.util.StationTypeEntityIdTypeHandler;
-import io.eddb.eddb2backend.infrastructure.persistence.util.SystemEntityIdTypeHandler;
+import io.eddb.eddb2backend.infrastructure.persistence.util.UuidTypeHandler;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Mapper
 public interface SystemEntityMapper {
 
     @Results(id = "SystemEntityResult", value = {
-            @Result(property = "id", column = "id", javaType = SystemEntity.Id.class, typeHandler = SystemEntityIdTypeHandler.class),
+            @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name")
     })
     @Select("SELECT id, name FROM systems")
@@ -23,10 +22,10 @@ public interface SystemEntityMapper {
     @Select("SELECT id, name FROM systems WHERE id = #{id}")
     Optional<SystemEntity> findById(@Param("id") UUID id);
 
-    @Insert("INSERT INTO systems (id, name) VALUES (#{id.value}, #{name})")
+    @Insert("INSERT INTO systems (id, name) VALUES (#{id}, #{name})")
     int insert(SystemEntity systemEntity);
 
-    @Update("UPDATE systems SET name = #{name} WHERE id = #{id.value}")
+    @Update("UPDATE systems SET name = #{name} WHERE id = #{id}")
     int update(SystemEntity systemEntity);
 
     @Delete("DELETE FROM systems WHERE id = #{id}")

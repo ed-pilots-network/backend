@@ -2,7 +2,6 @@ package io.eddb.eddb2backend.application.service;
 
 import io.eddb.eddb2backend.application.dto.eddn.CommodityMessage;
 import io.eddb.eddb2backend.application.dto.persistence.CommodityEntity;
-import io.eddb.eddb2backend.application.dto.persistence.EconomyEntity;
 import io.eddb.eddb2backend.application.dto.persistence.HistoricStationCommodityEntity;
 import io.eddb.eddb2backend.application.usecase.ReceiveCommodityMessageUsecase;
 import io.eddb.eddb2backend.domain.repository.*;
@@ -53,17 +52,17 @@ public class ReceiveCommodityMessageService implements ReceiveCommodityMessageUs
         var station = stationRepository.findOrCreateByMarketId(marketId);
 
         //parse message info
-        Collection<CommodityEntity.Id> prohibitedCommodityIds = Optional.ofNullable(prohibitedCommodities)
+        Collection<UUID> prohibitedCommodityIds = Optional.ofNullable(prohibitedCommodities)
                 .map(arr -> Arrays.stream(arr)
                         .map(commodityRepository::findOrCreateByName)
                         .map(CommodityEntity::getId)
                         .toList())
                 .orElse(Collections.emptyList());
 
-        Map<EconomyEntity.Id, Double> economyEntityIdProportionMap = Optional.ofNullable(economies)
+        Map<UUID, Double> economyEntityIdProportionMap = Optional.ofNullable(economies)
                 .map(arr -> Arrays.stream(arr)
                         .map(economy -> {
-                            EconomyEntity.Id id = economyRepository.findOrCreateByName(economy.getName()).getId();
+                            UUID id = economyRepository.findOrCreateByName(economy.getName()).getId();
                             double proportion = economy.getProportion();
                             return new AbstractMap.SimpleEntry<>(id, proportion);
                         })
@@ -74,11 +73,12 @@ public class ReceiveCommodityMessageService implements ReceiveCommodityMessageUs
         if (Objects.nonNull(commodities)) {
             Arrays.stream(commodities)
                     .forEach(commodity -> {
-                        CommodityEntity.Id commodityId = commodityRepository.findOrCreateByName(commodity.getName()).getId();
+                        UUID commodityId = commodityRepository.findOrCreateByName(commodity.getName()).getId();
 
-                        HistoricStationCommodityEntity.Id hid = new HistoricStationCommodityEntity.Id(station.getId(), commodityId, updateTimestamp);
                         var hsce = HistoricStationCommodityEntity.builder()
-                                .id(hid)
+                                .stationId(station.getId())
+                                .commodityId(commodityId)
+                                .timestamp(updateTimestamp)
                                 .meanPrice(commodity.getMeanPrice())
                                 .buyPrice(commodity.getBuyPrice())
                                 .sellPrice(commodity.getSellPrice())

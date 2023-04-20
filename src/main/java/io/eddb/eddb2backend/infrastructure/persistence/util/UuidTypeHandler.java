@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-
 @MappedTypes(UUID.class)
 public class UuidTypeHandler extends BaseTypeHandler<UUID> {
 

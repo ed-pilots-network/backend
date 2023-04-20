@@ -27,19 +27,19 @@ public class StationRepository implements io.eddb.eddb2backend.domain.repository
     public StationEntity update(StationEntity entity) {
         stationEntityMapper.update(entity);
         return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("station with id: " + entity.getId().getValue() + " could not be found after update"));
+                .orElseThrow(() -> new RuntimeException("station with id: " + entity.getId() + " could not be found after update"));
     }
 
     @Override
     public StationEntity create(StationEntity entity) {
-        entity.setId(new StationEntity.Id(UUID.randomUUID()));
+        entity.setId(UUID.randomUUID());
         stationEntityMapper.insert(entity);
         return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("station with id: " + entity.getId().getValue() + " could not be found after create"));
+                .orElseThrow(() -> new RuntimeException("station with id: " + entity.getId() + " could not be found after create"));
     }
 
     @Override
-    public Optional<StationEntity> findById(StationEntity.Id id) {
-        return stationEntityMapper.findById(id.getValue());
+    public Optional<StationEntity> findById(UUID id) {
+        return stationEntityMapper.findById(id);
     }
 }

@@ -16,12 +16,12 @@ public class HistoricStationCommodityRepository implements io.eddb.eddb2backend.
         historicStationCommodityEntityMapper.update(entity);
 
         return getById(entity)
-                .orElseThrow(() -> new RuntimeException("historicStationCommodity with id: " + entity.getId() + " could not be found after update"));
+                .orElseThrow(() -> new RuntimeException("historicStationCommodity with id: " + getIdString(entity) + " could not be found after update"));
     }
 
     @Override
     public Optional<HistoricStationCommodityEntity> getById(HistoricStationCommodityEntity entity) {
-        return historicStationCommodityEntityMapper.findById(entity.getId().getStationId().getValue(), entity.getId().getCommodityId().getValue(), entity.getId().getTimestamp());
+        return historicStationCommodityEntityMapper.findById(entity.getStationId(), entity.getCommodityId(), entity.getTimestamp());
     }
 
     @Override
@@ -29,6 +29,10 @@ public class HistoricStationCommodityRepository implements io.eddb.eddb2backend.
         historicStationCommodityEntityMapper.insert(entity);
 
         return getById(entity)
-                .orElseThrow(() -> new RuntimeException("historicStationCommodity with id: " + entity.getId() + " could not be found after create"));
+                .orElseThrow(() -> new RuntimeException("historicStationCommodity with id: " + getIdString(entity) + " could not be found after create"));
+    }
+
+    private String getIdString(HistoricStationCommodityEntity entity) {
+        return String.format("[stationId: '%s', commodityId: '%s', timestamp: '%s']", entity.getStationId(), entity.getCommodityId(), entity.getTimestamp());
     }
 }

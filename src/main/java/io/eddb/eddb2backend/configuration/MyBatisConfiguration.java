@@ -1,53 +1,39 @@
 package io.eddb.eddb2backend.configuration;
 
-import io.eddb.eddb2backend.application.dto.persistence.*;
-import io.eddb.eddb2backend.infrastructure.persistence.mappers.*;
-import io.eddb.eddb2backend.infrastructure.persistence.util.CommodityEntityIdTypeHandler;
-import io.eddb.eddb2backend.infrastructure.persistence.util.AbstractEntityIdTypeHandler;
-import io.eddb.eddb2backend.infrastructure.persistence.util.EconomyEntityIdTypeHandler;
+import io.eddb.eddb2backend.infrastructure.persistence.util.StringListTypeHandler;
+import io.eddb.eddb2backend.infrastructure.persistence.util.StringTrimmingTypeHandler;
+import io.eddb.eddb2backend.infrastructure.persistence.util.UuidTypeHandler;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+
+import javax.sql.DataSource;
 
 @Configuration
 @MapperScan("io.eddb.eddb2backend.infrastructure.persistence.mappers")
 public class MyBatisConfiguration {
 
     @Bean
+    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
+        SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
+        sessionFactoryBean.setDataSource(dataSource);
+        sessionFactoryBean.setTypeHandlers(new UuidTypeHandler(), new StringListTypeHandler(), new StringTrimmingTypeHandler());
+
+        return sessionFactoryBean.getObject();
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager(DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
+
+    @Bean
     public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
-    }
-
-    @Bean
-    public SystemEntityMapper systemEntityMapper(@Qualifier("sqlSessionTemplate") SqlSessionTemplate sqlSessionTemplate) {
-        return sqlSessionTemplate.getMapper(SystemEntityMapper.class);
-    }
-
-    @Bean
-    public StationEntityMapper stationEntityMapper(@Qualifier("sqlSessionTemplate") SqlSessionTemplate sqlSessionTemplate) {
-        return sqlSessionTemplate.getMapper(StationEntityMapper.class);
-    }
-
-    @Bean
-    public CommodityEntityMapper commodityEntityMapper(@Qualifier("sqlSessionTemplate") SqlSessionTemplate sqlSessionTemplate) {
-        return sqlSessionTemplate.getMapper(CommodityEntityMapper.class);
-    }
-
-    @Bean
-    public EconomyEntityMapper economyEntityMapper(@Qualifier("sqlSessionTemplate") SqlSessionTemplate sqlSessionTemplate) {
-        return sqlSessionTemplate.getMapper(EconomyEntityMapper.class);
-    }
-
-    @Bean
-    public HistoricStationCommodityEntityMapper historicStationCommodityEntityMapper(@Qualifier("sqlSessionTemplate") SqlSessionTemplate sqlSessionTemplate) {
-        return sqlSessionTemplate.getMapper(HistoricStationCommodityEntityMapper.class);
-    }
-
-    @Bean
-    public StationTypeEntityMapper stationTypeEntityMapper(@Qualifier("sqlSessionTemplate") SqlSessionTemplate sqlSessionTemplate) {
-        return sqlSessionTemplate.getMapper(StationTypeEntityMapper.class);
     }
 }

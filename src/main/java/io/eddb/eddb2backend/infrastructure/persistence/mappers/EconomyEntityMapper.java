@@ -1,20 +1,18 @@
 package io.eddb.eddb2backend.infrastructure.persistence.mappers;
 
-import io.eddb.eddb2backend.application.dto.persistence.CommodityEntity;
 import io.eddb.eddb2backend.application.dto.persistence.EconomyEntity;
-import io.eddb.eddb2backend.infrastructure.persistence.util.AbstractEntityIdTypeHandler;
-import io.eddb.eddb2backend.infrastructure.persistence.util.CommodityEntityIdTypeHandler;
-import io.eddb.eddb2backend.infrastructure.persistence.util.EconomyEntityIdTypeHandler;
+import io.eddb.eddb2backend.infrastructure.persistence.util.UuidTypeHandler;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Mapper
 public interface EconomyEntityMapper {
 
     @Results(id = "EconomyEntityResult", value = {
-            @Result(property = "id", column = "id", javaType = EconomyEntity.Id.class, typeHandler = EconomyEntityIdTypeHandler.class),
+            @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name")
     })
     @Select("SELECT id, name FROM economies")
@@ -24,10 +22,10 @@ public interface EconomyEntityMapper {
     @Select("SELECT id, name FROM economies WHERE id = #{id}")
     Optional<EconomyEntity> findById(@Param("id") UUID id);
 
-    @Insert("INSERT INTO economies (id, name) VALUES (#{id.value}, #{name})")
+    @Insert("INSERT INTO economies (id, name) VALUES (#{id}, #{name})")
     int insert(EconomyEntity economyEntity);
 
-    @Update("UPDATE economies SET name = #{name} WHERE id = #{id.value}")
+    @Update("UPDATE economies SET name = #{name} WHERE id = #{id}")
     int update(EconomyEntity economyEntity);
 
     @Delete("DELETE FROM economies WHERE id = #{id}")

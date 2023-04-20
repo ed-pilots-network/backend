@@ -12,17 +12,8 @@ import java.util.UUID;
 @Builder
 public class StationTypeEntity {
 
-    private Id id;
+    private UUID id;
     private String name;
-
-    @Getter
-    @Setter
-    @ToString
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class Id {
-        UUID value;
-    }
 }
 
 

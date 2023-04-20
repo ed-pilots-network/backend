@@ -28,19 +28,19 @@ public class SystemRepository implements io.eddb.eddb2backend.domain.repository.
     public SystemEntity update(SystemEntity entity) {
         systemEntityMapper.update(entity);
         return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("system with id: " + entity.getId().getValue() + " could not be found after update"));
+                .orElseThrow(() -> new RuntimeException("system with id: " + entity.getId() + " could not be found after update"));
     }
 
     @Override
     public SystemEntity create(SystemEntity entity) {
-        entity.setId(new SystemEntity.Id(UUID.randomUUID()));
+        entity.setId(UUID.randomUUID());
         systemEntityMapper.insert(entity);
         return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("system with id: " + entity.getId().getValue() + " could not be found after create"));
+                .orElseThrow(() -> new RuntimeException("system with id: " + entity.getId() + " could not be found after create"));
     }
 
     @Override
-    public Optional<SystemEntity> findById(SystemEntity.Id id) {
-        return systemEntityMapper.findById(id.getValue());
+    public Optional<SystemEntity> findById(UUID id) {
+        return systemEntityMapper.findById(id);
     }
 }
