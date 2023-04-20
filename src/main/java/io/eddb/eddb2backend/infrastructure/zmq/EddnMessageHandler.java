@@ -32,7 +32,6 @@ public class EddnMessageHandler implements MessageHandler {
     private final ObjectMapper objectMapper;
     private final KafkaTopicHandler kafkaTopicHandler;
     private final KafkaTemplate<String, JsonNode> jsonNodekafkaTemplate;
-    private final CommodityV3MessageProcessor commodityV3MessageProcessor;
 
     @Override
     public void handleMessage(@NonNull Message<?> message) throws MessagingException {

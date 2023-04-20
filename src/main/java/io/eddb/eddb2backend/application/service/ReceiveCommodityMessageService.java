@@ -18,7 +18,6 @@ import static io.eddb.eddb2backend.domain.util.CollectionUtil.toList;
 @RequiredArgsConstructor
 public class ReceiveCommodityMessageService implements ReceiveCommodityMessageUsecase {
 
-
     private final SystemRepository systemRepository;
     private final StationRepository stationRepository;
     private final CommodityRepository commodityRepository;

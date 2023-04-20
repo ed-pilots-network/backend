@@ -9,7 +9,7 @@ services:
     ports:
       - '2181:2181'
     volumes:
-      - "zookeeper_data:/bitnami"
+      - "zookeeper:/bitnami"
 
   kafka:
     image: "bitnami/kafka:3.4"
@@ -21,20 +21,25 @@ services:
     ports:
       - '9092:9092'
     volumes:
-      - "kafka_data:/bitnami/kafka"
+      - "kafka:/bitnami/kafka"
     depends_on:
       - zookeeper
 
+  postgres:
+    image: "postgres:14.1-alpine"
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - "postgres:/var/lib/postgresql/data"
+
 volumes:
-  zookeeper_data:
+  zookeeper:
     driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ./docker_data/zookeeper
-  kafka_data:
+  kafka:
     driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ./docker_data/kafka
+  postgres:
+    driver: local
