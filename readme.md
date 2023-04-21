@@ -84,6 +84,18 @@ The infrastructure layer contains the following components:
 
 ### Building and Running the Application
 
+Prior to running the application some infrastructure needs to be added. 
+Run the following command in the project's root directory:
+```
+docker compose up
+```
+
+Edit your runtime configuration environment variables with:
+```
+EDDB2_DB_URL=jdbc:postgresql://localhost:5432/postgres;EDDB2_USERNAME=postgres;EDDB2_PASSWORD=postgres;KAFKA_URL=localhost:9092
+```
+
+
 To build the application, run the following command in the project's root directory:
 
 ```
