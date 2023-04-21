@@ -6,7 +6,7 @@ import io.eddb.eddb2backend.application.dto.eddn.withMessageTimestamp;
 
 public interface EddnMessageProcessor<T extends withMessageTimestamp> {
 
-    void listen(JsonNode json) throws JsonProcessingException;
+    void listen(JsonNode json) throws JsonProcessingException, InterruptedException;
 
     void handle(T message);
 

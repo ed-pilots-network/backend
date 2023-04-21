@@ -4,7 +4,7 @@ import io.eddb.eddb2backend.application.dto.eddn.CommodityMessage;
 import io.eddb.eddb2backend.application.dto.persistence.CommodityEntity;
 import io.eddb.eddb2backend.application.dto.persistence.HistoricStationCommodityEntity;
 import io.eddb.eddb2backend.application.dto.persistence.SchemaLatestTimestampEntity;
-import io.eddb.eddb2backend.application.usecase.ReceiveCommodityMessageUsecase;
+import io.eddb.eddb2backend.application.usecase.ReceiveCommodityMessageUseCase;
 import io.eddb.eddb2backend.domain.repository.CommodityRepository;
 import io.eddb.eddb2backend.domain.repository.EconomyRepository;
 import io.eddb.eddb2backend.domain.repository.HistoricStationCommodityRepository;
@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static io.eddb.eddb2backend.domain.util.CollectionUtil.toList;
 
 @RequiredArgsConstructor
-public class ReceiveCommodityMessageService implements ReceiveCommodityMessageUsecase {
+public class SynchronizedReceiveCommodityMessageService implements ReceiveCommodityMessageUseCase {
 
     private final SystemRepository systemRepository;
     private final StationRepository stationRepository;
@@ -37,7 +37,7 @@ public class ReceiveCommodityMessageService implements ReceiveCommodityMessageUs
 
     @Override
     @Transactional
-    public void receive(CommodityMessage.V3 commodityMessage) {
+    public synchronized void receive(CommodityMessage.V3 commodityMessage) {
         System.out.println("ReceiveCommodityMessageService.receive -> commodityMessage: " + commodityMessage);
 
         var updateTimestamp = commodityMessage.getMessageTimeStamp();
