@@ -1,19 +1,26 @@
 package io.eddb.eddb2backend.application.dto.eddn;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.eddb.eddb2backend.domain.util.TimestampConverter;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 public interface CommodityMessage {
     @Data
     @NoArgsConstructor
-    class V3 {
+    class V3 implements withMessageTimestamp {
         @JsonProperty("$schemaRef")
         private String schemaRef;
         @JsonProperty("header")
         private Common.EddnMessageHeader header;
         @JsonProperty("message")
         private Message message;
+
+        @Override
+        public LocalDateTime getMessageTimeStamp() {
+            return TimestampConverter.convertToLocalDateTime(message.getTimestamp());
+        }
 
         @Data
         @NoArgsConstructor

@@ -4,10 +4,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.eddb.eddb2backend.domain.exception.UnsupportedSchemaException;
 import io.eddb.eddb2backend.infrastructure.kafka.KafkaTopicHandler;
-import io.eddb.eddb2backend.infrastructure.kafka.processor.CommodityV3MessageProcessor;
-import io.eddb.eddb2backend.infrastructure.kafka.processor.EddnMessageProcessor;
-import lombok.AccessLevel;
-import lombok.Getter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.task.TaskExecutor;
@@ -16,13 +17,6 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
 import org.springframework.retry.support.RetryTemplate;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.Objects;
-import java.util.zip.DataFormatException;
-import java.util.zip.Inflater;
 
 @RequiredArgsConstructor
 public class EddnMessageHandler implements MessageHandler {

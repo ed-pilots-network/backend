@@ -3,14 +3,25 @@ package io.eddb.eddb2backend.application.service;
 import io.eddb.eddb2backend.application.dto.eddn.CommodityMessage;
 import io.eddb.eddb2backend.application.dto.persistence.CommodityEntity;
 import io.eddb.eddb2backend.application.dto.persistence.HistoricStationCommodityEntity;
+import io.eddb.eddb2backend.application.dto.persistence.SchemaLatestTimestampEntity;
 import io.eddb.eddb2backend.application.usecase.ReceiveCommodityMessageUsecase;
-import io.eddb.eddb2backend.domain.repository.*;
-import io.eddb.eddb2backend.domain.util.TimestampConverter;
+import io.eddb.eddb2backend.domain.repository.CommodityRepository;
+import io.eddb.eddb2backend.domain.repository.EconomyRepository;
+import io.eddb.eddb2backend.domain.repository.HistoricStationCommodityRepository;
+import io.eddb.eddb2backend.domain.repository.SchemaLatestTimestampRepository;
+import io.eddb.eddb2backend.domain.repository.StationRepository;
+import io.eddb.eddb2backend.domain.repository.SystemRepository;
+import java.util.AbstractMap;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 import static io.eddb.eddb2backend.domain.util.CollectionUtil.toList;
 
@@ -22,11 +33,24 @@ public class ReceiveCommodityMessageService implements ReceiveCommodityMessageUs
     private final CommodityRepository commodityRepository;
     private final EconomyRepository economyRepository;
     private final HistoricStationCommodityRepository historicStationCommodityRepository;
+    private final SchemaLatestTimestampRepository schemaLatestTimestampRepository;
 
     @Override
     @Transactional
     public void receive(CommodityMessage.V3 commodityMessage) {
         System.out.println("ReceiveCommodityMessageService.receive -> commodityMessage: " + commodityMessage);
+
+        var updateTimestamp = commodityMessage.getMessageTimeStamp();
+        String schemaRef = commodityMessage.getSchemaRef();
+        if (!schemaLatestTimestampRepository.isAfterLatest(schemaRef, updateTimestamp)) {
+            System.out.println("ReceiveCommodityMessageService.receive -> the message is not newer than what we already processed, skipping");
+            return; // the message is not newer than what we already processed, skipping
+        } else {
+            schemaLatestTimestampRepository.createOrUpdate(SchemaLatestTimestampEntity.builder()
+                    .schema(schemaRef)
+                    .timestamp(updateTimestamp)
+                    .build());
+        }
 
         CommodityMessage.V3.Message payload = commodityMessage.getMessage();
         CommodityMessage.V3.Commodity[] commodities = payload.getCommodities();
@@ -35,10 +59,7 @@ public class ReceiveCommodityMessageService implements ReceiveCommodityMessageUs
         String systemName = payload.getSystemName();
         String stationName = payload.getStationName();
         String[] prohibitedCommodities = payload.getProhibited();
-        String timestamp = payload.getTimestamp();
 
-        //convert timestamp to localDateTime
-        var updateTimestamp = TimestampConverter.convertToLocalDateTime(timestamp);
 
         // find system, if not found create
         var system = systemRepository.findOrCreateByName(systemName);

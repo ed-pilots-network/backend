@@ -21,7 +21,6 @@ public class CommodityV3MessageProcessor implements EddnMessageProcessor<Commodi
 
     @Override
     public void handle(CommodityMessage.V3 message) {
-        System.out.println(message);
         receiveCommodityMessageUsecase.receive(message);
     }
 
