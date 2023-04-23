@@ -23,6 +23,8 @@
         <mybatis.version>3.0.0</mybatis.version>
         <mybatis.typehandlers.version>1.0.2</mybatis.typehandlers.version>
         <liquibase.version>4.21.1</liquibase.version>
+        <slf4j.version></slf4j.version>
+        <log4j.version></log4j.version>
     </properties>
     <dependencies>
         <dependency>

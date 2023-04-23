@@ -5,6 +5,8 @@ import io.eddb.eddb2backend.application.dto.persistence.*;
 import io.eddb.eddb2backend.application.usecase.ReceiveCommodityMessageUseCase;
 import io.eddb.eddb2backend.domain.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -15,6 +17,7 @@ import static io.eddb.eddb2backend.domain.util.CollectionUtil.toList;
 
 @RequiredArgsConstructor
 public class SynchronizedReceiveCommodityMessageService implements ReceiveCommodityMessageUseCase {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SynchronizedReceiveCommodityMessageService.class);
 
     private final SystemRepository systemRepository;
     private final StationRepository stationRepository;
@@ -28,7 +31,7 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
     @Override
     @Transactional
     public synchronized void receive(CommodityMessage.V3 commodityMessage) {
-        System.out.println("ReceiveCommodityMessageService.receive -> commodityMessage: " + commodityMessage);
+        LOGGER.debug("ReceiveCommodityMessageService.receive -> commodityMessage: " + commodityMessage);
 
         var updateTimestamp = commodityMessage.getMessageTimeStamp();
         String schemaRef = commodityMessage.getSchemaRef();
@@ -38,7 +41,7 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
         isLatest = isLatestMessageAndUpdateTimestamp(updateTimestamp, schemaRef);
 
         if (!isLatest) {
-            System.out.println("ReceiveCommodityMessageService.receive -> the message is not newer than what we already processed, skipping");
+            LOGGER.info("ReceiveCommodityMessageService.receive -> the message is not newer than what we already processed, skipping");
             return;
         }
 
@@ -73,13 +76,12 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
         //save market data
         saveCommodityMarketData(updateTimestamp, commodities, station);
 
-        System.out.println("ReceiveCommodityMessageService.receive -> station: " + station);
+        LOGGER.debug("ReceiveCommodityMessageService.receive -> station: " + station);
     }
 
     private boolean isLatestMessageAndUpdateTimestamp(LocalDateTime updateTimestamp, String schemaRef) {
         boolean isLatest;
         if (!schemaLatestTimestampRepository.isAfterLatest(schemaRef, updateTimestamp)) {
-            System.out.println("ReceiveCommodityMessageService.receive -> the message is not newer than what we already processed, skipping");
             isLatest = false; // the message is not newer than what we already processed
         } else {
             // the message is newer than what we already processed, update ore create the timestamp

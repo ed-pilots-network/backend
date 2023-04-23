@@ -4,13 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.eddb.eddb2backend.domain.exception.UnsupportedSchemaException;
 import io.eddb.eddb2backend.infrastructure.kafka.KafkaTopicHandler;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
-import java.util.zip.DataFormatException;
-import java.util.zip.Inflater;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.Message;
@@ -18,8 +15,16 @@ import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
 import org.springframework.retry.support.RetryTemplate;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
+
 @RequiredArgsConstructor
 public class EddnMessageHandler implements MessageHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EddnMessageHandler.class);
 
     private final TaskExecutor taskExecutor;
     private final RetryTemplate retryTemplate;
@@ -35,8 +40,7 @@ public class EddnMessageHandler implements MessageHandler {
                 return null;
             });
         } catch (Throwable e) {
-            System.err.println("message could not be handled in time, dropping");
-            e.printStackTrace(System.err);
+            LOGGER.error("could not handle message in time, dropping it", e);
         }
     }
 
@@ -57,26 +61,24 @@ public class EddnMessageHandler implements MessageHandler {
                             jsonNodekafkaTemplate.send(topicName, jsonNode).whenComplete(
                                     (kafkaResult, kafkaSendException) -> {
                                         if (Objects.nonNull(kafkaSendException)) {
-                                            //TODO log and handle kafka exception
+                                            //TODO handle kafka exception
+                                            LOGGER.error("could not send message to Kafka", kafkaSendException);
                                             throw new RuntimeException(kafkaSendException.getMessage());
                                         }
                                     }
                             );
                         } else {
-                            //TODO log and handle kafka exception
+                            //TODO handle kafka exception
+                            LOGGER.error("could not create topic on Kafka", kafkaTopicCreateException);
                             throw new RuntimeException(kafkaTopicCreateException.getMessage());
                         }
                     });
 
-        } catch (DataFormatException dfe) {
-            dfe.printStackTrace();
-            //TODO add some damn logging framework!!!
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-            //TODO add some damn logging framework!!!
+        } catch (DataFormatException | IOException e) {
+            LOGGER.error("Error processing EDDN message", e);
         } catch (UnsupportedSchemaException use) {
             //noop
-            System.out.println(use.getMessage());
+            LOGGER.trace("Schema is unsupported, we will not process", use);
         }
     }
 
