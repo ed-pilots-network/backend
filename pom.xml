@@ -8,11 +8,11 @@
         <version>3.0.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>io.eddb</groupId>
-    <artifactId>eddb2-backend</artifactId>
+    <groupId>io.edpn</groupId>
+    <artifactId>edpn-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>eddb2-backend</name>
-    <description>eddb2-backend</description>
+    <name>edpn-backend</name>
+    <description>edpn-backend</description>
     <properties>
         <java.version>17</java.version>
         <testcontainers.version>1.17.6</testcontainers.version>
@@ -23,8 +23,6 @@
         <mybatis.version>3.0.0</mybatis.version>
         <mybatis.typehandlers.version>1.0.2</mybatis.typehandlers.version>
         <liquibase.version>4.21.1</liquibase.version>
-        <slf4j.version></slf4j.version>
-        <log4j.version></log4j.version>
     </properties>
     <dependencies>
         <dependency>
@@ -142,7 +140,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>io.eddb.eddb2backend.Eddb2BackendApplication</mainClass>
+                    <mainClass>io.edpn.edpnbackend.edpnBackendApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>
