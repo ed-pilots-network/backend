@@ -36,10 +36,22 @@ services:
     volumes:
       - "postgres:/var/lib/postgresql/data"
 
+  mongodb:
+    image: "mongo:5.0"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongodb
+      - MONGO_INITDB_ROOT_PASSWORD=mongodb
+    ports:
+      - '27017:27017'
+    volumes:
+      - "mongodb:/data/db"
+
 volumes:
   zookeeper:
     driver: local
   kafka:
     driver: local
   postgres:
+    driver: local
+  mongodb:
     driver: local

@@ -6,9 +6,11 @@ import io.edpn.edpnbackend.domain.exception.UnsupportedSchemaException;
 import io.edpn.edpnbackend.infrastructure.kafka.KafkaTopicHandler;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
@@ -31,6 +33,7 @@ public class EddnMessageHandler implements MessageHandler {
     private final ObjectMapper objectMapper;
     private final KafkaTopicHandler kafkaTopicHandler;
     private final KafkaTemplate<String, JsonNode> jsonNodekafkaTemplate;
+    private final MongoTemplate mongoTemplate;
 
     @Override
     public void handleMessage(@NonNull Message<?> message) throws MessagingException {
@@ -55,31 +58,40 @@ public class EddnMessageHandler implements MessageHandler {
             String schemaRef = jsonNode.get("$schemaRef").asText();
             String sanitizedTopicName = sanitizeTopicName(schemaRef);
 
-            kafkaTopicHandler.createTopicIfNotExists(sanitizedTopicName)
-                    .whenComplete((topicName, kafkaTopicCreateException) -> {
-                        if (Objects.isNull(kafkaTopicCreateException)) {
-                            jsonNodekafkaTemplate.send(topicName, jsonNode).whenComplete(
-                                    (kafkaResult, kafkaSendException) -> {
-                                        if (Objects.nonNull(kafkaSendException)) {
-                                            //TODO handle kafka exception
-                                            LOGGER.error("could not send message to Kafka", kafkaSendException);
-                                            throw new RuntimeException(kafkaSendException.getMessage());
-                                        }
-                                    }
-                            );
-                        } else {
-                            //TODO handle kafka exception
-                            LOGGER.error("could not create topic on Kafka", kafkaTopicCreateException);
-                            throw new RuntimeException(kafkaTopicCreateException.getMessage());
-                        }
-                    });
-
+            saveToMongo(json, schemaRef);
+            sendToKafka(jsonNode, sanitizedTopicName);
         } catch (DataFormatException | IOException e) {
             LOGGER.error("Error processing EDDN message", e);
         } catch (UnsupportedSchemaException use) {
             //noop
             LOGGER.trace("Schema is unsupported, we will not process", use);
         }
+    }
+
+    private void saveToMongo(String json, String schemaRef) {
+        Document document = Document.parse(json);
+        mongoTemplate.insert(document, schemaRef);
+    }
+
+    private void sendToKafka(JsonNode jsonNode, String sanitizedTopicName) {
+        kafkaTopicHandler.createTopicIfNotExists(sanitizedTopicName)
+                .whenComplete((topicName, kafkaTopicCreateException) -> {
+                    if (Objects.isNull(kafkaTopicCreateException)) {
+                        jsonNodekafkaTemplate.send(topicName, jsonNode).whenComplete(
+                                (kafkaResult, kafkaSendException) -> {
+                                    if (Objects.nonNull(kafkaSendException)) {
+                                        //TODO handle kafka exception
+                                        LOGGER.error("could not send message to Kafka", kafkaSendException);
+                                        throw new RuntimeException(kafkaSendException.getMessage());
+                                    }
+                                }
+                        );
+                    } else {
+                        //TODO handle kafka exception
+                        LOGGER.error("could not create topic on Kafka", kafkaTopicCreateException);
+                        throw new RuntimeException(kafkaTopicCreateException.getMessage());
+                    }
+                });
     }
 
     public String sanitizeTopicName(String schemaRef) {
