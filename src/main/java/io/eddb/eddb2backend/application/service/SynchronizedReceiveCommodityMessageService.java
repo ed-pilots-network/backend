@@ -2,26 +2,16 @@ package io.eddb.eddb2backend.application.service;
 
 import io.eddb.eddb2backend.application.dto.eddn.CommodityMessage;
 import io.eddb.eddb2backend.application.dto.persistence.CommodityEntity;
-import io.eddb.eddb2backend.application.dto.persistence.HistoricStationCommodityEntity;
+import io.eddb.eddb2backend.application.dto.persistence.CommodityMarketDatumEntity;
+import io.eddb.eddb2backend.application.dto.persistence.HistoricStationCommodityMarketDatumEntity;
 import io.eddb.eddb2backend.application.dto.persistence.SchemaLatestTimestampEntity;
 import io.eddb.eddb2backend.application.usecase.ReceiveCommodityMessageUseCase;
-import io.eddb.eddb2backend.domain.repository.CommodityRepository;
-import io.eddb.eddb2backend.domain.repository.EconomyRepository;
-import io.eddb.eddb2backend.domain.repository.HistoricStationCommodityRepository;
-import io.eddb.eddb2backend.domain.repository.SchemaLatestTimestampRepository;
-import io.eddb.eddb2backend.domain.repository.StationRepository;
-import io.eddb.eddb2backend.domain.repository.SystemRepository;
-import java.util.AbstractMap;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import io.eddb.eddb2backend.domain.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static io.eddb.eddb2backend.domain.util.CollectionUtil.toList;
 
@@ -32,8 +22,9 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
     private final StationRepository stationRepository;
     private final CommodityRepository commodityRepository;
     private final EconomyRepository economyRepository;
-    private final HistoricStationCommodityRepository historicStationCommodityRepository;
+    private final HistoricStationCommodityMarketDatumRepository historicStationCommodityMarketDatumRepository;
     private final SchemaLatestTimestampRepository schemaLatestTimestampRepository;
+    private final CommodityMarketDatumRepository commodityMarketDatumRepository;
 
     @Override
     @Transactional
@@ -96,10 +87,8 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
                     .forEach(commodity -> {
                         UUID commodityId = commodityRepository.findOrCreateByName(commodity.getName()).getId();
 
-                        var hsce = HistoricStationCommodityEntity.builder()
-                                .stationId(station.getId())
-                                .commodityId(commodityId)
-                                .timestamp(updateTimestamp)
+                        var cmde = CommodityMarketDatumEntity.builder()
+                                .id(UUID.randomUUID())
                                 .meanPrice(commodity.getMeanPrice())
                                 .buyPrice(commodity.getBuyPrice())
                                 .sellPrice(commodity.getSellPrice())
@@ -109,8 +98,17 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
                                 .demandBracket(commodity.getDemandBracket())
                                 .statusFlags(toList(commodity.getStatusFlags()))
                                 .build();
+                        commodityMarketDatumRepository.create(cmde);
 
-                        historicStationCommodityRepository.create(hsce);
+                        var hsce = HistoricStationCommodityMarketDatumEntity.builder()
+                                .id(UUID.randomUUID())
+                                .stationId(station.getId())
+                                .commodityId(commodityId)
+                                .timestamp(updateTimestamp)
+                                .marketDatumId(cmde.getId())
+                                .build();
+
+                        historicStationCommodityMarketDatumRepository.create(hsce);
                     });
         }
 
