@@ -16,7 +16,7 @@ public class HistoricStationCommodityMarketDatumRepository implements io.edpn.ed
         historicStationCommodityMarketDatumEntityMapper.update(entity);
 
         return getById(entity)
-                .orElseThrow(() -> new RuntimeException("historicStationCommodity with id: " + getIdString(entity) + " could not be found after update"));
+                .orElseThrow(() -> new RuntimeException("historicStationCommodity with id: " + entity.getId() + " could not be found after update"));
     }
 
     @Override
@@ -29,10 +29,6 @@ public class HistoricStationCommodityMarketDatumRepository implements io.edpn.ed
         historicStationCommodityMarketDatumEntityMapper.insert(entity);
 
         return getById(entity)
-                .orElseThrow(() -> new RuntimeException("historicStationCommodity with id: " + getIdString(entity) + " could not be found after create"));
-    }
-
-    private String getIdString(HistoricStationCommodityMarketDatumEntity entity) {
-        return String.format("[stationId: '%s', commodityId: '%s', timestamp: '%s']", entity.getStationId(), entity.getCommodityId(), entity.getTimestamp());
+                .orElseThrow(() -> new RuntimeException("historicStationCommodity with id: " + entity.getId() + " could not be found after create"));
     }
 }

@@ -2,7 +2,6 @@ package io.edpn.edpnbackend.configuration;
 
 import io.edpn.edpnbackend.domain.repository.*;
 import io.edpn.edpnbackend.infrastructure.persistence.mappers.*;
-import io.edpn.edpnbackend.infrastructure.persistence.repository.HistoricStationCommodityMarketDatumRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,8 +19,8 @@ public class RepositoryConfiguration {
     }
 
     @Bean
-    public io.edpn.edpnbackend.domain.repository.HistoricStationCommodityMarketDatumRepository historicStationCommodityRepository(HistoricStationCommodityMarketDatumEntityMapper historicStationCommodityMarketDatumEntityMapper) {
-        return new HistoricStationCommodityMarketDatumRepository(historicStationCommodityMarketDatumEntityMapper);
+    public HistoricStationCommodityMarketDatumRepository historicStationCommodityRepository(HistoricStationCommodityMarketDatumEntityMapper historicStationCommodityMarketDatumEntityMapper) {
+        return new io.edpn.edpnbackend.infrastructure.persistence.repository.HistoricStationCommodityMarketDatumRepository(historicStationCommodityMarketDatumEntityMapper);
     }
 
     @Bean
@@ -37,11 +36,6 @@ public class RepositoryConfiguration {
     @Bean
     public SchemaLatestTimestampRepository schemaLatestTimestampRepository(SchemaLatestTimestampEntityMapper schemaLatestTimestampEntityMapper) {
         return new io.edpn.edpnbackend.infrastructure.persistence.repository.SchemaLatestTimestampRepository(schemaLatestTimestampEntityMapper);
-    }
-
-    @Bean
-    public CommodityMarketDatumRepository commodityMarketDatumRepository(CommodityMarketDatumEntityMapper commodityMarketDatumEntityMapper) {
-        return new io.edpn.edpnbackend.infrastructure.persistence.repository.CommodityMarketDatumRepository(commodityMarketDatumEntityMapper);
     }
 
     @Bean

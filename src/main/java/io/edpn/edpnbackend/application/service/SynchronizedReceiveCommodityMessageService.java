@@ -25,7 +25,6 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
     private final EconomyRepository economyRepository;
     private final HistoricStationCommodityMarketDatumRepository historicStationCommodityMarketDatumRepository;
     private final SchemaLatestTimestampRepository schemaLatestTimestampRepository;
-    private final CommodityMarketDatumRepository commodityMarketDatumRepository;
     private final StationSystemRepository stationSystemRepository;
 
     @Override
@@ -100,8 +99,11 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
                     .forEach(commodity -> {
                         UUID commodityId = commodityRepository.findOrCreateByName(commodity.getName()).getId();
 
-                        var cmde = CommodityMarketDatumEntity.builder()
+                        var hsce = HistoricStationCommodityMarketDatumEntity.builder()
                                 .id(UUID.randomUUID())
+                                .stationId(station.getId())
+                                .commodityId(commodityId)
+                                .timestamp(updateTimestamp)
                                 .meanPrice(commodity.getMeanPrice())
                                 .buyPrice(commodity.getBuyPrice())
                                 .sellPrice(commodity.getSellPrice())
@@ -110,15 +112,6 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
                                 .demand(commodity.getDemand())
                                 .demandBracket(commodity.getDemandBracket())
                                 .statusFlags(toList(commodity.getStatusFlags()))
-                                .build();
-                        commodityMarketDatumRepository.create(cmde);
-
-                        var hsce = HistoricStationCommodityMarketDatumEntity.builder()
-                                .id(UUID.randomUUID())
-                                .stationId(station.getId())
-                                .commodityId(commodityId)
-                                .timestamp(updateTimestamp)
-                                .marketDatumId(cmde.getId())
                                 .build();
 
                         historicStationCommodityMarketDatumRepository.create(hsce);

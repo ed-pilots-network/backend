@@ -19,8 +19,29 @@
             <column name="timestamp" type="timestamp">
                 <constraints nullable="false"/>
             </column>
-            <column name="market_datum_id" type="uuid">
-                <constraints nullable="true" foreignKeyName="fk_historic_station_commodity_market_data_market_datum_id" referencedTableName="commodity_market_data" referencedColumnNames="id"/>
+            <column name="mean_price" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="buy_price" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="stock" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="stock_bracket" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="sell_price" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="demand" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="demand_bracket" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="status_flags" type="varchar(255)">
+                <constraints nullable="true"/>
             </column>
         </createTable>
     </changeSet>
