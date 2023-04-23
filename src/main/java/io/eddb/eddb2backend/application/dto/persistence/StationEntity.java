@@ -18,6 +18,7 @@ public class StationEntity {
     private UUID id;
     private String name;
     private Long edMarketId;
+    private UUID StationTypeId;
     private LocalDateTime marketUpdatedAt;
     private boolean hasCommodities;
     private Collection<UUID> prohibitedCommodityIds;
