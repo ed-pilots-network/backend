@@ -43,4 +43,9 @@ public class RepositoryConfiguration {
     public CommodityMarketDatumRepository commodityMarketDatumRepository(CommodityMarketDatumEntityMapper commodityMarketDatumEntityMapper) {
         return new io.eddb.eddb2backend.infrastructure.persistence.repository.CommodityMarketDatumRepository(commodityMarketDatumEntityMapper);
     }
+
+    @Bean
+    public StationSystemRepository StationSystemRepository(StationSystemEntityMapper stationSystemEntityMapper) {
+        return new io.eddb.eddb2backend.infrastructure.persistence.repository.StationSystemRepository(stationSystemEntityMapper);
+    }
 }

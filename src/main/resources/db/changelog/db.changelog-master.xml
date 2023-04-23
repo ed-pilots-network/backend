@@ -16,5 +16,6 @@
     <include file="db/changelog/db.changelog-0008-create-station_economy_proportions-table.xml"/>
     <include file="db/changelog/db.changelog-0009-create-schema_latest_timestamp-table.xml"/>
     <include file="db/changelog/db.changelog-0010-create-historic_station_commodities-table.xml"/>
+    <include file="db/changelog/db.changelog-0011-create-system_stations-table.xml"/>
 
 </databaseChangeLog>
