@@ -13,6 +13,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>edpn-backend</name>
     <description>edpn-backend</description>
+    <packaging>jar</packaging>
     <properties>
         <java.version>17</java.version>
         <testcontainers.version>1.17.6</testcontainers.version>
@@ -132,19 +133,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>io.edpn.edpnbackend.edpnBackendApplication</mainClass>
+                    <mainClass>io.edpn.edpnbackend.EdpnBackendApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>
