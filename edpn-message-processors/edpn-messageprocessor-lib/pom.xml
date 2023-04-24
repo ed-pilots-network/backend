@@ -15,6 +15,7 @@
         <mybatis.version>3.5.13</mybatis.version>
         <lombo.version>1.18.26</lombo.version>
         <jackson.version>2.14.2</jackson.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
         <dependency>
