@@ -1,25 +1,44 @@
-# Use Alpine-based OpenJDK 17 image as the base container
-FROM openjdk:17-alpine
+# Use Alpine-based OpenJDK 17 image as builder container
+FROM openjdk:17-alpine3.14 as builder
 
 # Set working directory
 WORKDIR /app
 
 # Copy Maven wrapper and pom.xml to the working directory
-COPY mvnw ./
+COPY ./mvnw ./
 COPY .mvn .mvn
 COPY pom.xml ./
 
-# Download dependencies
+#Fixing line ends in wrapper. CRLF to LF
+RUN dos2unix mvnw
+#Download dependencies
 RUN ./mvnw dependency:go-offline -B
 
 # Copy source files
 COPY src src
 
 # Build the application
-RUN ./mvnw clean install -DskipTests
+RUN ./mvnw clean install -DskipTests -T 8C
 
-# Copy the executable JAR file
-RUN cp target/*.jar app.jar
+FROM openjdk:17-alpine3.14
+# Creating new nonroot user
 
+RUN adduser --disabled-password --gecos '' backend
+# Pointing to user's directory
+
+WORKDIR /home/backend
+# Swapping user
+
+USER backend
+#Copy the executable JAR file from builder
+
+COPY --chown=backend:backend --from=builder /app/target/*.jar ./
+#Copy jar
+
+RUN cp ./*.jar app.jar
+
+#Expose tomcat server port
+EXPOSE 8080
 # Set the entrypoint
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+ENTRYPOINT java $RUN_ARGS-jar app.jar

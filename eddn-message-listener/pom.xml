@@ -18,6 +18,7 @@
         <testcontainers.version>1.17.6</testcontainers.version>
         <spring-integration-zeromq.version>6.0.4</spring-integration-zeromq.version>
         <jackson.version>2.14.2</jackson.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
         <dependency>
@@ -98,19 +99,13 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <mainClass>io.edpn.backend.eddnmessagelistener.EddnMessageListenerApplication</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>io.edpn.backend.eddnmessagelistener.EddnMessageListenerApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>
