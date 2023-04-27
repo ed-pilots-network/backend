@@ -30,6 +30,7 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
     @Override
     @Transactional
     public synchronized void receive(CommodityMessage.V3 commodityMessage) {
+        long start = System.nanoTime();
         LOGGER.debug("ReceiveCommodityMessageService.receive -> commodityMessage: " + commodityMessage);
 
         var updateTimestamp = commodityMessage.getMessageTimeStamp();
@@ -41,8 +42,10 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
 
         if (!isLatest) {
             LOGGER.info("ReceiveCommodityMessageService.receive -> the message is not newer than what we already processed, skipping");
+            LOGGER.trace("ReceiveCommodityMessageService.receive -> took " + (System.nanoTime() - start) + " nanosecond");
             return;
         }
+        LOGGER.info("ReceiveCommodityMessageService.receive -> the message is newer than what we already processed, starting processing");
 
         CommodityMessage.V3.Message payload = commodityMessage.getMessage();
         CommodityMessage.V3.Commodity[] commodities = payload.getCommodities();
@@ -76,6 +79,8 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
         saveCommodityMarketData(updateTimestamp, commodities, station);
 
         LOGGER.debug("ReceiveCommodityMessageService.receive -> station: " + station);
+        LOGGER.info("ReceiveCommodityMessageService.receive -> the message is has been processed");
+        LOGGER.trace("ReceiveCommodityMessageService.receive -> took " + (System.nanoTime() - start) + " nanosecond");
     }
 
     private boolean isLatestMessageAndUpdateTimestamp(LocalDateTime updateTimestamp, String schemaRef) {
