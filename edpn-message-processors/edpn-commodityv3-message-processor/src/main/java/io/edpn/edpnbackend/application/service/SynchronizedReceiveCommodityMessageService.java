@@ -115,6 +115,8 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
                                 .build();
 
                         historicStationCommodityMarketDatumRepository.create(hsce);
+                        //data cleanup
+                        historicStationCommodityMarketDatumRepository.cleanupRedundantData(hsce);
                     });
         }
     }

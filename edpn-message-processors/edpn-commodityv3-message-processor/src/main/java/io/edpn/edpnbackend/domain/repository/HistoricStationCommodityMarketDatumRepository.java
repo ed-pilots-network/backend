@@ -11,4 +11,6 @@ public interface HistoricStationCommodityMarketDatumRepository {
 
     HistoricStationCommodityMarketDatumEntity create(HistoricStationCommodityMarketDatumEntity entity);
 
+    public void cleanupRedundantData(HistoricStationCommodityMarketDatumEntity entity);
+
 }

@@ -57,4 +57,24 @@ public interface HistoricStationCommodityMarketDatumEntityMapper {
 
     @Delete("DELETE FROM historic_station_commodity_market_data WHERE id = #{id}")
     int deleteById(@Param("id") UUID id);
+
+    @Delete("""
+            WITH cte AS (
+                SELECT *,
+                    ROW_NUMBER() OVER (PARTITION BY station_id, commodity_id ORDER BY timestamp) rn,
+                    LAG(timestamp) OVER (PARTITION BY station_id, commodity_id ORDER BY timestamp) prev_timestamp,
+                    LEAD(timestamp) OVER (PARTITION BY station_id, commodity_id ORDER BY timestamp) next_timestamp
+                FROM historic_station_commodity_market_data
+                WHERE station_id = #{stationId} AND commodity_id = #{commodityId}
+            )
+            DELETE FROM historic_station_commodity_market_data
+            WHERE id IN (
+                SELECT id
+                FROM cte
+                WHERE rn > 1
+                  AND (next_timestamp IS NOT NULL OR prev_timestamp IS NOT NULL)
+                  AND (next_timestamp = timestamp + INTERVAL '1 microsecond' OR prev_timestamp = timestamp - INTERVAL '1 microsecond')
+            )
+            """)
+    int deleteObsoleteInbetweenValues(@Param("stationId") UUID stationId, @Param("commodityId") UUID commodityId);
 }

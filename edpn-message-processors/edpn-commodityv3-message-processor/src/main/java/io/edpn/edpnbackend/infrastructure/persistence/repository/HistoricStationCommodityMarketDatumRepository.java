@@ -31,4 +31,9 @@ public class HistoricStationCommodityMarketDatumRepository implements io.edpn.ed
         return getById(entity)
                 .orElseThrow(() -> new RuntimeException("historicStationCommodity with id: " + entity.getId() + " could not be found after create"));
     }
+
+    @Override
+    public void cleanupRedundantData(HistoricStationCommodityMarketDatumEntity entity) {
+        historicStationCommodityMarketDatumEntityMapper.deleteObsoleteInbetweenValues(entity.getStationId(), entity.getCommodityId());
+    }
 }
