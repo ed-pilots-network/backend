@@ -1,0 +1,14 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>io.edpn</groupId>
+    <artifactId>backend</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>eddn-message-listener</module>
+        <module>edpn-message-processors/edpn-messageprocessor-lib</module>
+        <module>edpn-message-processors/edpn-commodityv3-message-processor</module>
+        <module>edpn-rest</module>
+    </modules>
+</project>
