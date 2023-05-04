@@ -35,7 +35,7 @@ public interface HistoricStationCommodityMarketDatumEntityMapper {
 
     @ResultMap("HistoricStationCommodityMarketDatumResult")
     @Select("SELECT id, station_id, commodity_id, timestamp, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags FROM historic_station_commodity_market_data WHERE commodity_id = #{commodityId} AND timestamp BETWEEN #{startTimestamp} AND #{endTimestamp}")
-    List<HistoricStationCommodityMarketDatumEntity> findByIdCommodityIdAndTimestampBetween(@Param("commodityId") UUID commodityId, @Param("startTimestamp") LocalDateTime startTimestamp, @Param("endTimestamp") LocalDateTime endTimestamp);
+    List<HistoricStationCommodityMarketDatumEntity> findByCommodityIdAndTimestampBetween(@Param("commodityId") UUID commodityId, @Param("startTimestamp") LocalDateTime startTimestamp, @Param("endTimestamp") LocalDateTime endTimestamp);
 
     @ResultMap("HistoricStationCommodityMarketDatumResult")
     @Select("SELECT id, station_id, commodity_id, timestamp, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags FROM historic_station_commodity_market_data WHERE station_id = #{stationId} AND timestamp BETWEEN #{startTimestamp} AND #{endTimestamp}")

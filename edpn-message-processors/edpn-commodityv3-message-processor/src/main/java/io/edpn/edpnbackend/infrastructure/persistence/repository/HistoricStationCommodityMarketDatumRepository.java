@@ -2,6 +2,9 @@ package io.edpn.edpnbackend.infrastructure.persistence.repository;
 
 import io.edpn.edpnbackend.application.dto.persistence.HistoricStationCommodityMarketDatumEntity;
 import io.edpn.edpnbackend.infrastructure.persistence.mappers.HistoricStationCommodityMarketDatumEntityMapper;
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
@@ -35,5 +38,10 @@ public class HistoricStationCommodityMarketDatumRepository implements io.edpn.ed
     @Override
     public void cleanupRedundantData(HistoricStationCommodityMarketDatumEntity entity) {
         historicStationCommodityMarketDatumEntityMapper.deleteObsoleteInbetweenValues(entity.getStationId(), entity.getCommodityId());
+    }
+
+    @Override
+    public Collection<HistoricStationCommodityMarketDatumEntity> findByCommodityIdAndTimestampBetween(UUID commodityId, LocalDateTime start, LocalDateTime end) {
+        return historicStationCommodityMarketDatumEntityMapper.findByCommodityIdAndTimestampBetween(commodityId, start, end);
     }
 }
