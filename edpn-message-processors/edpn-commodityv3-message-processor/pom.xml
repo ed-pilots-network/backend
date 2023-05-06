@@ -23,6 +23,7 @@
         <hamcrest.version>2.2</hamcrest.version>
         <mybatis.version>3.0.0</mybatis.version>
         <liquibase.version>4.21.1</liquibase.version>
+        <apache.commons.math.version>3.6.1</apache.commons.math.version>
         <messageprocessor.lib.version>0.0.1-SNAPSHOT</messageprocessor.lib.version>
     </properties>
     <dependencies>
@@ -106,7 +107,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
-        </dependency>
+        </dependency><dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-math3</artifactId>
+        <version>${apache.commons.math.version}</version>
+    </dependency>
 
         <!-- test -->
         <dependency>
