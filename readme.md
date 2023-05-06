@@ -92,7 +92,7 @@ docker compose up
 
 Edit your runtime configuration environment variables with:
 ```
-EDPN_DB_URL=jdbc:postgresql://localhost:5432/postgres;EDPN_USERNAME=postgres;EDPN_PASSWORD=postgres;KAFKA_URL=localhost:9092
+EDPN_DB_URL=jdbc:postgresql://localhost:5432/postgres;EDPN_MONGO_AUTHENTICATION_DATABASE=admin;EDPN_MONGO_DATABASE_NAME=mongo;EDPN_MONGO_HOST=localhost;EDPN_MONGO_PASSWORD=mongodb;EDPN_MONGO_PORT=27017;EDPN_MONGO_USERNAME=mongodb;EDPN_PASSWORD=postgres;EDPN_USERNAME=postgres;KAFKA_URL=localhost:9092
 ```
 
 
