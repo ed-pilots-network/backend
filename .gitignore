@@ -200,3 +200,10 @@ README.html
 .idea
 .exercism
 /.idea/
+
+### sensitive data
+*.cer
+*.jks
+*.pem
+*.key
+*.p12
