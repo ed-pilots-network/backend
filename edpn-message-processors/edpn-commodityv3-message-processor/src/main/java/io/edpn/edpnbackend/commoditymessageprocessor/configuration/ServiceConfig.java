@@ -3,7 +3,6 @@ package io.edpn.edpnbackend.commoditymessageprocessor.configuration;
 import io.edpn.edpnbackend.commoditymessageprocessor.application.service.SynchronizedReceiveCommodityMessageService;
 import io.edpn.edpnbackend.commoditymessageprocessor.application.usecase.ReceiveCommodityMessageUseCase;
 import io.edpn.edpnbackend.commoditymessageprocessor.domain.repository.*;
-import io.edpn.edpnbackend.domain.repository.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

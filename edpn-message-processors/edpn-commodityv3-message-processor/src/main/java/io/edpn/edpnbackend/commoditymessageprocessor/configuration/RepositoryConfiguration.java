@@ -2,8 +2,6 @@ package io.edpn.edpnbackend.commoditymessageprocessor.configuration;
 
 import io.edpn.edpnbackend.commoditymessageprocessor.domain.repository.*;
 import io.edpn.edpnbackend.commoditymessageprocessor.infrastructure.persistence.mappers.*;
-import io.edpn.edpnbackend.domain.repository.*;
-import io.edpn.edpnbackend.infrastructure.persistence.mappers.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
