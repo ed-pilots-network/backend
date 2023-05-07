@@ -30,6 +30,7 @@ ___
 ## Project Structure
 The EDPN Backend project consists of several independent projects contained within the root project to separate out the different parts:
 
+- `liquibase`: This project is used store all the database migration scripts in a central place.
 - `message-listener`: The project used to consume the EDDN message stream. It will consume the messages, split them out per type and send them to a Kafka.
 - `rest`: The project that provides the REST API.
 - `message-processors`: A containing folder for the message processor projects that consume the messages from the Kafka.
@@ -114,9 +115,10 @@ To install and run the EDPN Backend project locally, follow these steps:
 4. run `mvn clean install -f message-processors/messageprocessor-lib/pom.xml` to install the library jar in your local Maven
 5. run `docker-compose -f docker-compose.yml up` in terminal to launch the needed local infrastructure in docker
 6. run the projects with the local profiles:
-   1. `mvn spring-boot:run -Dspring-boot.run.profiles=local -f message-listener/pom.xml`
-   2. `mvn spring-boot:run -Dspring-boot.run.profiles=local -f message-processors/commodityv3-processor/pom.xml`
-   3. `mvn spring-boot:run -Dspring-boot.run.profiles=local -f rest/pom.xml`
+   1. `mvn spring-boot:run -Dspring-boot.run.profiles=local -f liquibase/pom.xml`
+   2. `mvn spring-boot:run -Dspring-boot.run.profiles=local -f message-listener/pom.xml`
+   3. `mvn spring-boot:run -Dspring-boot.run.profiles=local -f message-processors/commodityv3-processor/pom.xml`
+   4. `mvn spring-boot:run -Dspring-boot.run.profiles=local -f rest/pom.xml`
 
 ___
 ## Reporting Issues

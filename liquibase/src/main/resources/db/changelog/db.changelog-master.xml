@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Include the changeset that creates the systems table -->
+    <include file="db/changelog/db.changelog-0001-create-systems-table.xml"/>
+    <include file="db/changelog/db.changelog-0002-create-commodities-table.xml"/>
+    <include file="db/changelog/db.changelog-0003-create-economies-table.xml"/>
+    <include file="db/changelog/db.changelog-0004-create-station_types-table.xml"/>
+    <include file="db/changelog/db.changelog-0005-create-stations-table.xml"/>
+    <include file="db/changelog/db.changelog-0006-create-station_station_type-table.xml"/>
+    <include file="db/changelog/db.changelog-0007-create-station_prohibited_commodities-table.xml"/>
+    <include file="db/changelog/db.changelog-0008-create-station_economy_proportions-table.xml"/>
+    <include file="db/changelog/db.changelog-0009-create-schema_latest_timestamp-table.xml"/>
+    <include file="db/changelog/db.changelog-0010-create-historic_station_commodities-table.xml"/>
+    <include file="db/changelog/db.changelog-0011-create-system_stations-table.xml"/>
+
+</databaseChangeLog>
