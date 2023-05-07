@@ -79,7 +79,7 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
         saveCommodityMarketData(updateTimestamp, commodities, station);
 
         LOGGER.debug("ReceiveCommodityMessageService.receive -> station: " + station);
-        LOGGER.info("ReceiveCommodityMessageService.receive -> the message is has been processed");
+        LOGGER.info("ReceiveCommodityMessageService.receive -> the message has been processed");
         LOGGER.trace("ReceiveCommodityMessageService.receive -> took " + (System.nanoTime() - start) + " nanosecond");
     }
 
