@@ -31,11 +31,11 @@ ___
 ## Project Structure
 The EDPN Backend project consists of several independent projects contained within the root project to separate out the different parts:
 
-- `eddn-message-listener`: The project used to consume the EDDN message stream. It will consume the messages, split them out per type and send them to a Kafka.
-- `edpn-rest`: The project that provides the REST API.
-- `edpn-message-processors`: A containing folder for the message processor projects that consume the messages from the Kafka.
-- `edpn-messageprocessor-lib`: A project inside `edpn-message-processors` that provides a shared library for the other message processors.
-- `edpn-commodityv3-message-processor`: A project that consumes the commodity messages from the Kafka, processes the data, and stores it in the database.
+- `message-listener`: The project used to consume the EDDN message stream. It will consume the messages, split them out per type and send them to a Kafka.
+- `rest`: The project that provides the REST API.
+- `message-processors`: A containing folder for the message processor projects that consume the messages from the Kafka.
+- `messageprocessor-lib`: A project inside `message-processors` that provides a shared library for the other message processors.
+- `commodityv3-processor`: A project that consumes the commodity messages from the Kafka, processes the data, and stores it in the database.
 
 ### Code structure
 The projects follow a hexagonal architecture pattern and adheres to Domain-Driven Design (DDD) principles.
@@ -100,7 +100,7 @@ ___
 ## Data flow
 The EDPN Backend project, follow the following data flow:
 
-1. The `eddn-message-listener` project to consumes the EDDN message stream and store it in a Kafka
+1. The `message-listener` project to consumes the EDDN message stream and store it in a Kafka
 2. The message processor projects consume and process the data from the Kafka stream and store it in a Postgres database
 3. The REST APIs access the Postgres database to serve the data
 
@@ -112,12 +112,12 @@ To install and run the EDPN Backend project locally, follow these steps:
 2. Install Maven
 2. Install Docker
 3. Clone the EDPN Backend project from GitHub
-4. run `mvn clean install -f edpn-message-processors/edpn-messageprocessor-lib/pom.xml` to install the library jar in your local Maven
+4. run `mvn clean install -f message-processors/messageprocessor-lib/pom.xml` to install the library jar in your local Maven
 5. run `docker-compose -f docker-compose.yml up` in terminal to launch the needed local needed infrastructure in docker
 6. run the projects with the local profiles:
-   1. `mvn spring-boot:run -Dspring.profiles.active=local -f eddn-message-listener/pom.xml`
-   2. `mvn spring-boot:run -Dspring.profiles.active=local -f edpn-message-processors/edpn-commodityv3-message-processor/pom.xml`
-   3. `mvn spring-boot:run -Dspring.profiles.active=local -f edpn-rest/pom.xml`
+   1. `mvn spring-boot:run -Dspring.profiles.active=local -f message-listener/pom.xml`
+   2. `mvn spring-boot:run -Dspring.profiles.active=local -f message-processors/commodityv3-processor/pom.xml`
+   3. `mvn spring-boot:run -Dspring.profiles.active=local -f rest/pom.xml`
 
 ___
 ## Reporting Issues

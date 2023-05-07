@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.edpn.backend.messageprocessor</groupId>
-    <artifactId>edpn-commodityv3-message-processor</artifactId>
+    <artifactId>commodityv3-processor</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>edpn-commodityv3-message-processor</name>
     <description>edpn-backend</description>
@@ -29,7 +29,7 @@
     <dependencies>
         <dependency>
             <groupId>io.edpn.backend.messageprocessor</groupId>
-            <artifactId>edpn-messageprocessor-lib</artifactId>
+            <artifactId>messageprocessor-lib</artifactId>
             <version>${messageprocessor.lib.version}</version>
         </dependency>
         <dependency>

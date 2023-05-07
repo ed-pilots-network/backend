@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.edpn.backend</groupId>
-    <artifactId>edpn-rest</artifactId>
+    <artifactId>rest</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>edpn-rest</name>
     <description>Public REST endpoint to expose the data gathered by EDPN</description>

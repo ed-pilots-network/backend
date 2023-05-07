@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.edpn.backend</groupId>
-    <artifactId>eddn-message-listener</artifactId>
+    <artifactId>message-listener</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>eddn-message-listener</name>
     <description>Listener to consume the EDDN messages</description>

@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.edpn.backend.messageprocessor</groupId>
-    <artifactId>edpn-messageprocessor-lib</artifactId>
+    <artifactId>messageprocessor-lib</artifactId>
     <packaging>jar</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <name>edpn-messageprocessor-lib</name>

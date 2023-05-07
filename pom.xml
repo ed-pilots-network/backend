@@ -6,9 +6,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>eddn-message-listener</module>
-        <module>edpn-message-processors/edpn-messageprocessor-lib</module>
-        <module>edpn-message-processors/edpn-commodityv3-message-processor</module>
-        <module>edpn-rest</module>
+        <module>message-listener</module>
+        <module>message-processors/messageprocessor-lib</module>
+        <module>message-processors/commodityv3-processor</module>
+        <module>rest</module>
     </modules>
 </project>
