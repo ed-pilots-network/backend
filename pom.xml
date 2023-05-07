@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project>
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.edpn</groupId>
@@ -6,9 +7,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>message-listener</module>
-        <module>message-processors/messageprocessor-lib</module>
-        <module>message-processors/commodityv3-processor</module>
-        <module>rest</module>
+      <module>liquibase</module>
+      <module>message-listener</module>
+      <module>message-processors/messageprocessor-lib</module>
+      <module>message-processors/commodityv3-processor</module>
+      <module>rest</module>
     </modules>
 </project>
