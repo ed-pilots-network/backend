@@ -13,7 +13,6 @@ The Elite Dangerous Pilot Network Backend (EDPN Backend) project provides a REST
 - [License](#license)
 - [Contact](#contact)
 - [Further info](#further-info)
-  - 
 
 ___
 ## Technologies Used
