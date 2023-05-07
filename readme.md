@@ -140,7 +140,7 @@ ___
 MyBatis is a popular persistence framework that offers support for custom SQL, stored procedures, and advanced mappings. We chose MyBatis over JPA for this project due to its flexibility in handling complex database operations.
 
 #### Annotation-based Configuration
-In our project, MyBatis configuration is achieved entirely through annotations. Mappers are marked with the `@Mapper` annotation, and queries are specified within the interfaces using annotations. For more details on the bean configuration, refer to the `configuration.io.edpn.edpnbackend.commoditymessageprocessor.MyBatisConfiguration` class.
+In our project, MyBatis configuration is achieved entirely through annotations. Mappers are marked with the `@Mapper` annotation, and queries are specified within the interfaces using annotations. For more details on the bean configuration, refer to the `io.edpn.backend.messageprocessor.commodityv3.configuration.MyBatisConfiguration` class for an example.
 
 ### Liquibase
 Liquibase is a powerful open-source, database-independent library used for tracking, managing, and applying database schema changes. In this project, Liquibase is responsible for handling database migrations and changes.
