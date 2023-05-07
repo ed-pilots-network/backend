@@ -1,0 +1,57 @@
+version: "3.8"
+
+name: "edpn"
+services:
+  zookeeper:
+    image: "bitnami/zookeeper:3.8"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    ports:
+      - '2181:2181'
+    volumes:
+      - "zookeeper:/bitnami"
+
+  kafka:
+    image: "bitnami/kafka:3.4"
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_COMPRESSION_TYPE=gzip
+    ports:
+      - '9092:9092'
+    volumes:
+      - "kafka:/bitnami/kafka"
+    depends_on:
+      - zookeeper
+
+  postgres:
+    image: "postgres:14.1-alpine"
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - "postgres:/var/lib/postgresql/data"
+
+  mongodb:
+    image: "mongo:5.0"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongodb
+      - MONGO_INITDB_ROOT_PASSWORD=mongodb
+    ports:
+      - '27017:27017'
+    volumes:
+      - "mongodb:/data/db"
+
+volumes:
+  zookeeper:
+    driver: local
+  kafka:
+    driver: local
+  postgres:
+    driver: local
+  mongodb:
+    driver: local
