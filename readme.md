@@ -1,24 +1,44 @@
-# EDPN.IO
+# Elite Dangerous Pilot Network Backend (EDPN Backend)
+The Elite Dangerous Pilot Network Backend (EDPN Backend) project provides a REST API that consumes data from the Elite Dangerous Data Network (EDDN) message stream. The data is then processed and stored in a database for use by other applications.
 
 ## Table of Contents
 
-1. [purpose and architecture](#purpose-and-architecture)
-2. [project structure](#project-structure)
-3. [API Endpoints](#api-endpoints)
-4. [Lombok and JPA Best Practices Coding Guide](#Lombok-and-JPA-Best-Practices-Coding-Guide)
-5. [JPA entity management Best Practices and guidelines](#JPA-entity-management-Best-Practices-and-guidelines)
+- [Technologies Used](#technologies-used)
+- [Project Structure](#project-structure)
+    - [Code structure](#code-structure)
+- [Installation](#installation)
+- [Data flow](#data-flow)
+- [Reporting Issues](#reporting-issues)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
+- [Further info](#further-info)
+  - 
 
----
-## Purpose and architecture 
+___
+## Technologies Used
+The EDPN Backend project is built using the following technologies:
 
-This project is a Spring Boot application that receives data in the form of messages form [EDDN](https://github.com/EDCD/EDDN). These messages are transformed and store in a database. This project also implements a RESTful API for retrieving this stored data stored.  
+- [Spring Boot](https://spring.io/projects/spring-boot): An open-source Java-based framework used to create stand-alone, production-grade Spring applications quickly and easily.
+- [Maven](https://maven.apache.org/): A build automation tool used to manage dependencies and build Java projects.
+- [Kafka](https://kafka.apache.org/): A distributed streaming platform used to build real-time data pipelines and streaming applications.
+- [Postgres](https://www.postgresql.org/): An open-source relational database management system used to store data for the EDPN Backend project.
+- [MyBatis](https://mybatis.org/): A persistence framework that simplifies the development of Java applications working with relational databases.
+- [Liquibase](https://www.liquibase.org/): An open-source database schema migration tool used to track, manage, and apply database changes.
+- [Docker](https://www.docker.com/): A platform used to build, ship, and run distributed applications.
 
-The project follows a hexagonal architecture pattern and adheres to Domain-Driven Design (DDD) principles.
-
----
+___
 ## Project Structure
+The EDPN Backend project consists of several independent projects contained within the root project to separate out the different parts:
 
-The project is structured into the following packages:
+- `eddn-message-listener`: The project used to consume the EDDN message stream. It will consume the messages, split them out per type and send them to a Kafka.
+- `edpn-rest`: The project that provides the REST API.
+- `edpn-message-processors`: A containing folder for the message processor projects that consume the messages from the Kafka.
+- `edpn-messageprocessor-lib`: A project inside `edpn-message-processors` that provides a shared library for the other message processors.
+- `edpn-commodityv3-message-processor`: A project that consumes the commodity messages from the Kafka, processes the data, and stores it in the database.
+
+### Code structure
+The projects follow a hexagonal architecture pattern and adheres to Domain-Driven Design (DDD) principles.
 
 ```
 src
@@ -48,8 +68,7 @@ src
 └── ...
 ```
 
----
-### Application Layer
+#### Application Layer
 
 The application layer contains the following components:
 
@@ -59,87 +78,72 @@ The application layer contains the following components:
 - **service**: This package the implementations of the use cases.
 - **usecase**: This package contains use case classes that represent the core business logic of the application.
 
----
-### Configuration Layer
+#### Configuration Layer
 
 The config layer contains all the Bean configurations and annotations needed to instantiate the beans and bootstrap the Spring boot application
 
----
 ### Domain Layer
 
 The domain layer contains the following components:
 
 - **model**: This package contains the domain models (entities and value objects) that represent the core concepts of the problem domain.
 - **repository**: This package contains the repository interfaces that define the contract for persisting and retrieving domain models.
-- **repository**: This package contains utility classes and interfaces that do not directly relate to the program functionality, like custom map or list implementations.
 
----
 ### Infrastructure Layer
 
 The infrastructure layer contains the following components:
 
 - **adapter**: This package contains adapter classes that implement the repository interfaces from the domain layer by utilizing the persistence layer's repositories.
-- **zmq**: This package contains the message handlers components for [Elite Dangerous Data Network](https://github.com/EDCD/EDDN), such as message handlers transformers and selectors. 
 - **persistence**: This package contains the persistence-related components, such as Mybatis mappers and repositories.
 
-### Building and Running the Application
+___
+## Data flow
+The EDPN Backend project, follow the following data flow:
 
-Prior to running the application some infrastructure needs to be added. 
-Run the following command in the project's root directory:
-```
-docker compose up
-```
+1. The `eddn-message-listener` project to consumes the EDDN message stream and store it in a Kafka
+2. The message processor projects consume and process the data from the Kafka stream and store it in a Postgres database
+3. The REST APIs access the Postgres database to serve the data
 
-Edit your runtime configuration environment variables with:
-```
-EDPN_DB_URL=jdbc:postgresql://localhost:5432/postgres;EDPN_MONGO_AUTHENTICATION_DATABASE=admin;EDPN_MONGO_DATABASE_NAME=mongo;EDPN_MONGO_HOST=localhost;EDPN_MONGO_PASSWORD=mongodb;EDPN_MONGO_PORT=27017;EDPN_MONGO_USERNAME=mongodb;EDPN_PASSWORD=postgres;EDPN_USERNAME=postgres;KAFKA_URL=localhost:9092
-```
+___
+## Installation
+To install and run the EDPN Backend project locally, follow these steps:
 
+1. Install Java 17 or higher
+2. Install Maven
+2. Install Docker
+3. Clone the EDPN Backend project from GitHub
+4. run `mvn clean install -f edpn-message-processors/edpn-messageprocessor-lib/pom.xml` to install the library jar in your local Maven
+5. run `docker-compose -f docker-compose.yml up` in terminal to launch the needed local needed infrastructure in docker
+6. run the projects with the local profiles:
+   1. `mvn spring-boot:run -Dspring.profiles.active=local -f eddn-message-listener/pom.xml`
+   2. `mvn spring-boot:run -Dspring.profiles.active=local -f edpn-message-processors/edpn-commodityv3-message-processor/pom.xml`
+   3. `mvn spring-boot:run -Dspring.profiles.active=local -f edpn-rest/pom.xml`
 
-To build the application, run the following command in the project's root directory:
+___
+## Reporting Issues
+To report an issue with the EDPN Backend project or to request a feature, please open an issue on the project's GitHub repository. You can also join the [discord](https://discord.gg/RrhRmDQD) and make a suggestion there in `ideas` section.
 
-```
-./mvnw clean install
-```
+___
+## Contributing
+How to contribute to the project (and much more) is explained in our [charter](https://github.com/ed-pilots-network/charter).
 
-To run the application, execute the following command in the project's root directory:
+___
+## License
+We are still in license discussion, but we are sure to use a copyleft open source license like ApacheV2 or MIT
 
-```
-./mvnw spring-boot:run
-```
+___
+## Contact
+The best way to contact us would be to join our [discord](https://discord.gg/RrhRmDQD) and ping the @Admin or @Developer groups
 
-The application will start and expose the RESTful API endpoints at `http://localhost:8080/api/stations`.
-
----
-## API Endpoints
-
-todo: this section needs work as this is example code
-
-The following endpoints are available:
-
-- `POST /api/stations`: Create a new station.
-- `GET /api/stations`: Retrieve a list of all stations.
-- `GET /api/stations/{id}`: Retrieve a station by its ID.
-- `PUT /api/stations/{id}`: Update a station by its ID.
-- `DELETE /api/stations/{id}`: Delete a station by its ID.
-
-For detailed information about request and response payloads, please refer to the `StationRequest`, `StationResponse` classes and the `StationController` class.
-
----
-## # MyBatis and Liquibase Configuration
-
-This section provides an overview of the MyBatis and Liquibase configuration in our project. Both technologies play a vital role in handling database operations.
-
-### MyBatis Configuration
-
+___
+## Further info
+### MyBatis
 MyBatis is a popular persistence framework that offers support for custom SQL, stored procedures, and advanced mappings. We chose MyBatis over JPA for this project due to its flexibility in handling complex database operations.
 
 #### Annotation-based Configuration
-
 In our project, MyBatis configuration is achieved entirely through annotations. Mappers are marked with the `@Mapper` annotation, and queries are specified within the interfaces using annotations. For more details on the bean configuration, refer to the `configuration.io.edpn.edpnbackend.commoditymessageprocessor.MyBatisConfiguration` class.
 
-### Liquibase Configuration
-
+### Liquibase
 Liquibase is a powerful open-source, database-independent library used for tracking, managing, and applying database schema changes. In this project, Liquibase is responsible for handling database migrations and changes.
 
 #### XML-based Configuration
