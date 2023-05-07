@@ -99,7 +99,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>io.edpn.backend.eddnmessagelistener.EddnMessageListenerApplication</mainClass>
+                    <mainClass>io.edpn.backend.messagelistener.MessageListenerApplication</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>

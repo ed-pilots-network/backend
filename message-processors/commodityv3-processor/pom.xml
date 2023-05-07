@@ -11,8 +11,8 @@
     <groupId>io.edpn.backend.messageprocessor</groupId>
     <artifactId>commodityv3-processor</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>edpn-commodityv3-message-processor</name>
-    <description>edpn-backend</description>
+    <name>edpn-commodityv3-processor</name>
+    <description>Commodity message processor</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
@@ -133,7 +133,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>io.edpn.edpnbackend.edpnBackendApplication</mainClass>
+                    <mainClass>io.edpn.backend.messageprocessor.commodityv3.CommodityV3ProcessorApplication</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
