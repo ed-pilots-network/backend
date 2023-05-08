@@ -1,7 +1,16 @@
 package io.edpn.backend.rest.domain.model.system;
 
-import lombok.Builder;
+import lombok.*;
 
+import java.util.UUID;
+
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public record Security(Long id, String name) {
+public class Security {
+    private UUID id;
+    private String name;
 }
