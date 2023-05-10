@@ -118,6 +118,7 @@ To install and run the EDPN Backend project locally, follow these steps:
    1. `mvn spring-boot:run -Dspring-boot.run.profiles=local -f liquibase/pom.xml`
    2. `mvn spring-boot:run -Dspring-boot.run.profiles=local -f message-listener/pom.xml`
    3. `mvn spring-boot:run -Dspring-boot.run.profiles=local -f message-processors/commodityv3-processor/pom.xml`
+   3. `mvn spring-boot:run -Dspring-boot.run.profiles=local -f message-processors/fsssignaldiscoveredv1-processor/pom.xml`
    4. `mvn spring-boot:run -Dspring-boot.run.profiles=local -f rest/pom.xml`
 
 ___

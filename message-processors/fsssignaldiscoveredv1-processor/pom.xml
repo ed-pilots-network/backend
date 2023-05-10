@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.edpn.backend.messageprocessor</groupId>
-    <artifactId>commodityv3-processor</artifactId>
+    <artifactId>fsssignaldiscoveredv1-processor</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>edpn-commodityv3-processor</name>
-    <description>Commodity message processor</description>
+    <name>edpn-fsssignaldiscoveredv1-processor</name>
+    <description>FSS Signal Discovered message processor</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
@@ -98,11 +98,6 @@
             <artifactId>jackson-annotations</artifactId>
             <version>${jackson.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-math3</artifactId>
-            <version>${apache.commons.math.version}</version>
-        </dependency>
 
         <!-- test -->
         <dependency>
@@ -124,7 +119,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>io.edpn.backend.messageprocessor.commodityv3.CommodityV3ProcessorApplication</mainClass>
+                    <mainClass>io.edpn.backend.messageprocessor.fsssignaldiscoveredv1.FssSignalDiscoveredV1ProcessorApplication</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
