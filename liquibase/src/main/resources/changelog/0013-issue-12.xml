@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="a93e40ae-f46f-4a9a-a955-f72ef8209559" author="pveeckhout">
+
+        <dropNotNullConstraint columnDataType="bigint" columnName="ed_market_id" tableName="stations"/>
+
+        <addUniqueConstraint tableName="historic_station_commodity_market_data"
+                             columnNames="station_id, commodity_id, timestamp"/>
+
+        <!-- Add new column for system_id with foreign key constraint -->
+        <addColumn tableName="stations">
+            <column name="system_id" type="uuid">
+                <constraints nullable="true" foreignKeyName="fk_system_id" referencedTableName="systems"
+                             referencedColumnNames="id"/>
+            </column>
+        </addColumn>
+
+        <!-- Update stations table with data from station_systems table -->
+        <sql>
+            UPDATE stations s
+            SET system_id = ss.system_id FROM station_systems ss
+            WHERE s.id = ss.station_id;
+        </sql>
+
+        <!-- Alter column to set it as non-nullable with no default -->
+        <addNotNullConstraint tableName="stations" columnName="system_id" columnDataType="uuid"/>
+
+        <!-- Remove station_systems table -->
+        <dropTable tableName="station_systems"/>
+
+    </changeSet>
+
+</databaseChangeLog>

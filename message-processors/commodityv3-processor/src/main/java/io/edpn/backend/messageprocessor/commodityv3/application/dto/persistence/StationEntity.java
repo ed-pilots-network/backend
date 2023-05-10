@@ -23,4 +23,5 @@ public class StationEntity {
     private boolean hasCommodities;
     private Collection<UUID> prohibitedCommodityIds;
     private Map<UUID, Double> economyEntityIdProportionMap;
+    private UUID systemId;
 }
