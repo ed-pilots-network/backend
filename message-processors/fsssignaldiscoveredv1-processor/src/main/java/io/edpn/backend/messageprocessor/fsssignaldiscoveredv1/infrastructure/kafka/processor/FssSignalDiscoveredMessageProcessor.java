@@ -14,7 +14,7 @@ import java.util.concurrent.Semaphore;
 @RequiredArgsConstructor
 public class FssSignalDiscoveredMessageProcessor implements EddnMessageProcessor<FssSignalDiscoveredMessage.V1> {
 
-    private final ReceiveFssSignalDiscoveredMessageUseCase receiveCommodityMessageUsecase;
+    private final ReceiveFssSignalDiscoveredMessageUseCase receiveFssSignalDiscoveredMessageUsecase;
     private final ObjectMapper objectMapper;
     private final Semaphore semaphore = new Semaphore(1); // Change the number of permits if needed
 
@@ -31,7 +31,7 @@ public class FssSignalDiscoveredMessageProcessor implements EddnMessageProcessor
 
     @Override
     public void handle(FssSignalDiscoveredMessage.V1 message) {
-        receiveCommodityMessageUsecase.receive(message);
+        receiveFssSignalDiscoveredMessageUsecase.receive(message);
     }
 
     @Override

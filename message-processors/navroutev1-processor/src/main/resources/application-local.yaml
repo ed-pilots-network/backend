@@ -9,7 +9,7 @@ spring:
 
 management:
   server:
-    port: 8084
+    port: 8086
 
 server:
-  port: 8084
+  port: 8086

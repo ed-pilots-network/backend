@@ -18,5 +18,6 @@
     <include file="changelog/0010-create-historic_station_commodities-table.xml"/>
     <include file="changelog/0011-create-system_stations-table.xml"/>
     <include file="changelog/0012-expand-systems-table.xml"/>
+    <include file="changelog/0014-issue-16.xml"/>
 
 </databaseChangeLog>
