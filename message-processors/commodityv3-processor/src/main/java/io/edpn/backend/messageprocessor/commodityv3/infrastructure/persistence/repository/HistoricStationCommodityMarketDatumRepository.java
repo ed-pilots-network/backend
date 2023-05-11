@@ -2,13 +2,12 @@ package io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.
 
 import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.HistoricStationCommodityMarketDatumEntity;
 import io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.mappers.HistoricStationCommodityMarketDatumEntityMapper;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.UUID;
-import lombok.RequiredArgsConstructor;
-
 import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 public class HistoricStationCommodityMarketDatumRepository implements io.edpn.backend.messageprocessor.commodityv3.domain.repository.HistoricStationCommodityMarketDatumRepository {
@@ -19,26 +18,31 @@ public class HistoricStationCommodityMarketDatumRepository implements io.edpn.ba
     public HistoricStationCommodityMarketDatumEntity update(HistoricStationCommodityMarketDatumEntity entity) {
         historicStationCommodityMarketDatumEntityMapper.update(entity);
 
-        return getById(entity)
+        return getById(entity.getId())
                 .orElseThrow(() -> new RuntimeException("historicStationCommodity with id: " + entity.getId() + " could not be found after update"));
     }
 
     @Override
-    public Optional<HistoricStationCommodityMarketDatumEntity> getById(HistoricStationCommodityMarketDatumEntity entity) {
-        return historicStationCommodityMarketDatumEntityMapper.findById(entity.getStationId(), entity.getCommodityId(), entity.getTimestamp());
+    public Optional<HistoricStationCommodityMarketDatumEntity> getByStationIdAndCommodityIdAndTimestamp(UUID stationId, UUID commodityId, LocalDateTime timestamp) {
+        return historicStationCommodityMarketDatumEntityMapper.findByStationIdAndCommodityIdAndTimestamp(stationId, commodityId, timestamp);
+    }
+
+    @Override
+    public Optional<HistoricStationCommodityMarketDatumEntity> getById(UUID historicStationCommodityMarketDatumId) {
+        return historicStationCommodityMarketDatumEntityMapper.findById(historicStationCommodityMarketDatumId);
     }
 
     @Override
     public HistoricStationCommodityMarketDatumEntity create(HistoricStationCommodityMarketDatumEntity entity) {
         historicStationCommodityMarketDatumEntityMapper.insert(entity);
 
-        return getById(entity)
+        return getByStationIdAndCommodityIdAndTimestamp(entity.getStationId(), entity.getCommodityId(), entity.getTimestamp())
                 .orElseThrow(() -> new RuntimeException("historicStationCommodity with id: " + entity.getId() + " could not be found after create"));
     }
 
     @Override
-    public void cleanupRedundantData(HistoricStationCommodityMarketDatumEntity entity) {
-        historicStationCommodityMarketDatumEntityMapper.deleteObsoleteInbetweenValues(entity.getStationId(), entity.getCommodityId());
+    public void cleanupRedundantData(UUID stationId, UUID commodityId) {
+        historicStationCommodityMarketDatumEntityMapper.deleteObsoleteInbetweenValues(stationId, commodityId);
     }
 
     @Override

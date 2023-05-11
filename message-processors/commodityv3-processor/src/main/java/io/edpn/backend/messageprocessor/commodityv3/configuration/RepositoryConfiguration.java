@@ -32,14 +32,4 @@ public class RepositoryConfiguration {
     public SystemRepository systemRepository(SystemEntityMapper systemEntityMapper) {
         return new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.SystemRepository(systemEntityMapper);
     }
-
-    @Bean
-    public SchemaLatestTimestampRepository schemaLatestTimestampRepository(SchemaLatestTimestampEntityMapper schemaLatestTimestampEntityMapper) {
-        return new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.SchemaLatestTimestampRepository(schemaLatestTimestampEntityMapper);
-    }
-
-    @Bean
-    public StationSystemRepository StationSystemRepository(StationSystemEntityMapper stationSystemEntityMapper) {
-        return new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.StationSystemRepository(stationSystemEntityMapper);
-    }
 }

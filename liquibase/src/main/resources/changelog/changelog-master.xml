@@ -18,6 +18,8 @@
     <include file="changelog/0010-create-historic_station_commodities-table.xml"/>
     <include file="changelog/0011-create-system_stations-table.xml"/>
     <include file="changelog/0012-expand-systems-table.xml"/>
+    <include file="changelog/0013.1-add-unique-constraint-historic_station_commodity_market_data.xml"/>
+    <include file="changelog/0013.2-drop-station_systems-join-table.xml"/>
     <include file="changelog/0014-add-star_class-to-systems-table.xml"/>
 
 </databaseChangeLog>
