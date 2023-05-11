@@ -1,6 +1,7 @@
 package io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository;
 
 import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.CommodityEntity;
+import io.edpn.backend.messageprocessor.commodityv3.domain.repository.CommodityRepository;
 import io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.mappers.CommodityEntityMapper;
 import io.edpn.backend.messageprocessor.domain.exception.DatabaseEntityNotFoundException;
 import io.edpn.backend.messageprocessor.domain.util.IdGenerator;
@@ -27,7 +28,7 @@ class CommodityRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        commodityRepository = new CommodityRepository(idGenerator, commodityEntityMapper);
+        commodityRepository = new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.CommodityRepository(idGenerator, commodityEntityMapper);
     }
 
     @Test

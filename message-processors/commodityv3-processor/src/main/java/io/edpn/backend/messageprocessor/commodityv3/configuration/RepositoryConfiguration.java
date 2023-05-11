@@ -15,8 +15,8 @@ public class RepositoryConfiguration {
     }
 
     @Bean
-    public EconomyRepository economyRepository(EconomyEntityMapper economyEntityMapper) {
-        return new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.EconomyRepository(economyEntityMapper);
+    public EconomyRepository economyRepository(IdGenerator idGenerator, EconomyEntityMapper economyEntityMapper) {
+        return new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.EconomyRepository(idGenerator, economyEntityMapper);
     }
 
     @Bean
