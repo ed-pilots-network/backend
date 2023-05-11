@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class EddnMessagesProcessorBeanConfig {
     @Bean
-    public FssSignalDiscoveredMessageProcessor fssSignalDiscoveredMessageProcessor(ReceiveFssSignalDiscoveredMessageUseCase receiveCommodityMessageUsecase, ObjectMapper objectMapper) {
-        return new FssSignalDiscoveredMessageProcessor(receiveCommodityMessageUsecase, objectMapper);
+    public FssSignalDiscoveredMessageProcessor fssSignalDiscoveredMessageProcessor(ReceiveFssSignalDiscoveredMessageUseCase receiveFssSignalDiscoveredMessageUseCase, ObjectMapper objectMapper) {
+        return new FssSignalDiscoveredMessageProcessor(receiveFssSignalDiscoveredMessageUseCase, objectMapper);
     }
 }

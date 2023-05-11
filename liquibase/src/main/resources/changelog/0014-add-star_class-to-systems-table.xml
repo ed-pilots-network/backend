@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="fdb935ce-7544-452d-aa99-bb7ceb1c113a" author="pveeckhout">
+        <addColumn tableName="systems">
+            <column name="star_class" type="nvarchar"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>
