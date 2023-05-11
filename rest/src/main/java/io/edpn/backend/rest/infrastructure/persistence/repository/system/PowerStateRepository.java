@@ -24,21 +24,6 @@ public class PowerStateRepository implements io.edpn.backend.rest.domain.reposit
     }
     
     @Override
-    public PowerState update(PowerState entity) {
-        powerStateMapper.update(entity);
-        return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("allegiance with id: " + entity.getId() + "could not be found after update"));
-    }
-    
-    @Override
-    public PowerState create(PowerState entity) {
-        entity.setId(UUID.randomUUID());
-        powerStateMapper.insert(entity);
-        return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("allegiance with id: " + entity.getId() + "could not be found after create"));
-    }
-    
-    @Override
     public Optional<PowerState> findById(UUID id) {
         return powerStateMapper.findById(id);
     }

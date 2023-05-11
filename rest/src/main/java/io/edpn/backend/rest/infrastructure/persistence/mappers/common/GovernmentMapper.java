@@ -22,15 +22,6 @@ public interface GovernmentMapper {
     @Select("Select * FROM governments")
     List<Government> findAll();
     
-    @Insert("INSERT INTO governments (id, name) VALUES (#{id}, #{name})")
-    int insert(Government powerEntity);
-    
-    @Update("UPDATE governments SET name = #{name} WHERE id = #{id}")
-    int update(Government powerEntity);
-    
-    @Delete("DELETE FROM governments WHERE id = #{id}")
-    int delete(@Param("id") UUID id);
-    
     @ResultMap("GovernmentResult")
     @Select("Select * " +
             "FROM governments " +

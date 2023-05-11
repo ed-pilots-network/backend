@@ -11,9 +11,5 @@ public interface SecurityRepository {
     
     List<Security> findByNameContains(String nameSubString);
     
-    Security update(Security entity);
-    
-    Security create(Security entity);
-    
     Optional<Security> findById(UUID id);
 }

@@ -22,15 +22,6 @@ public interface EconomyMapper {
     @Select("Select * FROM economys")
     List<Economy> findAll();
     
-    @Insert("INSERT INTO economys (id, name) VALUES (#{id}, #{name})")
-    int insert(Economy powerEntity);
-    
-    @Update("UPDATE economys SET name = #{name} WHERE id = #{id}")
-    int update(Economy powerEntity);
-    
-    @Delete("DELETE FROM economys WHERE id = #{id}")
-    int delete(@Param("id") UUID id);
-    
     @ResultMap("EconomyResult")
     @Select("Select * " +
             "FROM economys " +

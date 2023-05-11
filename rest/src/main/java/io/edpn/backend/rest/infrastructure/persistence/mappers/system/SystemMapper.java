@@ -41,15 +41,6 @@ public interface SystemMapper {
     })
     @Select("SELECT * FROM systems WHERE id = #{id}")
     Optional<System> findById(@Param("id") UUID id);
-
-    @Insert("INSERT INTO systems (id, name) VALUES (#{id}, #{name})")
-    int insert(System systemEntity);
-
-    @Update("UPDATE systems SET name = #{name} WHERE id = #{id}")
-    int update(System systemEntity);
-
-    @Delete("DELETE FROM systems WHERE id = #{id}")
-    int delete(@Param("id") UUID id);
     
     @ResultMap("SystemResult")
     @Select("Select * " +

@@ -11,9 +11,5 @@ public interface EconomyRepository {
     
     List<Economy> findByNameContains(String nameSubString);
     
-    Economy update(Economy entity);
-    
-    Economy create(Economy entity);
-    
     Optional<Economy> findById(UUID id);
 }

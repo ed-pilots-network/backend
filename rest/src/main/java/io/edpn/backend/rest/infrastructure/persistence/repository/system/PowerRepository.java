@@ -24,21 +24,6 @@ public class PowerRepository implements io.edpn.backend.rest.domain.repository.s
     }
     
     @Override
-    public Power update(Power entity) {
-        powerMapper.update(entity);
-        return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("allegiance with id: " + entity.getId() + "could not be found after update"));
-    }
-    
-    @Override
-    public Power create(Power entity) {
-        entity.setId(UUID.randomUUID());
-        powerMapper.insert(entity);
-        return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("allegiance with id: " + entity.getId() + "could not be found after create"));
-    }
-    
-    @Override
     public Optional<Power> findById(UUID id) {
         return powerMapper.findById(id);
     }

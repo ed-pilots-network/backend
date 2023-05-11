@@ -11,9 +11,5 @@ public interface AllegianceRepository {
     
     List<Allegiance> findByNameContains(String nameSubString);
     
-    Allegiance update(Allegiance entity);
-    
-    Allegiance create(Allegiance entity);
-    
     Optional<Allegiance> findById(UUID id);
 }

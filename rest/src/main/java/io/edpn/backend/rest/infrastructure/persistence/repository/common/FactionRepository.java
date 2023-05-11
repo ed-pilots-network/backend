@@ -24,21 +24,6 @@ public class FactionRepository implements io.edpn.backend.rest.domain.repository
     }
     
     @Override
-    public Faction update(Faction entity) {
-        factionMapper.update(entity);
-        return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("allegiance with id: " + entity.getId() + "could not be found after update"));
-    }
-    
-    @Override
-    public Faction create(Faction entity) {
-        entity.setId(UUID.randomUUID());
-        factionMapper.insert(entity);
-        return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("allegiance with id: " + entity.getId() + "could not be found after create"));
-    }
-    
-    @Override
     public Optional<Faction> findById(UUID id) {
         return factionMapper.findById(id);
     }

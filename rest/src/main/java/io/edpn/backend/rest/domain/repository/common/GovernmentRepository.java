@@ -11,9 +11,5 @@ public interface GovernmentRepository {
     
     List<Government> findByNameContains(String nameSubString);
     
-    Government update(Government entity);
-    
-    Government create(Government entity);
-    
     Optional<Government> findById(UUID id);
 }

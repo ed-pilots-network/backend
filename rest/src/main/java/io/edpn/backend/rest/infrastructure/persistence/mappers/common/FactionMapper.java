@@ -22,15 +22,6 @@ public interface FactionMapper {
     @Select("Select * FROM factions")
     List<Faction> findAll();
     
-    @Insert("INSERT INTO factions (id, name) VALUES (#{id}, #{name})")
-    int insert(Faction powerEntity);
-    
-    @Update("UPDATE factions SET name = #{name} WHERE id = #{id}")
-    int update(Faction powerEntity);
-    
-    @Delete("DELETE FROM factions WHERE id = #{id}")
-    int delete(@Param("id") UUID id);
-    
     @ResultMap("FactionResult")
     @Select("Select * " +
             "FROM factions " +

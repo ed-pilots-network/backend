@@ -24,21 +24,6 @@ public class AllegianceRepository implements io.edpn.backend.rest.domain.reposit
     }
     
     @Override
-    public Allegiance update(Allegiance entity) {
-        allegianceMapper.update(entity);
-        return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("allegiance with id: " + entity.getId() + "could not be found after update"));
-    }
-    
-    @Override
-    public Allegiance create(Allegiance entity) {
-        entity.setId(UUID.randomUUID());
-        allegianceMapper.insert(entity);
-        return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("allegiance with id: " + entity.getId() + "could not be found after create"));
-    }
-    
-    @Override
     public Optional<Allegiance> findById(UUID id) {
         return allegianceMapper.findById(id);
     }

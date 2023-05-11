@@ -24,21 +24,6 @@ public class GovernmentRepository implements io.edpn.backend.rest.domain.reposit
     }
     
     @Override
-    public Government update(Government entity) {
-        governmentMapper.update(entity);
-        return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("allegiance with id: " + entity.getId() + "could not be found after update"));
-    }
-    
-    @Override
-    public Government create(Government entity) {
-        entity.setId(UUID.randomUUID());
-        governmentMapper.insert(entity);
-        return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("allegiance with id: " + entity.getId() + "could not be found after create"));
-    }
-    
-    @Override
     public Optional<Government> findById(UUID id) {
         return governmentMapper.findById(id);
     }

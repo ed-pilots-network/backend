@@ -9,9 +9,5 @@ import java.util.UUID;
 public interface SystemRepository {
     List<System> findByNameContains(String nameSubString);
     
-    System update(System entity);
-    
-    System create(System entity);
-    
     Optional<System> findById(UUID id);
 }

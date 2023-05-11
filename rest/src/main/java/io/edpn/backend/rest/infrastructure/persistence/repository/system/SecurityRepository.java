@@ -24,21 +24,6 @@ public class SecurityRepository implements io.edpn.backend.rest.domain.repositor
     }
     
     @Override
-    public Security update(Security entity) {
-        securityMapper.update(entity);
-        return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("allegiance with id: " + entity.getId() + "could not be found after update"));
-    }
-    
-    @Override
-    public Security create(Security entity) {
-        entity.setId(UUID.randomUUID());
-        securityMapper.insert(entity);
-        return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("allegiance with id: " + entity.getId() + "could not be found after create"));
-    }
-    
-    @Override
     public Optional<Security> findById(UUID id) {
         return securityMapper.findById(id);
     }

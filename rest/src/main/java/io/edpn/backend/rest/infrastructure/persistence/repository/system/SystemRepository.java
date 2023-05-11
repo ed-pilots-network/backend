@@ -19,21 +19,6 @@ public class SystemRepository implements io.edpn.backend.rest.domain.repository.
     }
     
     @Override
-    public System update(System entity) {
-        systemMapper.update(entity);
-        return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("allegiance with id: " + entity.getId() + "could not be found after update"));
-    }
-    
-    @Override
-    public System create(System entity) {
-        entity.setId(UUID.randomUUID());
-        systemMapper.insert(entity);
-        return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("allegiance with id: " + entity.getId() + "could not be found after create"));
-    }
-    
-    @Override
     public Optional<System> findById(UUID id) {
         return systemMapper.findById(id);
     }

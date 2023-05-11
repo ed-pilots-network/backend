@@ -22,15 +22,6 @@ public interface ReserveTypeMapper {
     @Select("Select * FROM reserve_types")
     List<ReserveType> findAll();
     
-    @Insert("INSERT INTO reserve_types (id, name) VALUES (#{id}, #{name})")
-    int insert(ReserveType powerEntity);
-    
-    @Update("UPDATE reserve_types SET name = #{name} WHERE id = #{id}")
-    int update(ReserveType powerEntity);
-    
-    @Delete("DELETE FROM reserve_types WHERE id = #{id}")
-    int delete(@Param("id") UUID id);
-    
     @ResultMap("ReserveTypeResult")
     @Select("Select * " +
             "FROM reserve_types " +

@@ -11,9 +11,5 @@ public interface ReserveTypeRepository {
     
     List<ReserveType> findByNameContains(String nameSubString);
     
-    ReserveType update(ReserveType entity);
-    
-    ReserveType create(ReserveType entity);
-    
     Optional<ReserveType> findById(UUID id);
 }

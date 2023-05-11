@@ -24,21 +24,6 @@ public class EconomyRepository implements io.edpn.backend.rest.domain.repository
     }
     
     @Override
-    public Economy update(Economy entity) {
-        economyMapper.update(entity);
-        return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("allegiance with id: " + entity.getId() + "could not be found after update"));
-    }
-    
-    @Override
-    public Economy create(Economy entity) {
-        entity.setId(UUID.randomUUID());
-        economyMapper.insert(entity);
-        return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("allegiance with id: " + entity.getId() + "could not be found after create"));
-    }
-    
-    @Override
     public Optional<Economy> findById(UUID id) {
         return economyMapper.findById(id);
     }

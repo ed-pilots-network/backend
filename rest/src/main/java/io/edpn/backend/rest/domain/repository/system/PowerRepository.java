@@ -11,9 +11,5 @@ public interface PowerRepository {
     
     List<Power> findByNameContains(String nameSubString);
     
-    Power update(Power entity);
-    
-    Power create(Power entity);
-    
     Optional<Power> findById(UUID id);
 }

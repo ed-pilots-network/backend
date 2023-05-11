@@ -22,15 +22,6 @@ public interface AllegianceMapper {
     @Select("Select * FROM allegiances")
     List<Allegiance> findAll();
     
-    @Insert("INSERT INTO allegiances (id, name) VALUES (#{id}, #{name})")
-    int insert(Allegiance powerEntity);
-    
-    @Update("UPDATE allegiances SET name = #{name} WHERE id = #{id}")
-    int update(Allegiance powerEntity);
-    
-    @Delete("DELETE FROM allegiances WHERE id = #{id}")
-    int delete(@Param("id") UUID id);
-    
     @ResultMap("AllegianceResult")
     @Select("Select * " +
             "FROM allegiances " +

@@ -22,15 +22,6 @@ public interface SecurityMapper {
     @Select("Select * FROM securitys")
     List<Security> findAll();
     
-    @Insert("INSERT INTO securitys (id, name) VALUES (#{id}, #{name})")
-    int insert(Security powerEntity);
-    
-    @Update("UPDATE securitys SET name = #{name} WHERE id = #{id}")
-    int update(Security powerEntity);
-    
-    @Delete("DELETE FROM securitys WHERE id = #{id}")
-    int delete(@Param("id") UUID id);
-    
     @ResultMap("SecurityResult")
     @Select("Select * " +
             "FROM securitys " +

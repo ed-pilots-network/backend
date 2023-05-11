@@ -22,15 +22,6 @@ public interface PowerMapper {
     @Select("Select * FROM powers")
     List<Power> findAll();
     
-    @Insert("INSERT INTO powers (id, name) VALUES (#{id}, #{name})")
-    int insert(Power powerEntity);
-    
-    @Update("UPDATE powers SET name = #{name} WHERE id = #{id}")
-    int update(Power powerEntity);
-    
-    @Delete("DELETE FROM powers WHERE id = #{id}")
-    int delete(@Param("id") UUID id);
-    
     @ResultMap("PowerResult")
     @Select("Select * " +
             "FROM powers " +

@@ -24,21 +24,6 @@ public class ReserveTypeRepository implements io.edpn.backend.rest.domain.reposi
     }
     
     @Override
-    public ReserveType update(ReserveType entity) {
-        reserveTypeMapper.update(entity);
-        return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("allegiance with id: " + entity.getId() + "could not be found after update"));
-    }
-    
-    @Override
-    public ReserveType create(ReserveType entity) {
-        entity.setId(UUID.randomUUID());
-        reserveTypeMapper.insert(entity);
-        return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("allegiance with id: " + entity.getId() + "could not be found after create"));
-    }
-    
-    @Override
     public Optional<ReserveType> findById(UUID id) {
         return reserveTypeMapper.findById(id);
     }

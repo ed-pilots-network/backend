@@ -11,9 +11,5 @@ public interface PowerStateRepository {
     
     List<PowerState> findByNameContains(String nameSubString);
     
-    PowerState update(PowerState entity);
-    
-    PowerState create(PowerState entity);
-    
     Optional<PowerState> findById(UUID id);
 }

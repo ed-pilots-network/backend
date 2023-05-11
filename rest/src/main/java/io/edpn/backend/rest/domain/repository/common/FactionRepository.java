@@ -11,9 +11,5 @@ public interface FactionRepository {
     
     List<Faction> findByNameContains(String nameSubString);
     
-    Faction update(Faction entity);
-    
-    Faction create(Faction entity);
-    
     Optional<Faction> findById(UUID id);
 }
