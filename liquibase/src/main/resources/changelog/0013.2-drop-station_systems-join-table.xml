@@ -9,9 +9,6 @@
 
         <dropNotNullConstraint columnDataType="bigint" columnName="ed_market_id" tableName="stations"/>
 
-        <addUniqueConstraint tableName="historic_station_commodity_market_data"
-                             columnNames="station_id, commodity_id, timestamp"/>
-
         <!-- Add new column for system_id with foreign key constraint -->
         <addColumn tableName="stations">
             <column name="system_id" type="uuid">

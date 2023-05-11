@@ -5,22 +5,30 @@ import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.
 import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.HistoricStationCommodityMarketDatumEntity;
 import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.StationEntity;
 import io.edpn.backend.messageprocessor.commodityv3.application.usecase.ReceiveCommodityMessageUseCase;
-import io.edpn.backend.messageprocessor.commodityv3.domain.repository.*;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
-
+import io.edpn.backend.messageprocessor.commodityv3.domain.repository.CommodityRepository;
+import io.edpn.backend.messageprocessor.commodityv3.domain.repository.EconomyRepository;
+import io.edpn.backend.messageprocessor.commodityv3.domain.repository.HistoricStationCommodityMarketDatumRepository;
+import io.edpn.backend.messageprocessor.commodityv3.domain.repository.StationRepository;
+import io.edpn.backend.messageprocessor.commodityv3.domain.repository.SystemRepository;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 import static io.edpn.backend.messageprocessor.domain.util.CollectionUtil.toList;
 
 @RequiredArgsConstructor
+@Slf4j
 public class SynchronizedReceiveCommodityMessageService implements ReceiveCommodityMessageUseCase {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SynchronizedReceiveCommodityMessageService.class);
-
     private final SystemRepository systemRepository;
     private final StationRepository stationRepository;
     private final CommodityRepository commodityRepository;
@@ -31,7 +39,9 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
     @Transactional
     public synchronized void receive(CommodityMessage.V3 commodityMessage) {
         long start = System.nanoTime();
-        LOGGER.debug("ReceiveCommodityMessageService.receive -> commodityMessage: " + commodityMessage);
+        if (log.isDebugEnabled()) {
+            log.debug("ReceiveCommodityMessageService.receive -> commodityMessage: " + commodityMessage);
+        }
 
         var updateTimestamp = commodityMessage.getMessageTimeStamp();
 
@@ -66,9 +76,14 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
         //save market data
         saveCommodityMarketData(updateTimestamp, commodities, station);
 
-        LOGGER.debug("ReceiveCommodityMessageService.receive -> station: " + station);
-        LOGGER.info("ReceiveCommodityMessageService.receive -> the message has been processed");
-        LOGGER.trace("ReceiveCommodityMessageService.receive -> took " + (System.nanoTime() - start) + " nanosecond");
+        if (log.isDebugEnabled()) {
+            log.debug("ReceiveCommodityMessageService.receive -> station: " + station);
+        }
+        if (log.isTraceEnabled()) {
+            log.trace("ReceiveCommodityMessageService.receive -> took " + (System.nanoTime() - start) + " nanosecond");
+        }
+
+        log.info("ReceiveCommodityMessageService.receive -> the message has been processed");
     }
 
     private void saveCommodityMarketData(LocalDateTime updateTimestamp, CommodityMessage.V3.Commodity[] commodities, StationEntity station) {
