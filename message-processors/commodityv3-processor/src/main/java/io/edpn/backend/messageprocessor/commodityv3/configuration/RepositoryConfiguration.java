@@ -33,4 +33,9 @@ public class RepositoryConfiguration {
     public SystemRepository systemRepository(IdGenerator idGenerator, SystemEntityMapper systemEntityMapper) {
         return new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.SystemRepository(idGenerator, systemEntityMapper);
     }
+
+    @Bean
+    public StationProhibitedCommodityRepository stationProhibitedCommodityRepository(StationProhibitedCommodityEntityMapper stationProhibitedCommodityEntityMapper) {
+        return new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.StationProhibitedCommodityRepository(stationProhibitedCommodityEntityMapper);
+    }
 }

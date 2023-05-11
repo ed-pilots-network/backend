@@ -5,24 +5,14 @@ import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.
 import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.HistoricStationCommodityMarketDatumEntity;
 import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.StationEntity;
 import io.edpn.backend.messageprocessor.commodityv3.application.usecase.ReceiveCommodityMessageUseCase;
-import io.edpn.backend.messageprocessor.commodityv3.domain.repository.CommodityRepository;
-import io.edpn.backend.messageprocessor.commodityv3.domain.repository.EconomyRepository;
-import io.edpn.backend.messageprocessor.commodityv3.domain.repository.HistoricStationCommodityMarketDatumRepository;
-import io.edpn.backend.messageprocessor.commodityv3.domain.repository.StationRepository;
-import io.edpn.backend.messageprocessor.commodityv3.domain.repository.SystemRepository;
-import java.time.LocalDateTime;
-import java.util.AbstractMap;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import io.edpn.backend.messageprocessor.commodityv3.domain.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static io.edpn.backend.messageprocessor.domain.util.CollectionUtil.toList;
 
@@ -34,6 +24,7 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
     private final CommodityRepository commodityRepository;
     private final EconomyRepository economyRepository;
     private final HistoricStationCommodityMarketDatumRepository historicStationCommodityMarketDatumRepository;
+    private final StationProhibitedCommodityRepository stationProhibitedCommodityRepository;
 
     @Override
     @Transactional
@@ -65,12 +56,19 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
         });
 
         // update station
+
+        //remove old prohibited commodities and save new
         Collection<UUID> prohibitedCommodityIds = getProhibitedCommodityIds(prohibitedCommodities);
+        stationProhibitedCommodityRepository.deleteByStationId(station.getId());
+        stationProhibitedCommodityRepository.insert(station.getId(), prohibitedCommodityIds);
+
+        //remove old economyProportions and save new
         Map<UUID, Double> economyEntityIdProportionMap = getEconomyEntityIdProportionMap(economies);
+        economyRepository.deleteByStationId(station.getId());
+        economyRepository.insert(station.getId(), economyEntityIdProportionMap);
+
         station.setMarketUpdatedAt(updateTimestamp);
         station.setHasCommodities(true);
-        station.setProhibitedCommodityIds(prohibitedCommodityIds);
-        station.setEconomyEntityIdProportionMap(economyEntityIdProportionMap);
         stationRepository.update(station);
 
         //save market data
