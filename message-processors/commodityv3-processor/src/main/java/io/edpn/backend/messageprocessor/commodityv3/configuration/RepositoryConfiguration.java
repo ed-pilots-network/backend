@@ -30,7 +30,7 @@ public class RepositoryConfiguration {
     }
 
     @Bean
-    public SystemRepository systemRepository(SystemEntityMapper systemEntityMapper) {
-        return new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.SystemRepository(systemEntityMapper);
+    public SystemRepository systemRepository(IdGenerator idGenerator, SystemEntityMapper systemEntityMapper) {
+        return new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.SystemRepository(idGenerator, systemEntityMapper);
     }
 }

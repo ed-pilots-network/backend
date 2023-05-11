@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.edpn.backend.messageprocessor.application.dto.eddn.Common;
 import io.edpn.backend.messageprocessor.application.dto.eddn.withMessageTimestamp;
 import io.edpn.backend.messageprocessor.domain.util.TimestampConverter;
-import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 public interface CommodityMessage {
     @Data
