@@ -25,7 +25,7 @@ public interface SecurityMapper {
     @ResultMap("SecurityResult")
     @Select("Select * " +
             "FROM securitys " +
-            "WHERE name ILIKE #{nameSubString}" +
+            "WHERE name ILIKE %#{nameSubString}%" +
             "ORDER BY " +
             "CASE WHEN name ILIKE #{nameSubString} THEN 0 ELSE 1 END," +
             "name")

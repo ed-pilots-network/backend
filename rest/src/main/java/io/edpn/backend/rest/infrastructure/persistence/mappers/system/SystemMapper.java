@@ -45,7 +45,7 @@ public interface SystemMapper {
     @ResultMap("SystemResult")
     @Select("Select * " +
             "FROM powers " +
-            "WHERE name ILIKE #{nameSubString}" +
+            "WHERE name ILIKE %#{nameSubString}%" +
             "ORDER BY " +
             "CASE WHEN name ILIKE #{nameSubString} THEN 0 ELSE 1 END," +
             "name")
