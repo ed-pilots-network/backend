@@ -3,17 +3,32 @@ package io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.
 import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.HistoricStationCommodityMarketDatumEntity;
 import io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.mappers.HistoricStationCommodityMarketDatumEntityMapper;
 import io.edpn.backend.messageprocessor.domain.exception.DatabaseEntityNotFoundException;
+import io.edpn.backend.messageprocessor.domain.util.IdGenerator;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
 public class HistoricStationCommodityMarketDatumRepository implements io.edpn.backend.messageprocessor.commodityv3.domain.repository.HistoricStationCommodityMarketDatumRepository {
 
+    private final IdGenerator idGenerator;
     private final HistoricStationCommodityMarketDatumEntityMapper historicStationCommodityMarketDatumEntityMapper;
+
+
+    @Override
+    public HistoricStationCommodityMarketDatumEntity create(HistoricStationCommodityMarketDatumEntity entity) throws DatabaseEntityNotFoundException {
+        if (Objects.isNull(entity.getId())) {
+            entity.setId(idGenerator.generateId());
+        }
+        historicStationCommodityMarketDatumEntityMapper.insert(entity);
+
+        return getById(entity.getId())
+                .orElseThrow(() -> new RuntimeException("historicStationCommodity with id: " + entity.getId() + " could not be found after create"));
+    }
 
     @Override
     public Optional<HistoricStationCommodityMarketDatumEntity> getByStationIdAndCommodityIdAndTimestamp(UUID stationId, UUID commodityId, LocalDateTime timestamp) {
@@ -23,14 +38,6 @@ public class HistoricStationCommodityMarketDatumRepository implements io.edpn.ba
     @Override
     public Optional<HistoricStationCommodityMarketDatumEntity> getById(UUID historicStationCommodityMarketDatumId) {
         return historicStationCommodityMarketDatumEntityMapper.findById(historicStationCommodityMarketDatumId);
-    }
-
-    @Override
-    public HistoricStationCommodityMarketDatumEntity create(HistoricStationCommodityMarketDatumEntity entity) throws DatabaseEntityNotFoundException {
-        historicStationCommodityMarketDatumEntityMapper.insert(entity);
-
-        return getByStationIdAndCommodityIdAndTimestamp(entity.getStationId(), entity.getCommodityId(), entity.getTimestamp())
-                .orElseThrow(() -> new RuntimeException("historicStationCommodity with id: " + entity.getId() + " could not be found after create"));
     }
 
     @Override

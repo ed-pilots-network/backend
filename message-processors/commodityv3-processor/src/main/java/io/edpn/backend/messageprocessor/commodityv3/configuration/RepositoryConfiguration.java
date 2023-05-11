@@ -20,8 +20,8 @@ public class RepositoryConfiguration {
     }
 
     @Bean
-    public HistoricStationCommodityMarketDatumRepository historicStationCommodityRepository(HistoricStationCommodityMarketDatumEntityMapper historicStationCommodityMarketDatumEntityMapper) {
-        return new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.HistoricStationCommodityMarketDatumRepository(historicStationCommodityMarketDatumEntityMapper);
+    public HistoricStationCommodityMarketDatumRepository historicStationCommodityRepository(IdGenerator idGenerator, HistoricStationCommodityMarketDatumEntityMapper historicStationCommodityMarketDatumEntityMapper) {
+        return new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.HistoricStationCommodityMarketDatumRepository(idGenerator, historicStationCommodityMarketDatumEntityMapper);
     }
 
     @Bean

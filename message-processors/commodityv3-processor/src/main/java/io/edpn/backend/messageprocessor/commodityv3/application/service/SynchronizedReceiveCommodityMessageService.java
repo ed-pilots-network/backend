@@ -91,12 +91,11 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
             Arrays.stream(commodities)
                     .forEach(commodity -> {
                         UUID commodityId = commodityRepository.findOrCreateByName(commodity.getName()).getId();
-                        UUID id = station.getId();
+                        UUID stationId = station.getId();
 
-                        if (historicStationCommodityMarketDatumRepository.getByStationIdAndCommodityIdAndTimestamp(id, commodityId, updateTimestamp).isEmpty()) {
+                        if (historicStationCommodityMarketDatumRepository.getByStationIdAndCommodityIdAndTimestamp(stationId, commodityId, updateTimestamp).isEmpty()) {
                             var hsce = HistoricStationCommodityMarketDatumEntity.builder()
-                                    .id(UUID.randomUUID())
-                                    .stationId(id)
+                                    .stationId(stationId)
                                     .commodityId(commodityId)
                                     .timestamp(updateTimestamp)
                                     .meanPrice(commodity.getMeanPrice())
@@ -113,7 +112,7 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
                         }
 
                         //data cleanup
-                        historicStationCommodityMarketDatumRepository.cleanupRedundantData(id, commodityId);
+                        historicStationCommodityMarketDatumRepository.cleanupRedundantData(stationId, commodityId);
                     });
         }
     }
