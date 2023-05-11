@@ -25,8 +25,8 @@ public class RepositoryConfiguration {
     }
 
     @Bean
-    public StationRepository stationRepository(StationEntityMapper stationEntityMapper) {
-        return new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.StationRepository(stationEntityMapper);
+    public StationRepository stationRepository(IdGenerator idGenerator, StationEntityMapper stationEntityMapper) {
+        return new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.StationRepository(idGenerator, stationEntityMapper);
     }
 
     @Bean
