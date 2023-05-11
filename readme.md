@@ -113,13 +113,14 @@ To install and run the EDPN Backend project locally, follow these steps:
 2. Install Docker
 3. Clone the EDPN Backend project from GitHub
 4. run `mvn clean install -f message-processors/messageprocessor-lib/pom.xml` to install the library jar in your local Maven
-5. run `docker-compose -f docker-compose.yml up` in terminal to launch the needed local infrastructure in docker
+5. run `docker compose up -d` in terminal to launch the needed local infrastructure in docker
 6. run the projects with the local profiles:
    1. `mvn spring-boot:run -Dspring-boot.run.profiles=local -f liquibase/pom.xml`
    2. `mvn spring-boot:run -Dspring-boot.run.profiles=local -f message-listener/pom.xml`
    3. `mvn spring-boot:run -Dspring-boot.run.profiles=local -f message-processors/commodityv3-processor/pom.xml`
-   3. `mvn spring-boot:run -Dspring-boot.run.profiles=local -f message-processors/fsssignaldiscoveredv1-processor/pom.xml`
-   4. `mvn spring-boot:run -Dspring-boot.run.profiles=local -f rest/pom.xml`
+   4. `mvn spring-boot:run -Dspring-boot.run.profiles=local -f message-processors/fsssignaldiscoveredv1-processor/pom.xml`
+   5. `mvn spring-boot:run -Dspring-boot.run.profiles=local -f message-processors/navroutev1-processor/pom.xml`
+   6. `mvn spring-boot:run -Dspring-boot.run.profiles=local -f rest/pom.xml`
 
 ___
 ## Reporting Issues

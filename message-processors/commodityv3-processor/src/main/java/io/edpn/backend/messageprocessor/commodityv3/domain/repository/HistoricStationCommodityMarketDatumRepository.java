@@ -10,11 +10,12 @@ import java.util.UUID;
 public interface HistoricStationCommodityMarketDatumRepository {
     HistoricStationCommodityMarketDatumEntity update(HistoricStationCommodityMarketDatumEntity entity);
 
-    Optional<HistoricStationCommodityMarketDatumEntity> getById(HistoricStationCommodityMarketDatumEntity entity);
+    Optional<HistoricStationCommodityMarketDatumEntity> getByStationIdAndCommodityIdAndTimestamp(UUID stationId, UUID commodityId, LocalDateTime timestamp);
+    Optional<HistoricStationCommodityMarketDatumEntity> getById(UUID historicStationCommodityMarketDatumId);
 
     HistoricStationCommodityMarketDatumEntity create(HistoricStationCommodityMarketDatumEntity entity);
 
-     void cleanupRedundantData(HistoricStationCommodityMarketDatumEntity entity);
+     void cleanupRedundantData(UUID stationId, UUID commodityId);
 
      Collection<HistoricStationCommodityMarketDatumEntity> findByCommodityIdAndTimestampBetween(UUID commodityId, LocalDateTime start, LocalDateTime end);
 

@@ -20,8 +20,9 @@ public interface StationEntityMapper {
             @Result(property = "hasCommodities", column = "has_commodities"),
             @Result(property = "prohibitedCommodityIds", column = "id", many = @Many(select = "findProhibitedCommodityIdsByStationId")),
             @Result(property = "economyEntityIdProportionMap", column = "id", many = @Many(select = "findEconomyProportionsByStationId")),
+            @Result(property = "systemId", column = "system_id", javaType = UUID.class, typeHandler = UuidTypeHandler.class)
     })
-    @Select("SELECT id, name, ed_market_id, market_updated_at, has_commodities FROM stations")
+    @Select("SELECT id, name, ed_market_id, market_updated_at, has_commodities, system_id FROM stations")
     List<StationEntity> findAll();
 
 
@@ -33,17 +34,21 @@ public interface StationEntityMapper {
     List<Map.Entry<UUID, Double>> findEconomyProportionsByStationId(UUID stationId);
 
     @ResultMap("StationEntityResult")
-    @Select("SELECT id, name, ed_market_id, market_updated_at, has_commodities FROM stations WHERE id = #{stationId}")
+    @Select("SELECT id, name, ed_market_id, market_updated_at, has_commodities, system_id FROM stations WHERE id = #{stationId}")
     Optional<StationEntity> findById(@Param("stationId") UUID stationId);
 
     @ResultMap("StationEntityResult")
-    @Select("SELECT id, name, ed_market_id, market_updated_at, has_commodities FROM stations WHERE ed_market_id = #{marketId}")
+    @Select("SELECT id, name, ed_market_id, market_updated_at, has_commodities,system_id FROM stations WHERE ed_market_id = #{marketId}")
     Optional<StationEntity> findByMarketId(@Param("marketId") long marketId);
 
-    @Insert("INSERT INTO stations (id, name, ed_market_id, market_updated_at, has_commodities) VALUES (#{id}, #{name}, #{edMarketId}, #{marketUpdatedAt}, #{hasCommodities})")
+    @ResultMap("StationEntityResult")
+    @Select("SELECT id, name, ed_market_id, market_updated_at, has_commodities, system_id FROM stations WHERE system_id = #{systemId} and name = #{stationName}")
+    Optional<StationEntity> findBySystemIdAndStationName(@Param("systemId") UUID systemId,@Param("stationName") String stationName);
+
+    @Insert("INSERT INTO stations (id, name, ed_market_id, market_updated_at, has_commodities, system_id) VALUES (#{id}, #{name}, #{edMarketId}, #{marketUpdatedAt}, #{hasCommodities}, #{systemId})")
     int insert(StationEntity stationEntity);
 
-    @Update("UPDATE stations SET name = #{name}, ed_market_id = #{edMarketId}, market_updated_at = #{marketUpdatedAt}, has_commodities = #{hasCommodities} WHERE id = #{id}")
+    @Update("UPDATE stations SET name = #{name}, ed_market_id = #{edMarketId}, market_updated_at = #{marketUpdatedAt}, has_commodities = #{hasCommodities}, system_id = #{systemId} WHERE id = #{id}")
     int update(StationEntity stationEntity);
 
     @Delete("DELETE FROM stations WHERE id = #{id}")

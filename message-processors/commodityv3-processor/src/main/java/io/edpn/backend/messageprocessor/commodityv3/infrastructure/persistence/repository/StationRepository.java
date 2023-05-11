@@ -13,11 +13,17 @@ public class StationRepository implements io.edpn.backend.messageprocessor.commo
     private final StationEntityMapper stationEntityMapper;
 
     @Override
-    public StationEntity findOrCreateByMarketId(long marketId) {
-        return stationEntityMapper.findByMarketId(marketId)
+    public Optional<StationEntity> findByMarketId(long marketId) {
+        return stationEntityMapper.findByMarketId(marketId);
+    }
+
+    @Override
+    public StationEntity findOrCreateBySystemIdAndStationName(UUID systemId, String stationName) {
+        return stationEntityMapper.findBySystemIdAndStationName(systemId, stationName)
                 .orElseGet(() -> {
                     StationEntity s = StationEntity.builder()
-                            .edMarketId(marketId)
+                            .systemId(systemId)
+                            .name(stationName)
                             .build();
                     return create(s);
                 });

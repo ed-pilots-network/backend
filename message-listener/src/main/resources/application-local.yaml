@@ -9,3 +9,11 @@ spring:
       username: "mongodb"
       password: "mongodb"
       authenticationDatabase: "admin"
+
+
+management:
+  server:
+    port: 8081
+
+server:
+  port: 8081

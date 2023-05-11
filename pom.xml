@@ -12,6 +12,7 @@
       <module>message-processors/messageprocessor-lib</module>
       <module>message-processors/commodityv3-processor</module>
       <module>message-processors/fsssignaldiscoveredv1-processor</module>
+      <module>message-processors/navroutev1-processor</module>
       <module>rest</module>
     </modules>
 </project>

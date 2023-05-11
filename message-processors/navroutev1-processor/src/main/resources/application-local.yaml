@@ -1,0 +1,15 @@
+spring:
+  kafka:
+    bootstrap-servers: "localhost:9092"
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/postgres"
+    username: "postgres"
+    password: "postgres"
+    driver-class-name: org.postgresql.Driver
+
+management:
+  server:
+    port: 8086
+
+server:
+  port: 8086

@@ -6,7 +6,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface StationRepository {
-    StationEntity findOrCreateByMarketId(long marketId);
+    Optional<StationEntity> findByMarketId(long marketId);
+    StationEntity findOrCreateBySystemIdAndStationName(UUID systemId, String stationName);
 
     StationEntity update(StationEntity entity);
 
