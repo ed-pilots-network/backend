@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.edpn.backend.messageprocessor</groupId>
-    <artifactId>fsssignaldiscoveredv1-processor</artifactId>
+    <artifactId>navroutev1-processor</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>edpn-fsssignaldiscoveredv1-processor</name>
-    <description>FSS Signal Discovered message processor</description>
+    <name>edpn-navroutev1-processor</name>
+    <description>Navroute message processor</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
@@ -23,6 +23,7 @@
         <hamcrest.version>2.2</hamcrest.version>
         <mybatis.version>3.0.0</mybatis.version>
         <messageprocessor.lib.version>0.0.1-SNAPSHOT</messageprocessor.lib.version>
+        <apache.lang3.version>3.12.0</apache.lang3.version>
     </properties>
     <dependencies>
         <dependency>
@@ -54,7 +55,13 @@
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
+        </dependency><!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${apache.lang3.version}</version>
         </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -118,7 +125,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>io.edpn.backend.messageprocessor.fsssignaldiscoveredv1.FssSignalDiscoveredV1ProcessorApplication</mainClass>
+                    <mainClass>io.edpn.backend.messageprocessor.navroutev1.NavRouteV1ProcessorApplication</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
