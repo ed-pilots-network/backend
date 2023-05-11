@@ -2,11 +2,14 @@ package io.edpn.backend.rest.domain.repository.system;
 
 import io.edpn.backend.rest.domain.model.system.PowerState;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface PowerStateRepository {
-    PowerState findOrCreateByName(String name);
+    List<PowerState> findAll();
+    
+    List<PowerState> findByNameContains(String nameSubString);
     
     PowerState update(PowerState entity);
     

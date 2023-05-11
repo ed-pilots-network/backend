@@ -5,12 +5,17 @@ import io.edpn.backend.rest.domain.model.common.Allegiance;
 import io.edpn.backend.rest.domain.model.common.Economy;
 import io.edpn.backend.rest.domain.model.common.Faction;
 import io.edpn.backend.rest.domain.model.common.Government;
-import lombok.Builder;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.UUID;
 
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 //TODO: Investigate states. EDPN Data has it as an array of 3 objects for Happiness/Economy/Security
 //TODO: Investigate minorFactionPresence array

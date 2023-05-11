@@ -1,0 +1,42 @@
+package io.edpn.backend.rest.infrastructure.persistence.mappers.system;
+
+import io.edpn.backend.rest.domain.model.system.Security;
+import io.edpn.backend.rest.infrastructure.util.UuidTypeHandler;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Mapper
+public interface SecurityMapper {
+    
+    @Results(id = "SecurityResult", value = {
+            @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
+            @Result(property = "name", column = "name")
+    })
+    @Select("Select * FROM securitys WHERE id = #{id}")
+    Optional<Security> findById(@Param("id") UUID id);
+    
+    @Results(id = "SecurityResult")
+    @Select("Select * FROM securitys")
+    List<Security> findAll();
+    
+    @Insert("INSERT INTO securitys (id, name) VALUES (#{id}, #{name})")
+    int insert(Security powerEntity);
+    
+    @Update("UPDATE securitys SET name = #{name} WHERE id = #{id}")
+    int update(Security powerEntity);
+    
+    @Delete("DELETE FROM securitys WHERE id = #{id}")
+    int delete(@Param("id") UUID id);
+    
+    @ResultMap("SecurityResult")
+    @Select("Select * " +
+            "FROM securitys " +
+            "WHERE name ILIKE #{nameSubString}" +
+            "ORDER BY " +
+            "CASE WHEN name ILIKE #{nameSubString} THEN 0 ELSE 1 END," +
+            "name")
+    List<Security> findByNameContains(@Param("nameSubString") String nameSubString);
+}
