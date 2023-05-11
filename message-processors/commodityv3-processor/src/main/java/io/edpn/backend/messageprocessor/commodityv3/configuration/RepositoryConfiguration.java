@@ -2,6 +2,7 @@ package io.edpn.backend.messageprocessor.commodityv3.configuration;
 
 import io.edpn.backend.messageprocessor.commodityv3.domain.repository.*;
 import io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.mappers.*;
+import io.edpn.backend.messageprocessor.domain.util.IdGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
 public class RepositoryConfiguration {
 
     @Bean
-    public CommodityRepository commodityRepository(CommodityEntityMapper commodityEntityMapper) {
-        return new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.CommodityRepository(commodityEntityMapper);
+    public CommodityRepository commodityRepository(IdGenerator idGenerator, CommodityEntityMapper commodityEntityMapper) {
+        return new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.CommodityRepository(idGenerator, commodityEntityMapper);
     }
 
     @Bean

@@ -30,9 +30,4 @@ public class StationStationTypeRepository implements io.edpn.backend.messageproc
     public Optional<StationStationTypeEntity> findById(UUID id) {
         return stationStationTypeEntityMapper.findById(id);
     }
-
-    @Override
-    public void deleteById(UUID id) {
-        stationStationTypeEntityMapper.delete(id);
-    }
 }

@@ -2,6 +2,7 @@ package io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.
 
 import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.HistoricStationCommodityMarketDatumEntity;
 import io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.mappers.HistoricStationCommodityMarketDatumEntityMapper;
+import io.edpn.backend.messageprocessor.domain.exception.DatabaseEntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -15,14 +16,6 @@ public class HistoricStationCommodityMarketDatumRepository implements io.edpn.ba
     private final HistoricStationCommodityMarketDatumEntityMapper historicStationCommodityMarketDatumEntityMapper;
 
     @Override
-    public HistoricStationCommodityMarketDatumEntity update(HistoricStationCommodityMarketDatumEntity entity) {
-        historicStationCommodityMarketDatumEntityMapper.update(entity);
-
-        return getById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("historicStationCommodity with id: " + entity.getId() + " could not be found after update"));
-    }
-
-    @Override
     public Optional<HistoricStationCommodityMarketDatumEntity> getByStationIdAndCommodityIdAndTimestamp(UUID stationId, UUID commodityId, LocalDateTime timestamp) {
         return historicStationCommodityMarketDatumEntityMapper.findByStationIdAndCommodityIdAndTimestamp(stationId, commodityId, timestamp);
     }
@@ -33,7 +26,7 @@ public class HistoricStationCommodityMarketDatumRepository implements io.edpn.ba
     }
 
     @Override
-    public HistoricStationCommodityMarketDatumEntity create(HistoricStationCommodityMarketDatumEntity entity) {
+    public HistoricStationCommodityMarketDatumEntity create(HistoricStationCommodityMarketDatumEntity entity) throws DatabaseEntityNotFoundException {
         historicStationCommodityMarketDatumEntityMapper.insert(entity);
 
         return getByStationIdAndCommodityIdAndTimestamp(entity.getStationId(), entity.getCommodityId(), entity.getTimestamp())

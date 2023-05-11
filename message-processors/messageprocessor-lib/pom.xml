@@ -5,7 +5,7 @@
     <groupId>io.edpn.backend.messageprocessor</groupId>
     <artifactId>messageprocessor-lib</artifactId>
     <packaging>jar</packaging>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <name>edpn-messageprocessor-lib</name>
     <description>Library project that defines common classes and interfaces to be used bu the message processors
     </description>

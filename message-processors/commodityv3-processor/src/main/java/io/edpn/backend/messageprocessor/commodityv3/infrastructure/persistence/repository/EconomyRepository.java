@@ -24,13 +24,6 @@ public class EconomyRepository implements io.edpn.backend.messageprocessor.commo
     }
 
     @Override
-    public EconomyEntity update(EconomyEntity entity) {
-        economyEntityMapper.update(entity);
-        return findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("economy with id: " + entity.getId() + " could not be found after update"));
-    }
-
-    @Override
     public EconomyEntity create(EconomyEntity entity) {
         entity.setId(UUID.randomUUID());
         economyEntityMapper.insert(entity);
