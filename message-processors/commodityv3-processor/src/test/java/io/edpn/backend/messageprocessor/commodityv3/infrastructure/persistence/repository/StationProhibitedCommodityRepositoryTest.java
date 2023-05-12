@@ -39,14 +39,12 @@ class StationProhibitedCommodityRepositoryTest {
         List<StationProhibitedCommodityEntity> insertedEntities = commodityIds.stream()
                 .map(commodityId -> new StationProhibitedCommodityEntity(stationId, commodityId))
                 .toList();
-        when(entityMapper.insert(argThat(list -> list.size() == commodityIds.size() &&
-                list.stream().allMatch(item -> item.getStationId().equals(stationId) && commodityIds.contains(item.getCommodityId())))))
-                .thenReturn(2);
+        when(entityMapper.insert(argThat(item -> commodityIds.contains(item.getCommodityId())))).thenReturn(1);
         when(entityMapper.findByStationIds(stationId)).thenReturn(insertedEntities);
 
         Collection<StationProhibitedCommodityEntity> result = repository.insert(stationId, commodityIds);
 
-        verify(entityMapper).insert(anyList());
+        verify(entityMapper, times(2)).insert(any());
         verify(entityMapper).findByStationIds(eq(stationId));
         assertEquals(insertedEntities, result);
     }

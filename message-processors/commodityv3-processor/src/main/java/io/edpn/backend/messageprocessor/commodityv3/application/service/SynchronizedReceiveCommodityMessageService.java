@@ -3,6 +3,7 @@ package io.edpn.backend.messageprocessor.commodityv3.application.service;
 import io.edpn.backend.messageprocessor.commodityv3.application.dto.eddn.CommodityMessage;
 import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.CommodityEntity;
 import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.HistoricStationCommodityMarketDatumEntity;
+import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.StationEconomyProportionEntity;
 import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.StationEntity;
 import io.edpn.backend.messageprocessor.commodityv3.application.usecase.ReceiveCommodityMessageUseCase;
 import io.edpn.backend.messageprocessor.commodityv3.domain.repository.*;
@@ -12,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static io.edpn.backend.messageprocessor.domain.util.CollectionUtil.toList;
 
@@ -25,6 +25,7 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
     private final EconomyRepository economyRepository;
     private final HistoricStationCommodityMarketDatumRepository historicStationCommodityMarketDatumRepository;
     private final StationProhibitedCommodityRepository stationProhibitedCommodityRepository;
+    private final StationEconomyProportionRepository stationEconomyProportionRepository;
 
     @Override
     @Transactional
@@ -56,6 +57,9 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
         });
 
         // update station
+        station.setMarketUpdatedAt(updateTimestamp);
+        station.setHasCommodities(true);
+        stationRepository.update(station);
 
         //remove old prohibited commodities and save new
         Collection<UUID> prohibitedCommodityIds = getProhibitedCommodityIds(prohibitedCommodities);
@@ -63,13 +67,9 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
         stationProhibitedCommodityRepository.insert(station.getId(), prohibitedCommodityIds);
 
         //remove old economyProportions and save new
-        Map<UUID, Double> economyEntityIdProportionMap = getEconomyEntityIdProportionMap(economies);
-        economyRepository.deleteByStationId(station.getId());
-        economyRepository.insert(station.getId(), economyEntityIdProportionMap);
-
-        station.setMarketUpdatedAt(updateTimestamp);
-        station.setHasCommodities(true);
-        stationRepository.update(station);
+        List<StationEconomyProportionEntity> stationEconomyProportionEntities = getEconomyEntityIdProportions(station.getId(), economies);
+        stationEconomyProportionRepository.deleteByStationId(station.getId());
+        stationEconomyProportionRepository.insert(stationEconomyProportionEntities);
 
         //save market data
         saveCommodityMarketData(updateTimestamp, commodities, station);
@@ -115,17 +115,16 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
         }
     }
 
-    private Map<UUID, Double> getEconomyEntityIdProportionMap(CommodityMessage.V3.Economy[] economies) {
+    private List<StationEconomyProportionEntity> getEconomyEntityIdProportions(UUID stationId, CommodityMessage.V3.Economy[] economies) {
         return Optional.ofNullable(economies)
                 .map(arr -> Arrays.stream(arr)
                         .map(economy -> {
-                            UUID id = economyRepository.findOrCreateByName(economy.getName()).getId();
+                            UUID economyId = economyRepository.findOrCreateByName(economy.getName()).getId();
                             double proportion = economy.getProportion();
-                            return new AbstractMap.SimpleEntry<>(id, proportion);
+                            return new StationEconomyProportionEntity(stationId, economyId, proportion);
                         })
-                        .filter(entry -> Objects.nonNull(entry.getKey()))
-                        .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue, (o1, o2) -> o1)))
-                .orElse(Collections.emptyMap());
+                        .toList())
+                .orElse(Collections.emptyList());
     }
 
     private Collection<UUID> getProhibitedCommodityIds(String[] prohibitedCommodities) {

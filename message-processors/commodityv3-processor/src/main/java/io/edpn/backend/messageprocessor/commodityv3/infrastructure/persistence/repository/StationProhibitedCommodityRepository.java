@@ -15,10 +15,13 @@ public class StationProhibitedCommodityRepository implements io.edpn.backend.mes
 
     @Override
     public Collection<StationProhibitedCommodityEntity> insert(UUID stationId, Collection<UUID> commodityIds) throws DatabaseEntityNotFoundException {
-        stationProhibitedCommodityEntityMapper.insert(commodityIds.stream()
-                .map(commodityId -> new StationProhibitedCommodityEntity(stationId, commodityId))
-                .toList());
+        commodityIds.forEach(id -> this.insert(stationId, id));
         return stationProhibitedCommodityEntityMapper.findByStationIds(stationId);
+    }
+
+
+    private void insert(UUID stationId, UUID commodityId) throws DatabaseEntityNotFoundException {
+        stationProhibitedCommodityEntityMapper.insert(new StationProhibitedCommodityEntity(stationId, commodityId));
     }
 
     @Override

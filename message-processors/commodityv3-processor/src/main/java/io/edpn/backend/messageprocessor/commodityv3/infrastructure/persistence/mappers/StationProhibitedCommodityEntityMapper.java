@@ -5,7 +5,6 @@ import io.edpn.backend.messageprocessor.infrastructure.persistence.util.UuidType
 import org.apache.ibatis.annotations.*;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 @Mapper
@@ -18,16 +17,8 @@ public interface StationProhibitedCommodityEntityMapper {
     @Select("SELECT station_id, commodity_id FROM station_prohibited_commodities WHERE station_id = #{stationId}")
     Collection<StationProhibitedCommodityEntity> findByStationIds(@Param("stationId") UUID stationId);
 
-    @Insert({
-            "INSERT INTO station_prohibited_commodities (station_id, commodity_id)",
-            "VALUES (#{stationId}, #{commodityId})",
-            "<foreach collection='list' item='entity' separator=','>",
-            "(#{stationId}, #{commodityId})",
-            "</foreach>",
-            "</script>"
-    })
-    @Options(useGeneratedKeys = true, keyProperty = "property1")
-    int insert(List<StationProhibitedCommodityEntity> entities);
+    @Insert("INSERT INTO station_prohibited_commodities (station_id, commodity_id) VALUES (#{stationId}, #{commodityId})")
+    int insert(StationProhibitedCommodityEntity entity);
 
     @Delete("DELETE FROM station_prohibited_commodities WHERE station_id = #{stationId}")
     int delete(@Param("stationId") UUID stationId);

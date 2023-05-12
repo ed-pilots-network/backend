@@ -3,6 +3,7 @@ package io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.
 import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.HistoricStationCommodityMarketDatumEntity;
 import io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.mappers.HistoricStationCommodityMarketDatumEntityMapper;
 import io.edpn.backend.messageprocessor.domain.exception.DatabaseEntityNotFoundException;
+import io.edpn.backend.messageprocessor.commodityv3.domain.repository.HistoricStationCommodityMarketDatumRepository;
 import io.edpn.backend.messageprocessor.domain.util.IdGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,7 @@ class HistoricStationCommodityMarketDatumRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        repository = new HistoricStationCommodityMarketDatumRepository(idGenerator, mapper);
+        repository = new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.HistoricStationCommodityMarketDatumRepository(idGenerator, mapper);
     }
 
     @Test
@@ -116,7 +117,7 @@ class HistoricStationCommodityMarketDatumRepositoryTest {
         repository.cleanupRedundantData(stationId, commodityId);
 
         // Assert
-        verify(mapper, times(1)).deleteObsoleteInbetweenValues(stationId, commodityId);
+        verify(mapper, times(1)).deleteObsoleteForStationAndCommodity(stationId, commodityId);
     }
 
     @Test

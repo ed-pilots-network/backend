@@ -42,7 +42,7 @@ public class HistoricStationCommodityMarketDatumRepository implements io.edpn.ba
 
     @Override
     public void cleanupRedundantData(UUID stationId, UUID commodityId) {
-        historicStationCommodityMarketDatumEntityMapper.deleteObsoleteInbetweenValues(stationId, commodityId);
+        historicStationCommodityMarketDatumEntityMapper.deleteObsoleteForStationAndCommodity(stationId, commodityId);
     }
 
     @Override

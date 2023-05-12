@@ -1,10 +1,7 @@
 package io.edpn.backend.messageprocessor.commodityv3.application.service;
 
 import io.edpn.backend.messageprocessor.commodityv3.application.dto.eddn.CommodityMessage;
-import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.CommodityEntity;
-import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.HistoricStationCommodityMarketDatumEntity;
-import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.StationEntity;
-import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.SystemEntity;
+import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.*;
 import io.edpn.backend.messageprocessor.commodityv3.domain.repository.*;
 import io.edpn.backend.messageprocessor.domain.util.TimestampConverter;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,8 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -41,6 +37,8 @@ public class SynchronizedReceiveCommodityMessageServiceTest {
     private HistoricStationCommodityMarketDatumRepository historicStationCommodityMarketDatumRepository;
     @Mock
     private StationProhibitedCommodityRepository stationProhibitedCommodityRepository;
+    @Mock
+    private StationEconomyProportionRepository stationEconomyProportionRepository;
 
     @BeforeEach
     void setUp() {
@@ -50,7 +48,8 @@ public class SynchronizedReceiveCommodityMessageServiceTest {
                 commodityRepository,
                 economyRepository,
                 historicStationCommodityMarketDatumRepository,
-                stationProhibitedCommodityRepository
+                stationProhibitedCommodityRepository,
+                stationEconomyProportionRepository
         );
     }
 
@@ -75,7 +74,7 @@ public class SynchronizedReceiveCommodityMessageServiceTest {
         message.setStationName(stationName);
         message.setMarketId(marketId);
         message.setProhibited(new String[]{"ImperialSlaves", "Slaves"});
-        message.setEconomies(new CommodityMessage.V3.Economy[]{});
+        message.setEconomies(new CommodityMessage.V3.Economy[]{economy});
 
         CommodityMessage.V3.Commodity commodity1 = new CommodityMessage.V3.Commodity();
         commodity1.setBuyPrice(15636);
@@ -134,15 +133,22 @@ public class SynchronizedReceiveCommodityMessageServiceTest {
         commodityEntity2.setId(commodityEntityId2);
         commodityEntity2.setName("alacarakmoskinart");
 
+        UUID economyEntityId = UUID.randomUUID();
+        EconomyEntity economy1 = new EconomyEntity(economyEntityId, "Carrier");
+
         // Mock repository methods
         when(systemRepository.findOrCreateByName(systemName)).thenReturn(systemEntity);
+
         when(stationRepository.findByMarketId(anyLong())).thenReturn(Optional.empty());
 
         when(stationRepository.findOrCreateBySystemIdAndStationName(systemEntityId, stationName)).thenReturn(stationEntity);
+
         when(commodityRepository.findOrCreateByName("ImperialSlaves")).thenReturn(prohibitedCommodityEntity1);
         when(commodityRepository.findOrCreateByName("Slaves")).thenReturn(prohibitedCommodityEntity2);
         when(commodityRepository.findOrCreateByName("agriculturalmedicines")).thenReturn(commodityEntity1);
         when(commodityRepository.findOrCreateByName("alacarakmoskinart")).thenReturn(commodityEntity2);
+
+        when(economyRepository.findOrCreateByName("Carrier")).thenReturn(economy1);
 
         when(historicStationCommodityMarketDatumRepository.getByStationIdAndCommodityIdAndTimestamp(
                 stationEntityId, commodityEntityId1, messageLocalDateTimeStamp)).thenReturn(Optional.empty());
@@ -155,29 +161,62 @@ public class SynchronizedReceiveCommodityMessageServiceTest {
         verify(stationProhibitedCommodityRepository, times(1)).insert(stationEntityId, List.of(prohibitedCommodityEntityId1, prohibitedCommodityEntityId2));
         verify(systemRepository, times(1)).findOrCreateByName(anyString());
         verify(stationRepository, times(1)).findByMarketId(anyLong());
-        verify(stationRepository, times(1)).findOrCreateBySystemIdAndStationName(any(UUID.class), anyString());
+        verify(stationRepository, times(1)).findOrCreateBySystemIdAndStationName(org.mockito.ArgumentMatchers.any(UUID.class), anyString());
         verify(commodityRepository, times(1)).findOrCreateByName("ImperialSlaves");
         verify(commodityRepository, times(1)).findOrCreateByName("Slaves");
-        verify(stationProhibitedCommodityRepository, times(1)).deleteByStationId(any(UUID.class));
-        verify(stationProhibitedCommodityRepository, times(1)).insert(any(UUID.class), anyList());
+        verify(stationProhibitedCommodityRepository, times(1)).deleteByStationId(org.mockito.ArgumentMatchers.any(UUID.class));
+        verify(stationProhibitedCommodityRepository, times(1)).insert(org.mockito.ArgumentMatchers.any(UUID.class), anyList());
+        verify(stationEconomyProportionRepository, times(1)).insert(org.mockito.ArgumentMatchers.any());
+
+        verify(economyRepository, times(1)).findOrCreateByName("Carrier");
+        verify(stationEconomyProportionRepository, times(1)).insert(
+                argThat(itemList -> {
+                            for (StationEconomyProportionEntity item : itemList) {
+                                if (!stationEntityId.equals(item.getStationId())) {
+                                    return false;
+                                }
+                                if (!economyEntityId.equals(item.getEconomyId())) {
+                                    return false;
+                                }
+                                if (1.0 != item.getProportion()) {
+                                    return false;
+                                }
+                            }
+                            return true;
+                        }
+                ));
+
         verify(commodityRepository, times(1)).findOrCreateByName("alacarakmoskinart");
         verify(commodityRepository, times(1)).findOrCreateByName("agriculturalmedicines");
         verify(historicStationCommodityMarketDatumRepository, times(1)).getByStationIdAndCommodityIdAndTimestamp(
-                any(UUID.class), eq(commodityEntityId1), any(LocalDateTime.class));
+                org.mockito.ArgumentMatchers.any(UUID.class), eq(commodityEntityId1), org.mockito.ArgumentMatchers.any(LocalDateTime.class));
         verify(historicStationCommodityMarketDatumRepository, times(1)).getByStationIdAndCommodityIdAndTimestamp(
-                any(UUID.class), eq(commodityEntityId2), any(LocalDateTime.class));
+                org.mockito.ArgumentMatchers.any(UUID.class), eq(commodityEntityId2), org.mockito.ArgumentMatchers.any(LocalDateTime.class));
 
         // Verify that the repository methods were called in the correct order
-        InOrder inOrder = inOrder(systemRepository, stationRepository, stationProhibitedCommodityRepository, commodityRepository, historicStationCommodityMarketDatumRepository);
+        InOrder inOrder = inOrder(systemRepository, stationRepository, stationProhibitedCommodityRepository, commodityRepository, historicStationCommodityMarketDatumRepository, economyRepository, stationEconomyProportionRepository);
         inOrder.verify(systemRepository).findOrCreateByName(anyString());
+
         inOrder.verify(stationRepository).findByMarketId(anyLong());
-        inOrder.verify(stationRepository).findOrCreateBySystemIdAndStationName(any(UUID.class), anyString());
-        inOrder.verify(commodityRepository, times(4)).findOrCreateByName(anyString());
+        inOrder.verify(stationRepository).findOrCreateBySystemIdAndStationName(org.mockito.ArgumentMatchers.any(UUID.class), anyString());
+        inOrder.verify(stationRepository).update(any());
+
+        inOrder.verify(commodityRepository, times(2)).findOrCreateByName(argThat(
+                name -> name.equals("ImperialSlaves") || name.equals("Slaves")
+        ));
+        inOrder.verify(stationProhibitedCommodityRepository, times(1)).deleteByStationId(any());
+        inOrder.verify(stationProhibitedCommodityRepository, times(1)).insert(any(), anyList());
+
+        inOrder.verify(economyRepository, times(1)).findOrCreateByName(anyString());
+        inOrder.verify(stationEconomyProportionRepository, times(1)).deleteByStationId(any());
+        inOrder.verify(stationEconomyProportionRepository, times(1)).insert(any());
+
         inOrder.verify(historicStationCommodityMarketDatumRepository).getByStationIdAndCommodityIdAndTimestamp(
-                any(UUID.class), any(UUID.class), any(LocalDateTime.class));
+                org.mockito.ArgumentMatchers.any(UUID.class), org.mockito.ArgumentMatchers.any(UUID.class), org.mockito.ArgumentMatchers.any(LocalDateTime.class));
         // Capture the arguments passed to create() method
         ArgumentCaptor<HistoricStationCommodityMarketDatumEntity> argumentCaptor = ArgumentCaptor.forClass(HistoricStationCommodityMarketDatumEntity.class);
         verify(historicStationCommodityMarketDatumRepository, times(2)).create(argumentCaptor.capture());
+
 
         // Assert the captured argument values
         HistoricStationCommodityMarketDatumEntity capturedDatum1 = argumentCaptor.getAllValues().stream()

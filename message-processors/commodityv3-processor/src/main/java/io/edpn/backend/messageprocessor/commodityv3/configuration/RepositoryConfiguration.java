@@ -25,6 +25,11 @@ public class RepositoryConfiguration {
     }
 
     @Bean
+    public StationEconomyProportionRepository stationEconomyProportionRepository(StationEconomyProportionEntityMapper stationEconomyProportionEntityMapper) {
+        return new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.StationEconomyProportionRepository(stationEconomyProportionEntityMapper);
+    }
+
+    @Bean
     public StationRepository stationRepository(IdGenerator idGenerator, StationEntityMapper stationEntityMapper) {
         return new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.StationRepository(idGenerator, stationEntityMapper);
     }
