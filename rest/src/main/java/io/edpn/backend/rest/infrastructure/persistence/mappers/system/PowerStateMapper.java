@@ -15,16 +15,16 @@ public interface PowerStateMapper {
             @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name")
     })
-    @Select("Select * FROM power_states WHERE id = #{id}")
+    @Select("Select * FROM power_state WHERE id = #{id}")
     Optional<PowerState> findById(@Param("id") UUID id);
     
     @Results(id = "PowerStateResult")
-    @Select("Select * FROM power_states")
+    @Select("Select * FROM power_state")
     List<PowerState> findAll();
     
     @ResultMap("PowerStateResult")
     @Select("Select * " +
-            "FROM power_states " +
+            "FROM power_state " +
             "WHERE name ILIKE %#{nameSubString}%" +
             "ORDER BY " +
             "CASE WHEN name ILIKE #{nameSubString} THEN 0 ELSE 1 END," +

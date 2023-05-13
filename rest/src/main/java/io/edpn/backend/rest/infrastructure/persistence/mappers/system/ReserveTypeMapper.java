@@ -15,16 +15,16 @@ public interface ReserveTypeMapper {
             @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name")
     })
-    @Select("Select * FROM reserve_types WHERE id = #{id}")
+    @Select("Select * FROM reserve_type WHERE id = #{id}")
     Optional<ReserveType> findById(@Param("id") UUID id);
     
     @Results(id = "ReserveTypeResult")
-    @Select("Select * FROM reserve_types")
+    @Select("Select * FROM reserve_type")
     List<ReserveType> findAll();
     
     @ResultMap("ReserveTypeResult")
     @Select("Select * " +
-            "FROM reserve_types " +
+            "FROM reserve_type " +
             "WHERE name ILIKE %#{nameSubString}%" +
             "ORDER BY " +
             "CASE WHEN name ILIKE #{nameSubString} THEN 0 ELSE 1 END," +

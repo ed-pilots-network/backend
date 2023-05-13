@@ -15,16 +15,16 @@ public interface AllegianceMapper {
             @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name")
     })
-    @Select("Select * FROM allegiances WHERE id = #{id}")
+    @Select("Select * FROM allegiance WHERE id = #{id}")
     Optional<Allegiance> findById(@Param("id") UUID id);
     
     @Results(id = "AllegianceResult")
-    @Select("Select * FROM allegiances")
+    @Select("Select * FROM allegiance")
     List<Allegiance> findAll();
     
     @ResultMap("AllegianceResult")
     @Select("Select * " +
-            "FROM allegiances " +
+            "FROM allegiance " +
             "WHERE name ILIKE %#{nameSubString}%" +
             "ORDER BY " +
             "CASE WHEN name ILIKE #{nameSubString} THEN 0 ELSE 1 END," +

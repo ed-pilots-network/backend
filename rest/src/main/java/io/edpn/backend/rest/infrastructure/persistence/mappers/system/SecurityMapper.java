@@ -15,16 +15,16 @@ public interface SecurityMapper {
             @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name")
     })
-    @Select("Select * FROM securitys WHERE id = #{id}")
+    @Select("Select * FROM security WHERE id = #{id}")
     Optional<Security> findById(@Param("id") UUID id);
     
     @Results(id = "SecurityResult")
-    @Select("Select * FROM securitys")
+    @Select("Select * FROM security")
     List<Security> findAll();
     
     @ResultMap("SecurityResult")
     @Select("Select * " +
-            "FROM securitys " +
+            "FROM security " +
             "WHERE name ILIKE %#{nameSubString}%" +
             "ORDER BY " +
             "CASE WHEN name ILIKE #{nameSubString} THEN 0 ELSE 1 END," +

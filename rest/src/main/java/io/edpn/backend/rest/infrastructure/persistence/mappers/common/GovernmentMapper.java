@@ -15,16 +15,16 @@ public interface GovernmentMapper {
             @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name")
     })
-    @Select("Select * FROM governments WHERE id = #{id}")
+    @Select("Select * FROM government WHERE id = #{id}")
     Optional<Government> findById(@Param("id") UUID id);
     
     @Results(id = "GovernmentResult")
-    @Select("Select * FROM governments")
+    @Select("Select * FROM government")
     List<Government> findAll();
     
     @ResultMap("GovernmentResult")
     @Select("Select * " +
-            "FROM governments " +
+            "FROM government " +
             "WHERE name ILIKE %#{nameSubString}%" +
             "ORDER BY " +
             "CASE WHEN name ILIKE #{nameSubString} THEN 0 ELSE 1 END," +

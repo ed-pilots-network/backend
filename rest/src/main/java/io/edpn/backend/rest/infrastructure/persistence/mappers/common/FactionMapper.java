@@ -15,16 +15,16 @@ public interface FactionMapper {
             @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name")
     })
-    @Select("Select * FROM factions WHERE id = #{id}")
+    @Select("Select * FROM faction WHERE id = #{id}")
     Optional<Faction> findById(@Param("id") UUID id);
     
     @Results(id = "FactionResult")
-    @Select("Select * FROM factions")
+    @Select("Select * FROM faction")
     List<Faction> findAll();
     
     @ResultMap("FactionResult")
     @Select("Select * " +
-            "FROM factions " +
+            "FROM faction " +
             "WHERE name ILIKE %#{nameSubString}%" +
             "ORDER BY " +
             "CASE WHEN name ILIKE #{nameSubString} THEN 0 ELSE 1 END," +

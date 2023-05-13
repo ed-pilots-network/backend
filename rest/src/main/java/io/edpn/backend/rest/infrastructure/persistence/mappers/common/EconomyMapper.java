@@ -15,16 +15,16 @@ public interface EconomyMapper {
             @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name")
     })
-    @Select("Select * FROM economys WHERE id = #{id}")
+    @Select("Select * FROM economy WHERE id = #{id}")
     Optional<Economy> findById(@Param("id") UUID id);
     
     @Results(id = "EconomyResult")
-    @Select("Select * FROM economys")
+    @Select("Select * FROM economy")
     List<Economy> findAll();
     
     @ResultMap("EconomyResult")
     @Select("Select * " +
-            "FROM economys " +
+            "FROM economy " +
             "WHERE name ILIKE %#{nameSubString}%" +
             "ORDER BY " +
             "CASE WHEN name ILIKE #{nameSubString} THEN 0 ELSE 1 END," +

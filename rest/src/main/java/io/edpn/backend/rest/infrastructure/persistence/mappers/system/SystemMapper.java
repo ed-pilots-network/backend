@@ -39,12 +39,12 @@ public interface SystemMapper {
                     javaType = Government.class, one =@One(select = "io.edpn.backend.eddnrest.infrastructure.mappers.system.ReserveTypeMapper.findById")),
             @Result(property = "edSystemAddress", column = "ed_system_address")
     })
-    @Select("SELECT * FROM systems WHERE id = #{id}")
+    @Select("SELECT * FROM system WHERE id = #{id}")
     Optional<System> findById(@Param("id") UUID id);
     
     @ResultMap("SystemResult")
     @Select("Select * " +
-            "FROM powers " +
+            "FROM system " +
             "WHERE name ILIKE %#{nameSubString}%" +
             "ORDER BY " +
             "CASE WHEN name ILIKE #{nameSubString} THEN 0 ELSE 1 END," +

@@ -15,16 +15,16 @@ public interface PowerMapper {
             @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name")
     })
-    @Select("Select * FROM powers WHERE id = #{id}")
+    @Select("Select * FROM power WHERE id = #{id}")
     Optional<Power> findById(@Param("id") UUID id);
     
     @Results(id = "PowerResult")
-    @Select("Select * FROM powers")
+    @Select("Select * FROM power")
     List<Power> findAll();
     
     @ResultMap("PowerResult")
     @Select("Select * " +
-            "FROM powers " +
+            "FROM power " +
             "WHERE name ILIKE %#{nameSubString}%" +
             "ORDER BY " +
             "CASE WHEN name ILIKE #{nameSubString} THEN 0 ELSE 1 END," +
