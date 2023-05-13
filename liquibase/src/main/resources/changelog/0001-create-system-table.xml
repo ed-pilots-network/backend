@@ -13,46 +13,10 @@
             <column name="name" type="varchar(255)">
                 <constraints nullable="false" unique="true"/>
             </column>
-            <column name="x" type="FLOAT8">
-                <constraints nullable="false"/>
-            </column>
-            <column name="y" type="FLOAT8">
-                <constraints nullable="false"/>
-            </column>
-            <column name="z" type="FLOAT8">
-                <constraints nullable="false"/>
-            </column>
-            <column name="ed_system_address" type="BIGINT"/>
-            <column name="last_updated" type="TIMESTAMP WITHOUT TIME ZONE"/>
-            <column name="name" type="VARCHAR(255)"/>
-            <column name="needs_permit" type="BOOLEAN"/>
-            <column name="population" type="uuid">
-                <constraints nullable="true" foreignKeyName="fk_systems_population_id" referencedTableName="population" referencedColumnNames="id"/>
-            </column>
-            <column name="allegiance_id" type="uuid">
-                <constraints nullable="true" foreignKeyName="fk_systems_allegiance_id" referencedTableName="allegiance" referencedColumnNames="id"/>
-            </column>
-            <column name="controlling_minor_faction_id" type="uuid">
-                <constraints nullable="true" foreignKeyName="fk_systems_controlling_minor_faction_id" referencedTableName="faction" referencedColumnNames="id"/>
-            </column>
-            <column name="government_id" type="uuid">
-                <constraints nullable="true" foreignKeyName="fk_systems_government_id" referencedTableName="government" referencedColumnNames="id"/>
-            </column>
-            <column name="power_id" type="uuid">
-                <constraints nullable="true" foreignKeyName="fk_systems_power_id" referencedTableName="power" referencedColumnNames="id"/>
-            </column>
-            <column name="power_state_id" type="uuid">
-                <constraints nullable="true" foreignKeyName="fk_systems_power_state_id" referencedTableName="power_state" referencedColumnNames="id"/>
-            </column>
-            <column name="primary_economy_id" type="uuid">
-                <constraints nullable="true" foreignKeyName="fk_systems_allegiance_id" referencedTableName="economy" referencedColumnNames="id"/>
-            </column>
-            <column name="reserve_type_id" type="uuid">
-                <constraints nullable="true" foreignKeyName="fk_systems_reserve_type_id" referencedTableName="reserve_type" referencedColumnNames="id"/>
-            </column>
-            <column name="security_id" type="uuid">
-                <constraints nullable="true" foreignKeyName="fk_systems_security_id" referencedTableName="security" referencedColumnNames="id"/>
-            </column>
+            <column name="elite_id" type="bigint"/>
+            <column name="x_coordinate" type="FLOAT8"/>
+            <column name="y_coordinate" type="FLOAT8"/>
+            <column name="z_coordinate" type="FLOAT8"/>
         </createTable>
     </changeSet>
 

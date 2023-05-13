@@ -10,14 +10,14 @@
         <dropNotNullConstraint columnDataType="bigint" columnName="ed_market_id" tableName="station"/>
 
         <!-- Add new column for system_id with foreign key constraint -->
-        <addColumn tableName="stations">
+        <addColumn tableName="station">
             <column name="system_id" type="uuid">
                 <constraints nullable="true" foreignKeyName="fk_system_id" referencedTableName="system"
                              referencedColumnNames="id"/>
             </column>
         </addColumn>
 
-        <!-- Update stations table with data from station_systems table -->
+        <!-- Update station table with data from station_systems table -->
         <sql>
             UPDATE station s
             SET system_id = ss.system_id FROM station_system ss

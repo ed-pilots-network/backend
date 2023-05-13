@@ -18,18 +18,17 @@ public interface SystemEntityMapper {
             @Result(property = "xCoordinate", column = "x_coordinate"),
             @Result(property = "yCoordinate", column = "y_coordinate"),
             @Result(property = "zCoordinate", column = "z_coordinate"),
-            @Result(property = "starClass", column = "star_class"),
     })
-    @Select("SELECT id, name, elite_id, x_coordinate, y_coordinate, z_coordinate, star_class FROM system WHERE id = #{id}")
+    @Select("SELECT id, name, elite_id, x_coordinate, y_coordinate, z_coordinate FROM system WHERE id = #{id}")
     Optional<SystemEntity> findById(@Param("id") UUID id);
 
-    @Insert("INSERT INTO system (id, name, elite_id, x_coordinate, y_coordinate, z_coordinate, star_class) VALUES (#{id}, #{name}, #{eliteId}, #{xCoordinate}, #{yCoordinate}, #{zCoordinate}, #{starClass})")
+    @Insert("INSERT INTO system (id, name, elite_id, x_coordinate, y_coordinate, z_coordinate) VALUES (#{id}, #{name}, #{eliteId}, #{xCoordinate}, #{yCoordinate}, #{zCoordinate})")
     int insert(SystemEntity systemEntity);
 
-    @Update("UPDATE system SET name = #{name}, elite_id = #{eliteId}, x_coordinate = #{xCoordinate}, y_coordinate = #{yCoordinate}, z_coordinate = #{zCoordinate}, star_class = #{starClass} WHERE id = #{id}")
+    @Update("UPDATE system SET name = #{name}, elite_id = #{eliteId}, x_coordinate = #{xCoordinate}, y_coordinate = #{yCoordinate}, z_coordinate = #{zCoordinate} WHERE id = #{id}")
     int update(SystemEntity systemEntity);
 
     @ResultMap("SystemEntityResult")
-    @Select("SELECT id, name, elite_id, x_coordinate, y_coordinate, z_coordinate, star_class FROM system WHERE name = #{name}")
+    @Select("SELECT id, name, elite_id, x_coordinate, y_coordinate, z_coordinate FROM system WHERE name = #{name}")
     Optional<SystemEntity> findByName(@Param("name") String name);
 }

@@ -18,7 +18,6 @@ public class SystemEntity {
     private Double xCoordinate;
     private Double yCoordinate;
     private Double zCoordinate;
-    private String starClass;
 
 }
 

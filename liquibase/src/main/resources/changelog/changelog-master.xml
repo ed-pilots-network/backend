@@ -6,19 +6,26 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <!-- Include the changeset that creates the systems table -->
-    <include file="changelog/0001-create-systems-table.xml"/>
-    <include file="changelog/0002-create-commodities-table.xml"/>
-    <include file="changelog/0003-create-economies-table.xml"/>
-    <include file="changelog/0004-create-station_types-table.xml"/>
-    <include file="changelog/0005-create-stations-table.xml"/>
+    <include file="changelog/0001-create-system-table.xml"/>
+    <include file="changelog/0002-create-commodity-table.xml"/>
+    <include file="changelog/0003-create-economy-table.xml"/>
+    <include file="changelog/0004-create-station_type-table.xml"/>
+    <include file="changelog/0005-create-station-table.xml"/>
     <include file="changelog/0006-create-station_station_type-table.xml"/>
-    <include file="changelog/0007-create-station_prohibited_commodities-table.xml"/>
-    <include file="changelog/0008-create-station_economy_proportions-table.xml"/>
+    <include file="changelog/0007-create-station_prohibited_commodity-table.xml"/>
+    <include file="changelog/0008-create-station_economy_proportion-table.xml"/>
     <include file="changelog/0009-create-schema_latest_timestamp-table.xml"/>
-    <include file="changelog/0010-create-historic_station_commodities-table.xml"/>
-    <include file="changelog/0011-create-system_stations-table.xml"/>
+    <include file="changelog/0010-create-historic_station_commodity-table.xml"/>
+    <include file="changelog/0011-create-system_station-table.xml"/>
     <include file="changelog/0013.1-add-unique-constraint-historic_station_commodity_market_data.xml"/>
-    <include file="changelog/0013.2-drop-station_systems-join-table.xml"/>
-    <include file="changelog/0014-add-star_class-to-systems-table.xml"/>
+    <include file="changelog/0013.2-drop-station_system-join-table.xml"/>
+    <include file="changelog/0015-create-allegiance-table.xml"/>
+    <include file="changelog/0016-create-faction-table.xml"/>
+    <include file="changelog/0017-create-government-table.xml"/>
+    <include file="changelog/0018-create-power-table.xml"/>
+    <include file="changelog/0019-create-power_state-table.xml"/>
+    <include file="changelog/0020-create-reserve_type-table.xml"/>
+    <include file="changelog/0021-create-security-table.xml"/>
+    <include file="changelog/0022-expand-system-table.xml"/>
 
 </databaseChangeLog>

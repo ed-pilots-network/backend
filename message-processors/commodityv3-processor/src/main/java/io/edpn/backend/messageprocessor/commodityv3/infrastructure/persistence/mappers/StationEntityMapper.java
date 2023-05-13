@@ -27,10 +27,10 @@ public interface StationEntityMapper {
 
 
     // Add additional methods for handling the complex relationships.
-    @Select("SELECT commodity_id FROM station_prohibited_commodities WHERE station_id = #{stationId}")
+    @Select("SELECT commodity_id FROM station_prohibited_commodity WHERE station_id = #{stationId}")
     List<UUID> findProhibitedCommodityIdsByStationId(UUID stationId);
 
-    @Select("SELECT economy_id, proportion FROM station_economy_proportions WHERE station_id = #{stationId}")
+    @Select("SELECT economy_id, proportion FROM station_economy_proportion WHERE station_id = #{stationId}")
     List<Map.Entry<UUID, Double>> findEconomyProportionsByStationId(UUID stationId);
 
     @ResultMap("StationEntityResult")
