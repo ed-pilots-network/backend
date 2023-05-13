@@ -15,19 +15,19 @@ public interface StationStationTypeEntityMapper {
             @Result(property = "stationId", column = "station_id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "stationTypeId", column = "station_type_id", javaType = UUID.class, typeHandler = UuidTypeHandler.class)
     })
-    @Select("SELECT station_id, station_type_id FROM station_station_types")
+    @Select("SELECT station_id, station_type_id FROM station_station_type")
     List<StationStationTypeEntity> findAll();
 
     @ResultMap("StationStationTypeEntityResult")
-    @Select("SELECT station_id, station_type_id FROM station_station_types WHERE station_id = #{stationId}")
+    @Select("SELECT station_id, station_type_id FROM station_station_type WHERE station_id = #{stationId}")
     Optional<StationStationTypeEntity> findById(@Param("stationId") UUID stationId);
 
-    @Insert("INSERT INTO station_station_types (station_id, station_type_id) VALUES (#{stationId}, #{systemId})")
+    @Insert("INSERT INTO station_station_type (station_id, station_type_id) VALUES (#{stationId}, #{systemId})")
     int insert(StationStationTypeEntity entity);
 
-    @Update("UPDATE station_station_types SET station_type_id = #{stationTypeId} WHERE station_id = #{stationId}")
+    @Update("UPDATE station_station_type SET station_type_id = #{stationTypeId} WHERE station_id = #{stationId}")
     int update(StationStationTypeEntity entity);
 
-    @Delete("DELETE FROM station_station_types WHERE station_id = #{stationId}")
+    @Delete("DELETE FROM station_station_type WHERE station_id = #{stationId}")
     int delete(@Param("stationId") UUID stationId);
 }

@@ -5,8 +5,8 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="051a0026-c808-47be-90f9-3fa6a8d6e246" author="daniel-j-mason ">
-        <createTable tableName="systems">
+    <changeSet id="031c60d5-da6b-462f-a37c-bd589eb616e9" author="daniel-j-mason">
+        <createTable tableName="reserve_type">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>

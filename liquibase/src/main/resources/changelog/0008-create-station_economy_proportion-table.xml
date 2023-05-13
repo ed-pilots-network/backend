@@ -5,19 +5,19 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="320f5745-af9e-41d2-98f9-4cd023e69064" author="pveeckhout">
-        <createTable tableName="station_economy_proportions">
+    <changeSet id="320f5745-af9e-41d2-98f9-4cd023e69064" author="daniel-j-mason">
+        <createTable tableName="station_economy_proportion">
             <column name="station_id" type="uuid">
-                <constraints nullable="false" foreignKeyName="fk_station_economy_proportions_station_id" referencedTableName="stations" referencedColumnNames="id"/>
+                <constraints nullable="false" foreignKeyName="fk_station_economy_proportion_station_id" referencedTableName="station" referencedColumnNames="id"/>
             </column>
             <column name="economy_id" type="uuid">
-                <constraints nullable="false" foreignKeyName="fk_station_economy_proportions_economy_id" referencedTableName="economies" referencedColumnNames="id"/>
+                <constraints nullable="false" foreignKeyName="fk_station_economy_proportion_economy_id" referencedTableName="economy" referencedColumnNames="id"/>
             </column>
             <column name="proportion" type="double">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addPrimaryKey tableName="station_economy_proportions" columnNames="station_id, economy_id" constraintName="pk_station_economy_proportions" />
+        <addPrimaryKey tableName="station_economy_proportion" columnNames="station_id, economy_id" constraintName="pk_station_economy_proportion" />
     </changeSet>
 
 </databaseChangeLog>

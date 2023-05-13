@@ -32,6 +32,7 @@ public interface HistoricStationCommodityMarketDatumEntityMapper {
     @ResultMap("HistoricStationCommodityMarketDatumResult")
     @Select("SELECT id, station_id, commodity_id, timestamp, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags FROM historic_station_commodity_market_data WHERE station_id = #{stationId} AND commodity_id = #{commodityId} AND timestamp = #{timestamp}")
     Optional<HistoricStationCommodityMarketDatumEntity> findByStationIdAndCommodityIdAndTimestamp(@Param("stationId") UUID stationId, @Param("commodityId") UUID commodityId, @Param("timestamp") LocalDateTime timestamp);
+    
     @ResultMap("HistoricStationCommodityMarketDatumResult")
     @Select("SELECT id, station_id, commodity_id, timestamp, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags FROM historic_station_commodity_market_data WHERE id = #{historicStationCommodityMarketDatumId}")
     Optional<HistoricStationCommodityMarketDatumEntity> findById(@Param("historicStationCommodityMarketDatumId") UUID historicStationCommodityMarketDatumId);

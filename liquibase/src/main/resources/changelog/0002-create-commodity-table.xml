@@ -5,8 +5,8 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="a751945b-5dcf-487e-ab6c-a193dd960007" author="pveeckhout ">
-        <createTable tableName="station_types">
+    <changeSet id="3006b50b-1c22-4b96-8dc1-5bc5b531d265" author="daniel-j-mason">
+        <createTable tableName="commodity">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>

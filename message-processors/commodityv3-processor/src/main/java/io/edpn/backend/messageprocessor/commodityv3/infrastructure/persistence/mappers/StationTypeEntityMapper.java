@@ -15,27 +15,27 @@ public interface StationTypeEntityMapper {
             @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name")
     })
-    @Select("SELECT id, name FROM station_types")
+    @Select("SELECT id, name FROM station_type")
     List<StationTypeEntity> findAll();
 
     @ResultMap("StationTypeEntityResult")
-    @Select("SELECT id, name FROM station_types WHERE id = #{id}")
+    @Select("SELECT id, name FROM station_type WHERE id = #{id}")
     Optional<StationTypeEntity> findById(@Param("id") UUID id);
 
-    @Insert("INSERT INTO station_types (id, name) VALUES (#{id}, #{name})")
+    @Insert("INSERT INTO station_type (id, name) VALUES (#{id}, #{name})")
     int insert(StationTypeEntity stationTypeEntity);
 
-    @Update("UPDATE station_types SET name = #{name} WHERE id = #{id}")
+    @Update("UPDATE station_type SET name = #{name} WHERE id = #{id}")
     int update(StationTypeEntity stationTypeEntity);
 
-    @Delete("DELETE FROM station_types WHERE id = #{id}")
+    @Delete("DELETE FROM station_type WHERE id = #{id}")
     int delete(@Param("id") UUID id);
 
     @ResultMap("StationTypeEntityResult")
-    @Select("SELECT id, name FROM station_types WHERE name = #{name}")
+    @Select("SELECT id, name FROM station_type WHERE name = #{name}")
     Optional<StationTypeEntity> findByName(@Param("name") String name);
 
     @ResultMap("StationTypeEntityResult")
-    @Select("SELECT id, name FROM station_types WHERE name LIKE #{namePrefix}%")
+    @Select("SELECT id, name FROM station_type WHERE name LIKE #{namePrefix}%")
     List<StationTypeEntity> findByNameStartingWith(@Param("namePrefix") String namePrefix);
 }

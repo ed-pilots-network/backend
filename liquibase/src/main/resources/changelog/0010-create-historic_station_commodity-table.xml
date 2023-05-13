@@ -5,16 +5,16 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="3fe19ef0-886c-4d19-99d6-9bbf16377c63" author="pveeckhout">
+    <changeSet id="3fe19ef0-886c-4d19-99d6-9bbf16377c63" author="daniel-j-mason">
         <createTable tableName="historic_station_commodity_market_data">
             <column name="id" type="uuid">
                 <constraints primaryKey="true"/>
             </column>
             <column name="station_id" type="uuid">
-                <constraints nullable="false" foreignKeyName="fk_historic_station_commodity_market_data_station_id" referencedTableName="stations" referencedColumnNames="id"/>
+                <constraints nullable="false" foreignKeyName="fk_historic_station_commodity_market_data_station_id" referencedTableName="station" referencedColumnNames="id"/>
             </column>
             <column name="commodity_id" type="uuid">
-                <constraints nullable="false" foreignKeyName="fk_historic_station_commodity_market_data_commodity_id" referencedTableName="commodities" referencedColumnNames="id"/>
+                <constraints nullable="false" foreignKeyName="fk_historic_station_commodity_market_data_commodity_id" referencedTableName="commodity" referencedColumnNames="id"/>
             </column>
             <column name="timestamp" type="timestamp">
                 <constraints nullable="false"/>

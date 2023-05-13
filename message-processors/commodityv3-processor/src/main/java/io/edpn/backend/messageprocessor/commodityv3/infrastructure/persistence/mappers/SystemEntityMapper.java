@@ -15,28 +15,28 @@ public interface SystemEntityMapper {
             @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name")
     })
-    @Select("SELECT id, name FROM systems")
+    @Select("SELECT id, name FROM system")
     List<SystemEntity> findAll();
 
     @ResultMap("SystemEntityResult")
-    @Select("SELECT id, name FROM systems WHERE id = #{id}")
+    @Select("SELECT id, name FROM system WHERE id = #{id}")
     Optional<SystemEntity> findById(@Param("id") UUID id);
 
-    @Insert("INSERT INTO systems (id, name) VALUES (#{id}, #{name})")
+    @Insert("INSERT INTO system (id, name) VALUES (#{id}, #{name})")
     int insert(SystemEntity systemEntity);
 
-    @Update("UPDATE systems SET name = #{name} WHERE id = #{id}")
+    @Update("UPDATE system SET name = #{name} WHERE id = #{id}")
     int update(SystemEntity systemEntity);
 
-    @Delete("DELETE FROM systems WHERE id = #{id}")
+    @Delete("DELETE FROM system WHERE id = #{id}")
     int delete(@Param("id") UUID id);
 
     @ResultMap("SystemEntityResult")
-    @Select("SELECT id, name FROM systems WHERE name = #{name}")
+    @Select("SELECT id, name FROM system WHERE name = #{name}")
     Optional<SystemEntity> findByName(@Param("name") String name);
 
     @ResultMap("SystemEntityResult")
-    @Select("SELECT id, name FROM systems WHERE name LIKE #{namePrefix}%")
+    @Select("SELECT id, name FROM system WHERE name LIKE #{namePrefix}%")
     List<SystemEntity> findByNameStartingWith(@Param("namePrefix") String namePrefix);
 
 }

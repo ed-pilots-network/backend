@@ -5,13 +5,13 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="5e7999c0-7cba-45ca-a9ec-5e218216b6b6" author="daniel-j-mason">
-        <createTable tableName="schema_latest_timestamp">
-            <column name="schema" type="varchar(255)">
-                <constraints nullable="false" primaryKey="true"/>
+    <changeSet id="44aed6de-a482-41af-b2be-fa36eb619c0d" author="daniel-j-mason">
+        <createTable tableName="power">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="timestamp" type="timestamp">
-                <constraints nullable="false"/>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
             </column>
         </createTable>
     </changeSet>

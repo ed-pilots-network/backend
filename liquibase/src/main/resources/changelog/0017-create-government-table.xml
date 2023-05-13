@@ -5,13 +5,13 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="5e7999c0-7cba-45ca-a9ec-5e218216b6b6" author="daniel-j-mason">
-        <createTable tableName="schema_latest_timestamp">
-            <column name="schema" type="varchar(255)">
-                <constraints nullable="false" primaryKey="true"/>
+    <changeSet id="83681acc-bae7-4952-abcd-11a37acc08a2" author="daniel-j-mason">
+        <createTable tableName="government">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="timestamp" type="timestamp">
-                <constraints nullable="false"/>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
             </column>
         </createTable>
     </changeSet>
