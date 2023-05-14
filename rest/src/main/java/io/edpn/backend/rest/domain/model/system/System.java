@@ -34,6 +34,6 @@ public class System {
     private LocalDateTime lastUpdated;
     private Faction controllingMinorFaction;
     private ReserveType reserveType;
-    private Long edSystemAddress;
+    private Long eliteId;
     private Collection<Body> bodies;
 }

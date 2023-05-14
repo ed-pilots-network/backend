@@ -7,7 +7,6 @@
 
     <changeSet id="b305dffc-efd6-4dd3-8b75-996b5ce0fe19" author="daniel-j-mason">
         <addColumn tableName="system">
-            <column name="ed_system_address" type="BIGINT"/>
             <column name="last_updated" type="TIMESTAMP WITHOUT TIME ZONE"/>
             <column name="needs_permit" type="BOOLEAN"/>
             <column name="population" type="BIGINT"/>

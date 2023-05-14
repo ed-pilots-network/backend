@@ -37,7 +37,7 @@ public interface SystemMapper {
                     javaType = Government.class, one =@One(select = "io.edpn.backend.eddnrest.infrastructure.mappers.common.FactionMapper.findById")),
             @Result(property = "reserveType", column = "reserve_type_id",
                     javaType = Government.class, one =@One(select = "io.edpn.backend.eddnrest.infrastructure.mappers.system.ReserveTypeMapper.findById")),
-            @Result(property = "edSystemAddress", column = "ed_system_address")
+            @Result(property = "eliteId", column = "elite_id")
     })
     @Select("SELECT * FROM system WHERE id = #{id}")
     Optional<System> findById(@Param("id") UUID id);
