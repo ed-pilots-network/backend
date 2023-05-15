@@ -2,6 +2,7 @@ package io.edpn.backend.rest.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.rest.application.service.station.GetStationService;
+import io.edpn.backend.rest.application.service.system.GetSystemService;
 import io.edpn.backend.rest.application.usecase.station.GetStationUseCase;
 import io.edpn.backend.rest.application.usecase.system.GetSystemUseCase;
 import io.edpn.backend.rest.infrastructure.persistence.mappers.system.SystemMapper;
@@ -12,21 +13,27 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class BeanConfig {
+
     @Bean
-    public GetStationService getStationService() {
+    public SystemRepository systemRepository(SystemMapper systemMapper) {
+        return new io.edpn.backend.rest.infrastructure.persistence.repository.system.SystemRepository(systemMapper);
+    }
+
+    @Bean
+    public GetSystemUseCase getSystemUseCase(SystemRepository systemRepository) {
+        return new GetSystemService(systemRepository);
+    }
+
+    @Bean
+    public GetStationUseCase getStationService() {
         return new GetStationService();
     }
 
     @Bean
-    public GetStationUseCase getStationUsecase(GetStationService getStationService) {
-        return getStationService;
-    }
-    
-    @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
     }
-    
+
     @Bean
     public ConfigurationCustomizer mybatisConfigurationCustomizer() {
         return new ConfigurationCustomizer() {
