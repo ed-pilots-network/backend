@@ -23,7 +23,8 @@
         <hamcrest.version>2.2</hamcrest.version>
         <mybatis.version>3.0.0</mybatis.version>
         <apache.commons.math.version>3.6.1</apache.commons.math.version>
-        <messageprocessor.lib.version>0.0.1-SNAPSHOT</messageprocessor.lib.version>
+        <messageprocessor.lib.version>0.0.2-SNAPSHOT</messageprocessor.lib.version>
+        <mockito.version>5.3.1</mockito.version>
     </properties>
     <dependencies>
         <dependency>
@@ -113,6 +114,18 @@
         <dependency>
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>${hamcrest.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
