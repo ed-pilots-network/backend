@@ -9,7 +9,7 @@ import java.util.UUID;
 
 
 @RequiredArgsConstructor
-public class StationEconomyProportionRepository implements io.edpn.backend.messageprocessor.commodityv3.domain.repository.StationEconomyProportionRepository {
+public class MybatisStationEconomyProportionRepository implements io.edpn.backend.messageprocessor.commodityv3.domain.repository.StationEconomyProportionRepository {
 
     private final StationEconomyProportionEntityMapper stationEconomyProportionEntityMapper;
 

@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class StationProhibitedCommodityRepository implements io.edpn.backend.messageprocessor.commodityv3.domain.repository.StationProhibitedCommodityRepository {
+public class MybatisStationProhibitedCommodityRepository implements io.edpn.backend.messageprocessor.commodityv3.domain.repository.StationProhibitedCommodityRepository {
 
     private final StationProhibitedCommodityEntityMapper stationProhibitedCommodityEntityMapper;
 

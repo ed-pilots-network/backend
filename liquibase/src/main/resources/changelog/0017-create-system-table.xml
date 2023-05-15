@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="051a0026-c808-47be-90f9-3fa6a8d6e246" author="daniel-j-mason ">
+        <createTable tableName="system">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="elite_id" type="bigint"/>
+            <column name="x_coordinate" type="float"/>
+            <column name="y_coordinate" type="float"/>
+            <column name="z_coordinate" type="float"/>
+            <column name="last_updated" type="timestamp"/>
+            <column name="needs_permit" type="boolean"/>
+            <column name="population" type="bigint"/>
+            <column name="allegiance_id" type="uuid">
+                <constraints nullable="true" foreignKeyName="fk_systems_allegiance_id" referencedTableName="allegiance"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="controlling_minor_faction_id" type="uuid">
+                <constraints nullable="true" foreignKeyName="fk_system_controlling_minor_faction_id"
+                             referencedTableName="faction" referencedColumnNames="id"/>
+            </column>
+            <column name="government_id" type="uuid">
+                <constraints nullable="true" foreignKeyName="fk_system_government_id" referencedTableName="government"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="power_id" type="uuid">
+                <constraints nullable="true" foreignKeyName="fk_system_power_id" referencedTableName="power"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="power_state_id" type="uuid">
+                <constraints nullable="true" foreignKeyName="fk_system_power_state_id" referencedTableName="power_state"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="primary_economy_id" type="uuid">
+                <constraints nullable="true" foreignKeyName="fk_system_allegiance_id" referencedTableName="economy"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="reserve_type_id" type="uuid">
+                <constraints nullable="true" foreignKeyName="fk_system_reserve_type_id"
+                             referencedTableName="reserve_type" referencedColumnNames="id"/>
+            </column>
+            <column name="security_id" type="uuid">
+                <constraints nullable="true" foreignKeyName="fk_system_security_id" referencedTableName="security"
+                             referencedColumnNames="id"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
