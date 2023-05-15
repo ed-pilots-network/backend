@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class HistoricStationCommodityMarketDatumRepositoryTest {
+class MybatisHistoricStationCommodityMarketDatumRepositoryTest {
 
     private HistoricStationCommodityMarketDatumRepository repository;
 
@@ -33,7 +33,7 @@ class HistoricStationCommodityMarketDatumRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        repository = new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.HistoricStationCommodityMarketDatumRepository(idGenerator, mapper);
+        repository = new MybatisHistoricStationCommodityMarketDatumRepository(idGenerator, mapper);
     }
 
     @Test

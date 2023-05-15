@@ -17,7 +17,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class StationEconomyProportionRepositoryTest {
+class MybatisStationEconomyProportionRepositoryTest {
 
     @Mock
     private StationEconomyProportionEntityMapper stationEconomyProportionEntityMapper;
@@ -26,7 +26,7 @@ class StationEconomyProportionRepositoryTest {
 
     @BeforeEach
     void setup() {
-        repository = new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.StationEconomyProportionRepository(stationEconomyProportionEntityMapper);
+        repository = new MybatisStationEconomyProportionRepository(stationEconomyProportionEntityMapper);
     }
 
     @Test

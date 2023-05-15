@@ -20,7 +20,7 @@ public interface EconomyEntityMapper {
 
     @Insert("INSERT INTO economy (id, name) VALUES (#{id}, #{name})")
     int insert(EconomyEntity economyEntity);
-    
+
     @ResultMap("EconomyEntityResult")
     @Select("SELECT id, name FROM economy WHERE name = #{name}")
     Optional<EconomyEntity> findByName(@Param("name") String name);

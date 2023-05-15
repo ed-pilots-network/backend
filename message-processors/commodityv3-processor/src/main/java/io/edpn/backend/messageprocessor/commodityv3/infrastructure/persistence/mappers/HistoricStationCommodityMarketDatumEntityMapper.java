@@ -26,10 +26,6 @@ public interface HistoricStationCommodityMarketDatumEntityMapper {
             @Result(property = "demandBracket", column = "demand_bracket"),
             @Result(property = "statusFlags", column = "status_flags")
     })
-    @Select("SELECT id, station_id, commodity_id, timestamp, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags FROM historic_station_commodity_market_data")
-    List<HistoricStationCommodityMarketDatumEntity> findAll();
-
-    @ResultMap("HistoricStationCommodityMarketDatumResult")
     @Select("SELECT id, station_id, commodity_id, timestamp, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags FROM historic_station_commodity_market_data WHERE station_id = #{stationId} AND commodity_id = #{commodityId} AND timestamp = #{timestamp}")
     Optional<HistoricStationCommodityMarketDatumEntity> findByStationIdAndCommodityIdAndTimestamp(@Param("stationId") UUID stationId, @Param("commodityId") UUID commodityId, @Param("timestamp") LocalDateTime timestamp);
     
@@ -41,26 +37,8 @@ public interface HistoricStationCommodityMarketDatumEntityMapper {
     @Select("SELECT id, station_id, commodity_id, timestamp, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags FROM historic_station_commodity_market_data WHERE commodity_id = #{commodityId} AND timestamp BETWEEN #{startTimestamp} AND #{endTimestamp}")
     List<HistoricStationCommodityMarketDatumEntity> findByCommodityIdAndTimestampBetween(@Param("commodityId") UUID commodityId, @Param("startTimestamp") LocalDateTime startTimestamp, @Param("endTimestamp") LocalDateTime endTimestamp);
 
-    @ResultMap("HistoricStationCommodityMarketDatumResult")
-    @Select("SELECT id, station_id, commodity_id, timestamp, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags FROM historic_station_commodity_market_data WHERE station_id = #{stationId} AND timestamp BETWEEN #{startTimestamp} AND #{endTimestamp}")
-    List<HistoricStationCommodityMarketDatumEntity> findByIdStationIdAndTimestampBetween(@Param("stationId") UUID stationId, @Param("startTimestamp") LocalDateTime startTimestamp, @Param("endTimestamp") LocalDateTime endTimestamp);
-
-    @ResultMap("HistoricStationCommodityMarketDatumResult")
-    @Select("SELECT id, station_id, commodity_id, timestamp, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags FROM historic_station_commodity_market_data WHERE commodity_id = #{commodityId} AND timestamp = (SELECT MAX(timestamp) FROM historic_station_commodity_market_data WHERE commodity_id = #{commodityId})")
-    List<HistoricStationCommodityMarketDatumEntity> findLatestByIdCommodityId(@Param("commodityId") UUID commodityId);
-
-    @ResultMap("HistoricStationCommodityMarketDatumResult")
-    @Select("SELECT id, station_id, commodity_id, timestamp, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags FROM historic_station_commodity_market_data WHERE station_id = #{stationId} AND timestamp = (SELECT MAX(timestamp) FROM historic_station_commodity_market_data WHERE station_id = #{stationId})")
-    List<HistoricStationCommodityMarketDatumEntity> findLatestByIdStationId(@Param("stationId") UUID stationId);
-
     @Insert("INSERT INTO historic_station_commodity_market_data (id, station_id, commodity_id, timestamp, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags) VALUES (#{id}, #{stationId}, #{commodityId}, #{timestamp}, #{meanPrice}, #{buyPrice}, #{stock}, #{stockBracket}, #{sellPrice}, #{demand}, #{demandBracket}, #{statusFlags})")
     int insert(HistoricStationCommodityMarketDatumEntity historicStationCommodityMarketDatumEntity);
-
-    @Update("UPDATE historic_station_commodity_market_data SET station_id = #{stationId}, commodity_id = #{commodityId}, timestamp = #{timestamp}, mean_price = #{meanPrice}, buy_price = #{buyPrice}, stock = #{stock}, stock_bracket = #{stockBracket}, sell_price = #{sellPrice}, demand = #{demand}, demand_bracket = #{demandBracket}, status_flags = #{statusFlags} WHERE id = #{id} ")
-    int update(HistoricStationCommodityMarketDatumEntity historicStationCommodityMarketDatumEntity);
-
-    @Delete("DELETE FROM historic_station_commodity_market_data WHERE id = #{id}")
-    int deleteById(@Param("id") UUID id);
 
     @Delete("""
             WITH cte AS (
@@ -80,5 +58,5 @@ public interface HistoricStationCommodityMarketDatumEntityMapper {
                   AND (next_timestamp = timestamp + INTERVAL '1 microsecond' OR prev_timestamp = timestamp - INTERVAL '1 microsecond')
             )
             """)
-    int deleteObsoleteInbetweenValues(@Param("stationId") UUID stationId, @Param("commodityId") UUID commodityId);
+    int deleteObsoleteForStationAndCommodity(@Param("stationId") UUID stationId, @Param("commodityId") UUID commodityId);
 }

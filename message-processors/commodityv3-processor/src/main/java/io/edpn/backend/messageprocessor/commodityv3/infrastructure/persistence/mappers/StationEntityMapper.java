@@ -22,18 +22,6 @@ public interface StationEntityMapper {
             @Result(property = "economyEntityIdProportionMap", column = "id", many = @Many(select = "findEconomyProportionsByStationId")),
             @Result(property = "systemId", column = "system_id", javaType = UUID.class, typeHandler = UuidTypeHandler.class)
     })
-    @Select("SELECT id, name, ed_market_id, market_updated_at, has_commodities, system_id FROM station")
-    List<StationEntity> findAll();
-
-
-    // Add additional methods for handling the complex relationships.
-    @Select("SELECT commodity_id FROM station_prohibited_commodity WHERE station_id = #{stationId}")
-    List<UUID> findProhibitedCommodityIdsByStationId(UUID stationId);
-
-    @Select("SELECT economy_id, proportion FROM station_economy_proportion WHERE station_id = #{stationId}")
-    List<Map.Entry<UUID, Double>> findEconomyProportionsByStationId(UUID stationId);
-
-    @ResultMap("StationEntityResult")
     @Select("SELECT id, name, ed_market_id, market_updated_at, has_commodities, system_id FROM station WHERE id = #{stationId}")
     Optional<StationEntity> findById(@Param("stationId") UUID stationId);
 
@@ -50,8 +38,5 @@ public interface StationEntityMapper {
 
     @Update("UPDATE station SET name = #{name}, ed_market_id = #{edMarketId}, market_updated_at = #{marketUpdatedAt}, has_commodities = #{hasCommodities}, system_id = #{systemId} WHERE id = #{id}")
     int update(StationEntity stationEntity);
-
-    @Delete("DELETE FROM station WHERE id = #{id}")
-    int deleteById(UUID id);
 
 }

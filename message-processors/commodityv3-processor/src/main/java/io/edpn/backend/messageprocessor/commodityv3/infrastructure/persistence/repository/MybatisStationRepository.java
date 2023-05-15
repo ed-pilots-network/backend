@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class StationRepository implements io.edpn.backend.messageprocessor.commodityv3.domain.repository.StationRepository {
+public class MybatisStationRepository implements io.edpn.backend.messageprocessor.commodityv3.domain.repository.StationRepository {
 
     private final IdGenerator idGenerator;
     private final StationEntityMapper stationEntityMapper;
