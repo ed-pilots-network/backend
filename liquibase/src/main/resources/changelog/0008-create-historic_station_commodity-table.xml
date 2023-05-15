@@ -44,6 +44,9 @@
                 <constraints nullable="true"/>
             </column>
         </createTable>
+
+        <addUniqueConstraint tableName="historic_station_commodity_market_data"
+                             columnNames="station_id, commodity_id, timestamp"/>
     </changeSet>
 
 </databaseChangeLog>

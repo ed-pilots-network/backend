@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class StationProhibitedCommodityRepositoryTest {
+class MybatisStationProhibitedCommodityRepositoryTest {
 
     @Mock
     private StationProhibitedCommodityEntityMapper entityMapper;
@@ -28,7 +28,7 @@ class StationProhibitedCommodityRepositoryTest {
 
     @BeforeEach
     void setup() {
-        repository = new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.StationProhibitedCommodityRepository(entityMapper);
+        repository = new MybatisStationProhibitedCommodityRepository(entityMapper);
     }
 
     @Test

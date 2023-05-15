@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class SystemRepository implements io.edpn.backend.messageprocessor.fsssignaldiscoveredv1.domain.repository.SystemRepository {
+public class MybatisSystemRepository implements io.edpn.backend.messageprocessor.fsssignaldiscoveredv1.domain.repository.SystemRepository {
 
     private final SystemEntityMapper systemEntityMapper;
 

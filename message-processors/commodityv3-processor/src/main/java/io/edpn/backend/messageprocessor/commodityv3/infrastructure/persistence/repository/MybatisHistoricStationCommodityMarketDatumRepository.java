@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class HistoricStationCommodityMarketDatumRepository implements io.edpn.backend.messageprocessor.commodityv3.domain.repository.HistoricStationCommodityMarketDatumRepository {
+public class MybatisHistoricStationCommodityMarketDatumRepository implements io.edpn.backend.messageprocessor.commodityv3.domain.repository.HistoricStationCommodityMarketDatumRepository {
 
     private final IdGenerator idGenerator;
     private final HistoricStationCommodityMarketDatumEntityMapper historicStationCommodityMarketDatumEntityMapper;

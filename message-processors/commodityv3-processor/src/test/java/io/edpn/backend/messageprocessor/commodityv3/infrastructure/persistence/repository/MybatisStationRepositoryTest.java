@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class StationRepositoryTest {
+class MybatisStationRepositoryTest {
 
     @Mock
     private IdGenerator idGenerator;
@@ -30,7 +30,7 @@ class StationRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        stationRepository = new io.edpn.backend.messageprocessor.commodityv3.infrastructure.persistence.repository.StationRepository(idGenerator, stationEntityMapper);
+        stationRepository = new MybatisStationRepository(idGenerator, stationEntityMapper);
     }
 
     @Test
