@@ -15,7 +15,15 @@ public class ServiceConfig {
             StationRepository stationRepository,
             CommodityRepository commodityRepository,
             EconomyRepository economyRepository,
-            HistoricStationCommodityMarketDatumRepository historicStationCommodityMarketDatumRepository) {
-        return new SynchronizedReceiveCommodityMessageService(systemRepository, stationRepository, commodityRepository, economyRepository, historicStationCommodityMarketDatumRepository);
+            HistoricStationCommodityMarketDatumRepository historicStationCommodityMarketDatumRepository,
+            StationProhibitedCommodityRepository stationProhibitedCommodityRepository,
+    StationEconomyProportionRepository stationEconomyProportionRepository) {
+        return new SynchronizedReceiveCommodityMessageService(systemRepository,
+                stationRepository,
+                commodityRepository,
+                economyRepository,
+                historicStationCommodityMarketDatumRepository,
+                stationProhibitedCommodityRepository,
+                stationEconomyProportionRepository);
     }
 }

@@ -3,26 +3,16 @@ package io.edpn.backend.messageprocessor.commodityv3.application.service;
 import io.edpn.backend.messageprocessor.commodityv3.application.dto.eddn.CommodityMessage;
 import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.CommodityEntity;
 import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.HistoricStationCommodityMarketDatumEntity;
+import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.StationEconomyProportionEntity;
 import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.StationEntity;
 import io.edpn.backend.messageprocessor.commodityv3.application.usecase.ReceiveCommodityMessageUseCase;
-import io.edpn.backend.messageprocessor.commodityv3.domain.repository.CommodityRepository;
-import io.edpn.backend.messageprocessor.commodityv3.domain.repository.EconomyRepository;
-import io.edpn.backend.messageprocessor.commodityv3.domain.repository.HistoricStationCommodityMarketDatumRepository;
-import io.edpn.backend.messageprocessor.commodityv3.domain.repository.StationRepository;
-import io.edpn.backend.messageprocessor.commodityv3.domain.repository.SystemRepository;
-import java.time.LocalDateTime;
-import java.util.AbstractMap;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import io.edpn.backend.messageprocessor.commodityv3.domain.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.*;
 
 import static io.edpn.backend.messageprocessor.domain.util.CollectionUtil.toList;
 
@@ -34,6 +24,8 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
     private final CommodityRepository commodityRepository;
     private final EconomyRepository economyRepository;
     private final HistoricStationCommodityMarketDatumRepository historicStationCommodityMarketDatumRepository;
+    private final StationProhibitedCommodityRepository stationProhibitedCommodityRepository;
+    private final StationEconomyProportionRepository stationEconomyProportionRepository;
 
     @Override
     @Transactional
@@ -65,13 +57,19 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
         });
 
         // update station
-        Collection<UUID> prohibitedCommodityIds = getProhibitedCommodityIds(prohibitedCommodities);
-        Map<UUID, Double> economyEntityIdProportionMap = getEconomyEntityIdProportionMap(economies);
         station.setMarketUpdatedAt(updateTimestamp);
         station.setHasCommodities(true);
-        station.setProhibitedCommodityIds(prohibitedCommodityIds);
-        station.setEconomyEntityIdProportionMap(economyEntityIdProportionMap);
         stationRepository.update(station);
+
+        //remove old prohibited commodities and save new
+        Collection<UUID> prohibitedCommodityIds = getProhibitedCommodityIds(prohibitedCommodities);
+        stationProhibitedCommodityRepository.deleteByStationId(station.getId());
+        stationProhibitedCommodityRepository.insert(station.getId(), prohibitedCommodityIds);
+
+        //remove old economyProportions and save new
+        List<StationEconomyProportionEntity> stationEconomyProportionEntities = getEconomyEntityIdProportions(station.getId(), economies);
+        stationEconomyProportionRepository.deleteByStationId(station.getId());
+        stationEconomyProportionRepository.insert(stationEconomyProportionEntities);
 
         //save market data
         saveCommodityMarketData(updateTimestamp, commodities, station);
@@ -91,12 +89,11 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
             Arrays.stream(commodities)
                     .forEach(commodity -> {
                         UUID commodityId = commodityRepository.findOrCreateByName(commodity.getName()).getId();
-                        UUID id = station.getId();
+                        UUID stationId = station.getId();
 
-                        if (historicStationCommodityMarketDatumRepository.getByStationIdAndCommodityIdAndTimestamp(id, commodityId, updateTimestamp).isEmpty()) {
+                        if (historicStationCommodityMarketDatumRepository.getByStationIdAndCommodityIdAndTimestamp(stationId, commodityId, updateTimestamp).isEmpty()) {
                             var hsce = HistoricStationCommodityMarketDatumEntity.builder()
-                                    .id(UUID.randomUUID())
-                                    .stationId(id)
+                                    .stationId(stationId)
                                     .commodityId(commodityId)
                                     .timestamp(updateTimestamp)
                                     .meanPrice(commodity.getMeanPrice())
@@ -113,22 +110,21 @@ public class SynchronizedReceiveCommodityMessageService implements ReceiveCommod
                         }
 
                         //data cleanup
-                        historicStationCommodityMarketDatumRepository.cleanupRedundantData(id, commodityId);
+                        historicStationCommodityMarketDatumRepository.cleanupRedundantData(stationId, commodityId);
                     });
         }
     }
 
-    private Map<UUID, Double> getEconomyEntityIdProportionMap(CommodityMessage.V3.Economy[] economies) {
+    private List<StationEconomyProportionEntity> getEconomyEntityIdProportions(UUID stationId, CommodityMessage.V3.Economy[] economies) {
         return Optional.ofNullable(economies)
                 .map(arr -> Arrays.stream(arr)
                         .map(economy -> {
-                            UUID id = economyRepository.findOrCreateByName(economy.getName()).getId();
+                            UUID economyId = economyRepository.findOrCreateByName(economy.getName()).getId();
                             double proportion = economy.getProportion();
-                            return new AbstractMap.SimpleEntry<>(id, proportion);
+                            return new StationEconomyProportionEntity(stationId, economyId, proportion);
                         })
-                        .filter(entry -> Objects.nonNull(entry.getKey()))
-                        .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue, (o1, o2) -> o1)))
-                .orElse(Collections.emptyMap());
+                        .toList())
+                .orElse(Collections.emptyList());
     }
 
     private Collection<UUID> getProhibitedCommodityIds(String[] prohibitedCommodities) {

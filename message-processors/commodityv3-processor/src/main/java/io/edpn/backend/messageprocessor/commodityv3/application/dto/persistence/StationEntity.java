@@ -21,7 +21,5 @@ public class StationEntity {
     private UUID StationTypeId;
     private LocalDateTime marketUpdatedAt;
     private boolean hasCommodities;
-    private Collection<UUID> prohibitedCommodityIds;
-    private Map<UUID, Double> economyEntityIdProportionMap;
     private UUID systemId;
 }
