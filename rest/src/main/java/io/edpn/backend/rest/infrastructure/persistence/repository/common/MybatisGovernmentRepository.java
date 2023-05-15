@@ -1,6 +1,7 @@
 package io.edpn.backend.rest.infrastructure.persistence.repository.common;
 
 import io.edpn.backend.rest.domain.model.common.Government;
+import io.edpn.backend.rest.domain.repository.common.GovernmentRepository;
 import io.edpn.backend.rest.infrastructure.persistence.mappers.common.GovernmentMapper;
 import lombok.RequiredArgsConstructor;
 
@@ -9,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class GovernmentRepository implements io.edpn.backend.rest.domain.repository.common.GovernmentRepository {
+public class MybatisGovernmentRepository implements GovernmentRepository {
     
     private final GovernmentMapper governmentMapper;
     

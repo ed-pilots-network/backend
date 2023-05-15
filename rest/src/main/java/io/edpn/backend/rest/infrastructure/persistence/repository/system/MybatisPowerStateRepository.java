@@ -1,6 +1,7 @@
 package io.edpn.backend.rest.infrastructure.persistence.repository.system;
 
 import io.edpn.backend.rest.domain.model.system.PowerState;
+import io.edpn.backend.rest.domain.repository.system.PowerStateRepository;
 import io.edpn.backend.rest.infrastructure.persistence.mappers.system.PowerStateMapper;
 import lombok.RequiredArgsConstructor;
 
@@ -9,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class PowerStateRepository implements io.edpn.backend.rest.domain.repository.system.PowerStateRepository {
+public class MybatisPowerStateRepository implements PowerStateRepository {
     
     private final PowerStateMapper powerStateMapper;
     

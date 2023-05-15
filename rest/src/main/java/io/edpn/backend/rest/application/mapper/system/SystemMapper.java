@@ -1,11 +1,11 @@
 package io.edpn.backend.rest.application.mapper.system;
 
-import io.edpn.backend.rest.application.dto.system.GetSystemResponse;
+import io.edpn.backend.rest.application.dto.system.FindSystemResponse;
 import io.edpn.backend.rest.domain.model.system.System;
 
 public class SystemMapper{
-        public static GetSystemResponse map(System system) {
-            return GetSystemResponse.builder()
+        public static FindSystemResponse map(System system) {
+            return FindSystemResponse.builder()
                     .id(system.getId())
                     .name(system.getName())
                     .coordinate(system.getCoordinate())
@@ -24,23 +24,23 @@ public class SystemMapper{
                     .build();
         }
         
-        public static System map(GetSystemResponse getSystemResponse) {
+        public static System map(FindSystemResponse findSystemResponse) {
             return System.builder()
-                    .id(getSystemResponse.getId())
-                    .name(getSystemResponse.getName())
-                    .coordinate(getSystemResponse.getCoordinate())
-                    .population(getSystemResponse.getPopulation())
-                    .government(getSystemResponse.getGovernment())
-                    .allegiance(getSystemResponse.getAllegiance())
-                    .security(getSystemResponse.getSecurity())
-                    .primaryEconomy(getSystemResponse.getPrimaryEconomy())
-                    .power(getSystemResponse.getPower())
-                    .powerState(getSystemResponse.getPowerState())
-                    .needsPermit(getSystemResponse.isNeedsPermit())
-                    .lastUpdated(getSystemResponse.getLastUpdated())
-                    .controllingMinorFaction(getSystemResponse.getControllingMinorFaction())
-                    .reserveType(getSystemResponse.getReserveType())
-                    .eliteId(getSystemResponse.getEliteId())
+                    .id(findSystemResponse.getId())
+                    .name(findSystemResponse.getName())
+                    .coordinate(findSystemResponse.getCoordinate())
+                    .population(findSystemResponse.getPopulation())
+                    .government(findSystemResponse.getGovernment())
+                    .allegiance(findSystemResponse.getAllegiance())
+                    .security(findSystemResponse.getSecurity())
+                    .primaryEconomy(findSystemResponse.getPrimaryEconomy())
+                    .power(findSystemResponse.getPower())
+                    .powerState(findSystemResponse.getPowerState())
+                    .needsPermit(findSystemResponse.isNeedsPermit())
+                    .lastUpdated(findSystemResponse.getLastUpdated())
+                    .controllingMinorFaction(findSystemResponse.getControllingMinorFaction())
+                    .reserveType(findSystemResponse.getReserveType())
+                    .eliteId(findSystemResponse.getEliteId())
                     .build();
         }
 }

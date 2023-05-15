@@ -1,6 +1,7 @@
 package io.edpn.backend.rest.infrastructure.persistence.repository.common;
 
 import io.edpn.backend.rest.domain.model.common.Economy;
+import io.edpn.backend.rest.domain.repository.common.EconomyRepository;
 import io.edpn.backend.rest.infrastructure.persistence.mappers.common.EconomyMapper;
 import lombok.RequiredArgsConstructor;
 
@@ -9,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class EconomyRepository implements io.edpn.backend.rest.domain.repository.common.EconomyRepository {
+public class MybatisEconomyRepository implements EconomyRepository {
     
     private final EconomyMapper economyMapper;
     

@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Value(staticConstructor = "of")
 @Builder
-public class GetSystemResponse {
+public class FindSystemResponse {
     
     UUID id;
     String name;

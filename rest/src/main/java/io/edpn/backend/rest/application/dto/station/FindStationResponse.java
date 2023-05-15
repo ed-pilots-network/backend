@@ -5,7 +5,7 @@ import lombok.Value;
 
 @Value(staticConstructor = "of")
 @Builder
-public class GetStationResponse {
+public class FindStationResponse {
 
     Long id;
     String name;

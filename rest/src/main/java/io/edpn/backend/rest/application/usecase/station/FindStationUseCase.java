@@ -4,7 +4,7 @@ import io.edpn.backend.rest.domain.model.station.Station;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface GetStationUseCase {
+public interface FindStationUseCase {
 
     Optional<Station> findById(UUID id);
 }

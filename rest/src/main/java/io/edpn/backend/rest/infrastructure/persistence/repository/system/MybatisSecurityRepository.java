@@ -1,6 +1,7 @@
 package io.edpn.backend.rest.infrastructure.persistence.repository.system;
 
 import io.edpn.backend.rest.domain.model.system.Security;
+import io.edpn.backend.rest.domain.repository.system.SecurityRepository;
 import io.edpn.backend.rest.infrastructure.persistence.mappers.system.SecurityMapper;
 import lombok.RequiredArgsConstructor;
 
@@ -9,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class SecurityRepository implements io.edpn.backend.rest.domain.repository.system.SecurityRepository {
+public class MybatisSecurityRepository implements SecurityRepository {
     
     private final SecurityMapper securityMapper;
     

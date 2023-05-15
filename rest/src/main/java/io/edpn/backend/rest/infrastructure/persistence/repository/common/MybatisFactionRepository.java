@@ -1,6 +1,7 @@
 package io.edpn.backend.rest.infrastructure.persistence.repository.common;
 
 import io.edpn.backend.rest.domain.model.common.Faction;
+import io.edpn.backend.rest.domain.repository.common.FactionRepository;
 import io.edpn.backend.rest.infrastructure.persistence.mappers.common.FactionMapper;
 import lombok.RequiredArgsConstructor;
 
@@ -9,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class FactionRepository implements io.edpn.backend.rest.domain.repository.common.FactionRepository {
+public class MybatisFactionRepository implements FactionRepository {
     
     private final FactionMapper factionMapper;
     
