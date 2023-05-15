@@ -18,7 +18,7 @@ public interface PowerMapper {
     @Select("Select * FROM power WHERE id = #{id}")
     Optional<Power> findById(@Param("id") UUID id);
     
-    @Results(id = "PowerResult")
+    @ResultMap("PowerResult")
     @Select("Select * FROM power")
     List<Power> findAll();
     

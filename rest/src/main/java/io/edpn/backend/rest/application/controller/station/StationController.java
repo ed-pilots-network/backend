@@ -1,8 +1,8 @@
 package io.edpn.backend.rest.application.controller.station;
 
 import io.edpn.backend.rest.application.dto.station.GetStationResponse;
-import io.edpn.backend.rest.application.mapper.StationMapper;
-import io.edpn.backend.rest.application.usecase.GetStationUsecase;
+import io.edpn.backend.rest.application.mapper.station.StationMapper;
+import io.edpn.backend.rest.application.usecase.station.GetStationUseCase;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class StationController {
 
-    private final GetStationUsecase getStationUsecase;
+    private final GetStationUseCase getStationUsecase;
 
     @GetMapping("/{id}")
     public ResponseEntity<GetStationResponse> getStation(@PathVariable UUID id) {

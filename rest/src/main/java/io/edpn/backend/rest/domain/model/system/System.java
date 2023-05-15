@@ -19,6 +19,7 @@ import java.util.UUID;
 @Builder
 //TODO: Investigate states. EDPN Data has it as an array of 3 objects for Happiness/Economy/Security
 //TODO: Investigate minorFactionPresence array
+//TODO: bodies?
 public class System {
     private UUID id;
     private String name;

@@ -1,4 +1,4 @@
-package io.edpn.backend.rest.application.mapper;
+package io.edpn.backend.rest.application.mapper.station;
 
 import io.edpn.backend.rest.application.dto.station.GetStationResponse;
 import io.edpn.backend.rest.domain.model.station.Station;

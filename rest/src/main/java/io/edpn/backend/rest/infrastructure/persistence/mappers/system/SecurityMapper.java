@@ -18,7 +18,7 @@ public interface SecurityMapper {
     @Select("Select * FROM security WHERE id = #{id}")
     Optional<Security> findById(@Param("id") UUID id);
     
-    @Results(id = "SecurityResult")
+    @ResultMap("SecurityResult")
     @Select("Select * FROM security")
     List<Security> findAll();
     

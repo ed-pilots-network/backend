@@ -1,8 +1,11 @@
 package io.edpn.backend.rest.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.rest.application.service.GetStationService;
-import io.edpn.backend.rest.application.usecase.GetStationUsecase;
+import io.edpn.backend.rest.application.service.station.GetStationService;
+import io.edpn.backend.rest.application.usecase.station.GetStationUseCase;
+import io.edpn.backend.rest.application.usecase.system.GetSystemUseCase;
+import io.edpn.backend.rest.infrastructure.persistence.mappers.system.SystemMapper;
+import io.edpn.backend.rest.infrastructure.persistence.repository.system.SystemRepository;
 import org.mybatis.spring.boot.autoconfigure.ConfigurationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,10 +18,10 @@ public class BeanConfig {
     }
 
     @Bean
-    public GetStationUsecase getStationUsecase(GetStationService getStationService) {
+    public GetStationUseCase getStationUsecase(GetStationService getStationService) {
         return getStationService;
     }
-
+    
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();

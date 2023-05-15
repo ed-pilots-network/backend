@@ -18,7 +18,7 @@ public interface GovernmentMapper {
     @Select("Select * FROM government WHERE id = #{id}")
     Optional<Government> findById(@Param("id") UUID id);
     
-    @Results(id = "GovernmentResult")
+    @ResultMap("GovernmentResult")
     @Select("Select * FROM government")
     List<Government> findAll();
     

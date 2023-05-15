@@ -18,7 +18,7 @@ public interface ReserveTypeMapper {
     @Select("Select * FROM reserve_type WHERE id = #{id}")
     Optional<ReserveType> findById(@Param("id") UUID id);
     
-    @Results(id = "ReserveTypeResult")
+    @ResultMap("ReserveTypeResult")
     @Select("Select * FROM reserve_type")
     List<ReserveType> findAll();
     

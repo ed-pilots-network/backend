@@ -18,7 +18,7 @@ public interface AllegianceMapper {
     @Select("Select * FROM allegiance WHERE id = #{id}")
     Optional<Allegiance> findById(@Param("id") UUID id);
     
-    @Results(id = "AllegianceResult")
+    @ResultMap("AllegianceResult")
     @Select("Select * FROM allegiance")
     List<Allegiance> findAll();
     

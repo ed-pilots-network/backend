@@ -18,7 +18,7 @@ public interface FactionMapper {
     @Select("Select * FROM faction WHERE id = #{id}")
     Optional<Faction> findById(@Param("id") UUID id);
     
-    @Results(id = "FactionResult")
+    @ResultMap("FactionResult")
     @Select("Select * FROM faction")
     List<Faction> findAll();
     

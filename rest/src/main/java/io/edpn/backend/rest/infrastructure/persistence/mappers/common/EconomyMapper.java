@@ -18,7 +18,7 @@ public interface EconomyMapper {
     @Select("Select * FROM economy WHERE id = #{id}")
     Optional<Economy> findById(@Param("id") UUID id);
     
-    @Results(id = "EconomyResult")
+    @ResultMap("EconomyResult")
     @Select("Select * FROM economy")
     List<Economy> findAll();
     
