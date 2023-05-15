@@ -1,6 +1,7 @@
 package io.edpn.backend.messageprocessor.fsssignaldiscoveredv1.infrastructure.persistence.mapper;
 
 import io.edpn.backend.messageprocessor.fsssignaldiscoveredv1.application.dto.persistence.SystemEntity;
+import io.edpn.backend.messageprocessor.infrastructure.persistence.util.UuidTypeHandler;
 import java.util.Optional;
 import java.util.UUID;
 import org.apache.ibatis.annotations.Insert;
