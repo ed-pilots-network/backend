@@ -8,6 +8,12 @@ services:
       - .env
     volumes:
       - "zookeeper:/bitnami"
+    healthcheck:
+      test: nc -vz localhost 2181 || exit -1
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 0s
 
   kafka:
     image: "bitnami/kafka:3.4"
@@ -15,8 +21,15 @@ services:
       - .env
     volumes:
       - "kafka:/bitnami/kafka"
+    healthcheck:
+      test: nc -vz localhost 9092 || exit -1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 0s
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_healthy
 
   postgres:
     image: "postgres:14.1-alpine"
@@ -25,6 +38,11 @@ services:
       - .env
     volumes:
       - "postgres:/var/lib/postgresql/data"
+    healthcheck:
+      test: pg_isready
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   mongodb:
     image: "mongo:5.0"
@@ -32,6 +50,12 @@ services:
       - .env
     volumes:
       - "mongodb:/data/db"
+    healthcheck:
+      test: echo 'db.stats().ok' | mongo localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
   liquibase:
     build:
@@ -40,7 +64,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   message-listener:
     build:
@@ -48,10 +73,21 @@ services:
       dockerfile: dockerfile
     env_file:
       - .env
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 0s
     depends_on:
-      - kafka
-      - postgres
-      - mongodb
+      kafka:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      liquibase:
+        condition: service_completed_successfully
 
   commodityv3-processor:
     build:
@@ -63,9 +99,20 @@ services:
       - "8081:8080"
     env_file:
       - .env
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 0s
     depends_on:
-      - kafka
-      - postgres
+      kafka:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      liquibase:
+        condition: service_completed_successfully
+
 
   fsssignaldiscoveredv1-processor:
     build:
@@ -77,9 +124,19 @@ services:
       - "8082:8080"
     env_file:
       - .env
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 0s
     depends_on:
-      - kafka
-      - postgres
+      kafka:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      liquibase:
+        condition: service_completed_successfully
 
   navroutev1-processor:
     build:
@@ -91,9 +148,19 @@ services:
       - "8083:8080"
     env_file:
       - .env
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 0s
     depends_on:
-      - kafka
-      - postgres
+      kafka:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      liquibase:
+        condition: service_completed_successfully
 
   rest:
     build:
@@ -103,9 +170,19 @@ services:
       - "8080:8080"
     env_file:
       - .env
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 0s
     depends_on:
-      - kafka
-      - postgres
+      kafka:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      liquibase:
+        condition: service_completed_successfully
 
 volumes:
   zookeeper:
