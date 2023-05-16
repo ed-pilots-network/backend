@@ -4,8 +4,8 @@ name: "edpn"
 services:
   zookeeper:
     image: "bitnami/zookeeper:3.8"
-    env_file:
-      - .env
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
     volumes:
       - "zookeeper:/bitnami"
     healthcheck:
@@ -17,8 +17,11 @@ services:
 
   kafka:
     image: "bitnami/kafka:3.4"
-    env_file:
-      - .env
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_COMPRESSION_TYPE=gzip
     volumes:
       - "kafka:/bitnami/kafka"
     healthcheck:
