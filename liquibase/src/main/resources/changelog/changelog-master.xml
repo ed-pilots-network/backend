@@ -6,21 +6,20 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <!-- Include the changeset that creates the systems table -->
-    <include file="/changelog/0001-create-commodity-table.xml"/>
-    <include file="/changelog/0002-create-economy-table.xml"/>
-    <include file="/changelog/0003-create-station_type-table.xml"/>
-    <include file="/changelog/0004-create-station-table.xml"/>
-    <include file="/changelog/0005-create-station_prohibited_commodity-table.xml"/>
-    <include file="/changelog/0006-create-station_economy_proportion-table.xml"/>
-    <include file="/changelog/0007-create-schema_latest_timestamp-table.xml"/>
-    <include file="/changelog/0008-create-historic_station_commodity-table.xml"/>
-    <include file="/changelog/0009-create-allegiance-table.xml"/>
-    <include file="/changelog/0010-create-faction-table.xml"/>
-    <include file="/changelog/0011-create-government-table.xml"/>
-    <include file="/changelog/0012-create-power-table.xml"/>
-    <include file="/changelog/0013-create-power_state-table.xml"/>
-    <include file="/changelog/0014-create-reserve_type-table.xml"/>
-    <include file="/changelog/0015-create-security-table.xml"/>
-    <include file="/changelog/0016-create-system-table.xml"/>
-    <include file="/changelog/0017-create-system_station-table.xml"/>
+    <include file="changelog/0001-create-schema_latest_timestamp-table.xml"/>
+    <include file="changelog/0002-create-commodity-table.xml"/>
+    <include file="changelog/0003-create-economy-table.xml"/>
+    <include file="changelog/0004-create-station_type-table.xml"/>
+    <include file="changelog/0005-create-allegiance-table.xml"/>
+    <include file="changelog/0006-create-faction-table.xml"/>
+    <include file="changelog/0007-create-government-table.xml"/>
+    <include file="changelog/0008-create-power-table.xml"/>
+    <include file="changelog/0009-create-power_state-table.xml"/>
+    <include file="changelog/0010-create-reserve_type-table.xml"/>
+    <include file="changelog/0011-create-security-table.xml"/>
+    <include file="changelog/0012-create-system-table.xml"/>
+    <include file="changelog/0013-create-station-table.xml"/>
+    <include file="changelog/0014-create-station_prohibited_commodity-table.xml"/>
+    <include file="changelog/0015-create-station_economy_proportion-table.xml"/>
+    <include file="changelog/0016-create-historic_station_commodity-table.xml"/>
 </databaseChangeLog>

@@ -17,6 +17,10 @@
                 <constraints nullable="true" foreignKeyName="fk_station_station_type_id" referencedTableName="station_type"
                              referencedColumnNames="id"/>
             </column>
+            <column name="system_id" type="uuid">
+                <constraints nullable="true" foreignKeyName="fk_station_system_id" referencedTableName="system"
+                             referencedColumnNames="id"/>
+            </column>
             <column name="ed_market_id" type="bigint">
                 <constraints nullable="false" unique="true"/>
             </column>
