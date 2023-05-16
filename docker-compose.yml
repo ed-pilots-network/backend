@@ -22,11 +22,11 @@ services:
     volumes:
       - "kafka:/bitnami/kafka"
     healthcheck:
-      test: nc -vz localhost 9092 || exit -1
+      test: kafka-topics.sh --list --bootstrap-server localhost:9092
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 0s
+      start_period: 30s
     depends_on:
       zookeeper:
         condition: service_healthy
@@ -55,7 +55,7 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
-      start_period: 40s
+      start_period: 0s
 
   liquibase:
     build:
@@ -78,7 +78,7 @@ services:
       interval: 20s
       timeout: 5s
       retries: 5
-      start_period: 0s
+      start_period: 30s
     depends_on:
       kafka:
         condition: service_healthy
@@ -104,7 +104,7 @@ services:
       interval: 20s
       timeout: 5s
       retries: 5
-      start_period: 0s
+      start_period: 30s
     depends_on:
       kafka:
         condition: service_healthy
@@ -129,7 +129,7 @@ services:
       interval: 20s
       timeout: 5s
       retries: 5
-      start_period: 0s
+      start_period: 30s
     depends_on:
       kafka:
         condition: service_healthy
@@ -153,7 +153,7 @@ services:
       interval: 20s
       timeout: 5s
       retries: 5
-      start_period: 0s
+      start_period: 30s
     depends_on:
       kafka:
         condition: service_healthy
@@ -175,7 +175,7 @@ services:
       interval: 20s
       timeout: 5s
       retries: 5
-      start_period: 0s
+      start_period: 30s
     depends_on:
       kafka:
         condition: service_healthy
