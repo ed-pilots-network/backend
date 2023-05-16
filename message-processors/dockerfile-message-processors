@@ -1,0 +1,72 @@
+ARG APP_DIR
+
+# Verify if APP_DIR is set
+SHELL ["/bin/sh", "-c"]
+RUN if [ -z "$APP_DIR" ]; then \
+        echo "WARNING: APP_DIR build argument is not set. Please provide a value using the --build-arg flag."; \
+        exit 1; \
+    fi
+
+FROM openjdk:17-alpine3.14 as messageProcessorLibBuilder
+
+WORKDIR /app
+
+COPY ./messageprocessor-lib/mvnw ./
+COPY ./messageprocessor-lib/.mvn .mvn
+COPY ./messageprocessor-lib/pom.xml ./
+RUN chmod +x ./mvnw
+RUN dos2unix mvnw
+RUN ./mvnw dependency:go-offline -B
+
+COPY ./messageprocessor-lib/src src
+
+RUN ./mvnw clean install -DskipTests -T 8C
+
+# Start a new stage to avoid including unnecessary files in the final image
+FROM openjdk:17-alpine3.14 as builder
+
+# Copy the installed .m2 directory from the previous stage
+COPY --from=messageProcessorLibBuilder /root/.m2 /root/.m2
+
+# Set working directory
+WORKDIR /app
+
+# Copy Maven wrapper and pom.xml to the working directory
+COPY ./${APP_DIR}/mvnw ./
+COPY ./${APP_DIR}/.mvn .mvn
+COPY ./${APP_DIR}/pom.xml ./
+RUN chmod +x ./mvnw
+
+#Fixing line ends in wrapper. CRLF to LF
+RUN dos2unix mvnw
+#Download dependencies
+RUN ./mvnw dependency:go-offline -B
+
+# Copy source files
+COPY ./${APP_DIR}/src src
+
+# Build the application
+RUN ./mvnw clean install -DskipTests -T 8C
+
+FROM openjdk:17-alpine3.14
+# Creating new nonroot user
+
+RUN adduser --disabled-password --gecos '' backend
+# Pointing to user's directory
+
+WORKDIR /home/backend
+# Swapping user
+
+USER backend
+#Copy the executable JAR file from builder
+
+COPY --chown=backend:backend --from=builder /app/target/*.jar ./
+#Copy jar
+
+RUN cp ./*.jar app.jar
+
+#Expose tomcat server port
+EXPOSE 8080
+# Set the entrypoint
+
+ENTRYPOINT java $RUN_ARGS -jar app.jar

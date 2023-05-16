@@ -4,22 +4,15 @@ name: "edpn"
 services:
   zookeeper:
     image: "bitnami/zookeeper:3.8"
-    environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
-    ports:
-      - '2181:2181'
+    env_file:
+      - .env
     volumes:
       - "zookeeper:/bitnami"
 
   kafka:
     image: "bitnami/kafka:3.4"
-    environment:
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
-      - ALLOW_PLAINTEXT_LISTENER=yes
-      - KAFKA_CFG_COMPRESSION_TYPE=gzip
-    ports:
-      - '9092:9092'
+    env_file:
+      - .env
     volumes:
       - "kafka:/bitnami/kafka"
     depends_on:
@@ -28,23 +21,91 @@ services:
   postgres:
     image: "postgres:14.1-alpine"
     restart: always
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    ports:
-      - '5432:5432'
+    env_file:
+      - .env
     volumes:
       - "postgres:/var/lib/postgresql/data"
 
   mongodb:
     image: "mongo:5.0"
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=mongodb
-      - MONGO_INITDB_ROOT_PASSWORD=mongodb
-    ports:
-      - '27017:27017'
+    env_file:
+      - .env
     volumes:
       - "mongodb:/data/db"
+
+  liquibase:
+    build:
+      context: ./liquibase
+      dockerfile: dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+  message-listener:
+    build:
+      context: ./message-listener
+      dockerfile: dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - kafka
+      - postgres
+      - mongodb
+
+  commodityv3-processor:
+    build:
+      context: ./message-processors
+      dockerfile: dockerfile-message-processors
+      args:
+        - APP_DIR=commodityv3-processor
+    ports:
+      - "8081:8080"
+    env_file:
+      - .env
+    depends_on:
+      - kafka
+      - postgres
+
+  fsssignaldiscoveredv1-processor:
+    build:
+      context: ./message-processors
+      dockerfile: dockerfile-message-processors
+      args:
+        - APP_DIR=fsssignaldiscoveredv1-processor
+    ports:
+      - "8082:8080"
+    env_file:
+      - .env
+    depends_on:
+      - kafka
+      - postgres
+
+  navroutev1-processor:
+    build:
+      context: ./message-processors
+      dockerfile: dockerfile-message-processors
+      args:
+        - APP_DIR=navroutev1-processor
+    ports:
+      - "8083:8080"
+    env_file:
+      - .env
+    depends_on:
+      - kafka
+      - postgres
+
+  rest:
+    build:
+      context: ./rest
+      dockerfile: dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      - kafka
+      - postgres
 
 volumes:
   zookeeper:
