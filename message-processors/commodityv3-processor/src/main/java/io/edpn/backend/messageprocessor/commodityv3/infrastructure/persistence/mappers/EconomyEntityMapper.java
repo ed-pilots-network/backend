@@ -15,13 +15,13 @@ public interface EconomyEntityMapper {
             @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name")
     })
-    @Select("SELECT id, name FROM economies WHERE id = #{id}")
+    @Select("SELECT id, name FROM economy WHERE id = #{id}")
     Optional<EconomyEntity> findById(@Param("id") UUID id);
 
-    @Insert("INSERT INTO economies (id, name) VALUES (#{id}, #{name})")
+    @Insert("INSERT INTO economy (id, name) VALUES (#{id}, #{name})")
     int insert(EconomyEntity economyEntity);
 
     @ResultMap("EconomyEntityResult")
-    @Select("SELECT id, name FROM economies WHERE name = #{name}")
+    @Select("SELECT id, name FROM economy WHERE name = #{name}")
     Optional<EconomyEntity> findByName(@Param("name") String name);
 }

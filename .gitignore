@@ -207,3 +207,4 @@ README.html
 *.pem
 *.key
 *.p12
+/logs/

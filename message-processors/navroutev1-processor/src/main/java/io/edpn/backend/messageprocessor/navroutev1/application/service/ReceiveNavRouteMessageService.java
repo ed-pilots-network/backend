@@ -28,7 +28,6 @@ public class ReceiveNavRouteMessageService implements ReceiveNavRouteMessageUseC
 
         Arrays.stream(payload.getItems()).forEach(item -> {
             String systemName = item.getStarSystem();
-            String starClass = item.getStarClass();
             long systemAddress = item.getSystemAddress();
             Double[] coordinates = item.getStarPos();
 
@@ -46,10 +45,6 @@ public class ReceiveNavRouteMessageService implements ReceiveNavRouteMessageUseC
                 system.setYCoordinate(coordinates[1]);
                 system.setZCoordinate(coordinates[2]);
                 changed = true;
-            }
-
-            if(StringUtils.isBlank(system.getStarClass())) {
-                system.setStarClass(starClass);
             }
 
             if (changed) {

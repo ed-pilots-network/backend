@@ -4,6 +4,7 @@ import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.
 import io.edpn.backend.messageprocessor.infrastructure.persistence.util.UuidTypeHandler;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,13 +15,17 @@ public interface SystemEntityMapper {
             @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name")
     })
-    @Select("SELECT id, name FROM systems WHERE id = #{id}")
+    @Select("SELECT id, name FROM system WHERE id = #{id}")
     Optional<SystemEntity> findById(@Param("id") UUID id);
 
-    @Insert("INSERT INTO systems (id, name) VALUES (#{id}, #{name})")
+    @Insert("INSERT INTO system (id, name) VALUES (#{id}, #{name})")
     int insert(SystemEntity systemEntity);
 
+    @Delete("DELETE FROM system WHERE id = #{id}")
+    int delete(@Param("id") UUID id);
+
     @ResultMap("SystemEntityResult")
-    @Select("SELECT id, name FROM systems WHERE name = #{name}")
+    @Select("SELECT id, name FROM system WHERE name = #{name}")
     Optional<SystemEntity> findByName(@Param("name") String name);
+
 }

@@ -4,6 +4,7 @@ import io.edpn.backend.messageprocessor.commodityv3.application.dto.persistence.
 import io.edpn.backend.messageprocessor.infrastructure.persistence.util.UuidTypeHandler;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,13 +15,13 @@ public interface CommodityEntityMapper {
             @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name")
     })
-    @Select("SELECT id, name FROM commodities WHERE id = #{id}")
+    @Select("SELECT id, name FROM commodity WHERE id = #{id}")
     Optional<CommodityEntity> findById(@Param("id") UUID id);
 
-    @Insert("INSERT INTO commodities (id, name) VALUES (#{id}, #{name})")
+    @Insert("INSERT INTO commodity (id, name) VALUES (#{id}, #{name})")
     int insert(CommodityEntity commodityEntity);
 
     @ResultMap("CommodityEntityResult")
-    @Select("SELECT id, name FROM commodities WHERE name = #{name}")
+    @Select("SELECT id, name FROM commodity WHERE name = #{name}")
     Optional<CommodityEntity> findByName(@Param("name") String name);
 }
