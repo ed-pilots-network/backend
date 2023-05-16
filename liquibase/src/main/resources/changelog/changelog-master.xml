@@ -19,9 +19,8 @@
     <include file="/changelog/0011-create-government-table.xml"/>
     <include file="/changelog/0012-create-power-table.xml"/>
     <include file="/changelog/0013-create-power_state-table.xml"/>
-    <include file="/changelog/0014-create-system_station-table.xml"/>
-    <include file="/changelog/0015-create-reserve_type-table.xml"/>
-    <include file="/changelog/0016-create-security-table.xml"/>
-    <include file="/changelog/0017-create-system-table.xml"/>
-
+    <include file="/changelog/0014-create-reserve_type-table.xml"/>
+    <include file="/changelog/0015-create-security-table.xml"/>
+    <include file="/changelog/0016-create-system-table.xml"/>
+    <include file="/changelog/0017-create-system_station-table.xml"/>
 </databaseChangeLog>

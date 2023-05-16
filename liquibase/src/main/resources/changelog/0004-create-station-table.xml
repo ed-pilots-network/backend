@@ -13,6 +13,10 @@
             <column name="name" type="varchar(255)">
                 <constraints nullable="true" unique="false"/>
             </column>
+            <column name="station_type_id" type="uuid">
+                <constraints nullable="true" foreignKeyName="fk_station_station_type_id" referencedTableName="station_type"
+                             referencedColumnNames="id"/>
+            </column>
             <column name="ed_market_id" type="bigint">
                 <constraints nullable="false" unique="true"/>
             </column>

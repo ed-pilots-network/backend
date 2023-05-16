@@ -4,7 +4,6 @@ import io.edpn.backend.messageprocessor.navroutev1.application.dto.persistence.S
 import io.edpn.backend.messageprocessor.infrastructure.persistence.util.UuidTypeHandler;
 import org.apache.ibatis.annotations.*;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
