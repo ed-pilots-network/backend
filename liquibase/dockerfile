@@ -8,6 +8,7 @@ WORKDIR /app
 COPY ./mvnw ./
 COPY .mvn .mvn
 COPY pom.xml ./
+RUN chmod +x ./mvnw
 
 #Fixing line ends in wrapper. CRLF to LF
 RUN dos2unix mvnw
@@ -37,8 +38,4 @@ COPY --chown=backend:backend --from=builder /app/target/*.jar ./
 
 RUN cp ./*.jar app.jar
 
-#Expose tomcat server port
-EXPOSE 8080
-# Set the entrypoint
-
-ENTRYPOINT java $RUN_ARGS-jar app.jar
+ENTRYPOINT java $RUN_ARGS -jar app.jar

@@ -8,6 +8,7 @@ WORKDIR /app
 COPY ./mvnw ./
 COPY .mvn .mvn
 COPY pom.xml ./
+RUN chmod +x ./mvnw
 
 #Fixing line ends in wrapper. CRLF to LF
 RUN dos2unix mvnw
@@ -41,4 +42,4 @@ RUN cp ./*.jar app.jar
 EXPOSE 8080
 # Set the entrypoint
 
-ENTRYPOINT java $RUN_ARGS-jar app.jar
+ENTRYPOINT java $RUN_ARGS -jar app.jar
