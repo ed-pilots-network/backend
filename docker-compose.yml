@@ -39,6 +39,8 @@ services:
     restart: always
     env_file:
       - .env
+    ports:
+      - "5432:5432"
     volumes:
       - "postgres:/var/lib/postgresql/data"
     healthcheck:
@@ -46,6 +48,15 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  init-db:
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - "./init-db:/docker-entrypoint-initdb.d"
+    command: ["docker-entrypoint.sh", "postgres"]
+
 
 volumes:
   zookeeper:
