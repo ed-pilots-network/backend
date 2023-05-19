@@ -132,7 +132,7 @@ How to contribute to the project (and much more) is explained in our [charter](h
 
 ___
 ## License
-We are still in license discussion, but we are sure to use a copyleft open source license like ApacheV2 or MIT
+We are  using [Apache-2.0](https://opensource.org/license/apache-2-0/).
 
 ___
 ## Contact
