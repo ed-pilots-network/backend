@@ -31,6 +31,8 @@ subprojects {
     }
 
     dependencies {
+        implementation 'de.slub-dresden:urnlib:2.0.1'
+
         compileOnly 'org.projectlombok:lombok:1.18.28'
     }
 
