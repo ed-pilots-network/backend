@@ -1,5 +1,6 @@
 rootProject.name = 'modulith'
 include 'util'
 include 'messageprocessor-lib'
+include 'mybatis-util'
 include 'commodityFinder'
 

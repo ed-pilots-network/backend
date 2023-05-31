@@ -3,9 +3,18 @@ plugins {
 
 dependencies {
     implementation project(':messageprocessor-lib')
+    implementation project(':mybatis-util')
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-integration'
+    implementation 'org.springframework.integration:spring-integration-http'
+    implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.0'
     implementation 'org.liquibase:liquibase-core'
+
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.14.2'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.14.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
 
     runtimeOnly 'org.postgresql:postgresql'
 
