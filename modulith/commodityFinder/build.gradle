@@ -1,0 +1,13 @@
+plugins {
+}
+
+dependencies {
+    implementation project(':util')
+    implementation project(':messageprocessor-lib')
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.liquibase:liquibase-core'
+
+    runtimeOnly 'org.postgresql:postgresql'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

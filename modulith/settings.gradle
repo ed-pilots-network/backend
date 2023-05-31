@@ -1,0 +1,5 @@
+rootProject.name = 'modulith'
+include 'util'
+include 'messageprocessor-lib'
+include 'commodityFinder'
+

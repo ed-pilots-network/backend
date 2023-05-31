@@ -1,0 +1,58 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.1.0'
+    id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group = 'io.edpn.backend'
+version = '0.0.1-SNAPSHOT'
+description = 'Listener to consume the EDDN messages and store in Kafka'
+compileJava.options.encoding = 'UTF-8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-integration'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    implementation 'org.springframework.integration:spring-integration-http'
+    implementation "org.springframework.integration:spring-integration-zeromq:6.0.4"
+    implementation 'org.springframework.kafka:spring-kafka'
+    implementation "com.fasterxml.jackson.core:jackson-core:2.14.2"
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.14.2"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:2.14.2"
+
+    compileOnly 'org.projectlombok:lombok'
+
+    annotationProcessor 'org.projectlombok:lombok'
+
+    runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.integration:spring-integration-test'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+}
+
+
+test {
+    systemProperty "file.encoding", "utf-8"
+    useJUnitPlatform()
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile).tap {
+    configureEach {
+        options.encoding = 'UTF-8'
+    }
+}

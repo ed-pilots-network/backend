@@ -1,0 +1,56 @@
+version: "3.8"
+
+name: "edpn"
+services:
+  zookeeper:
+    image: "bitnami/zookeeper:3.8"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    volumes:
+      - "zookeeper:/bitnami"
+    healthcheck:
+      test: nc -vz localhost 2181 || exit -1
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 0s
+
+  kafka:
+    image: "bitnami/kafka:3.4"
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_COMPRESSION_TYPE=gzip
+    volumes:
+      - "kafka:/bitnami/kafka"
+    healthcheck:
+      test: kafka-topics.sh --list --bootstrap-server localhost:9092
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+
+  postgres:
+    image: "postgres:14.1-alpine"
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - "postgres:/var/lib/postgresql/data"
+    healthcheck:
+      test: pg_isready
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  zookeeper:
+    driver: local
+  kafka:
+    driver: local
+  postgres:
+    driver: local
