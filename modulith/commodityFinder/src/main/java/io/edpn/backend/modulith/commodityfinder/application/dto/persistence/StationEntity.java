@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -29,6 +29,6 @@ public class StationEntity {
     private boolean fleetCarrier;
     private LandingPadSize maxLandingPadSize;
     private LocalDateTime marketUpdatedAt;
-    private Map<CommodityEntity, MarketDatumEntity> commodityMarketData;
+    private List<MarketDatumEntity> commodityMarketData;
 
 }

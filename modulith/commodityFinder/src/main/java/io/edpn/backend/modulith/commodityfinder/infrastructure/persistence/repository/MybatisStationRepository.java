@@ -38,8 +38,16 @@ public class MybatisStationRepository implements StationRepository {
     @Override
     public StationEntity update(StationEntity entity) throws DatabaseEntityNotFoundException {
         stationEntityMapper.update(entity);
+
+        saveMarketData(entity);
+
         return findById(entity.getId())
                 .orElseThrow(() -> new DatabaseEntityNotFoundException("station with id: " + entity.getId() + " could not be found after update"));
+    }
+
+    private void saveMarketData(StationEntity entity) {
+        marketDatumEntityMapper.deleteByStationId(entity.getId());
+        entity.getCommodityMarketData().forEach(marketDatumEntityMapper::insert);
     }
 
     @Override
@@ -48,6 +56,8 @@ public class MybatisStationRepository implements StationRepository {
             entity.setId(idGenerator.generateId());
         }
         stationEntityMapper.insert(entity);
+        saveMarketData(entity);
+
         return findById(entity.getId())
                 .orElseThrow(() -> new DatabaseEntityNotFoundException("station with id: " + entity.getId() + " could not be found after create"));
     }

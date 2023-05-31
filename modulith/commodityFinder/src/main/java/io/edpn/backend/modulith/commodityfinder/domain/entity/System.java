@@ -19,7 +19,7 @@ public class System {
     private UUID id;
     private Long eliteId;
     private String name;
-    private Long xCoordinate;
-    private Long yCoordinate;
-    private Long zCoordinate;
+    private Double xCoordinate;
+    private Double yCoordinate;
+    private Double zCoordinate;
 }

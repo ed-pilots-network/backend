@@ -10,15 +10,15 @@ import io.edpn.backend.modulith.commodityfinder.domain.entity.System;
 import io.edpn.backend.modulith.commodityfinder.domain.usecase.ReceiveCommodityMessageUseCase;
 import io.edpn.backend.modulith.messageprocessorlib.application.dto.eddn.CommodityMessage;
 import io.edpn.backend.modulith.util.CollectionUtil;
-import java.util.AbstractMap;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -64,19 +64,28 @@ public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMe
             }
         });
 
-        // get marketDatamap
-        CompletableFuture<Map<Commodity, MarketDatum>> marketDataMapCompletableFuture = CompletableFuture.supplyAsync(HashMap::new);
-        Arrays.stream(commodities).parallel().map(commodityFromMessage -> {
-            // get commodity
-            CompletableFuture<Commodity> commodity = CompletableFuture.supplyAsync(() -> commodityService.getOrCreateByName(commodityFromMessage.getName()));
-            // parse market data
-            CompletableFuture<MarketDatum> marketDatum = CompletableFuture.supplyAsync(() -> getMarketDatum(commodityFromMessage, prohibitedCommodities));
+        // get marketDataCollection
+        List<CompletableFuture<MarketDatum>> completableFutureList = Arrays.stream(commodities).parallel().map(commodityFromMessage -> {
+                    // get commodity
+                    CompletableFuture<Commodity> commodity = CompletableFuture.supplyAsync(() -> commodityService.getOrCreateByName(commodityFromMessage.getName()));
+                    // parse market data
+                    CompletableFuture<MarketDatum> marketDatum = CompletableFuture.supplyAsync(() -> getMarketDatum(commodityFromMessage, prohibitedCommodities));
 
-            return commodity.thenCombine(marketDatum, AbstractMap.SimpleEntry::new);
-        }).forEach(entryFuture -> marketDataMapCompletableFuture.thenCombine(entryFuture, (marketDataMap, entry) -> marketDataMap.put(entry.getKey(), entry.getValue())));
+                    return commodity.thenCombine(marketDatum, (c, md) -> {
+                        md.setCommodity(c);
+                        return md;
+                    });
+                })
+                .toList();
+
+        CompletableFuture<List<MarketDatum>> combinedFuture = CompletableFuture.allOf(completableFutureList.toArray(new CompletableFuture[0]))
+                .thenApply(v -> completableFutureList.stream()
+                        .map(CompletableFuture::join)
+                        .collect(Collectors.toList()));
+
 
         // put market data map in station
-        stationCompletableFuture.thenCombine(marketDataMapCompletableFuture, (station, marketDataMap) -> {
+        stationCompletableFuture.thenCombine(combinedFuture, (station, marketDataMap) -> {
             station.setCommodityMarketData(marketDataMap);
             return station;
         });

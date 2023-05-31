@@ -16,6 +16,7 @@ import lombok.ToString;
 @Builder
 public class MarketDatum {
 
+    private Commodity commodity;
     private long meanPrice;
     private long buyPrice;
     private long stock;

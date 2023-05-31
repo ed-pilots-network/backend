@@ -1,14 +1,15 @@
 package io.edpn.backend.modulith.commodityfinder.domain.entity;
 
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -27,5 +28,5 @@ public class Station {
     private boolean fleetCarrier;
     private LandingPadSize maxLandingPadSize;
     private LocalDateTime marketUpdatedAt;
-    private Map<Commodity, MarketDatum> commodityMarketData;
+    private List<MarketDatum> commodityMarketData;
 }

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.Value;
 
 import java.util.List;
 
@@ -18,7 +17,9 @@ import java.util.List;
 @Builder
 public class MarketDatumEntity {
 
-    private Id id;
+
+    private StationEntity station;
+    private CommodityEntity commodity;
     private long meanPrice;
     private long buyPrice;
     private long stock;
@@ -28,11 +29,4 @@ public class MarketDatumEntity {
     private long demandBracket;
     private List<String> statusFlags;
     private boolean prohibited;
-
-
-    @Value
-    public static class Id {
-        StationEntity station;
-        CommodityEntity commodityId;
-    }
 }
