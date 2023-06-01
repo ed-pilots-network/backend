@@ -1,5 +1,6 @@
 package io.edpn.backend.modulith.commodityfinder.infrastructure.persistence.mappers;
 
+import io.edpn.backend.modulith.commodityfinder.application.dto.persistence.BestCommodityPriceEntity;
 import io.edpn.backend.modulith.commodityfinder.application.dto.persistence.CommodityEntity;
 import io.edpn.backend.modulith.commodityfinder.application.dto.persistence.MarketDatumEntity;
 import io.edpn.backend.modulith.mybatisutil.StringListTypeHandler;
@@ -24,7 +25,7 @@ public interface MarketDatumEntityMapper {
 
     @Select("SELECT * FROM market_datum WHERE station_id = #{stationId} AND commodity_id = #{commodityId}")
     @Results(id = "marketDatumResultMap", value = {
-            @Result(property = "commodity", column = "id", javaType = CommodityEntity.class,
+            @Result(property = "commodity", column = "commodity_id", javaType = CommodityEntity.class,
                     one = @One(select = "io.edpn.backend.modulith.commodityfinder.application.mapper.CommodityEntityMapper.findById")),
             @Result(property = "meanPrice", column = "mean_price", javaType = long.class),
             @Result(property = "buyPrice", column = "buy_price", javaType = long.class),
@@ -58,4 +59,36 @@ public interface MarketDatumEntityMapper {
 
     @Delete("DELETE FROM market_datum WHERE station_id = #{stationId}")
     void deleteByStationId(@Param("stationId") UUID stationId);
+
+    @Select("SELECT commodity_id, MAX(buy_price) AS maxBuyPrice, MIN(sell_price) AS minSellPrice, AVG(mean_price) AS averagePrice, " +
+            "COUNT(DISTINCT station_id) AS totalStations, " +
+            "COUNT(DISTINCT CASE WHEN buy_price IS NOT NULL THEN station_id END) * 100.0 / COUNT(DISTINCT station_id) AS percentStationsWithBuyPrice, " +
+            "COUNT(DISTINCT CASE WHEN buy_price > AVG(mean_price) THEN station_id END) * 100.0 / COUNT(DISTINCT station_id) AS percentStationsWithBuyPriceAboveAverage, " +
+            "COUNT(DISTINCT CASE WHEN sell_price IS NOT NULL THEN station_id END) * 100.0 / COUNT(DISTINCT station_id) AS percentStationsWithSellPrice, " +
+            "COUNT(DISTINCT CASE WHEN sell_price < AVG(mean_price) THEN station_id END) * 100.0 / COUNT(DISTINCT station_id) AS percentStationsWithSellPriceBelowAverage, " +
+            "GROUP_CONCAT(DISTINCT CASE WHEN sell_price = (SELECT MIN(sell_price) FROM market_datum WHERE commodity_id = #{commodityId}) THEN station_id END) AS stationsWithLowestSellPrice, " +
+            "GROUP_CONCAT(DISTINCT CASE WHEN buy_price = (SELECT MAX(buy_price) FROM market_datum WHERE commodity_id = #{commodityId}) THEN station_id END) AS stationsWithHighestBuyPrice " +
+            "FROM market_datum WHERE commodity_id = #{commodityId} " +
+            "GROUP BY commodity_id")
+    @Results(id = "commodityInfoResultMap", value = {
+            @Result(property = "commodity", column = "commodity_id", javaType = CommodityEntity.class,
+                    one = @One(select = "io.edpn.backend.modulith.commodityfinder.application.mapper.CommodityEntityMapper.findById")),
+            @Result(property = "maxBuyPrice", column = "maxBuyPrice", javaType = long.class),
+            @Result(property = "minSellPrice", column = "minSellPrice", javaType = long.class),
+            @Result(property = "averagePrice", column = "averagePrice", javaType = double.class),
+            @Result(property = "percentStationsWithBuyPrice", column = "percentStationsWithBuyPrice", javaType = double.class),
+            @Result(property = "percentStationsWithBuyPriceAboveAverage", column = "percentStationsWithBuyPriceAboveAverage", javaType = double.class),
+            @Result(property = "percentStationsWithSellPrice", column = "percentStationsWithSellPrice", javaType = double.class),
+            @Result(property = "percentStationsWithSellPriceBelowAverage", column = "percentStationsWithSellPriceBelowAverage", javaType = double.class),
+            @Result(property = "stationsWithLowestSellPrice", column = "stationsWithLowestSellPrice", javaType = String.class),
+            @Result(property = "stationsWithHighestBuyPrice", column = "stationsWithHighestBuyPrice", javaType = String.class),
+            @Result(property = "stationEntitiesWithLowestSellPrice", column = "stationsWithLowestSellPrice", javaType = List.class,
+                    many = @Many(select = "io.edpn.backend.modulith.commodityfinder.infrastructure.persistence.mappers.StationEntityMapper.findById")),
+            @Result(property = "stationEntitiesWithHighestBuyPrice", column = "stationsWithHighestBuyPrice", javaType = List.class,
+                    many = @Many(select = "io.edpn.backend.modulith.commodityfinder.infrastructure.persistence.mappers.StationEntityMapper.findById"))
+    })
+    @ResultMap("commodityInfoResultMap")
+    Optional<BestCommodityPriceEntity> getBestCommodityPrice(@Param("commodityId") UUID commodityId);
+
+
 }

@@ -1,6 +1,6 @@
 package io.edpn.backend.modulith.commodityfinder.application.service;
 
-import io.edpn.backend.modulith.commodityfinder.application.mappers.CommodityMapper;
+import io.edpn.backend.modulith.commodityfinder.application.mappers.persistence.CommodityMapper;
 import io.edpn.backend.modulith.commodityfinder.domain.entity.Commodity;
 import io.edpn.backend.modulith.commodityfinder.domain.repository.CommodityRepository;
 import lombok.RequiredArgsConstructor;

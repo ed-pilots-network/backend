@@ -1,8 +1,7 @@
-package io.edpn.backend.modulith.commodityfinder.application.mappers;
+package io.edpn.backend.modulith.commodityfinder.application.mappers.persistence;
 
 import io.edpn.backend.modulith.commodityfinder.application.dto.persistence.MarketDatumEntity;
 import io.edpn.backend.modulith.commodityfinder.domain.entity.MarketDatum;
-import io.edpn.backend.modulith.commodityfinder.domain.entity.Station;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
 package io.edpn.backend.modulith.commodityfinder.application.service;
 
-import io.edpn.backend.modulith.commodityfinder.application.mappers.StationMapper;
-import io.edpn.backend.modulith.commodityfinder.application.mappers.SystemMapper;
+import io.edpn.backend.modulith.commodityfinder.application.mappers.persistence.StationMapper;
+import io.edpn.backend.modulith.commodityfinder.application.mappers.persistence.SystemMapper;
 import io.edpn.backend.modulith.commodityfinder.domain.entity.Station;
 import io.edpn.backend.modulith.commodityfinder.domain.entity.System;
 import io.edpn.backend.modulith.commodityfinder.domain.repository.StationRepository;

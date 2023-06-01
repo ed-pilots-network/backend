@@ -1,4 +1,4 @@
-package io.edpn.backend.modulith.commodityfinder.application.mappers;
+package io.edpn.backend.modulith.commodityfinder.application.mappers.persistence;
 
 import io.edpn.backend.modulith.commodityfinder.application.dto.persistence.StationEntity;
 import io.edpn.backend.modulith.commodityfinder.domain.entity.LandingPadSize;

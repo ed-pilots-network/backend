@@ -26,7 +26,7 @@ public interface StationEntityMapper {
             @Result(property = "id", column = "id", javaType = UUID.class),
             @Result(property = "marketId", column = "market_id", javaType = Long.class),
             @Result(property = "name", column = "name", javaType = String.class),
-            @Result(property = "system", column = "id", javaType = SystemEntity.class,
+            @Result(property = "system", column = "system_id", javaType = SystemEntity.class,
                     one = @One(select = "io.edpn.backend.modulith.commodityfinder.application.mapper.SystemEntityMapper.findById")),
             @Result(property = "planetary", column = "planetary", javaType = boolean.class),
             @Result(property = "requireOdyssey", column = "require_odyssey", javaType = boolean.class),
