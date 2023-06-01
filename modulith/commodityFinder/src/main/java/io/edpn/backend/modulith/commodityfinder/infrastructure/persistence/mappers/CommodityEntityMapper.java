@@ -1,14 +1,16 @@
 package io.edpn.backend.modulith.commodityfinder.infrastructure.persistence.mappers;
 
 import io.edpn.backend.modulith.commodityfinder.application.dto.persistence.CommodityEntity;
+import io.edpn.backend.modulith.mybatisutil.UuidTypeHandler;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.ResultMap;
+import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,13 +18,12 @@ import java.util.UUID;
 public interface CommodityEntityMapper {
 
     @Select("SELECT * FROM commodity WHERE id = #{id}")
-    Optional<CommodityEntity> findById(@Param("id") UUID id);
-
-    @Select("SELECT * FROM commodity WHERE name = #{name}")
-    Optional<CommodityEntity> findByName(@Param("name") String name);
-
-    @Select("SELECT * FROM commodity")
-    List<CommodityEntity> findAll();
+    @Results(id = "commodityResultMap", value = {
+            @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
+            @Result(property = "name", column = "name", javaType = String.class)
+    })
+    @ResultMap("commodityResultMap")
+    Optional<CommodityEntity> findById(UUID id);
 
     @Insert("INSERT INTO commodity (id, name) VALUES (#{id}, #{name})")
     void insert(CommodityEntity commodity);
@@ -31,5 +32,5 @@ public interface CommodityEntityMapper {
     void update(CommodityEntity commodity);
 
     @Delete("DELETE FROM commodity WHERE id = #{id}")
-    void deleteById(@Param("id") UUID id);
+    void delete(UUID id);
 }

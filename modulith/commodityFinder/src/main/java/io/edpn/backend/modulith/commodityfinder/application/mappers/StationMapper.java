@@ -1,6 +1,7 @@
 package io.edpn.backend.modulith.commodityfinder.application.mappers;
 
 import io.edpn.backend.modulith.commodityfinder.application.dto.persistence.StationEntity;
+import io.edpn.backend.modulith.commodityfinder.domain.entity.LandingPadSize;
 import io.edpn.backend.modulith.commodityfinder.domain.entity.Station;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,8 +10,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class StationMapper {
 
-    private final SystemMapper systemMapper;
     private final MarketDatumMapper marketDatumMapper;
+    private final SystemMapper systemMapper;
 
     public Station map(StationEntity stationEntity) {
         return Station.builder()
@@ -21,9 +22,9 @@ public class StationMapper {
                 .planetary(stationEntity.isPlanetary())
                 .requireOdyssey(stationEntity.isRequireOdyssey())
                 .fleetCarrier(stationEntity.isFleetCarrier())
-                .maxLandingPadSize(stationEntity.getMaxLandingPadSize())
+                .maxLandingPadSize(LandingPadSize.valueOf(stationEntity.getMaxLandingPadSize()))
                 .marketUpdatedAt(stationEntity.getMarketUpdatedAt())
-                .commodityMarketData(marketDatumMapper.map(stationEntity.getCommodityMarketData()))
+                .marketData(marketDatumMapper.map(stationEntity.getMarketData()))
                 .build();
     }
 
@@ -36,9 +37,9 @@ public class StationMapper {
                 .planetary(station.isPlanetary())
                 .requireOdyssey(station.isRequireOdyssey())
                 .fleetCarrier(station.isFleetCarrier())
-                .maxLandingPadSize(station.getMaxLandingPadSize())
+                .maxLandingPadSize(station.getMaxLandingPadSize().name())
                 .marketUpdatedAt(station.getMarketUpdatedAt())
-                .commodityMarketData(marketDatumMapper.map(station, station.getCommodityMarketData()))
+                .marketData(marketDatumMapper.mapToEntity(station.getMarketData()))
                 .build();
     }
 }

@@ -86,7 +86,7 @@ public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMe
 
         // put market data map in station
         stationCompletableFuture.thenCombine(combinedFuture, (station, marketDataMap) -> {
-            station.setCommodityMarketData(marketDataMap);
+            station.setMarketData(marketDataMap);
             return station;
         });
 
