@@ -27,4 +27,25 @@ subprojects {
     }
     task prepareKotlinBuildScriptModel {}
     task wrapper {}
+
+    test {
+        systemProperty "file.encoding", "utf-8"
+        useJUnitPlatform()
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    tasks.named('test') {
+        useJUnitPlatform()
+    }
+
+    tasks.withType(JavaCompile).tap {
+        configureEach {
+            options.encoding = 'UTF-8'
+        }
+    }
 }
