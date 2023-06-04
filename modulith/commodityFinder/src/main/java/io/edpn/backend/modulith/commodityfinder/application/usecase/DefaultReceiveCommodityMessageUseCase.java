@@ -13,6 +13,7 @@ import io.edpn.backend.modulith.util.CollectionUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +31,7 @@ public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMe
     private final StationService stationService;
 
     @Override
+    @Transactional
     public void receive(CommodityMessage.V3 message) {
 
         long start = java.lang.System.nanoTime();
@@ -86,7 +88,7 @@ public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMe
 
         // put market data map in station
         stationCompletableFuture.thenCombine(combinedFuture, (station, marketDataMap) -> {
-            station.setCommodityMarketData(marketDataMap);
+            station.setMarketData(marketDataMap);
             return station;
         });
 

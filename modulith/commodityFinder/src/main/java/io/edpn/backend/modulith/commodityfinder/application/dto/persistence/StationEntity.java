@@ -1,6 +1,7 @@
 package io.edpn.backend.modulith.commodityfinder.application.dto.persistence;
 
 import io.edpn.backend.modulith.commodityfinder.domain.entity.LandingPadSize;
+import io.edpn.backend.modulith.commodityfinder.domain.entity.MarketDatum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,8 +28,7 @@ public class StationEntity {
     private boolean planetary;
     private boolean requireOdyssey;
     private boolean fleetCarrier;
-    private LandingPadSize maxLandingPadSize;
+    private String maxLandingPadSize;
     private LocalDateTime marketUpdatedAt;
-    private List<MarketDatumEntity> commodityMarketData;
-
+    private List<MarketDatumEntity> marketData;
 }

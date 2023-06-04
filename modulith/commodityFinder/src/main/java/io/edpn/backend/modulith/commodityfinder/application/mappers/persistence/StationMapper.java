@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class StationMapper {
 
+    private final MarketDatumMapper marketDatumMapper;
     private final SystemMapper systemMapper;
-//    private final MarketDatumMapper marketDatumMapper;
 
     public Station map(StationEntity stationEntity) {
         return Station.builder()
@@ -21,9 +21,9 @@ public class StationMapper {
                 .planetary(stationEntity.isPlanetary())
                 .requireOdyssey(stationEntity.isRequireOdyssey())
                 .fleetCarrier(stationEntity.isFleetCarrier())
-                .maxLandingPadSize(stationEntity.getMaxLandingPadSize())
+                .maxLandingPadSize(LandingPadSize.valueOf(stationEntity.getMaxLandingPadSize()))
                 .marketUpdatedAt(stationEntity.getMarketUpdatedAt())
-//                .commodityMarketData(marketDatumMapper.map(stationEntity.getCommodityMarketData()))
+                .marketData(marketDatumMapper.map(stationEntity.getMarketData()))
                 .build();
     }
 
@@ -36,9 +36,9 @@ public class StationMapper {
                 .planetary(station.isPlanetary())
                 .requireOdyssey(station.isRequireOdyssey())
                 .fleetCarrier(station.isFleetCarrier())
-                .maxLandingPadSize(station.getMaxLandingPadSize())
+                .maxLandingPadSize(station.getMaxLandingPadSize().name())
                 .marketUpdatedAt(station.getMarketUpdatedAt())
-//                .commodityMarketData(marketDatumMapper.map(station, station.getCommodityMarketData()))
+                .marketData(marketDatumMapper.mapToEntity(station.getMarketData()))
                 .build();
     }
 }

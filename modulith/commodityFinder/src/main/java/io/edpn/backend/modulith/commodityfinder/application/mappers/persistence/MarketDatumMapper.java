@@ -1,8 +1,7 @@
-package io.edpn.backend.modulith.commodityfinder.application.mappers;
+package io.edpn.backend.modulith.commodityfinder.application.mappers.persistence;
 
 import io.edpn.backend.modulith.commodityfinder.application.dto.persistence.MarketDatumEntity;
 import io.edpn.backend.modulith.commodityfinder.domain.entity.MarketDatum;
-import io.edpn.backend.modulith.commodityfinder.domain.entity.Station;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +12,6 @@ import java.util.List;
 public class MarketDatumMapper {
 
     private final CommodityMapper commodityMapper;
-    private final StationMapper stationMapper;
 
     public List<MarketDatum> map(List<MarketDatumEntity> marketDatumEntityList) {
         return marketDatumEntityList.stream().map(this::map).toList();
@@ -34,13 +32,12 @@ public class MarketDatumMapper {
                 .build();
     }
 
-    public List<MarketDatumEntity> map(Station station, List<MarketDatum> marketDatumList) {
-        return marketDatumList.stream().map(marketDatum -> this.map(station, marketDatum)).toList();
+    public List<MarketDatumEntity> mapToEntity(List<MarketDatum> marketDatumList) {
+        return marketDatumList.stream().map(this::mapToEntity).toList();
     }
 
-    public MarketDatumEntity map(Station station, MarketDatum marketDatum) {
+    public MarketDatumEntity mapToEntity(MarketDatum marketDatum) {
         return MarketDatumEntity.builder()
-                .station(stationMapper.map(station))
                 .commodity(commodityMapper.map(marketDatum.getCommodity()))
                 .meanPrice(marketDatum.getMeanPrice())
                 .buyPrice(marketDatum.getBuyPrice())

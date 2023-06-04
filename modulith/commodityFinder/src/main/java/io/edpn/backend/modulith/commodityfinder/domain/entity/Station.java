@@ -28,5 +28,5 @@ public class Station {
     private boolean fleetCarrier;
     private LandingPadSize maxLandingPadSize;
     private LocalDateTime marketUpdatedAt;
-    private List<MarketDatum> commodityMarketData;
+    private List<MarketDatum> marketData;
 }

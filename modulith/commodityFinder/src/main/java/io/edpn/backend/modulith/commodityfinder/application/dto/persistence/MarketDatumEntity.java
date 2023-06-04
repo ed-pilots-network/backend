@@ -1,5 +1,6 @@
 package io.edpn.backend.modulith.commodityfinder.application.dto.persistence;
 
+import io.edpn.backend.modulith.commodityfinder.domain.entity.Commodity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,7 +20,6 @@ import java.util.List;
 public class MarketDatumEntity {
 
 
-    private StationEntity station;
     private CommodityEntity commodity;
     private long meanPrice;
     private long buyPrice;

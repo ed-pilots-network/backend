@@ -1,6 +1,7 @@
 package io.edpn.backend.modulith.commodityfinder.infrastructure.persistence.repository;
 
 import io.edpn.backend.modulith.commodityfinder.application.dto.persistence.StationEntity;
+import io.edpn.backend.modulith.commodityfinder.application.dto.persistence.SystemEntity;
 import io.edpn.backend.modulith.commodityfinder.domain.repository.StationRepository;
 import io.edpn.backend.modulith.commodityfinder.domain.repository.SystemRepository;
 import io.edpn.backend.modulith.commodityfinder.infrastructure.persistence.mappers.MarketDatumEntityMapper;
@@ -21,14 +22,13 @@ public class MybatisStationRepository implements StationRepository {
     private final IdGenerator idGenerator;
     private final StationEntityMapper stationEntityMapper;
     private final MarketDatumEntityMapper marketDatumEntityMapper;
-    private final SystemRepository systemRepository;
 
     @Override
-    public StationEntity findOrCreateBySystemIdAndStationName(UUID systemId, String stationName) throws DatabaseEntityNotFoundException {
-        return stationEntityMapper.findBySystemIdAndStationName(systemId, stationName)
+    public StationEntity findOrCreateBySystemAndStationName(SystemEntity systemEntity, String stationName) throws DatabaseEntityNotFoundException {
+        return stationEntityMapper.findBySystemIdAndStationName(systemEntity.getId(), stationName)
                 .orElseGet(() -> {
                     StationEntity s = StationEntity.builder()
-                            .system(systemRepository.findById(systemId).orElseThrow(() -> new DatabaseEntityNotFoundException("system with id: " + systemId + " could not be found")))
+                            .system(systemEntity)
                             .name(stationName)
                             .build();
                     return create(s);
@@ -47,7 +47,7 @@ public class MybatisStationRepository implements StationRepository {
 
     private void saveMarketData(StationEntity entity) {
         marketDatumEntityMapper.deleteByStationId(entity.getId());
-        entity.getCommodityMarketData().forEach(marketDatumEntityMapper::insert);
+        entity.getMarketData().forEach(marketDatumEntity -> marketDatumEntityMapper.insert(entity.getId(), marketDatumEntity));
     }
 
     @Override
