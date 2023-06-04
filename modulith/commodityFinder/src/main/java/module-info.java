@@ -17,4 +17,7 @@ module edpn.commodity {
     requires org.apache.ibatis;
     requires spring.beans;
     requires kafka.clients;
+    requires spring.web;
+
+    opens io.edpn.backend.modulith.commodityfinder.application.controller to spring.core;
 }

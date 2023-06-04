@@ -1,12 +1,16 @@
 plugins {
     id 'java'
-    id 'idea'
     id 'io.spring.dependency-management' version '1.1.0' apply false
     id 'org.javamodularity.moduleplugin' version '1.8.12' apply false
+    id "org.gradlex.extra-java-module-info" version "1.4"
 }
 
 repositories {
-    mavenCentral()
+    mavenCentral(){
+        metadataSources {
+            gradleMetadata()
+        }
+    }
 }
 
 allprojects {
@@ -17,14 +21,14 @@ allprojects {
 
 subprojects {
     apply plugin: "java"
-    apply plugin: "idea"
     apply plugin: "org.javamodularity.moduleplugin"
-
+    apply plugin: "org.gradlex.extra-java-module-info"
     version = '0.0.1-SNAPSHOT'
 
     repositories {
         mavenCentral()
     }
+
     task prepareKotlinBuildScriptModel {}
     task wrapper {}
 
@@ -46,6 +50,34 @@ subprojects {
     tasks.withType(JavaCompile).tap {
         configureEach {
             options.encoding = 'UTF-8'
+        }
+    }
+
+    ext {
+        springBootVersion = '3.1.0'
+        jacksonVersion = '2.14.2'
+        lombokVersion = '1.18.28'
+    }
+
+    dependencies {
+        constraints {
+            implementation "org.springframework.boot:spring-boot-starter:${springBootVersion}"
+            implementation "org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}"
+            implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+            implementation "org.springframework.boot:spring-boot-starter-integration:${springBootVersion}"
+            implementation "org.springframework.integration:spring-integration-http:6.1.0"
+            implementation "org.springframework.kafka:spring-kafka:3.0.4"
+            implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.0"
+            implementation "org.mybatis:mybatis:3.5.11"
+            implementation "org.liquibase:liquibase-core:4.17.2"
+            implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
+            implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
+            implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+            runtimeOnly "org.postgresql:postgresql:42.2.12"
+            compileOnly "org.projectlombok:lombok:${lombokVersion}"
+            annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+            testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+            testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
         }
     }
 }
