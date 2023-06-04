@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class StationMapper {
 
     private final SystemMapper systemMapper;
-    private final MarketDatumMapper marketDatumMapper;
+//    private final MarketDatumMapper marketDatumMapper;
 
     public Station map(StationEntity stationEntity) {
         return Station.builder()
@@ -23,7 +23,7 @@ public class StationMapper {
                 .fleetCarrier(stationEntity.isFleetCarrier())
                 .maxLandingPadSize(stationEntity.getMaxLandingPadSize())
                 .marketUpdatedAt(stationEntity.getMarketUpdatedAt())
-                .commodityMarketData(marketDatumMapper.map(stationEntity.getCommodityMarketData()))
+//                .commodityMarketData(marketDatumMapper.map(stationEntity.getCommodityMarketData()))
                 .build();
     }
 
@@ -38,7 +38,7 @@ public class StationMapper {
                 .fleetCarrier(station.isFleetCarrier())
                 .maxLandingPadSize(station.getMaxLandingPadSize())
                 .marketUpdatedAt(station.getMarketUpdatedAt())
-                .commodityMarketData(marketDatumMapper.map(station, station.getCommodityMarketData()))
+//                .commodityMarketData(marketDatumMapper.map(station, station.getCommodityMarketData()))
                 .build();
     }
 }

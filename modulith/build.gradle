@@ -1,14 +1,12 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.1.0' apply false
+    id 'idea'
     id 'io.spring.dependency-management' version '1.1.0' apply false
+    id 'org.javamodularity.moduleplugin' version '1.8.12' apply false
 }
 
 repositories {
     mavenCentral()
-}
-
-dependencies {
 }
 
 allprojects {
@@ -18,42 +16,15 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'java'
-    apply plugin: 'org.springframework.boot'
-    apply plugin: 'io.spring.dependency-management'
+    apply plugin: "java"
+    apply plugin: "idea"
+    apply plugin: "org.javamodularity.moduleplugin"
 
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-
+    version = '0.0.1-SNAPSHOT'
 
     repositories {
         mavenCentral()
     }
-
-    dependencies {
-        implementation 'de.slub-dresden:urnlib:2.0.1'
-
-        compileOnly 'org.projectlombok:lombok:1.18.28'
-    }
-
-    test {
-        systemProperty "file.encoding", "utf-8"
-        useJUnitPlatform()
-    }
-
-    configurations {
-        compileOnly {
-            extendsFrom annotationProcessor
-        }
-    }
-
-    tasks.named('test') {
-        useJUnitPlatform()
-    }
-
-    tasks.withType(JavaCompile).tap {
-        configureEach {
-            options.encoding = 'UTF-8'
-        }
-    }
+    task prepareKotlinBuildScriptModel {}
+    task wrapper {}
 }

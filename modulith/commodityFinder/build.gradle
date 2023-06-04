@@ -1,23 +1,44 @@
 plugins {
+    id 'java'
+    id 'idea'
+    id "org.gradlex.extra-java-module-info" version "1.4"
 }
-
 dependencies {
     implementation project(':util')
     implementation project(':mybatis-util')
     implementation project(':messageprocessor-lib')
-    implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-    implementation 'org.springframework.boot:spring-boot-starter-integration'
-    implementation 'org.springframework.integration:spring-integration-http'
-    implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc:3.1.0'
+    implementation 'org.springframework.boot:spring-boot-starter-integration:3.1.0'
+    implementation 'org.springframework.integration:spring-integration-http:6.1.0'
+    implementation 'org.springframework.kafka:spring-kafka:3.0.4'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.0'
-    implementation 'org.liquibase:liquibase-core'
+    implementation 'org.liquibase:liquibase-core:4.17.2'
 
     implementation 'com.fasterxml.jackson.core:jackson-core:2.14.2'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.14.2'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
 
-    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'org.postgresql:postgresql:42.2.12'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    compileOnly 'org.projectlombok:lombok:1.18.28'
+    annotationProcessor 'org.projectlombok:lombok:1.18.28'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.28'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
+}
+
+extraJavaModuleInfo {
+    automaticModule("kafka-clients-3.3.2.jar", "kafka.clients")
+    automaticModule("spring-retry-2.0.1.jar","spring.retry")
+    automaticModule("dependency-management-plugin-1.1.0.jar","dependency.management.plugin")
+    automaticModule("tomlj-1.0.0.jar","tomlj")
+    automaticModule("jsr305-3.0.2.jar","jsr305")
+    automaticModule("snappy-java-1.1.8.4.jar","snappy.java")
+    automaticModule("liquibase-core-4.17.2.jar","liquibase.core")
+//    automaticModule("mybatis-3.5.11.jar", "org.apache.ibatis")
+    module("mybatis-3.5.11.jar", "org.apache.ibatis") {
+        exports("org.apache.ibatis.session")
+        exports("org.apache.ibatis.type")
+        exports("org.apache.ibatis.annotations")
+    }
 }
