@@ -34,15 +34,13 @@ services:
       zookeeper:
         condition: service_healthy
 
-  postgres:
-    image: "postgres:14.1-alpine"
+  commoddityfinder-postgres:
+    image: "postgres:15-alpine"
     restart: always
     env_file:
-      - .env
-    ports:
-      - "5432:5432"
+      - .env_commoddityfinder
     volumes:
-      - "postgres:/var/lib/postgresql/data"
+      - "commoddityfinder-postgres:/var/lib/postgresql/data"
     healthcheck:
       test: pg_isready
       interval: 10s
@@ -54,5 +52,5 @@ volumes:
     driver: local
   kafka:
     driver: local
-  postgres:
+  commoddityfinder-postgres:
     driver: local
