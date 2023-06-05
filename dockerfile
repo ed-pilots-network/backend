@@ -1,6 +1,5 @@
-# Use the official maven/Java 8 image to create a build artifact.
-# This is based on Debian and sets the working directory to /app
-FROM openjdk:17-jdk-alpine as build
+# Use the official Amazon Corretto 17 image to create a build artifact.
+FROM amazoncorretto:17-alpine-full as build
 
 # Set the current working directory inside the image
 WORKDIR /app
@@ -19,8 +18,8 @@ COPY src src
 # Build the project and its dependencies.
 RUN ./gradlew bootJar
 
-# Use AdoptOpenJDK for base image
-FROM adoptopenjdk:8-jdk-hotspot as runtime
+# Use Amazon Corretto 17 for runtime
+FROM amazoncorretto:17-alpine-full as runtime
 
 WORKDIR /app
 
@@ -28,4 +27,4 @@ WORKDIR /app
 COPY --from=build /app/boot/build/libs/*.jar /app
 
 # Set the startup command to run your binary
-ENTRYPOINT ["java","-jar","./<your-application-name>.jar"]
+ENTRYPOINT ["java","-jar","./boot.jar"]
