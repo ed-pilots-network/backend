@@ -19,5 +19,6 @@ module edpn.commodity.finder {
     requires kafka.clients;
     requires spring.web;
 
-    opens io.edpn.backend.commodityfinder.application.controller to spring.core;
+    exports io.edpn.backend.commodityfinder.application.controller;
+    exports io.edpn.backend.commodityfinder.application.dto.rest;
 }
