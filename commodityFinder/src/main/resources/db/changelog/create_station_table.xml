@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create_commodity_table" author="pveeckhout">
+        <createTable tableName="station">
+            <column name="id" type="uuid">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="market_id" type="bigint"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="arrival_distance" type="double"/>
+            <column name="system_id" type="uuid"/>
+            <column name="planetary" type="boolean"/>
+            <column name="require_odyssey" type="boolean"/>
+            <column name="fleet_carrier" type="boolean"/>
+            <column name="max_landing_pad_size" type="varchar(255)"/>
+            <column name="market_updated_at" type="timestamp"/>
+        </createTable>
+
+        <!-- Add foreign key constraints -->
+        <addForeignKeyConstraint baseTableName="station" baseColumnNames="system_id"
+                                 constraintName="fk_station_system_id"
+                                 referencedTableName="system" referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

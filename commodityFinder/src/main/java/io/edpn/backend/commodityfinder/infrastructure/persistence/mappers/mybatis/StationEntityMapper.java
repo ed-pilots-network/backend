@@ -26,6 +26,7 @@ public interface StationEntityMapper {
             @Result(property = "id", column = "id", javaType = UUID.class),
             @Result(property = "marketId", column = "market_id", javaType = Long.class),
             @Result(property = "name", column = "name", javaType = String.class),
+            @Result(property = "arrivalDistance", column = "arrival_distance", javaType = Double.class),
             @Result(property = "system", column = "system_id", javaType = SystemEntity.class,
                     one = @One(select = "io.edpn.backend.modulith.commodityfinder.application.mapper.SystemEntityMapper.findById")),
             @Result(property = "planetary", column = "planetary", javaType = boolean.class),
@@ -42,11 +43,11 @@ public interface StationEntityMapper {
     @ResultMap("stationResultMap")
     Optional<StationEntity> findBySystemIdAndStationName(UUID systemId, String stationName);
 
-    @Insert("INSERT INTO station (id, market_id, name, system_id, planetary, require_odyssey, fleet_carrier, max_landing_pad_size, market_updated_at) " +
+    @Insert("INSERT INTO station (id, market_id, name, arrival_distance, system_id, planetary, require_odyssey, fleet_carrier, max_landing_pad_size, market_updated_at) " +
             "VALUES (#{id}, #{marketId}, #{name}, #{systemId}, #{planetary}, #{requireOdyssey}, #{fleetCarrier}, #{maxLandingPadSize}, #{marketUpdatedAt})")
     void insert(StationEntity station);
 
-    @Update("UPDATE station SET market_id = #{marketId}, name = #{name}, system_id = #{systemId}, planetary = #{planetary}, " +
+    @Update("UPDATE station SET market_id = #{marketId}, name = #{name}, arrival_distance = #{arrivalDistance}, system_id = #{systemId}, planetary = #{planetary}, " +
             "require_odyssey = #{requireOdyssey}, fleet_carrier = #{fleetCarrier}, max_landing_pad_size = #{maxLandingPadSize}, " +
             "market_updated_at = #{marketUpdatedAt} WHERE id = #{id}")
     void update(StationEntity station);
