@@ -15,7 +15,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-@Repository
 public class MybatisStationRepository implements StationRepository {
 
     private final IdGenerator idGenerator;

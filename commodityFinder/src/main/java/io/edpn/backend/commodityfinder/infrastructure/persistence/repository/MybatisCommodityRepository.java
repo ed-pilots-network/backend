@@ -1,18 +1,16 @@
 package io.edpn.backend.commodityfinder.infrastructure.persistence.repository;
 
-import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.CommodityEntityMapper;
 import io.edpn.backend.commodityfinder.application.dto.persistence.CommodityEntity;
 import io.edpn.backend.commodityfinder.domain.repository.CommodityRepository;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.CommodityEntityMapper;
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.exception.DatabaseEntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository
 @RequiredArgsConstructor
 public class MybatisCommodityRepository implements CommodityRepository {
 

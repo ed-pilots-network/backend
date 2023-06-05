@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
-@Component
 public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMessageUseCase {
 
     private final CommodityService commodityService;

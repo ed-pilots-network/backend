@@ -5,7 +5,6 @@ import io.edpn.backend.commodityfinder.domain.entity.System;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
 public class SystemMapper {
 

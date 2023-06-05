@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Slf4j
-@Service
 public class StationService {
 
     private final StationRepository stationRepository;

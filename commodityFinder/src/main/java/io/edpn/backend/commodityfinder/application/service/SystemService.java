@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Slf4j
-@Service
 public class SystemService {
 
     private final SystemRepository systemRepository;

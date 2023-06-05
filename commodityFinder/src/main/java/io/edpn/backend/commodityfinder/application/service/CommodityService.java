@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Slf4j
-@Service
 public class CommodityService {
 
     private final CommodityRepository commodityRepository;

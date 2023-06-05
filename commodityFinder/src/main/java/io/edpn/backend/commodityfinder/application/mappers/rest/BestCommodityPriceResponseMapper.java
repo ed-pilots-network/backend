@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
-@Service
 public class BestCommodityPriceResponseMapper {
 
     public BestCommodityPriceResponse map(BestCommodityPrice bestCommodityPrice) {

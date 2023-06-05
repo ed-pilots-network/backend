@@ -11,7 +11,6 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
-@Service
 public class MarketDatumService {
 
     private final MarketDatumRepository marketDatumRepository;

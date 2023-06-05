@@ -11,7 +11,6 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
-@Component
 public class DefaultFindBestCommodityPriceUseCase implements FindBestCommodityPriceUseCase {
 
     private final MarketDatumService marketDatumService;

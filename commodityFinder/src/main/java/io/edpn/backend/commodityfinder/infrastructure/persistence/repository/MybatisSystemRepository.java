@@ -6,14 +6,12 @@ import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.System
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.exception.DatabaseEntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-@Repository
 public class MybatisSystemRepository implements SystemRepository {
 
     private final IdGenerator idGenerator;

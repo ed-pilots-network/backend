@@ -6,12 +6,11 @@ import io.edpn.backend.commodityfinder.domain.entity.Station;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
 public class StationMapper {
 
-    private final MarketDatumMapper marketDatumMapper;
     private final SystemMapper systemMapper;
+    private final MarketDatumMapper marketDatumMapper;
 
     public Station map(StationEntity stationEntity) {
         return Station.builder()
