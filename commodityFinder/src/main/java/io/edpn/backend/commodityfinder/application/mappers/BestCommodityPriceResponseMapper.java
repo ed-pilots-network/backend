@@ -19,7 +19,7 @@ public class BestCommodityPriceResponseMapper {
                 .stationsThatSellBelowAverage(bestCommodityPrice.getPercentStationsWithSellPriceBelowAverage())
                 .lowestSellingStation(bestCommodityPrice.getStationEntitiesWithLowestSellPrice().stream()
                         .map(station -> BestCommodityPriceResponse.Station.builder()
-                                .arrivalDistance(0) //TODO
+                                .arrivalDistance(station.getArrivalDistance())
                                 .name(station.getName())
                                 .system(BestCommodityPriceResponse.System.builder()
                                         .name(station.getSystem().getName())
@@ -31,7 +31,7 @@ public class BestCommodityPriceResponseMapper {
                         .toList())
                 .highestStation(bestCommodityPrice.getStationEntitiesWithHighestBuyPrice().stream()
                         .map(station -> BestCommodityPriceResponse.Station.builder()
-                                .arrivalDistance(0) //TODO
+                                .arrivalDistance(station.getArrivalDistance())
                                 .name(station.getName())
                                 .system(BestCommodityPriceResponse.System.builder()
                                         .name(station.getSystem().getName())

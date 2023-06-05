@@ -22,6 +22,7 @@ public class StationEntity {
     private UUID id;
     private Long marketId;
     private String name;
+    private Double arrivalDistance;
     private SystemEntity system;
     private boolean planetary;
     private boolean requireOdyssey;
