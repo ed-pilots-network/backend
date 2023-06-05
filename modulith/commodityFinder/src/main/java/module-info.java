@@ -1,4 +1,4 @@
-module edpn.commodity {
+module edpn.commodity.finder {
     requires static lombok;
     requires spring.boot;
     requires spring.boot.autoconfigure;
@@ -12,7 +12,7 @@ module edpn.commodity {
     requires org.slf4j;
     requires edpn.mybatis.util;
     requires edpn.util;
-    requires edpn.lib;
+    requires edpn.messageprocessor.lib;
     requires org.mybatis.spring;
     requires org.apache.ibatis;
     requires spring.beans;

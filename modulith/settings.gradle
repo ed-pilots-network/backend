@@ -3,6 +3,6 @@ rootProject.name = 'modulith'
 include 'util'
 include 'messageprocessor-lib'
 include 'mybatis-util'
-
+include 'api-gateway'
 include 'commodityFinder'
 include 'boot'
