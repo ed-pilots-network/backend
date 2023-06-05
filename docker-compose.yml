@@ -49,15 +49,6 @@ services:
       timeout: 5s
       retries: 5
 
-  init-db:
-    depends_on:
-      postgres:
-        condition: service_healthy
-    volumes:
-      - "./init-db:/docker-entrypoint-initdb.d"
-    command: ["docker-entrypoint.sh", "postgres"]
-
-
 volumes:
   zookeeper:
     driver: local
