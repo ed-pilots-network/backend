@@ -1,6 +1,6 @@
 package io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity;
 
-import io.edpn.backend.commodityfinder.infrastructure.persistence.dto.MarketDatumEntity;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.MarketDatumEntity;
 import io.edpn.backend.commodityfinder.domain.model.MarketDatum;
 import lombok.RequiredArgsConstructor;
 

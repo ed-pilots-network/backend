@@ -1,4 +1,4 @@
-package io.edpn.backend.commodityfinder.application.dto.rest;
+package io.edpn.backend.commodityfinder.application.dto;
 
 import lombok.Builder;
 import lombok.Value;

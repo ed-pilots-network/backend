@@ -3,7 +3,7 @@ package io.edpn.backend.commodityfinder.infrastructure.persistence.repository;
 import io.edpn.backend.commodityfinder.domain.model.Station;
 import io.edpn.backend.commodityfinder.domain.model.System;
 import io.edpn.backend.commodityfinder.domain.repository.StationRepository;
-import io.edpn.backend.commodityfinder.infrastructure.persistence.dto.StationEntity;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.StationEntity;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity.StationMapper;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.MarketDatumEntityMapper;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.StationEntityMapper;

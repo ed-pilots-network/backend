@@ -2,7 +2,7 @@ package io.edpn.backend.commodityfinder.infrastructure.persistence.repository;
 
 import io.edpn.backend.commodityfinder.domain.model.BestCommodityPrice;
 import io.edpn.backend.commodityfinder.domain.repository.MarketDatumRepository;
-import io.edpn.backend.commodityfinder.infrastructure.persistence.dto.CommodityEntity;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.CommodityEntity;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity.BestCommodityPriceMapper;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.CommodityEntityMapper;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.MarketDatumEntityMapper;

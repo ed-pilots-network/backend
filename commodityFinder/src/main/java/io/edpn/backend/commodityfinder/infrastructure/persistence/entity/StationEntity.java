@@ -1,4 +1,4 @@
-package io.edpn.backend.commodityfinder.infrastructure.persistence.dto;
+package io.edpn.backend.commodityfinder.infrastructure.persistence.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

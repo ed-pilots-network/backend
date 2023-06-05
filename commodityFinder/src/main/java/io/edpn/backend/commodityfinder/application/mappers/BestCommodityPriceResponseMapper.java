@@ -1,4 +1,4 @@
-package io.edpn.backend.commodityfinder.application.mappers.rest;
+package io.edpn.backend.commodityfinder.application.mappers;
 
 import io.edpn.backend.commodityfinder.application.dto.rest.BestCommodityPriceResponse;
 import io.edpn.backend.commodityfinder.domain.model.BestCommodityPrice;

@@ -1,6 +1,6 @@
 package io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity;
 
-import io.edpn.backend.commodityfinder.infrastructure.persistence.dto.BestCommodityPriceEntity;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.BestCommodityPriceEntity;
 import io.edpn.backend.commodityfinder.domain.model.BestCommodityPrice;
 import lombok.RequiredArgsConstructor;
 

@@ -1,6 +1,6 @@
 package io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity;
 
-import io.edpn.backend.commodityfinder.infrastructure.persistence.dto.SystemEntity;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.SystemEntity;
 import io.edpn.backend.commodityfinder.domain.model.System;
 import lombok.RequiredArgsConstructor;
 

@@ -1,7 +1,6 @@
 package io.edpn.backend.commodityfinder.domain.repository;
 
 import io.edpn.backend.commodityfinder.domain.model.Commodity;
-import io.edpn.backend.commodityfinder.infrastructure.persistence.dto.CommodityEntity;
 import io.edpn.backend.util.exception.DatabaseEntityNotFoundException;
 
 import java.util.Optional;

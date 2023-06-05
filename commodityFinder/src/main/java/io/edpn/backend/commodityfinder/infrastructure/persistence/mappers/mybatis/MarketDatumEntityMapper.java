@@ -1,8 +1,8 @@
 package io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis;
 
-import io.edpn.backend.commodityfinder.infrastructure.persistence.dto.BestCommodityPriceEntity;
-import io.edpn.backend.commodityfinder.infrastructure.persistence.dto.CommodityEntity;
-import io.edpn.backend.commodityfinder.infrastructure.persistence.dto.MarketDatumEntity;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.BestCommodityPriceEntity;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.CommodityEntity;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.MarketDatumEntity;
 import io.edpn.backend.mybatisutil.StringListTypeHandler;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;

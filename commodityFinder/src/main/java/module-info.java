@@ -20,5 +20,5 @@ module edpn.commodity.finder {
     requires spring.web;
 
     exports io.edpn.backend.commodityfinder.application.controller;
-    exports io.edpn.backend.commodityfinder.application.dto.rest;
+    exports io.edpn.backend.commodityfinder.application.dto;
 }

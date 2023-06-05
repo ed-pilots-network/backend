@@ -1,6 +1,6 @@
 package io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity;
 
-import io.edpn.backend.commodityfinder.infrastructure.persistence.dto.StationEntity;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.StationEntity;
 import io.edpn.backend.commodityfinder.domain.model.LandingPadSize;
 import io.edpn.backend.commodityfinder.domain.model.Station;
 import lombok.RequiredArgsConstructor;
