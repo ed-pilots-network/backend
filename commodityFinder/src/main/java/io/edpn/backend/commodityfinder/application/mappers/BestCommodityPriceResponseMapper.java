@@ -1,6 +1,6 @@
 package io.edpn.backend.commodityfinder.application.mappers;
 
-import io.edpn.backend.commodityfinder.application.dto.rest.BestCommodityPriceResponse;
+import io.edpn.backend.commodityfinder.application.dto.BestCommodityPriceResponse;
 import io.edpn.backend.commodityfinder.domain.model.BestCommodityPrice;
 import lombok.RequiredArgsConstructor;
 

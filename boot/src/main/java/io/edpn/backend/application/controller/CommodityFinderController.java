@@ -1,7 +1,7 @@
 package io.edpn.backend.application.controller;
 
 import io.edpn.backend.commodityfinder.application.controller.BestCommodityPriceController;
-import io.edpn.backend.commodityfinder.application.dto.rest.BestCommodityPriceResponse;
+import io.edpn.backend.commodityfinder.application.dto.BestCommodityPriceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
