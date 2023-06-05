@@ -1,14 +1,15 @@
 package io.edpn.backend.commodityfinder.infrastructure.persistence.repository;
 
-import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.MarketDatumEntityMapper;
-import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.StationEntityMapper;
-import io.edpn.backend.commodityfinder.application.dto.persistence.StationEntity;
-import io.edpn.backend.commodityfinder.application.dto.persistence.SystemEntity;
+import io.edpn.backend.commodityfinder.domain.model.Station;
+import io.edpn.backend.commodityfinder.domain.model.System;
 import io.edpn.backend.commodityfinder.domain.repository.StationRepository;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.dto.StationEntity;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity.StationMapper;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.MarketDatumEntityMapper;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.StationEntityMapper;
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.exception.DatabaseEntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -18,15 +19,17 @@ import java.util.UUID;
 public class MybatisStationRepository implements StationRepository {
 
     private final IdGenerator idGenerator;
+    private final StationMapper stationMapper;
     private final StationEntityMapper stationEntityMapper;
     private final MarketDatumEntityMapper marketDatumEntityMapper;
 
     @Override
-    public StationEntity findOrCreateBySystemAndStationName(SystemEntity systemEntity, String stationName) throws DatabaseEntityNotFoundException {
-        return stationEntityMapper.findBySystemIdAndStationName(systemEntity.getId(), stationName)
+    public Station findOrCreateBySystemAndStationName(System system, String stationName) throws DatabaseEntityNotFoundException {
+        return stationEntityMapper.findBySystemIdAndStationName(system.getId(), stationName)
+                .map(stationMapper::map)
                 .orElseGet(() -> {
-                    StationEntity s = StationEntity.builder()
-                            .system(systemEntity)
+                    Station s = Station.builder()
+                            .system(system)
                             .name(stationName)
                             .build();
                     return create(s);
@@ -34,7 +37,8 @@ public class MybatisStationRepository implements StationRepository {
     }
 
     @Override
-    public StationEntity update(StationEntity entity) throws DatabaseEntityNotFoundException {
+    public Station update(Station station) throws DatabaseEntityNotFoundException {
+        var entity = stationMapper.map(station);
         stationEntityMapper.update(entity);
 
         saveMarketData(entity);
@@ -49,7 +53,8 @@ public class MybatisStationRepository implements StationRepository {
     }
 
     @Override
-    public StationEntity create(StationEntity entity) throws DatabaseEntityNotFoundException {
+    public Station create(Station station) throws DatabaseEntityNotFoundException {
+        var entity = stationMapper.map(station);
         if (Objects.isNull(entity.getId())) {
             entity.setId(idGenerator.generateId());
         }
@@ -61,7 +66,8 @@ public class MybatisStationRepository implements StationRepository {
     }
 
     @Override
-    public Optional<StationEntity> findById(UUID id) {
-        return stationEntityMapper.findById(id);
+    public Optional<Station> findById(UUID id) {
+        return stationEntityMapper.findById(id)
+                .map(stationMapper::map);
     }
 }

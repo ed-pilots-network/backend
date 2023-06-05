@@ -1,8 +1,9 @@
 package io.edpn.backend.commodityfinder.infrastructure.persistence.repository;
 
-import io.edpn.backend.commodityfinder.application.dto.persistence.CommodityEntity;
+import io.edpn.backend.commodityfinder.domain.model.Commodity;
 import io.edpn.backend.commodityfinder.domain.repository.CommodityRepository;
-import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.CommodityEntityMapper;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity.CommodityMapper;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.CommodityEntityMapper;
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.exception.DatabaseEntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +16,15 @@ import java.util.UUID;
 public class MybatisCommodityRepository implements CommodityRepository {
 
     private final IdGenerator idGenerator;
+    private final CommodityMapper commodityMapper;
     private final CommodityEntityMapper commodityEntityMapper;
 
     @Override
-    public CommodityEntity findOrCreateByName(String name) {
+    public Commodity findOrCreateByName(String name) {
         return commodityEntityMapper.findByName(name)
+                .map(commodityMapper::map)
                 .orElseGet(() -> {
-                    CommodityEntity s = CommodityEntity.builder()
+                    Commodity s = Commodity.builder()
                             .name(name)
                             .build();
                     return create(s);
@@ -29,17 +32,19 @@ public class MybatisCommodityRepository implements CommodityRepository {
     }
 
     @Override
-    public CommodityEntity create(CommodityEntity entity) {
+    public Commodity create(Commodity commodity) {
+        var entity = commodityMapper.map(commodity);
         if (Objects.isNull(entity.getId())) {
             entity.setId(idGenerator.generateId());
         }
         commodityEntityMapper.insert(entity);
         return findById(entity.getId())
-                .orElseThrow(() -> new DatabaseEntityNotFoundException("commodity with id: " + entity.getId() + " could not be found after create"));
+                .orElseThrow(() -> new DatabaseEntityNotFoundException("commodity with id: " + commodity.getId() + " could not be found after create"));
     }
 
     @Override
-    public Optional<CommodityEntity> findById(UUID id) {
-        return commodityEntityMapper.findById(id);
+    public Optional<Commodity> findById(UUID id) {
+        return commodityEntityMapper.findById(id)
+                .map(commodityMapper::map);
     }
 }

@@ -1,7 +1,7 @@
-package io.edpn.backend.commodityfinder.infrastructure.persistence.mappers;
+package io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis;
 
-import io.edpn.backend.commodityfinder.application.dto.persistence.StationEntity;
-import io.edpn.backend.commodityfinder.application.dto.persistence.SystemEntity;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.dto.StationEntity;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.dto.SystemEntity;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Many;

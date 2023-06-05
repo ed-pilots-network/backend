@@ -1,9 +1,8 @@
 package io.edpn.backend.commodityfinder.application.mappers.rest;
 
 import io.edpn.backend.commodityfinder.application.dto.rest.BestCommodityPriceResponse;
-import io.edpn.backend.commodityfinder.domain.entity.BestCommodityPrice;
+import io.edpn.backend.commodityfinder.domain.model.BestCommodityPrice;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 public class BestCommodityPriceResponseMapper {

@@ -1,4 +1,4 @@
-package io.edpn.backend.commodityfinder.domain.entity;
+package io.edpn.backend.commodityfinder.domain.model;
 
 import java.util.List;
 import lombok.AllArgsConstructor;

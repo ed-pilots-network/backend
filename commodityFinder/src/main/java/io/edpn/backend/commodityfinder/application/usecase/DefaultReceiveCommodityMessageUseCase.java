@@ -1,18 +1,17 @@
 package io.edpn.backend.commodityfinder.application.usecase;
 
-import io.edpn.backend.commodityfinder.application.service.CommodityService;
-import io.edpn.backend.commodityfinder.application.service.StationService;
-import io.edpn.backend.commodityfinder.application.service.SystemService;
-import io.edpn.backend.commodityfinder.domain.entity.Commodity;
-import io.edpn.backend.commodityfinder.domain.entity.MarketDatum;
-import io.edpn.backend.commodityfinder.domain.entity.Station;
-import io.edpn.backend.commodityfinder.domain.entity.System;
+import io.edpn.backend.commodityfinder.domain.model.Commodity;
+import io.edpn.backend.commodityfinder.domain.model.MarketDatum;
+import io.edpn.backend.commodityfinder.domain.model.Station;
+import io.edpn.backend.commodityfinder.domain.model.System;
+import io.edpn.backend.commodityfinder.domain.repository.CommodityRepository;
+import io.edpn.backend.commodityfinder.domain.repository.StationRepository;
+import io.edpn.backend.commodityfinder.domain.repository.SystemRepository;
 import io.edpn.backend.commodityfinder.domain.usecase.ReceiveCommodityMessageUseCase;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.CommodityMessage;
 import io.edpn.backend.util.CollectionUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
@@ -25,9 +24,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMessageUseCase {
 
-    private final CommodityService commodityService;
-    private final SystemService systemService;
-    private final StationService stationService;
+    private final CommodityRepository commodityRepository;
+    private final SystemRepository systemRepository;
+    private final StationRepository stationRepository;
 
     @Override
     @Transactional
@@ -51,10 +50,10 @@ public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMe
 
 
         // get system
-        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> systemService.getOrCreateByName(systemName));
+        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> systemRepository.findOrCreateByName(systemName));
 
         // get station
-        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> stationService.getOrCreateBySystemAndStationName(systemCompletableFuture.copy().join(), stationName));
+        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> stationRepository.findOrCreateBySystemAndStationName(systemCompletableFuture.copy().join(), stationName));
         stationCompletableFuture.whenComplete((station, throwable) -> {
             if (throwable != null) {
                 log.error("Exception occurred in retrieving station", throwable);
@@ -68,7 +67,7 @@ public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMe
         // get marketDataCollection
         List<CompletableFuture<MarketDatum>> completableFutureList = Arrays.stream(commodities).parallel().map(commodityFromMessage -> {
                     // get commodity
-                    CompletableFuture<Commodity> commodity = CompletableFuture.supplyAsync(() -> commodityService.getOrCreateByName(commodityFromMessage.getName()));
+                    CompletableFuture<Commodity> commodity = CompletableFuture.supplyAsync(() -> commodityRepository.findOrCreateByName(commodityFromMessage.getName()));
                     // parse market data
                     CompletableFuture<MarketDatum> marketDatum = CompletableFuture.supplyAsync(() -> getMarketDatum(commodityFromMessage, prohibitedCommodities));
 
@@ -92,7 +91,7 @@ public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMe
         });
 
         // save station
-        stationService.save(stationCompletableFuture.join());
+        stationRepository.create(stationCompletableFuture.join());
 
         if (log.isTraceEnabled()) {
             log.trace("DefaultReceiveCommodityMessageUseCase.receive -> took " + (java.lang.System.nanoTime() - start) + " nanosecond");

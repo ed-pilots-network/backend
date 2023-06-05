@@ -1,9 +1,8 @@
-package io.edpn.backend.commodityfinder.application.mappers.persistence;
+package io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity;
 
-import io.edpn.backend.commodityfinder.application.dto.persistence.MarketDatumEntity;
-import io.edpn.backend.commodityfinder.domain.entity.MarketDatum;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.dto.MarketDatumEntity;
+import io.edpn.backend.commodityfinder.domain.model.MarketDatum;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

@@ -1,6 +1,5 @@
-package io.edpn.backend.commodityfinder.domain.entity;
+package io.edpn.backend.commodityfinder.infrastructure.persistence.dto;
 
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,14 +7,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Commodity {
+public class CommodityEntity {
 
     private UUID id;
     private String name;
 }
+

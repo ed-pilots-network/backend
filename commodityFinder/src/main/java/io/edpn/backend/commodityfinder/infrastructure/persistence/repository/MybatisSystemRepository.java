@@ -1,8 +1,9 @@
 package io.edpn.backend.commodityfinder.infrastructure.persistence.repository;
 
-import io.edpn.backend.commodityfinder.application.dto.persistence.SystemEntity;
+import io.edpn.backend.commodityfinder.domain.model.System;
 import io.edpn.backend.commodityfinder.domain.repository.SystemRepository;
-import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.SystemEntityMapper;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity.SystemMapper;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.SystemEntityMapper;
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.exception.DatabaseEntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +16,15 @@ import java.util.UUID;
 public class MybatisSystemRepository implements SystemRepository {
 
     private final IdGenerator idGenerator;
+    private final SystemMapper systemMapper;
     private final SystemEntityMapper systemEntityMapper;
 
     @Override
-    public SystemEntity findOrCreateByName(String name) {
+    public System findOrCreateByName(String name) {
         return systemEntityMapper.findByName(name)
+                .map(systemMapper::map)
                 .orElseGet(() -> {
-                    SystemEntity s = SystemEntity.builder()
+                    System s = System.builder()
                             .name(name)
                             .build();
 
@@ -30,14 +33,18 @@ public class MybatisSystemRepository implements SystemRepository {
     }
 
     @Override
-    public SystemEntity update(SystemEntity entity) {
+    public System update(System system) {
+        var entity = systemMapper.map(system);
+
         systemEntityMapper.update(entity);
         return findById(entity.getId())
                 .orElseThrow(() -> new DatabaseEntityNotFoundException("system with id: " + entity.getId() + " could not be found after update"));
     }
 
     @Override
-    public SystemEntity create(SystemEntity entity) {
+    public System create(System system) {
+        var entity = systemMapper.map(system);
+
         if (Objects.isNull(entity.getId())) {
             entity.setId(idGenerator.generateId());
         }
@@ -47,7 +54,8 @@ public class MybatisSystemRepository implements SystemRepository {
     }
 
     @Override
-    public Optional<SystemEntity> findById(UUID id) {
-        return systemEntityMapper.findById(id);
+    public Optional<System> findById(UUID id) {
+        return systemEntityMapper.findById(id)
+                .map(systemMapper::map);
     }
 }

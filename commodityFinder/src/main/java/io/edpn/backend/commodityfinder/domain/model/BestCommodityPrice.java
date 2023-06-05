@@ -1,4 +1,4 @@
-package io.edpn.backend.commodityfinder.application.dto.persistence;
+package io.edpn.backend.commodityfinder.domain.model;
 
 import lombok.*;
 
@@ -10,8 +10,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BestCommodityPriceEntity {
-    private CommodityEntity commodity;
+public class BestCommodityPrice {
+    private Commodity commodity;
     private long maxBuyPrice;
     private long minSellPrice;
     private double averagePrice;
@@ -19,6 +19,7 @@ public class BestCommodityPriceEntity {
     private double percentStationsWithBuyPriceAboveAverage;
     private double percentStationsWithSellPrice;
     private double percentStationsWithSellPriceBelowAverage;
-    private List<StationEntity> stationEntitiesWithLowestSellPrice;
-    private List<StationEntity> stationEntitiesWithHighestBuyPrice;
+    private List<Station> stationEntitiesWithLowestSellPrice;
+    private List<Station> stationEntitiesWithHighestBuyPrice;
 }
+

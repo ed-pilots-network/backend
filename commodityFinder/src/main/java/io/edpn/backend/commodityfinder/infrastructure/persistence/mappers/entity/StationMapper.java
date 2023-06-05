@@ -1,10 +1,9 @@
-package io.edpn.backend.commodityfinder.application.mappers.persistence;
+package io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity;
 
-import io.edpn.backend.commodityfinder.application.dto.persistence.StationEntity;
-import io.edpn.backend.commodityfinder.domain.entity.LandingPadSize;
-import io.edpn.backend.commodityfinder.domain.entity.Station;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.dto.StationEntity;
+import io.edpn.backend.commodityfinder.domain.model.LandingPadSize;
+import io.edpn.backend.commodityfinder.domain.model.Station;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 public class StationMapper {

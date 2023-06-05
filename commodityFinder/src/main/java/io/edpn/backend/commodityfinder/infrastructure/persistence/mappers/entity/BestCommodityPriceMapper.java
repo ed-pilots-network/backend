@@ -1,9 +1,8 @@
-package io.edpn.backend.commodityfinder.application.mappers.persistence;
+package io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity;
 
-import io.edpn.backend.commodityfinder.application.dto.persistence.BestCommodityPriceEntity;
-import io.edpn.backend.commodityfinder.domain.entity.BestCommodityPrice;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.dto.BestCommodityPriceEntity;
+import io.edpn.backend.commodityfinder.domain.model.BestCommodityPrice;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

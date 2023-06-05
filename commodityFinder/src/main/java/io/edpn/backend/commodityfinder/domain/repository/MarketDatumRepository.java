@@ -1,13 +1,14 @@
 package io.edpn.backend.commodityfinder.domain.repository;
 
-import io.edpn.backend.commodityfinder.application.dto.persistence.BestCommodityPriceEntity;
+import io.edpn.backend.commodityfinder.domain.model.BestCommodityPrice;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.dto.BestCommodityPriceEntity;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface MarketDatumRepository {
-    Optional<BestCommodityPriceEntity> findBestCommodityPriceEntityByCommodityId(UUID commodityId);
+    Optional<BestCommodityPrice> findBestCommodityPriceEntityByCommodityId(UUID commodityId);
 
-    List<BestCommodityPriceEntity> findAllBestCommodityPrices();
+    List<BestCommodityPrice> findAllBestCommodityPrices();
 }

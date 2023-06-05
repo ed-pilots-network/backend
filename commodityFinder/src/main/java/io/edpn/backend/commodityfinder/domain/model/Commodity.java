@@ -1,4 +1,4 @@
-package io.edpn.backend.commodityfinder.domain.entity;
+package io.edpn.backend.commodityfinder.domain.model;
 
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -14,12 +14,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class System {
+public class Commodity {
 
     private UUID id;
-    private Long eliteId;
     private String name;
-    private Double xCoordinate;
-    private Double yCoordinate;
-    private Double zCoordinate;
 }

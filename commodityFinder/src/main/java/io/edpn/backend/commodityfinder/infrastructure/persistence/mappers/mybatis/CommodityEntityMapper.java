@@ -1,6 +1,6 @@
-package io.edpn.backend.commodityfinder.infrastructure.persistence.mappers;
+package io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis;
 
-import io.edpn.backend.commodityfinder.application.dto.persistence.CommodityEntity;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.dto.CommodityEntity;
 import io.edpn.backend.mybatisutil.UuidTypeHandler;
 import org.apache.ibatis.annotations.*;
 
