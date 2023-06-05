@@ -19,7 +19,7 @@ services:
     image: "bitnami/kafka:3.4"
     environment:
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_CFG_COMPRESSION_TYPE=gzip
     volumes:
@@ -34,23 +34,35 @@ services:
       zookeeper:
         condition: service_healthy
 
-  commoddityfinder-postgres:
+  commoddityfinder_postgres:
     image: "postgres:15-alpine"
     restart: always
     env_file:
       - .env_commoddityfinder
     volumes:
-      - "commoddityfinder-postgres:/var/lib/postgresql/data"
+      - "commoddityfinder_postgres:/var/lib/postgresql/data"
     healthcheck:
       test: pg_isready
       interval: 10s
       timeout: 5s
       retries: 5
 
+  backend:
+    build:
+      context: ./
+      dockerfile: dockerfile
+    env_file:
+      - .env_boot
+    depends_on:
+      kafka:
+        condition: service_healthy
+      commoddityfinder_postgres:
+        condition: service_healthy
+
 volumes:
   zookeeper:
     driver: local
   kafka:
     driver: local
-  commoddityfinder-postgres:
+  commoddityfinder_postgres:
     driver: local
