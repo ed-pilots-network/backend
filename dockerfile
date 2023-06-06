@@ -21,7 +21,8 @@ WORKDIR /home/backend
 USER backend
 
 #Copy the executable JAR file from builder
-COPY --chown=backend:backend --from=builder /home/gradle/src/boot/build/libs/*.jar /app.jar
+COPY --chown=backend:backend --from=builder /home/gradle/src/boot/build/libs/*.jar ./
+RUN cp ./*.jar app.jar
 
 #Expose tomcat server port
 EXPOSE 8080

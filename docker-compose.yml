@@ -55,6 +55,12 @@ services:
       - .env_boot
     ports:
       - "8080:8080"
+    healthcheck:
+      test: "curl --fail --silent backend:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     depends_on:
       kafka:
         condition: service_healthy
