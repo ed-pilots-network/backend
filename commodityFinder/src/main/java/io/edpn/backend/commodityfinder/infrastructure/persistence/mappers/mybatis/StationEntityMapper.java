@@ -37,7 +37,6 @@ public interface StationEntityMapper {
             @Result(property = "marketData", column = "id", javaType = List.class,
                     many = @Many(select = "io.edpn.backend.modulith.commodityfinder.application.mapper.MarketDatumEntityMapper.findByStationId"))
     })
-    @ResultMap("stationResultMap")
     Optional<StationEntity> findById(UUID id);
 
     @ResultMap("stationResultMap")

@@ -16,7 +16,6 @@ public interface CommodityEntityMapper {
             @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name", javaType = String.class)
     })
-    @ResultMap("commodityResultMap")
     List<CommodityEntity> findAll();
 
     @Select("SELECT * FROM commodity WHERE id = #{id}")

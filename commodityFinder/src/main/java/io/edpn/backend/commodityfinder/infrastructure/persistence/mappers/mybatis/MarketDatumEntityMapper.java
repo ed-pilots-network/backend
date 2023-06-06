@@ -4,6 +4,9 @@ import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.BestCom
 import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.CommodityEntity;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.MarketDatumEntity;
 import io.edpn.backend.mybatisutil.StringListTypeHandler;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Many;
@@ -15,10 +18,6 @@ import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Mapper
 public interface MarketDatumEntityMapper {
@@ -37,7 +36,6 @@ public interface MarketDatumEntityMapper {
             @Result(property = "statusFlags", column = "status_flags", javaType = List.class, typeHandler = StringListTypeHandler.class),
             @Result(property = "prohibited", column = "prohibited", javaType = boolean.class)
     })
-    @ResultMap("marketDatumResultMap")
     Optional<MarketDatumEntity> findById(@Param("stationId") UUID stationId, @Param("commodityId") UUID commodityId);
 
     @Select("SELECT * FROM market_datum WHERE commodity_id = #{commodityId}")
@@ -87,8 +85,6 @@ public interface MarketDatumEntityMapper {
             @Result(property = "stationEntitiesWithHighestBuyPrice", column = "stationsWithHighestBuyPrice", javaType = List.class,
                     many = @Many(select = "mappers.persistence.infrastructure.io.edpn.backend.commodityfinder.StationEntityMapper.findById"))
     })
-    @ResultMap("commodityInfoResultMap")
     Optional<BestCommodityPriceEntity> getBestCommodityPrice(@Param("commodityId") UUID commodityId);
-
 
 }

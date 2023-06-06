@@ -53,6 +53,8 @@ services:
       dockerfile: dockerfile
     env_file:
       - .env_boot
+    ports:
+      - "8080:8080"
     depends_on:
       kafka:
         condition: service_healthy

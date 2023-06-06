@@ -11,8 +11,20 @@ RUN gradle clean bootJar --no-daemon
 # The second stage of the Dockerfile packages the application jar with OpenJDK JRE
 FROM openjdk:17-jdk-alpine
 
-# Copy the Spring Boot application jar from the builder stage to the current stage
-COPY --from=builder /home/gradle/src/boot/build/libs/*.jar /app.jar
+# Creating new nonroot user
+RUN adduser --disabled-password --gecos '' backend
+
+# Pointing to user's directory
+WORKDIR /home/backend
+
+# Swapping user
+USER backend
+
+#Copy the executable JAR file from builder
+COPY --chown=backend:backend --from=builder /home/gradle/src/boot/build/libs/*.jar /app.jar
+
+#Expose tomcat server port
+EXPOSE 8080
 
 # Set the startup command to execute the jar
-CMD ["java", "-jar", "/app.jar"]
+ENTRYPOINT java $RUN_ARGS -jar app.jar

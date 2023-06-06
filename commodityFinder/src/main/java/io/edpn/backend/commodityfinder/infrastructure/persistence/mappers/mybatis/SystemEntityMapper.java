@@ -28,7 +28,6 @@ public interface SystemEntityMapper {
             @Result(property = "yCoordinate", column = "y_coordinate", javaType = Double.class),
             @Result(property = "zCoordinate", column = "z_coordinate", javaType = Double.class)
     })
-    @ResultMap("systemResultMap")
     Optional<SystemEntity> findById(UUID id);
 
     @Select("SELECT * FROM system WHERE name = #{name}")
