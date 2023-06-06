@@ -53,7 +53,7 @@ services:
     env_file:
       - .env_eddn_message_listener
     healthcheck:
-      test: "curl --fail --silent eddn-message-listener:8080/actuator/health | grep UP || exit 1"
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
       interval: 20s
       timeout: 5s
       retries: 5
@@ -71,7 +71,7 @@ services:
     ports:
       - "8080:8080"
     healthcheck:
-      test: "curl --fail --silent backend:8080/actuator/health | grep UP || exit 1"
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
       interval: 20s
       timeout: 5s
       retries: 5

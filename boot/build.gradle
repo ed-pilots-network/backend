@@ -9,6 +9,7 @@ repositories {
 dependencies {
     implementation project(":commodityFinder")
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -18,6 +19,8 @@ dependencies {
 }
 
 extraJavaModuleInfo {
+    automaticModule("LatencyUtils-2.0.3.jar", "LatencyUtils")
+    automaticModule("HdrHistogram-2.1.12.jar", "HdrHistogram")
     automaticModule("kafka-clients-3.3.2.jar", "kafka.clients")
     automaticModule("spring-retry-2.0.1.jar","spring.retry")
     automaticModule("dependency-management-plugin-1.1.0.jar","dependency.management.plugin")

@@ -65,6 +65,7 @@ subprojects {
             implementation "org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}"
             implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
             implementation "org.springframework.boot:spring-boot-starter-integration:${springBootVersion}"
+            implementation "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
             implementation "org.springframework.integration:spring-integration-http:6.1.0"
             implementation "org.springframework.kafka:spring-kafka:3.0.4"
             implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.0"
