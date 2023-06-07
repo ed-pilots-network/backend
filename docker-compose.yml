@@ -4,6 +4,7 @@ name: "edpn"
 services:
   zookeeper:
     image: "bitnami/zookeeper:3.8"
+    restart: on-failure
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
     volumes:
@@ -17,6 +18,7 @@ services:
 
   kafka:
     image: "bitnami/kafka:3.4"
+    restart: on-failure
     environment:
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
@@ -36,7 +38,7 @@ services:
 
   commoddityfinder_postgres:
     image: "postgres:15-alpine"
-    restart: always
+    restart: on-failure
     env_file:
       - env/.env_commoddityfinder
     volumes:
@@ -49,7 +51,7 @@ services:
 
   eddn-message-listener:
     image: elitedangerouspilotnetwork/backend-eddn-message-listener:0.0.1-SNAPSHOT
-    restart: always
+    restart: on-failure
     env_file:
       - env/.env_eddn_message_listener
     healthcheck:
@@ -66,6 +68,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
+    restart: on-failure
     env_file:
       - env/.env_boot
     ports:

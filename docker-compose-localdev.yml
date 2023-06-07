@@ -4,6 +4,7 @@ name: "edpn-local"
 services:
   zookeeper:
     image: "bitnami/zookeeper:3.8"
+    restart: on-failure
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
     volumes:
@@ -17,6 +18,7 @@ services:
 
   kafka:
     image: "bitnami/kafka:3.4"
+    restart: on-failure
     environment:
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
@@ -38,6 +40,7 @@ services:
 
   commoddityfinder_postgres:
     image: "postgres:15-alpine"
+    restart: on-failure
     environment:
       - POSTGRES_USER=edpn_commodityfinder
       - POSTGRES_PASSWORD=MSDVq372rNk3AwRq
