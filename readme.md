@@ -7,6 +7,7 @@ The Elite Dangerous Pilot Network Backend (EDPN Backend) project provides a REST
 - [Project Structure](#project-structure)
     - [Code structure](#code-structure)
 - [Installation](#installation)
+- [Local Development](#local-development)
 - [Data flow](#data-flow)
 - [Reporting Issues](#reporting-issues)
 - [Contributing](#contributing)
@@ -113,6 +114,7 @@ To install and run the EDPN Backend project, follow these steps:
    - pull and run initialize the `eddn-message-listener` container
    - containerize the code via the dockerfile included, and run it in the stack
 
+___
 ## Local Development
 to run the stack for local development, follow these steps:
 
@@ -123,6 +125,7 @@ to run the stack for local development, follow these steps:
 4. You can now run/debug the project main class (`io.edpn.backend.EDPNApplication` in boot project) with spring profile `local`
 
 **keep in mind that the EddnMessageListener application needs to be run separately to receive messages to process**
+
 ___
 ## Reporting Issues
 To report an issue with the EDPN Backend project or to request a feature, please open an issue on the project's GitHub repository. You can also join the [discord](https://discord.gg/RrhRmDQD) and make a suggestion there in `ideas` section.
