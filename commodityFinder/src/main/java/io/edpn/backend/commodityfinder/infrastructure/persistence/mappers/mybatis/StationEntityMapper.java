@@ -28,14 +28,14 @@ public interface StationEntityMapper {
             @Result(property = "name", column = "name", javaType = String.class),
             @Result(property = "arrivalDistance", column = "arrival_distance", javaType = Double.class),
             @Result(property = "system", column = "system_id", javaType = SystemEntity.class,
-                    one = @One(select = "io.edpn.backend.modulith.commodityfinder.application.mapper.SystemEntityMapper.findById")),
+                    one = @One(select = "io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.SystemEntityMapper.findById")),
             @Result(property = "planetary", column = "planetary", javaType = boolean.class),
             @Result(property = "requireOdyssey", column = "require_odyssey", javaType = boolean.class),
             @Result(property = "fleetCarrier", column = "fleet_carrier", javaType = boolean.class),
             @Result(property = "maxLandingPadSize", column = "max_landing_pad_size", javaType = String.class),
             @Result(property = "marketUpdatedAt", column = "market_updated_at", javaType = LocalDateTime.class),
             @Result(property = "marketData", column = "id", javaType = List.class,
-                    many = @Many(select = "io.edpn.backend.modulith.commodityfinder.application.mapper.MarketDatumEntityMapper.findByStationId"))
+                    many = @Many(select = "io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.MarketDatumEntityMapper.findByStationId"))
     })
     Optional<StationEntity> findById(UUID id);
 

@@ -6,7 +6,7 @@ plugins {
 }
 
 repositories {
-    mavenCentral(){
+    mavenCentral() {
         metadataSources {
             gradleMetadata()
         }

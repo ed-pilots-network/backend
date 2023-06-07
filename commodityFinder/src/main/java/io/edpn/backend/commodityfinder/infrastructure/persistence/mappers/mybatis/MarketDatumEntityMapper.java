@@ -3,10 +3,8 @@ package io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybat
 import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.BestCommodityPriceEntity;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.CommodityEntity;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.MarketDatumEntity;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.StationEntity;
 import io.edpn.backend.mybatisutil.StringListTypeHandler;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Many;
@@ -19,13 +17,17 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 @Mapper
 public interface MarketDatumEntityMapper {
 
     @Select("SELECT * FROM market_datum WHERE station_id = #{stationId} AND commodity_id = #{commodityId}")
     @Results(id = "marketDatumResultMap", value = {
             @Result(property = "commodity", column = "commodity_id", javaType = CommodityEntity.class,
-                    one = @One(select = "io.edpn.backend.modulith.commodityfinder.application.mapper.CommodityEntityMapper.findById")),
+                    one = @One(select = "io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.CommodityEntityMapper.findById")),
             @Result(property = "meanPrice", column = "mean_price", javaType = long.class),
             @Result(property = "buyPrice", column = "buy_price", javaType = long.class),
             @Result(property = "stock", column = "stock", javaType = long.class),
@@ -38,9 +40,9 @@ public interface MarketDatumEntityMapper {
     })
     Optional<MarketDatumEntity> findById(@Param("stationId") UUID stationId, @Param("commodityId") UUID commodityId);
 
-    @Select("SELECT * FROM market_datum WHERE commodity_id = #{commodityId}")
+    @Select("SELECT * FROM market_datum WHERE station_id = #{stationId}")
     @ResultMap("marketDatumResultMap")
-    List<MarketDatumEntity> findByStationId(UUID stationId);
+    List<MarketDatumEntity> findByStationId(@Param("stationId") UUID stationId);
 
     @Insert("INSERT INTO market_datum (station_id, commodity_id, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, " +
             "status_flags, prohibited) VALUES (#{stationId}, #{commodityId}, #{meanPrice}, #{buyPrice}, #{stock}, #{stockBracket}, #{sellPrice}, " +
@@ -70,7 +72,7 @@ public interface MarketDatumEntityMapper {
             "GROUP BY commodity_id")
     @Results(id = "commodityInfoResultMap", value = {
             @Result(property = "commodity", column = "commodity_id", javaType = CommodityEntity.class,
-                    one = @One(select = "io.edpn.backend.modulith.commodityfinder.application.mapper.CommodityEntityMapper.findById")),
+                    one = @One(select = "io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.CommodityEntityMapper.findById")),
             @Result(property = "maxBuyPrice", column = "maxBuyPrice", javaType = long.class),
             @Result(property = "minSellPrice", column = "minSellPrice", javaType = long.class),
             @Result(property = "averagePrice", column = "averagePrice", javaType = double.class),
@@ -81,9 +83,9 @@ public interface MarketDatumEntityMapper {
             @Result(property = "stationsWithLowestSellPrice", column = "stationsWithLowestSellPrice", javaType = String.class),
             @Result(property = "stationsWithHighestBuyPrice", column = "stationsWithHighestBuyPrice", javaType = String.class),
             @Result(property = "stationEntitiesWithLowestSellPrice", column = "stationsWithLowestSellPrice", javaType = List.class,
-                    many = @Many(select = "mappers.persistence.infrastructure.io.edpn.backend.commodityfinder.StationEntityMapper.findById")),
+                    many = @Many(select = "io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.StationEntityMapper.findById")),
             @Result(property = "stationEntitiesWithHighestBuyPrice", column = "stationsWithHighestBuyPrice", javaType = List.class,
-                    many = @Many(select = "mappers.persistence.infrastructure.io.edpn.backend.commodityfinder.StationEntityMapper.findById"))
+                    many = @Many(select = "io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.StationEntityMapper.findById"))
     })
     Optional<BestCommodityPriceEntity> getBestCommodityPrice(@Param("commodityId") UUID commodityId);
 
