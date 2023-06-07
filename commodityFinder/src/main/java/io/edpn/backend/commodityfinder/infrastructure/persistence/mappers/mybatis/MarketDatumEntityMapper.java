@@ -44,9 +44,9 @@ public interface MarketDatumEntityMapper {
     List<MarketDatumEntity> findByStationId(@Param("stationId") UUID stationId);
 
     @Insert("INSERT INTO market_datum (station_id, commodity_id, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, " +
-            "status_flags, prohibited) VALUES (#{stationId}, #{commodityId}, #{meanPrice}, #{buyPrice}, #{stock}, #{stockBracket}, #{sellPrice}, " +
-            "#{demand}, #{demandBracket}, #{statusFlags}, #{prohibited})")
-    void insert(@Param("stationId") UUID stationId, MarketDatumEntity marketDatum);
+            "status_flags, prohibited) VALUES (#{stationId}, #{marketDatum.commodity.id}, #{marketDatum.meanPrice}, #{marketDatum.buyPrice}, #{marketDatum.stock}, #{marketDatum.stockBracket}, #{marketDatum.sellPrice}, " +
+            "#{marketDatum.demand}, #{marketDatum.demandBracket}, #{marketDatum.statusFlags}, #{marketDatum.prohibited})")
+    void insert(@Param("stationId") UUID stationId, @Param("marketDatum") MarketDatumEntity marketDatum);
 
     @Update("UPDATE market_datum SET mean_price = #{meanPrice}, buy_price = #{buyPrice}, stock = #{stock}, stock_bracket = #{stockBracket}, " +
             "sell_price = #{sellPrice}, demand = #{demand}, demand_bracket = #{demandBracket}, status_flags = #{statusFlags}, " +

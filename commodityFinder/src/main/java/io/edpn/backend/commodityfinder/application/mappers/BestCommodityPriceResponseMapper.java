@@ -4,6 +4,9 @@ import io.edpn.backend.commodityfinder.application.dto.BestCommodityPriceRespons
 import io.edpn.backend.commodityfinder.domain.model.BestCommodityPrice;
 import lombok.RequiredArgsConstructor;
 
+import java.util.LinkedList;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 public class BestCommodityPriceResponseMapper {
 
@@ -28,7 +31,7 @@ public class BestCommodityPriceResponseMapper {
                                         .zCoordinate(station.getSystem().getZCoordinate())
                                         .build())
                                 .build())
-                        .toList())
+                        .collect(Collectors.toCollection(LinkedList::new)))
                 .highestStation(bestCommodityPrice.getStationEntitiesWithHighestBuyPrice().stream()
                         .map(station -> BestCommodityPriceResponse.Station.builder()
                                 .arrivalDistance(station.getArrivalDistance())
@@ -40,7 +43,7 @@ public class BestCommodityPriceResponseMapper {
                                         .zCoordinate(station.getSystem().getZCoordinate())
                                         .build())
                                 .build())
-                        .toList())
+                        .collect(Collectors.toCollection(LinkedList::new)))
                 .build();
     }
 }

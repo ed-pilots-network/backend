@@ -8,9 +8,11 @@ import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybati
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.MarketDatumEntityMapper;
 import lombok.RequiredArgsConstructor;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class MybatisMarketDatumRepository implements MarketDatumRepository {
@@ -33,7 +35,7 @@ public class MybatisMarketDatumRepository implements MarketDatumRepository {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .map(bestCommodityPriceMapper::map)
-                .toList();
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -26,6 +27,7 @@ public class MarketDatumEntity {
     private long sellPrice;
     private long demand;
     private long demandBracket;
-    private List<String> statusFlags;
+    @Builder.Default
+    private List<String> statusFlags = new ArrayList<>();
     private boolean prohibited;
 }

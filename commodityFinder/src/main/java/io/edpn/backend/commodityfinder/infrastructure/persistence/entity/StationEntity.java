@@ -8,6 +8,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,5 +31,6 @@ public class StationEntity {
     private boolean fleetCarrier;
     private String maxLandingPadSize;
     private LocalDateTime marketUpdatedAt;
-    private List<MarketDatumEntity> marketData;
+    @Builder.Default
+    private List<MarketDatumEntity> marketData = new ArrayList<>();
 }

@@ -1,10 +1,12 @@
 package io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity;
 
-import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.MarketDatumEntity;
 import io.edpn.backend.commodityfinder.domain.model.MarketDatum;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.MarketDatumEntity;
 import lombok.RequiredArgsConstructor;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class MarketDatumMapper {
@@ -12,7 +14,9 @@ public class MarketDatumMapper {
     private final CommodityMapper commodityMapper;
 
     public List<MarketDatum> map(List<MarketDatumEntity> marketDatumEntityList) {
-        return marketDatumEntityList.stream().map(this::map).toList();
+        return marketDatumEntityList.stream()
+                .map(this::map)
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     public MarketDatum map(MarketDatumEntity marketDatumEntity) {
@@ -31,7 +35,9 @@ public class MarketDatumMapper {
     }
 
     public List<MarketDatumEntity> mapToEntity(List<MarketDatum> marketDatumList) {
-        return marketDatumList.stream().map(this::mapToEntity).toList();
+        return marketDatumList.stream()
+                .map(this::mapToEntity)
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     public MarketDatumEntity mapToEntity(MarketDatum marketDatum) {

@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -76,12 +77,12 @@ public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMe
                         return md;
                     });
                 })
-                .toList();
+                .collect(Collectors.toCollection(LinkedList::new));
 
         CompletableFuture<List<MarketDatum>> combinedFuture = CompletableFuture.allOf(completableFutureList.toArray(new CompletableFuture[0]))
                 .thenApply(v -> completableFutureList.stream()
                         .map(CompletableFuture::join)
-                        .collect(Collectors.toList()));
+                        .collect(Collectors.toCollection(LinkedList::new)));
 
 
         // put market data map in station
@@ -91,7 +92,7 @@ public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMe
         });
 
         // save station
-        stationRepository.create(stationCompletableFuture.join());
+        stationRepository.update(stationCompletableFuture.join());
 
         if (log.isTraceEnabled()) {
             log.trace("DefaultReceiveCommodityMessageUseCase.receive -> took " + (java.lang.System.nanoTime() - start) + " nanosecond");

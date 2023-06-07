@@ -4,7 +4,9 @@ import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.BestCom
 import io.edpn.backend.commodityfinder.domain.model.BestCommodityPrice;
 import lombok.RequiredArgsConstructor;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class BestCommodityPriceMapper {
@@ -13,7 +15,9 @@ public class BestCommodityPriceMapper {
     private final StationMapper stationMapper;
 
     public List<BestCommodityPrice> map(List<BestCommodityPriceEntity> entities) {
-        return entities.stream().map(this::map).toList();
+        return entities.stream()
+                .map(this::map)
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     public BestCommodityPrice map(BestCommodityPriceEntity entity) {
@@ -26,8 +30,8 @@ public class BestCommodityPriceMapper {
                 .percentStationsWithBuyPriceAboveAverage(entity.getPercentStationsWithBuyPriceAboveAverage())
                 .percentStationsWithSellPrice(entity.getPercentStationsWithSellPrice())
                 .percentStationsWithSellPriceBelowAverage(entity.getPercentStationsWithSellPriceBelowAverage())
-                .stationEntitiesWithLowestSellPrice(entity.getStationEntitiesWithLowestSellPrice().stream().map(stationMapper::map).toList())
-                .stationEntitiesWithHighestBuyPrice(entity.getStationEntitiesWithHighestBuyPrice().stream().map(stationMapper::map).toList())
+                .stationEntitiesWithLowestSellPrice(entity.getStationEntitiesWithLowestSellPrice().stream().map(stationMapper::map).collect(Collectors.toCollection(LinkedList::new)))
+                .stationEntitiesWithHighestBuyPrice(entity.getStationEntitiesWithHighestBuyPrice().stream().map(stationMapper::map).collect(Collectors.toCollection(LinkedList::new)))
                 .build();
     }
 }

@@ -57,6 +57,9 @@ subprojects {
         springBootVersion = '3.1.0'
         jacksonVersion = '2.14.2'
         lombokVersion = '1.18.28'
+        mybatisSpringBootVersion = '3.0.2'
+        liquibaseVersion = '4.22.0'
+        postgresqlVersion = '42.6.0'
     }
 
     dependencies {
@@ -68,13 +71,12 @@ subprojects {
             implementation "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
             implementation "org.springframework.integration:spring-integration-http:6.1.0"
             implementation "org.springframework.kafka:spring-kafka:3.0.4"
-            implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.0"
-            implementation "org.mybatis:mybatis:3.5.11"
-            implementation "org.liquibase:liquibase-core:4.17.2"
+            implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:${mybatisSpringBootVersion}"
+            implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
             implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
             implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
             implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
-            runtimeOnly "org.postgresql:postgresql:42.2.12"
+            runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
             compileOnly "org.projectlombok:lombok:${lombokVersion}"
             annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
             testCompileOnly "org.projectlombok:lombok:${lombokVersion}"

@@ -14,10 +14,10 @@ module edpn.commodity.finder {
     requires edpn.util;
     requires edpn.messageprocessor.lib;
     requires org.mybatis.spring;
-    requires org.apache.ibatis;
     requires spring.beans;
     requires kafka.clients;
     requires spring.web;
+    requires org.mybatis;
 
     exports io.edpn.backend.commodityfinder.application.controller;
     exports io.edpn.backend.commodityfinder.application.dto;

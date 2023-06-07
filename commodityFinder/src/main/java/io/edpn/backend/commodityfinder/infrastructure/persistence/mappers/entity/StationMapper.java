@@ -5,6 +5,8 @@ import io.edpn.backend.commodityfinder.domain.model.LandingPadSize;
 import io.edpn.backend.commodityfinder.domain.model.Station;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 public class StationMapper {
 
@@ -37,7 +39,7 @@ public class StationMapper {
                 .planetary(station.isPlanetary())
                 .requireOdyssey(station.isRequireOdyssey())
                 .fleetCarrier(station.isFleetCarrier())
-                .maxLandingPadSize(station.getMaxLandingPadSize().name())
+                .maxLandingPadSize(Optional.ofNullable(station.getMaxLandingPadSize()).map(LandingPadSize::name).orElse(LandingPadSize.UNKNOWN.name()))
                 .marketUpdatedAt(station.getMarketUpdatedAt())
                 .marketData(marketDatumMapper.mapToEntity(station.getMarketData()))
                 .build();

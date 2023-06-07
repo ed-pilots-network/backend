@@ -2,11 +2,12 @@ package io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybat
 
 import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.StationEntity;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.SystemEntity;
+import io.edpn.backend.mybatisutil.UuidTypeHandler;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Many;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.One;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
@@ -22,7 +23,7 @@ public interface StationEntityMapper {
 
     @Select("SELECT * FROM station WHERE id = #{id}")
     @Results(id = "stationResultMap", value = {
-            @Result(property = "id", column = "id", javaType = UUID.class),
+            @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "marketId", column = "market_id", javaType = Long.class),
             @Result(property = "name", column = "name", javaType = String.class),
             @Result(property = "arrivalDistance", column = "arrival_distance", javaType = Double.class),
@@ -36,20 +37,21 @@ public interface StationEntityMapper {
             @Result(property = "marketData", column = "id", javaType = List.class,
                     many = @Many(select = "io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.MarketDatumEntityMapper.findByStationId"))
     })
-    Optional<StationEntity> findById(UUID id);
+    Optional<StationEntity> findById(@Param("id") UUID id);
 
     @ResultMap("stationResultMap")
-    Optional<StationEntity> findBySystemIdAndStationName(UUID systemId, String stationName);
+    @Select("SELECT * FROM station WHERE system_id = #{systemId} and name = #{stationName}")
+    Optional<StationEntity> findBySystemIdAndStationName(@Param("systemId") UUID systemId, @Param("stationName") String stationName);
 
     @Insert("INSERT INTO station (id, market_id, name, arrival_distance, system_id, planetary, require_odyssey, fleet_carrier, max_landing_pad_size, market_updated_at) " +
-            "VALUES (#{id}, #{marketId}, #{name}, #{systemId}, #{planetary}, #{requireOdyssey}, #{fleetCarrier}, #{maxLandingPadSize}, #{marketUpdatedAt})")
+            "VALUES (#{id}, #{marketId}, #{name}, #{arrivalDistance}, #{system.id}, #{planetary}, #{requireOdyssey}, #{fleetCarrier}, #{maxLandingPadSize}, #{marketUpdatedAt})")
     void insert(StationEntity station);
 
-    @Update("UPDATE station SET market_id = #{marketId}, name = #{name}, arrival_distance = #{arrivalDistance}, system_id = #{systemId}, planetary = #{planetary}, " +
+    @Update("UPDATE station SET market_id = #{marketId}, name = #{name}, arrival_distance = #{arrivalDistance}, system_id = #{system.id}, planetary = #{planetary}, " +
             "require_odyssey = #{requireOdyssey}, fleet_carrier = #{fleetCarrier}, max_landing_pad_size = #{maxLandingPadSize}, " +
             "market_updated_at = #{marketUpdatedAt} WHERE id = #{id}")
     void update(StationEntity station);
 
     @Delete("DELETE FROM station WHERE id = #{id}")
-    void delete(UUID id);
+    void delete(@Param("id") UUID id);
 }

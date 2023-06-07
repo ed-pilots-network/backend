@@ -1,12 +1,14 @@
 package io.edpn.backend.commodityfinder.domain.model;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,6 +26,7 @@ public class MarketDatum {
     private long sellPrice;
     private long demand;
     private long demandBracket;
-    private List<String> statusFlags;
+    @Builder.Default
+    private List<String> statusFlags = new ArrayList<>();
     private boolean prohibited;
 }
