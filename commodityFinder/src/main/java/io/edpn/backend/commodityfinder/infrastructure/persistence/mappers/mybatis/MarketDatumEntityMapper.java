@@ -3,12 +3,10 @@ package io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybat
 import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.BestCommodityPriceEntity;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.CommodityEntity;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.MarketDatumEntity;
-import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.StationEntity;
 import io.edpn.backend.mybatisutil.StringListTypeHandler;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Many;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;

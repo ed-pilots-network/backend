@@ -27,7 +27,7 @@ public class MyBatisConfiguration {
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
         sessionFactoryBean.setDataSource(dataSource);
-        sessionFactoryBean.setTypeHandlers(new TypeHandler<?>[]{new UuidTypeHandler(), new StringListTypeHandler(), new StringTrimmingTypeHandler()});
+        sessionFactoryBean.setTypeHandlers(new UuidTypeHandler(), new StringListTypeHandler(), new StringTrimmingTypeHandler());
 
         return sessionFactoryBean.getObject();
     }
