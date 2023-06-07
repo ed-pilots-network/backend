@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Mapper
 public interface StationEntityMapper {
 
     @Select("SELECT * FROM station WHERE id = #{id}")

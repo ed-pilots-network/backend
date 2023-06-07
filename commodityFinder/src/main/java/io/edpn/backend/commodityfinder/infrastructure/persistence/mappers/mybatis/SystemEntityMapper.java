@@ -16,7 +16,6 @@ import org.apache.ibatis.annotations.Update;
 import java.util.Optional;
 import java.util.UUID;
 
-@Mapper
 public interface SystemEntityMapper {
 
     @Select("SELECT * FROM system WHERE id = #{id}")
