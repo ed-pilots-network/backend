@@ -1,6 +1,6 @@
 version: "3.8"
 
-name: "edpn"
+name: "edpn-local"
 services:
   zookeeper:
     image: "bitnami/zookeeper:3.8"
@@ -19,11 +19,13 @@ services:
     image: "bitnami/kafka:3.4"
     environment:
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_CFG_COMPRESSION_TYPE=gzip
     volumes:
       - "kafka:/bitnami/kafka"
+    ports:
+      - "9092:9092"
     healthcheck:
       test: kafka-topics.sh --list --bootstrap-server localhost:9092
       interval: 30s
@@ -37,50 +39,19 @@ services:
   commoddityfinder_postgres:
     image: "postgres:15-alpine"
     restart: always
-    env_file:
-      - env/.env_commoddityfinder
+    environment:
+      - POSTGRES_USER=edpn_commodityfinder
+      - POSTGRES_PASSWORD=MSDVq372rNk3AwRq
+      - POSTGRES_DB=commodityfinder
     volumes:
       - "commoddityfinder_postgres:/var/lib/postgresql/data"
+    ports:
+      - "54321:5432"
     healthcheck:
       test: pg_isready
       interval: 10s
       timeout: 5s
       retries: 5
-
-  eddn-message-listener:
-    image: elitedangerouspilotnetwork/backend-eddn-message-listener:0.0.1-SNAPSHOT
-    restart: always
-    env_file:
-      - env/.env_eddn_message_listener
-    healthcheck:
-      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
-      interval: 20s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-    depends_on:
-      kafka:
-        condition: service_healthy
-
-  backend:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    env_file:
-      - env/.env_boot
-    ports:
-      - "8080:8080"
-    healthcheck:
-      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
-      interval: 20s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-    depends_on:
-      kafka:
-        condition: service_healthy
-      commoddityfinder_postgres:
-        condition: service_healthy
 
 volumes:
   zookeeper:
