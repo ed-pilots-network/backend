@@ -38,7 +38,6 @@ services:
 
   commoddityfinder_postgres:
     image: "postgres:15-alpine"
-    restart: always
     environment:
       - POSTGRES_USER=edpn_commodityfinder
       - POSTGRES_PASSWORD=MSDVq372rNk3AwRq

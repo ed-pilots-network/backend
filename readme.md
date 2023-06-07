@@ -18,7 +18,7 @@ ___
 ## Technologies Used
 The EDPN Backend project is built using the following technologies:
 
-- [Spring Boot](https://spring.io/projects/spring-boot): An open-source Java-based framework used to create stand-alone, production-grade Spring applications quickly and easily.
+- [Sp[readme.md](readme.md)ring Boot](https://spring.io/projects/spring-boot): An open-source Java-based framework used to create stand-alone, production-grade Spring applications quickly and easily.
 - [Maven](https://maven.apache.org/): A build automation tool used to manage dependencies and build Java projects.
 - [Kafka](https://kafka.apache.org/): A distributed streaming platform used to build real-time data pipelines and streaming applications.
 - [Postgres](https://www.postgresql.org/): An open-source relational database management system used to store data for the EDPN Backend project.
@@ -104,15 +104,25 @@ The EDPN Backend project, follow the following data flow:
 
 ___
 ## Installation
-To install and run the EDPN Backend project locally, follow these steps:
+To install and run the EDPN Backend project, follow these steps:
 
 1. Install Docker
 2. install Docker-compose
-3. run the following command from the root project folder: `docker compose up -d`. This command will:
+3. run the following command from the root project folder: `docker compose -f docker-compose.yml up -d`. This command will:
    - create a stack which contains a Zookeeper, a Kafka, and a postgres
    - pull and run initialize the `eddn-message-listener` container
    - containerize the code via the dockerfile included, and run it in the stack
 
+## Local Development
+to run the stack for local development, follow these steps:
+
+1. Install Docker
+2. install Docker-compose
+3. run the following command from the root project folder: `docker compose -f docker-compose-localdev.yml up -d`. This command will:
+    - create a stack which contains a Zookeeper, a Kafka, and a postgres with the needed ports exposed on localhost
+4. You can now run/debug the project main class (`io.edpn.backend.EDPNApplication` in boot project) with spring profile `local`
+
+**keep in mind that the EddnMessageListener application needs to be run separately to receive messages to process**
 ___
 ## Reporting Issues
 To report an issue with the EDPN Backend project or to request a feature, please open an issue on the project's GitHub repository. You can also join the [discord](https://discord.gg/RrhRmDQD) and make a suggestion there in `ideas` section.
@@ -135,7 +145,7 @@ ___
 MyBatis is a popular persistence framework that offers support for custom SQL, stored procedures, and advanced mappings. We chose MyBatis over JPA for this project due to its flexibility in handling complex database operations.
 
 #### Annotation-based Configuration
-In our project, MyBatis configuration is achieved entirely through annotations. Mappers are marked with the `@Mapper` annotation, and queries are specified within the interfaces using annotations. For more details on the bean configuration, refer to the `io.edpn.backend.messageprocessor.commodityv3.configuration.MyBatisConfiguration` class for an example.
+In our project, MyBatis configuration is achieved entirely through annotations. Mappers are marked with the `@Mapper` annotation, and queries are specified within the interfaces using annotations. For more details on the bean configuration, refer to the `io.edpn.backend.commodityfinder.cnfiguration.MyBatisConfiguration` class for an example.
 
 ### Liquibase
 Liquibase is a powerful open-source, database-independent library used for tracking, managing, and applying database schema changes. In this project, Liquibase is responsible for handling database migrations and changes.
