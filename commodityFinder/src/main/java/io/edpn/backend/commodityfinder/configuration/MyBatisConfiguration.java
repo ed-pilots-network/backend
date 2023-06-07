@@ -4,12 +4,11 @@ import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybati
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.MarketDatumEntityMapper;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.StationEntityMapper;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.SystemEntityMapper;
-import io.edpn.backend.mybatisutil.StringListTypeHandler;
+import io.edpn.backend.mybatisutil.StringListToArrayTypeHandler;
 import io.edpn.backend.mybatisutil.StringTrimmingTypeHandler;
 import io.edpn.backend.mybatisutil.UuidTypeHandler;
 import io.edpn.backend.util.IdGenerator;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.type.TypeHandler;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.mapper.MapperFactoryBean;
@@ -27,7 +26,7 @@ public class MyBatisConfiguration {
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
         sessionFactoryBean.setDataSource(dataSource);
-        sessionFactoryBean.setTypeHandlers(new UuidTypeHandler(), new StringListTypeHandler(), new StringTrimmingTypeHandler());
+        sessionFactoryBean.setTypeHandlers(new UuidTypeHandler(), new StringTrimmingTypeHandler(), new StringListToArrayTypeHandler());
 
         return sessionFactoryBean.getObject();
     }

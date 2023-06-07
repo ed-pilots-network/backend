@@ -19,7 +19,7 @@
             <column name="sell_price" type="bigint"/>
             <column name="demand" type="bigint"/>
             <column name="demand_bracket" type="bigint"/>
-            <column name="status_flags" type="varchar(255)"/>
+            <column name="status_flags" type="varchar(255) []"/>
             <column name="prohibited" type="boolean"/>
         </createTable>
 

@@ -3,7 +3,7 @@ package io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybat
 import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.BestCommodityPriceEntity;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.CommodityEntity;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.MarketDatumEntity;
-import io.edpn.backend.mybatisutil.StringListTypeHandler;
+import io.edpn.backend.mybatisutil.StringListToArrayTypeHandler;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Many;
@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.apache.ibatis.type.JdbcType.ARRAY;
+
 public interface MarketDatumEntityMapper {
 
     @Select("SELECT * FROM market_datum WHERE station_id = #{stationId} AND commodity_id = #{commodityId}")
@@ -32,7 +34,7 @@ public interface MarketDatumEntityMapper {
             @Result(property = "sellPrice", column = "sell_price", javaType = long.class),
             @Result(property = "demand", column = "demand", javaType = long.class),
             @Result(property = "demandBracket", column = "demand_bracket", javaType = long.class),
-            @Result(property = "statusFlags", column = "status_flags", javaType = List.class, typeHandler = StringListTypeHandler.class),
+            @Result(property = "statusFlags", column = "status_flags", javaType = List.class, jdbcType = ARRAY, typeHandler = StringListToArrayTypeHandler.class),
             @Result(property = "prohibited", column = "prohibited", javaType = boolean.class)
     })
     Optional<MarketDatumEntity> findById(@Param("stationId") UUID stationId, @Param("commodityId") UUID commodityId);
@@ -43,11 +45,11 @@ public interface MarketDatumEntityMapper {
 
     @Insert("INSERT INTO market_datum (station_id, commodity_id, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, " +
             "status_flags, prohibited) VALUES (#{stationId}, #{marketDatum.commodity.id}, #{marketDatum.meanPrice}, #{marketDatum.buyPrice}, #{marketDatum.stock}, #{marketDatum.stockBracket}, #{marketDatum.sellPrice}, " +
-            "#{marketDatum.demand}, #{marketDatum.demandBracket}, #{marketDatum.statusFlags}, #{marketDatum.prohibited})")
+            "#{marketDatum.demand}, #{marketDatum.demandBracket}, #{marketDatum.statusFlags, jdbcType=ARRAY, typeHandler=io.edpn.backend.mybatisutil.StringListToArrayTypeHandler}, #{marketDatum.prohibited})")
     void insert(@Param("stationId") UUID stationId, @Param("marketDatum") MarketDatumEntity marketDatum);
 
     @Update("UPDATE market_datum SET mean_price = #{meanPrice}, buy_price = #{buyPrice}, stock = #{stock}, stock_bracket = #{stockBracket}, " +
-            "sell_price = #{sellPrice}, demand = #{demand}, demand_bracket = #{demandBracket}, status_flags = #{statusFlags}, " +
+            "sell_price = #{sellPrice}, demand = #{demand}, demand_bracket = #{demandBracket}, status_flags = #{statusFlags, jdbcType=ARRAY, typeHandler=io.edpn.backend.mybatisutil.StringListToArrayTypeHandler}, " +
             "prohibited = #{prohibited} WHERE station_id = #{stationId} AND commodity_id = #{commodityId}")
     void update(MarketDatumEntity marketDatum);
 
