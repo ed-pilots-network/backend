@@ -60,6 +60,7 @@ subprojects {
         mybatisSpringBootVersion = '3.0.2'
         liquibaseVersion = '4.22.0'
         postgresqlVersion = '42.6.0'
+        springdocOpenapiVersion = '2.1.0'
     }
 
     dependencies {
@@ -70,6 +71,7 @@ subprojects {
             implementation "org.springframework.boot:spring-boot-starter-integration:${springBootVersion}"
             implementation "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
             implementation "org.springframework.integration:spring-integration-http:6.1.0"
+            implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocOpenapiVersion}"
             implementation "org.springframework.kafka:spring-kafka:3.0.4"
             implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:${mybatisSpringBootVersion}"
             implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
