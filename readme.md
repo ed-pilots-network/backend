@@ -36,7 +36,7 @@ The projects follow a hexagonal architecture pattern and adheres to Domain-Drive
 
 ```
 src
-└── main
+├── main
 ├── java
 │   └── com
 │       └── example
@@ -57,7 +57,7 @@ src
 │               │       ├── entity
 │               │       └── repository
 │               └── StationsApplication.java
-└── resources
+├── resources
 ├── application.properties
 └── ...
 ```
