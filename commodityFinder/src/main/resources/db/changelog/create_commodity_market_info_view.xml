@@ -4,7 +4,7 @@
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="create_commodity_market_info_view" author="pveeckhout">
-        <createView viewName="commodity_market_info_view">
+        <createView viewName="commodity_market_info_view" replaceIfExists="true">
             <![CDATA[
             SELECT md.commodity_id,
                    MAX(md.buy_price)               AS maxBuyPrice,
