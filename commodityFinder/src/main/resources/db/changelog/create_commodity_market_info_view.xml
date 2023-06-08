@@ -1,0 +1,74 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="create_commodity_market_info_view" author="pveeckhout">
+        <createView viewName="commodity_market_info_view">
+            <![CDATA[
+            SELECT md.commodity_id,
+                   MAX(md.buy_price)               AS maxBuyPrice,
+                   MIN(md.buy_price)               AS minBuyPrice,
+                   AVG(md.buy_price)               AS avgBuyPrice,
+                   MAX(md.sell_price)              AS maxSellPrice,
+                   MIN(md.sell_price)              AS minSellPrice,
+                   AVG(md.sell_price)              AS avgSellPrice,
+                   MIN(md.mean_price)              AS minMeanPrice,
+                   MAX(md.mean_price)              AS maxMeanPrice,
+                   AVG(md.mean_price)              AS averageMeanPrice,
+                   SUM(md.stock)                   AS totalStock,
+                   SUM(md.demand)                  AS totalDemand,
+                   COUNT(DISTINCT md.station_id)   AS totalStations,
+                   (SELECT COUNT(DISTINCT station_id)
+                    FROM market_datum
+                    WHERE commodity_id = md.commodity_id
+                      AND NOT (buy_price IS NULL OR buy_price != 0)
+                    GROUP BY commodity_id)         AS stationsWithBuyPrice,
+                   (SELECT COUNT(DISTINCT station_id)
+                    FROM market_datum
+                    WHERE commodity_id = md.commodity_id
+                      AND NOT (sell_price IS NULL OR sell_price = 0)
+                    GROUP BY commodity_id)         AS stationsWithSellPrice,
+                   (SELECT COUNT(DISTINCT station_id)
+                    FROM market_datum
+                    WHERE commodity_id = md.commodity_id
+                      AND NOT (buy_price >
+                               (SELECT AVG(mean_price)
+                                FROM market_datum
+                                WHERE commodity_id = md.commodity_id
+                                GROUP BY commodity_id)
+                        )
+                    GROUP BY commodity_id)         AS stationsWithBuyPriceHigherThanAverage,
+                   (SELECT COUNT(DISTINCT station_id)
+                    FROM market_datum
+                    WHERE commodity_id = md.commodity_id
+                      AND NOT (sell_price <
+                               (SELECT AVG(mean_price)
+                                FROM market_datum
+                                WHERE commodity_id = md.commodity_id
+                                GROUP BY commodity_id)
+                        )
+                    GROUP BY commodity_id)         AS stationsWithSellPriceLowerThanAverage,
+                   (SELECT '{' || string_agg(station_id::text, ',') || '}'
+                    FROM market_datum
+                    WHERE commodity_id = md.commodity_id
+                      AND sell_price =
+                          (SELECT MIN(sell_price)
+                           FROM market_datum
+                           WHERE commodity_id = md.commodity_id
+                           GROUP BY commodity_id)) as lowestSellingStations,
+                   (SELECT '{' || string_agg(station_id::text, ',') || '}'
+                    FROM market_datum
+                    WHERE commodity_id = md.commodity_id
+                      AND buy_price =
+                          (SELECT MAX(buy_price)
+                           FROM market_datum
+                           WHERE commodity_id = md.commodity_id
+                           GROUP BY commodity_id)) as highestBuyingStations
+            FROM market_datum md
+            GROUP BY md.commodity_id;
+            ]]>
+        </createView>
+    </changeSet>
+
+</databaseChangeLog>

@@ -28,7 +28,7 @@ public class EntityMapperConfig {
     }
 
     @Bean
-    public BestCommodityPriceMapper bestCommodityPriceMapper(CommodityMapper commodityMapper, StationMapper stationMapper) {
-        return new BestCommodityPriceMapper(commodityMapper, stationMapper);
+    public CommodityMarketInfoMapper bestCommodityPriceMapper(CommodityMapper commodityMapper, StationMapper stationMapper) {
+        return new CommodityMarketInfoMapper(commodityMapper, stationMapper);
     }
 }

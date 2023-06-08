@@ -9,5 +9,6 @@
     <include file="db/changelog/create_commodity_table.xml"/>
     <include file="db/changelog/create_station_table.xml"/>
     <include file="db/changelog/create_market_datum_table.xml"/>
+    <include file="db/changelog/create_commodity_market_info_view.xml"/>
 
 </databaseChangeLog>

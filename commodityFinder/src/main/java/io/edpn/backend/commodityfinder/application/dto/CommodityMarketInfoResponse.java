@@ -7,7 +7,7 @@ import java.util.List;
 
 @Value(staticConstructor = "of")
 @Builder
-public class BestCommodityPriceResponse {
+public class CommodityMarketInfoResponse {
 
     String commodityName;
     double buyPrice;

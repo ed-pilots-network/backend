@@ -1,6 +1,6 @@
 package io.edpn.backend.commodityfinder.configuration;
 
-import io.edpn.backend.commodityfinder.application.mappers.BestCommodityPriceResponseMapper;
+import io.edpn.backend.commodityfinder.application.mappers.CommodityMarketInfoResponseMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class RestMapperConfig {
 
     @Bean
-    public BestCommodityPriceResponseMapper bestCommodityPriceResponseMapper() {
-        return new BestCommodityPriceResponseMapper();
+    public CommodityMarketInfoResponseMapper bestCommodityPriceResponseMapper() {
+        return new CommodityMarketInfoResponseMapper();
     }
 }

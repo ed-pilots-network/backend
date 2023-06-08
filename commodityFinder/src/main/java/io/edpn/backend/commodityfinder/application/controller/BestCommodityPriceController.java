@@ -1,8 +1,8 @@
 package io.edpn.backend.commodityfinder.application.controller;
 
-import io.edpn.backend.commodityfinder.application.dto.BestCommodityPriceResponse;
-import io.edpn.backend.commodityfinder.application.mappers.BestCommodityPriceResponseMapper;
-import io.edpn.backend.commodityfinder.domain.usecase.FindBestCommodityPriceUseCase;
+import io.edpn.backend.commodityfinder.application.dto.CommodityMarketInfoResponse;
+import io.edpn.backend.commodityfinder.application.mappers.CommodityMarketInfoResponseMapper;
+import io.edpn.backend.commodityfinder.domain.usecase.FindCommodityMarketInfoUseCase;
 import lombok.RequiredArgsConstructor;
 
 import java.util.LinkedList;
@@ -12,12 +12,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BestCommodityPriceController {
 
-    private final FindBestCommodityPriceUseCase findBestCommodityPriceUseCase;
-    private final BestCommodityPriceResponseMapper bestCommodityPriceResponseMapper;
+    private final FindCommodityMarketInfoUseCase findCommodityMarketInfoUseCase;
+    private final CommodityMarketInfoResponseMapper commodityMarketInfoResponseMapper;
 
-    public List<BestCommodityPriceResponse> getBestCommodityPrice() {
-        return findBestCommodityPriceUseCase.findAll().stream()
-                .map(bestCommodityPriceResponseMapper::map)
+    public List<CommodityMarketInfoResponse> getCommodityMarketInfo() {
+        return findCommodityMarketInfoUseCase.findAll().stream()
+                .map(commodityMarketInfoResponseMapper::map)
                 .collect(Collectors.toCollection(LinkedList::new));
     }
 }

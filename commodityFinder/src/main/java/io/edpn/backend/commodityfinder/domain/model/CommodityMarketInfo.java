@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BestCommodityPrice {
+public class CommodityMarketInfo {
     private Commodity commodity;
     private long maxBuyPrice;
     private long minSellPrice;

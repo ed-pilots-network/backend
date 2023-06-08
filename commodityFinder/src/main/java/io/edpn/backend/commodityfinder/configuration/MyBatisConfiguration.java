@@ -1,5 +1,6 @@
 package io.edpn.backend.commodityfinder.configuration;
 
+import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.CommodityMarketInfoEntityMapper;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.CommodityEntityMapper;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.MarketDatumEntityMapper;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.StationEntityMapper;
@@ -70,6 +71,13 @@ public class MyBatisConfiguration {
     @Bean
     public MapperFactoryBean<SystemEntityMapper> systemEntityMapper(SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<SystemEntityMapper> factoryBean = new MapperFactoryBean<>(SystemEntityMapper.class);
+        factoryBean.setSqlSessionFactory(sqlSessionFactory);
+        return factoryBean;
+    }
+
+    @Bean
+    public MapperFactoryBean<CommodityMarketInfoEntityMapper> bestCommodityPriceEntityMapper(SqlSessionFactory sqlSessionFactory) {
+        MapperFactoryBean<CommodityMarketInfoEntityMapper> factoryBean = new MapperFactoryBean<>(CommodityMarketInfoEntityMapper.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }
