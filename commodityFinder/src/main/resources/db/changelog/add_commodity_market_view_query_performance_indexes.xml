@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="add_commodity_market_view_query_performance_indexes" author="pveeckhout">
+        <createIndex indexName="idx_market_datum_commodity_buy_price" tableName="market_datum">
+            <column name="commodity_id" />
+            <column name="buy_price" />
+        </createIndex>
+
+        <createIndex indexName="idx_market_datum_commodity_sell_price" tableName="market_datum">
+            <column name="commodity_id" />
+            <column name="sell_price" />
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

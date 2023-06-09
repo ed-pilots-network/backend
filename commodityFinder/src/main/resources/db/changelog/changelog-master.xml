@@ -10,5 +10,7 @@
     <include file="db/changelog/create_station_table.xml"/>
     <include file="db/changelog/create_market_datum_table.xml"/>
     <include file="db/changelog/create_commodity_market_info_view.xml"/>
+    <include file="db/changelog/add_foreign_key_indexes.xml"/>
+    <include file="db/changelog/add_commodity_market_view_query_performance_indexes.xml"/>
 
 </databaseChangeLog>
