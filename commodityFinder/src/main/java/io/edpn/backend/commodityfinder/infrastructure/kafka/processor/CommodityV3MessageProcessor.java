@@ -3,14 +3,15 @@ package io.edpn.backend.commodityfinder.infrastructure.kafka.processor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.edpn.backend.commodityfinder.domain.usecase.ReceiveCommodityMessageUseCase;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.CommodityMessage;
 import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.EddnMessageProcessor;
-import java.util.concurrent.Semaphore;
+import io.edpn.backend.util.AutoCloseableSemaphore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Component
@@ -18,16 +19,24 @@ public class CommodityV3MessageProcessor implements EddnMessageProcessor<Commodi
 
     private final ReceiveCommodityMessageUseCase receiveCommodityMessageUsecase;
     private final ObjectMapper objectMapper;
-    private final Semaphore semaphore = new Semaphore(1); // Change the number of permits if needed
+    private final Map<String, AutoCloseableSemaphore> semaphores;
 
     @Override
     @KafkaListener(topics = "https___eddn.edcd.io_schemas_commodity_3", groupId = "commodityFinder", containerFactory = "eddnCommodityFinderKafkaListenerContainerFactory")
     public void listen(JsonNode json) throws JsonProcessingException, InterruptedException {
-        semaphore.acquire(); // Acquire a permit before processing the message
-        try {
-            handle(processJson(json));
-        } finally {
-            semaphore.release(); // Release the permit after processing is complete
+        // Acquire the needed permits before processing the message, they auto release
+        try (var marketDatum = semaphores.get("marketDatum")) {
+            marketDatum.acquire();
+            try (var commodity = semaphores.get("commodity")) {
+                commodity.acquire();
+                try (var station = semaphores.get("station")) {
+                    station.acquire();
+                    try (var system = semaphores.get("system")) {
+                        system.acquire();
+                        handle(processJson(json));
+                    }
+                }
+            }
         }
     }
 

@@ -35,7 +35,7 @@ public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMe
 
         long start = java.lang.System.nanoTime();
         if (log.isDebugEnabled()) {
-            log.debug("DefaultReceiveCommodityMessageUseCase.receive -> commodityMessage: " + message);
+            log.debug("DefaultReceiveCommodityMessageUseCase.receive -> CommodityMessage: " + message);
         }
 
         var updateTimestamp = message.getMessageTimeStamp();

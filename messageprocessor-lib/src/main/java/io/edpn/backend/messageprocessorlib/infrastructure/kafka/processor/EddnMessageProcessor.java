@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.withMessageTimestamp;
 
+import java.util.List;
+import java.util.concurrent.Semaphore;
+
 public interface EddnMessageProcessor<T extends withMessageTimestamp> {
 
     void listen(JsonNode json) throws JsonProcessingException, InterruptedException;
