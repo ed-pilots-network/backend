@@ -4,7 +4,6 @@
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="create_commodity_market_info_view" author="pveeckhout" runOnChange="true">
-        <dropView viewName="commodity_market_info_view" />
         
         <createView viewName="commodity_market_info_view" replaceIfExists="true">
             <![CDATA[
@@ -12,8 +11,8 @@
                 mean_prices AS (
                     SELECT
                         commodity_id,
-                        MIN(sell_price) AS min_sell_price,
-                        MAX(buy_price) AS max_buy_price
+                        MAX(sell_price) AS max_sell_price,
+                        MIN(nullif(buy_price,0)) AS min_buy_price
                     FROM market_datum
                     GROUP BY commodity_id),
                 average_mean_prices AS (
@@ -46,38 +45,38 @@
                              JOIN mean_prices mp ON mp.commodity_id = md.commodity_id
                              JOIN station s ON md.station_id = s.id
                              JOIN system sys ON s.system_id = sys.id
-                     WHERE md.sell_price = mp.min_sell_price OR md.buy_price = mp.max_buy_price),
-                 min_max_stations AS (
-                     SELECT
-                         commodity_id,
-                         station_id AS lowest_selling_station,
-                         NULL AS highest_buying_station
-                     FROM stations_with_prices
-                     WHERE rn_sell = 1
-                     UNION ALL
-                     SELECT
-                         commodity_id,
-                         NULL AS lowest_selling_station,
-                         station_id AS highest_buying_station
-                     FROM stations_with_prices
-                     WHERE rn_buy = 1 ),
-                 buy_sell_counts AS (
-                     SELECT
-                         md.commodity_id,
-                         COUNT(DISTINCT CASE WHEN md.buy_price IS NOT NULL AND md.buy_price != 0 THEN md.station_id END) AS stations_with_buy_price,
-                         COUNT(DISTINCT CASE WHEN md.sell_price IS NOT NULL AND md.sell_price != 0 THEN md.station_id END) AS stations_with_sell_price,
-                         COUNT(DISTINCT CASE WHEN md.buy_price > amp.avg_mean_price THEN md.station_id END) AS stations_with_buy_price_higher_than_average,
-                         COUNT(DISTINCT CASE WHEN md.sell_price < amp.avg_mean_price THEN md.station_id END) AS stations_with_sell_price_lower_than_average
-                     FROM market_datum md
+                    WHERE md.sell_price = mp.max_sell_price OR md.buy_price = mp.min_buy_price),
+                min_max_stations AS (
+                    SELECT
+                        commodity_id,
+                        station_id AS highest_selling_station,
+                        NULL AS lowest_buying_station
+                    FROM stations_with_prices
+                    WHERE rn_sell = 1
+                    UNION ALL
+                    SELECT
+                        commodity_id,
+                        NULL AS highest_selling_station,
+                        station_id AS lowest_buying_station
+                    FROM stations_with_prices
+                    WHERE rn_buy = 1 ),
+                buy_sell_counts AS (
+                    SELECT
+                        md.commodity_id,
+                        COUNT(DISTINCT CASE WHEN md.buy_price IS NOT NULL AND md.buy_price != 0 THEN md.station_id END) AS stations_with_buy_price,
+                        COUNT(DISTINCT CASE WHEN md.sell_price IS NOT NULL AND md.sell_price != 0 THEN md.station_id END) AS stations_with_sell_price,
+                        COUNT(DISTINCT CASE WHEN md.buy_price < amp.avg_mean_price THEN md.station_id END) AS stations_with_buy_price_lower_than_average,
+                        COUNT(DISTINCT CASE WHEN md.sell_price > amp.avg_mean_price THEN md.station_id END) AS stations_with_sell_price_higher_than_average
+                    FROM market_datum md
                              JOIN average_mean_prices amp ON amp.commodity_id = md.commodity_id
-                     GROUP BY md.commodity_id)
+                    GROUP BY md.commodity_id)
             SELECT
                 md.commodity_id,
                 MAX(md.buy_price) AS maxBuyPrice,
-                MIN(md.buy_price) AS minBuyPrice,
+                MIN(NULLIF(md.buy_price,0)) AS minBuyPrice,
                 AVG(md.buy_price) AS avgBuyPrice,
                 MAX(md.sell_price) AS maxSellPrice,
-                MIN(md.sell_price) AS minSellPrice,
+                MIN(NULLIF(md.sell_price,0)) AS minSellPrice,
                 AVG(md.sell_price) AS avgSellPrice,
                 MIN(md.mean_price) AS minMeanPrice,
                 MAX(md.mean_price) AS maxMeanPrice,
@@ -87,19 +86,21 @@
                 COUNT(DISTINCT md.station_id) AS totalStations,
                 bsc.stations_with_buy_price,
                 bsc.stations_with_sell_price,
-                bsc.stations_with_buy_price_higher_than_average,
-                bsc.stations_with_sell_price_lower_than_average,
-                MAX((CASE WHEN mms.lowest_selling_station IS NOT NULL THEN mms.lowest_selling_station END)::text) AS lowest_selling_station,
-                MAX((CASE WHEN mms.highest_buying_station IS NOT NULL THEN mms.highest_buying_station END)::text) AS highest_buying_station
+                bsc.stations_with_buy_price_lower_than_average,
+                bsc.stations_with_sell_price_higher_than_average,
+                MIN((CASE WHEN mms.highest_selling_station IS NOT NULL THEN mms.highest_selling_station END)::text) AS
+                    highest_selling_to_station,
+                MAX((CASE WHEN mms.lowest_buying_station IS NOT NULL THEN mms.lowest_buying_station END)::text) AS
+                    lowest_buying_from_station
             FROM market_datum md
-                    LEFT JOIN buy_sell_counts bsc ON md.commodity_id = bsc.commodity_id
-                    LEFT JOIN min_max_stations mms ON md.commodity_id = mms.commodity_id
+                     LEFT JOIN buy_sell_counts bsc ON md.commodity_id = bsc.commodity_id
+                     LEFT JOIN min_max_stations mms ON md.commodity_id = mms.commodity_id
             GROUP BY
                 md.commodity_id,
                 bsc.stations_with_buy_price,
                 bsc.stations_with_sell_price,
-                bsc.stations_with_buy_price_higher_than_average,
-                bsc.stations_with_sell_price_lower_than_average;
+                bsc.stations_with_buy_price_lower_than_average,
+                bsc.stations_with_sell_price_higher_than_average;
             ]]>
         </createView>
     </changeSet>
