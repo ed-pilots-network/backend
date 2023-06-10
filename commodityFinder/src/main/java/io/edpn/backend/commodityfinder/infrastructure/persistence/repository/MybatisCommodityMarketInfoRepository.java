@@ -28,12 +28,8 @@ public class MybatisCommodityMarketInfoRepository implements CommodityMarketInfo
 
     @Override
     public List<CommodityMarketInfo> findAllCommodityMarketInfo() {
-        return commodityEntityMapper.findAll().stream()
-                .map(CommodityEntity::getId)
-                .map(commodityMarketInfoEntityMapper::findByCommodityId)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(commodityMarketInfoMapper::map)
+        return commodityMarketInfoEntityMapper.findAll()
+                .stream().map(commodityMarketInfoMapper::map)
                 .collect(Collectors.toCollection(LinkedList::new));
     }
 
