@@ -2,10 +2,8 @@ package io.edpn.backend.commodityfinder.application.mappers;
 
 import io.edpn.backend.commodityfinder.application.dto.CommodityMarketInfoResponse;
 import io.edpn.backend.commodityfinder.domain.model.CommodityMarketInfo;
+import io.edpn.backend.commodityfinder.domain.model.Station;
 import lombok.RequiredArgsConstructor;
-
-import java.util.LinkedList;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class CommodityMarketInfoResponseMapper {
@@ -13,37 +11,37 @@ public class CommodityMarketInfoResponseMapper {
     public CommodityMarketInfoResponse map(CommodityMarketInfo commoditymarketInfo) {
         return CommodityMarketInfoResponse.builder()
                 .commodityName(commoditymarketInfo.getCommodity().getName())
-                .buyPrice(commoditymarketInfo.getMaxBuyPrice())
-                .sellPrice(commoditymarketInfo.getMinSellPrice())
-                .averagePrice(commoditymarketInfo.getAveragePrice())
-                .stationsThatBuy(commoditymarketInfo.getPercentStationsWithBuyPrice())
-                .stationsThatBuyAboveAverage(commoditymarketInfo.getPercentStationsWithBuyPriceAboveAverage())
-                .stationsThatSell(commoditymarketInfo.getPercentStationsWithSellPrice())
-                .stationsThatSellBelowAverage(commoditymarketInfo.getPercentStationsWithSellPriceBelowAverage())
-                .lowestSellingStation(commoditymarketInfo.getStationEntitiesWithLowestSellPrice().stream()
-                        .map(station -> CommodityMarketInfoResponse.Station.builder()
-                                .arrivalDistance(station.getArrivalDistance())
-                                .name(station.getName())
-                                .system(CommodityMarketInfoResponse.System.builder()
-                                        .name(station.getSystem().getName())
-                                        .xCoordinate(station.getSystem().getXCoordinate())
-                                        .yCoordinate(station.getSystem().getYCoordinate())
-                                        .zCoordinate(station.getSystem().getZCoordinate())
-                                        .build())
-                                .build())
-                        .collect(Collectors.toCollection(LinkedList::new)))
-                .highestStation(commoditymarketInfo.getStationEntitiesWithHighestBuyPrice().stream()
-                        .map(station -> CommodityMarketInfoResponse.Station.builder()
-                                .arrivalDistance(station.getArrivalDistance())
-                                .name(station.getName())
-                                .system(CommodityMarketInfoResponse.System.builder()
-                                        .name(station.getSystem().getName())
-                                        .xCoordinate(station.getSystem().getXCoordinate())
-                                        .yCoordinate(station.getSystem().getYCoordinate())
-                                        .zCoordinate(station.getSystem().getZCoordinate())
-                                        .build())
-                                .build())
-                        .collect(Collectors.toCollection(LinkedList::new)))
+                .maxBuyPrice(commoditymarketInfo.getMaxBuyPrice())
+                .minBuyPrice(commoditymarketInfo.getMinBuyPrice())
+                .avgBuyPrice(commoditymarketInfo.getAvgBuyPrice())
+                .maxSellPrice(commoditymarketInfo.getMaxSellPrice())
+                .minSellPrice(commoditymarketInfo.getMinSellPrice())
+                .avgSellPrice(commoditymarketInfo.getAvgSellPrice())
+                .minMeanPrice(commoditymarketInfo.getMinMeanPrice())
+                .maxMeanPrice(commoditymarketInfo.getMaxMeanPrice())
+                .averageMeanPrice(commoditymarketInfo.getAverageMeanPrice())
+                .totalStock(commoditymarketInfo.getTotalStock())
+                .totalDemand(commoditymarketInfo.getTotalDemand())
+                .totalStations(commoditymarketInfo.getTotalStations())
+                .stationsWithBuyPrice(commoditymarketInfo.getStationsWithBuyPrice())
+                .stationsWithSellPrice(commoditymarketInfo.getStationsWithSellPrice())
+                .stationsWithBuyPriceLowerThanAverage(commoditymarketInfo.getStationsWithBuyPriceLowerThanAverage())
+                .stationsWithSellPriceHigherThanAverage(commoditymarketInfo.getStationsWithSellPriceHigherThanAverage())
+                .highestSellingToStation(mapStation(commoditymarketInfo.getHighestSellingToStation()))
+                .lowestBuyingFromStation(mapStation(commoditymarketInfo.getLowestBuyingFromStation()))
+                .build();
+    }
+
+    public CommodityMarketInfoResponse.Station mapStation(Station station) {
+        return CommodityMarketInfoResponse.Station.builder()
+                .arrivalDistance(station.getArrivalDistance())
+                .name(station.getName())
+                .system(CommodityMarketInfoResponse.System.builder()
+                        .name(station.getSystem().getName())
+                        .xCoordinate(station.getSystem().getXCoordinate())
+                        .yCoordinate(station.getSystem().getYCoordinate())
+                        .zCoordinate(station.getSystem().getZCoordinate())
+                        .build())
                 .build();
     }
 }

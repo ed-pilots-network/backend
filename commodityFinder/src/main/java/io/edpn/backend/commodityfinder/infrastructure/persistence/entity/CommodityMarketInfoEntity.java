@@ -1,8 +1,11 @@
 package io.edpn.backend.commodityfinder.infrastructure.persistence.entity;
 
-import lombok.*;
-
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -12,13 +15,22 @@ import java.util.List;
 @Builder
 public class CommodityMarketInfoEntity {
     private CommodityEntity commodity;
-    private long maxBuyPrice;
-    private long minSellPrice;
-    private double averagePrice;
-    private double percentStationsWithBuyPrice;
-    private double percentStationsWithBuyPriceAboveAverage;
-    private double percentStationsWithSellPrice;
-    private double percentStationsWithSellPriceBelowAverage;
-    private List<StationEntity> stationEntitiesWithLowestSellPrice;
-    private List<StationEntity> stationEntitiesWithHighestBuyPrice;
+    private Double maxBuyPrice;
+    private Double minBuyPrice;
+    private Double avgBuyPrice;
+    private Double maxSellPrice;
+    private Double minSellPrice;
+    private Double avgSellPrice;
+    private Double minMeanPrice;
+    private Double maxMeanPrice;
+    private Double averageMeanPrice;
+    private Integer totalStock;
+    private Integer totalDemand;
+    private Integer totalStations;
+    private Integer stationsWithBuyPrice;
+    private Integer stationsWithSellPrice;
+    private Integer stationsWithBuyPriceLowerThanAverage;
+    private Integer stationsWithSellPriceHigherThanAverage;
+    private StationEntity highestSellingToStation;
+    private StationEntity lowestBuyingFromStation;
 }

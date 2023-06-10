@@ -3,29 +3,37 @@ package io.edpn.backend.commodityfinder.application.dto;
 import lombok.Builder;
 import lombok.Value;
 
-import java.util.List;
-
 @Value(staticConstructor = "of")
 @Builder
 public class CommodityMarketInfoResponse {
 
     String commodityName;
-    double buyPrice;
-    double sellPrice;
-    double averagePrice;
-    double stationsThatBuy;
-    double stationsThatBuyAboveAverage;
-    double stationsThatSell;
-    double stationsThatSellBelowAverage;
-    List<Station> lowestSellingStation;
-    List<Station> highestStation;
+
+    private Double maxBuyPrice;
+    private Double minBuyPrice;
+    private Double avgBuyPrice;
+    private Double maxSellPrice;
+    private Double minSellPrice;
+    private Double avgSellPrice;
+    private Double minMeanPrice;
+    private Double maxMeanPrice;
+    private Double averageMeanPrice;
+    private Integer totalStock;
+    private Integer totalDemand;
+    private Integer totalStations;
+    private Integer stationsWithBuyPrice;
+    private Integer stationsWithSellPrice;
+    private Integer stationsWithBuyPriceLowerThanAverage;
+    private Integer stationsWithSellPriceHigherThanAverage;
+    private Station highestSellingToStation;
+    private Station lowestBuyingFromStation;
 
     @Value(staticConstructor = "of")
     @Builder
     public static class Station {
 
         String name;
-        double arrivalDistance;
+        Double arrivalDistance;
         System system;
     }
 
@@ -34,8 +42,8 @@ public class CommodityMarketInfoResponse {
     public static class System {
 
         String name;
-        double xCoordinate;
-        double yCoordinate;
-        double zCoordinate;
+        Double xCoordinate;
+        Double yCoordinate;
+        Double zCoordinate;
     }
 }

@@ -4,7 +4,8 @@
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="create_commodity_market_info_view" author="pveeckhout" runOnChange="true">
-        
+        <dropView viewName="commodity_market_info_view" />
+
         <createView viewName="commodity_market_info_view" replaceIfExists="true">
             <![CDATA[
             WITH
@@ -93,9 +94,9 @@
                 bsc.stations_with_sell_price,
                 bsc.stations_with_buy_price_lower_than_average,
                 bsc.stations_with_sell_price_higher_than_average,
-                MIN((CASE WHEN mms.highest_selling_station IS NOT NULL THEN mms.highest_selling_station END)::text) AS
+                MIN((CASE WHEN mms.highest_selling_station IS NOT NULL THEN mms.highest_selling_station END)::text)::UUID AS
                     highest_selling_to_station,
-                MAX((CASE WHEN mms.lowest_buying_station IS NOT NULL THEN mms.lowest_buying_station END)::text) AS
+                MAX((CASE WHEN mms.lowest_buying_station IS NOT NULL THEN mms.lowest_buying_station END)::text)::UUID AS
                     lowest_buying_from_station
             FROM market_datum md
                      LEFT JOIN buy_sell_counts bsc ON md.commodity_id = bsc.commodity_id

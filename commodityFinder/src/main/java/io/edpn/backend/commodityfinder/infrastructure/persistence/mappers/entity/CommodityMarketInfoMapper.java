@@ -1,7 +1,7 @@
 package io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity;
 
-import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.CommodityMarketInfoEntity;
 import io.edpn.backend.commodityfinder.domain.model.CommodityMarketInfo;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.CommodityMarketInfoEntity;
 import lombok.RequiredArgsConstructor;
 
 import java.util.LinkedList;
@@ -24,14 +24,23 @@ public class CommodityMarketInfoMapper {
         return CommodityMarketInfo.builder()
                 .commodity(commodityMapper.map(entity.getCommodity()))
                 .maxBuyPrice(entity.getMaxBuyPrice())
+                .minBuyPrice(entity.getMinBuyPrice())
+                .avgBuyPrice(entity.getAvgBuyPrice())
+                .maxSellPrice(entity.getMaxSellPrice())
                 .minSellPrice(entity.getMinSellPrice())
-                .averagePrice(entity.getAveragePrice())
-                .percentStationsWithBuyPrice(entity.getPercentStationsWithBuyPrice())
-                .percentStationsWithBuyPriceAboveAverage(entity.getPercentStationsWithBuyPriceAboveAverage())
-                .percentStationsWithSellPrice(entity.getPercentStationsWithSellPrice())
-                .percentStationsWithSellPriceBelowAverage(entity.getPercentStationsWithSellPriceBelowAverage())
-                .stationEntitiesWithLowestSellPrice(entity.getStationEntitiesWithLowestSellPrice().stream().map(stationMapper::map).collect(Collectors.toCollection(LinkedList::new)))
-                .stationEntitiesWithHighestBuyPrice(entity.getStationEntitiesWithHighestBuyPrice().stream().map(stationMapper::map).collect(Collectors.toCollection(LinkedList::new)))
+                .avgSellPrice(entity.getAvgSellPrice())
+                .minMeanPrice(entity.getMinMeanPrice())
+                .maxMeanPrice(entity.getMaxMeanPrice())
+                .averageMeanPrice(entity.getAverageMeanPrice())
+                .totalStock(entity.getTotalStock())
+                .totalDemand(entity.getTotalDemand())
+                .totalStations(entity.getTotalStations())
+                .stationsWithBuyPrice(entity.getStationsWithBuyPrice())
+                .stationsWithSellPrice(entity.getStationsWithSellPrice())
+                .stationsWithBuyPriceLowerThanAverage(entity.getStationsWithBuyPriceLowerThanAverage())
+                .stationsWithSellPriceHigherThanAverage(entity.getStationsWithSellPriceHigherThanAverage())
+                .highestSellingToStation(stationMapper.map(entity.getHighestSellingToStation()))
+                .lowestBuyingFromStation(stationMapper.map(entity.getLowestBuyingFromStation()))
                 .build();
     }
 }

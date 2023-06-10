@@ -1,8 +1,11 @@
 package io.edpn.backend.commodityfinder.domain.model;
 
-import lombok.*;
-
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -11,15 +14,25 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class CommodityMarketInfo {
+
     private Commodity commodity;
-    private long maxBuyPrice;
-    private long minSellPrice;
-    private double averagePrice;
-    private double percentStationsWithBuyPrice;
-    private double percentStationsWithBuyPriceAboveAverage;
-    private double percentStationsWithSellPrice;
-    private double percentStationsWithSellPriceBelowAverage;
-    private List<Station> stationEntitiesWithLowestSellPrice;
-    private List<Station> stationEntitiesWithHighestBuyPrice;
+    private Double maxBuyPrice;
+    private Double minBuyPrice;
+    private Double avgBuyPrice;
+    private Double maxSellPrice;
+    private Double minSellPrice;
+    private Double avgSellPrice;
+    private Double minMeanPrice;
+    private Double maxMeanPrice;
+    private Double averageMeanPrice;
+    private Integer totalStock;
+    private Integer totalDemand;
+    private Integer totalStations;
+    private Integer stationsWithBuyPrice;
+    private Integer stationsWithSellPrice;
+    private Integer stationsWithBuyPriceLowerThanAverage;
+    private Integer stationsWithSellPriceHigherThanAverage;
+    private Station highestSellingToStation;
+    private Station lowestBuyingFromStation;
 }
 
