@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.StationEntity;
-import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
@@ -23,18 +22,18 @@ public interface CommodityMarketInfoEntityMapper {
     @Results(id = "commodityMarketInfoResultMap", value = {
             @Result(property = "commodity", column = "commodity_id", javaType = CommodityEntity.class,
                     one = @One(select = "io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.CommodityEntityMapper.findById")),
-            @Result(column="maxBuyPrice", property="maxBuyPrice"),
-            @Result(column="minBuyPrice", property="minBuyPrice"),
-            @Result(column="avgBuyPrice", property="avgBuyPrice"),
-            @Result(column="maxSellPrice", property="maxSellPrice"),
-            @Result(column="minSellPrice", property="minSellPrice"),
-            @Result(column="avgSellPrice", property="avgSellPrice"),
-            @Result(column="minMeanPrice", property="minMeanPrice"),
-            @Result(column="maxMeanPrice", property="maxMeanPrice"),
-            @Result(column="averageMeanPrice", property="averageMeanPrice"),
-            @Result(column="totalStock", property="totalStock"),
-            @Result(column="totalDemand", property="totalDemand"),
-            @Result(column="totalStations", property="totalStations"),
+            @Result(column="max_buy_price", property="maxBuyPrice"),
+            @Result(column="min_buy_price", property="minBuyPrice"),
+            @Result(column="avg_buy_price", property="avgBuyPrice"),
+            @Result(column="max_sell_price", property="maxSellPrice"),
+            @Result(column="min_sell_price", property="minSellPrice"),
+            @Result(column="avg_sell_price", property="avgSellPrice"),
+            @Result(column="min_mean_price", property="minMeanPrice"),
+            @Result(column="max_mean_price", property="maxMeanPrice"),
+            @Result(column="average_mean_price", property="averageMeanPrice"),
+            @Result(column="total_stock", property="totalStock"),
+            @Result(column="total_demand", property="totalDemand"),
+            @Result(column="total_stations", property="totalStations"),
             @Result(column="stations_with_buy_price", property="stationsWithBuyPrice"),
             @Result(column="stations_with_sell_price", property="stationsWithSellPrice"),
             @Result(column="stations_with_buy_price_lower_than_average", property="stationsWithBuyPriceLowerThanAverage"),
