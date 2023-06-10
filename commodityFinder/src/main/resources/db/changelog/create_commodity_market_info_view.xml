@@ -79,7 +79,7 @@
             SELECT
                 md.commodity_id,
                 MAX(md.buy_price) AS max_buy_price,
-                MIN(NULLIF(md.buy_price,0)) AS minb_buy_price,
+                MIN(NULLIF(md.buy_price,0)) AS min_buy_price,
                 AVG(md.buy_price) AS avg_buy_price,
                 MAX(md.sell_price) AS max_sell_price,
                 MIN(NULLIF(md.sell_price,0)) AS min_sell_price,
