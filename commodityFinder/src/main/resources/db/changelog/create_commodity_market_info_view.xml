@@ -46,20 +46,25 @@
                              JOIN station s ON md.station_id = s.id
                              JOIN system sys ON s.system_id = sys.id
                     WHERE md.sell_price = mp.max_sell_price OR md.buy_price = mp.min_buy_price),
-                min_max_stations AS (
+                highest_selling AS (
                     SELECT
                         commodity_id,
-                        station_id AS highest_selling_station,
-                        NULL AS lowest_buying_station
+                        station_id AS highest_selling_station
                     FROM stations_with_prices
-                    WHERE rn_sell = 1
-                    UNION ALL
+                    WHERE rn_sell = 1),
+                lowest_buying AS (
                     SELECT
                         commodity_id,
-                        NULL AS highest_selling_station,
                         station_id AS lowest_buying_station
                     FROM stations_with_prices
-                    WHERE rn_buy = 1 ),
+                    WHERE rn_buy = 1),
+                min_max_stations as (
+                    SELECT
+                        COALESCE(hs.commodity_id, lb.commodity_id) AS commodity_id,
+                        hs.highest_selling_station,
+                        lb.lowest_buying_station
+                    FROM highest_selling hs
+                        FULL JOIN lowest_buying lb ON hs.commodity_id = lb.commodity_id),
                 buy_sell_counts AS (
                     SELECT
                         md.commodity_id,
@@ -72,18 +77,18 @@
                     GROUP BY md.commodity_id)
             SELECT
                 md.commodity_id,
-                MAX(md.buy_price) AS maxBuyPrice,
-                MIN(NULLIF(md.buy_price,0)) AS minBuyPrice,
-                AVG(md.buy_price) AS avgBuyPrice,
-                MAX(md.sell_price) AS maxSellPrice,
-                MIN(NULLIF(md.sell_price,0)) AS minSellPrice,
-                AVG(md.sell_price) AS avgSellPrice,
-                MIN(md.mean_price) AS minMeanPrice,
-                MAX(md.mean_price) AS maxMeanPrice,
-                AVG(md.mean_price) AS averageMeanPrice,
-                SUM(md.stock) AS totalStock,
-                SUM(md.demand) AS totalDemand,
-                COUNT(DISTINCT md.station_id) AS totalStations,
+                MAX(md.buy_price) AS max_buy_price,
+                MIN(NULLIF(md.buy_price,0)) AS minb_buy_price,
+                AVG(md.buy_price) AS avg_buy_price,
+                MAX(md.sell_price) AS max_sell_price,
+                MIN(NULLIF(md.sell_price,0)) AS min_sell_price,
+                AVG(md.sell_price) AS avg_sell_price,
+                MIN(md.mean_price) AS min_mean_price,
+                MAX(md.mean_price) AS max_mean_price,
+                AVG(md.mean_price) AS average_mean_price,
+                SUM(md.stock) AS total_stock,
+                SUM(md.demand) AS total_demand,
+                COUNT(DISTINCT md.station_id) AS total_stations,
                 bsc.stations_with_buy_price,
                 bsc.stations_with_sell_price,
                 bsc.stations_with_buy_price_lower_than_average,
