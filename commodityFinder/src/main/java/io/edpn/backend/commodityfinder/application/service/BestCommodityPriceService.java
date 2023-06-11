@@ -1,4 +1,4 @@
-package io.edpn.backend.commodityfinder.application.controller;
+package io.edpn.backend.commodityfinder.application.service;
 
 import io.edpn.backend.commodityfinder.application.dto.CommodityMarketInfoResponse;
 import io.edpn.backend.commodityfinder.application.mappers.CommodityMarketInfoResponseMapper;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class BestCommodityPriceController {
+public class BestCommodityPriceService {
 
     private final FindCommodityMarketInfoUseCase findCommodityMarketInfoUseCase;
     private final CommodityMarketInfoResponseMapper commodityMarketInfoResponseMapper;
