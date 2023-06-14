@@ -1,5 +1,6 @@
 package io.edpn.backend.commodityfinder.application.dto;
 
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Value;
 
@@ -7,8 +8,7 @@ import lombok.Value;
 @Builder
 public class CommodityMarketInfoResponse {
 
-    String commodityName;
-
+    private String commodityName;
     private Double maxBuyPrice;
     private Double minBuyPrice;
     private Double avgBuyPrice;

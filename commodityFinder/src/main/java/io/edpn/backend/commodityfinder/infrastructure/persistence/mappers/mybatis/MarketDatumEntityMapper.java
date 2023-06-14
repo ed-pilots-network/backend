@@ -3,6 +3,7 @@ package io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybat
 import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.CommodityEntity;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.entity.MarketDatumEntity;
 import io.edpn.backend.mybatisutil.StringListToArrayTypeHandler;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,6 +25,7 @@ public interface MarketDatumEntityMapper {
     @Results(id = "marketDatumResultMap", value = {
             @Result(property = "commodity", column = "commodity_id", javaType = CommodityEntity.class,
                     one = @One(select = "io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.CommodityEntityMapper.findById")),
+            @Result(property = "timestamp", column = "timestamp", javaType = LocalDateTime.class),
             @Result(property = "meanPrice", column = "mean_price", javaType = long.class),
             @Result(property = "buyPrice", column = "buy_price", javaType = long.class),
             @Result(property = "stock", column = "stock", javaType = long.class),
@@ -40,19 +42,13 @@ public interface MarketDatumEntityMapper {
     @ResultMap("marketDatumResultMap")
     List<MarketDatumEntity> findByStationId(@Param("stationId") UUID stationId);
 
-    @Insert("INSERT INTO market_datum (station_id, commodity_id, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, " +
-            "status_flags, prohibited) VALUES (#{stationId}, #{marketDatum.commodity.id}, #{marketDatum.meanPrice}, #{marketDatum.buyPrice}, #{marketDatum.stock}, #{marketDatum.stockBracket}, #{marketDatum.sellPrice}, " +
+    @Insert("INSERT INTO market_datum (station_id, commodity_id, timestamp, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, " +
+            "status_flags, prohibited) VALUES (#{stationId}, #{marketDatum.commodity.id}, #{marketDatum.timestamp}, #{marketDatum.meanPrice}, #{marketDatum.buyPrice}, #{marketDatum.stock}, #{marketDatum.stockBracket}, #{marketDatum.sellPrice}, " +
             "#{marketDatum.demand}, #{marketDatum.demandBracket}, #{marketDatum.statusFlags, jdbcType=ARRAY, typeHandler=io.edpn.backend.mybatisutil.StringListToArrayTypeHandler}, #{marketDatum.prohibited})")
     void insert(@Param("stationId") UUID stationId, @Param("marketDatum") MarketDatumEntity marketDatum);
 
     @Update("UPDATE market_datum SET mean_price = #{meanPrice}, buy_price = #{buyPrice}, stock = #{stock}, stock_bracket = #{stockBracket}, " +
             "sell_price = #{sellPrice}, demand = #{demand}, demand_bracket = #{demandBracket}, status_flags = #{statusFlags, jdbcType=ARRAY, typeHandler=io.edpn.backend.mybatisutil.StringListToArrayTypeHandler}, " +
-            "prohibited = #{prohibited} WHERE station_id = #{stationId} AND commodity_id = #{commodityId}")
+            "prohibited = #{prohibited} WHERE station_id = #{stationId} AND commodity_id = #{commodityId} AND timestamp = #{timestamp}")
     void update(MarketDatumEntity marketDatum);
-
-    @Delete("DELETE FROM market_datum WHERE station_id = #{stationId} AND commodity_id = #{commodityId}")
-    void deleteById(@Param("stationId") UUID stationId, @Param("commodityId") UUID commodityId);
-
-    @Delete("DELETE FROM market_datum WHERE station_id = #{stationId}")
-    void deleteByStationId(@Param("stationId") UUID stationId);
 }

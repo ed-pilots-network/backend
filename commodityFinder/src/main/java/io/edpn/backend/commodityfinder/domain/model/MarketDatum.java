@@ -1,5 +1,6 @@
 package io.edpn.backend.commodityfinder.domain.model;
 
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +20,7 @@ import java.util.List;
 public class MarketDatum {
 
     private Commodity commodity;
+    private LocalDateTime timestamp;
     private long meanPrice;
     private long buyPrice;
     private long stock;

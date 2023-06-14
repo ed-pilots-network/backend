@@ -1,0 +1,31 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="latest_market_data_view" author="pveeckhout" runOnChange="true">
+        <dropView viewName="latest_market_data_view" />
+
+        <createView viewName="latest_market_data_view" replaceIfExists="true">
+            <![CDATA[
+            SELECT DISTINCT
+            ON (station_id, commodity_id)
+                station_id,
+                commodity_id,
+                mean_price,
+                buy_price,
+                stock,
+                stock_bracket,
+                sell_price,
+                demand,
+                demand_bracket,
+                status_flags,
+                prohibited,
+                timestamp
+            FROM market_datum
+            ORDER BY station_id, commodity_id, timestamp DESC;
+            ]]>
+        </createView>
+    </changeSet>
+
+</databaseChangeLog>

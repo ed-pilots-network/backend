@@ -22,6 +22,7 @@ public class MarketDatumMapper {
     public MarketDatum map(MarketDatumEntity marketDatumEntity) {
         return MarketDatum.builder()
                 .commodity(commodityMapper.map(marketDatumEntity.getCommodity()))
+                .timestamp(marketDatumEntity.getTimestamp())
                 .meanPrice(marketDatumEntity.getMeanPrice())
                 .buyPrice(marketDatumEntity.getBuyPrice())
                 .stock(marketDatumEntity.getStock())
@@ -43,6 +44,7 @@ public class MarketDatumMapper {
     public MarketDatumEntity mapToEntity(MarketDatum marketDatum) {
         return MarketDatumEntity.builder()
                 .commodity(commodityMapper.map(marketDatum.getCommodity()))
+                .timestamp(marketDatum.getTimestamp())
                 .meanPrice(marketDatum.getMeanPrice())
                 .buyPrice(marketDatum.getBuyPrice())
                 .stock(marketDatum.getStock())

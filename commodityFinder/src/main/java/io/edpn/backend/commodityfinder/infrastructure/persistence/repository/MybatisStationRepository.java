@@ -48,7 +48,6 @@ public class MybatisStationRepository implements StationRepository {
     }
 
     private void saveMarketData(StationEntity entity) {
-        marketDatumEntityMapper.deleteByStationId(entity.getId());
         entity.getMarketData().forEach(marketDatumEntity -> marketDatumEntityMapper.insert(entity.getId(), marketDatumEntity));
     }
 

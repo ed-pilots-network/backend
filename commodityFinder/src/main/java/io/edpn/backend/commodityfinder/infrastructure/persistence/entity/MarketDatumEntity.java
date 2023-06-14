@@ -1,5 +1,6 @@
 package io.edpn.backend.commodityfinder.infrastructure.persistence.entity;
 
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +21,7 @@ public class MarketDatumEntity {
 
 
     private CommodityEntity commodity;
+    private LocalDateTime timestamp;
     private long meanPrice;
     private long buyPrice;
     private long stock;

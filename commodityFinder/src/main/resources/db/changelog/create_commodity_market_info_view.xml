@@ -9,18 +9,34 @@
         <createView viewName="commodity_market_info_view" replaceIfExists="true">
             <![CDATA[
             WITH
+                latest_market_data as (
+                    SELECT DISTINCT ON (station_id, commodity_id)
+                        station_id,
+                        commodity_id,
+                        mean_price,
+                        buy_price,
+                        stock,
+                        stock_bracket,
+                        sell_price,
+                        demand,
+                        demand_bracket,
+                        status_flags,
+                        prohibited
+                    FROM market_datum
+                    ORDER BY station_id, commodity_id, timestamp DESC
+                ),
                 mean_prices AS (
                     SELECT
                         commodity_id,
                         MAX(sell_price) AS max_sell_price,
                         MIN(nullif(buy_price,0)) AS min_buy_price
-                    FROM market_datum
+                    FROM latest_market_data
                     GROUP BY commodity_id),
                 average_mean_prices AS (
                      SELECT
                          commodity_id,
                          AVG(mean_price) as avg_mean_price
-                     FROM market_datum
+                     FROM latest_market_data
                      GROUP BY commodity_id),
                 stations_with_prices AS (
                      SELECT
@@ -42,7 +58,7 @@
                             ORDER BY
                                 POWER(sys.x_coordinate, 2) + POWER(sys.y_coordinate, 2) + POWER(sys.z_coordinate, 2)
                         ) as rn_buy
-                     FROM market_datum md
+                     FROM latest_market_data md
                              JOIN mean_prices mp ON mp.commodity_id = md.commodity_id
                              JOIN station s ON md.station_id = s.id
                              JOIN system sys ON s.system_id = sys.id
@@ -73,7 +89,7 @@
                         COUNT(DISTINCT CASE WHEN md.sell_price IS NOT NULL AND md.sell_price != 0 THEN md.station_id END) AS stations_with_sell_price,
                         COUNT(DISTINCT CASE WHEN md.buy_price < amp.avg_mean_price THEN md.station_id END) AS stations_with_buy_price_lower_than_average,
                         COUNT(DISTINCT CASE WHEN md.sell_price > amp.avg_mean_price THEN md.station_id END) AS stations_with_sell_price_higher_than_average
-                    FROM market_datum md
+                    FROM latest_market_data md
                              JOIN average_mean_prices amp ON amp.commodity_id = md.commodity_id
                     GROUP BY md.commodity_id)
             SELECT
@@ -98,7 +114,7 @@
                     highest_selling_to_station,
                 MAX((CASE WHEN mms.lowest_buying_station IS NOT NULL THEN mms.lowest_buying_station END)::text)::UUID AS
                     lowest_buying_from_station
-            FROM market_datum md
+            FROM latest_market_data md
                      LEFT JOIN buy_sell_counts bsc ON md.commodity_id = bsc.commodity_id
                      LEFT JOIN min_max_stations mms ON md.commodity_id = mms.commodity_id
             GROUP BY

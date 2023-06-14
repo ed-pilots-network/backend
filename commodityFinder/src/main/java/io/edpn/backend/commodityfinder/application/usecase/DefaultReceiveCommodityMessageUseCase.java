@@ -89,7 +89,7 @@ public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMe
                     // get commodity
                     CompletableFuture<Commodity> commodity = CompletableFuture.supplyAsync(() -> commodityRepository.findOrCreateByName(commodityFromMessage.getName()));
                     // parse market data
-                    CompletableFuture<MarketDatum> marketDatum = CompletableFuture.supplyAsync(() -> getMarketDatum(commodityFromMessage, prohibitedCommodities));
+                    CompletableFuture<MarketDatum> marketDatum = CompletableFuture.supplyAsync(() -> getMarketDatum(commodityFromMessage, prohibitedCommodities, updateTimestamp));
 
                     return commodity.thenCombine(marketDatum, (c, md) -> {
                         md.setCommodity(c);
@@ -120,8 +120,9 @@ public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMe
         log.info("DefaultReceiveCommodityMessageUseCase.receive -> the message has been processed");
     }
 
-    private MarketDatum getMarketDatum(CommodityMessage.V3.Commodity commodity, String[] prohibitedCommodities) {
+    private MarketDatum getMarketDatum(CommodityMessage.V3.Commodity commodity, String[] prohibitedCommodities, LocalDateTime timestamp) {
         return MarketDatum.builder()
+                .timestamp(timestamp)
                 .meanPrice(commodity.getMeanPrice())
                 .buyPrice(commodity.getBuyPrice())
                 .sellPrice(commodity.getSellPrice())

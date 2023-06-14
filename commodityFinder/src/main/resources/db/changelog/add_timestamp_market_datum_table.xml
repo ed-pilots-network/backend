@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="add_timestamp_market_datum_table" author="pveeckhout">
+        <addColumn tableName="market_datum">
+            <column name="timestamp" type="timestamp" />
+        </addColumn>
+
+        <sql>
+            UPDATE market_datum
+            SET timestamp = NOW()
+            WHERE timestamp IS NULL;
+        </sql>
+
+        <addNotNullConstraint tableName="market_datum" columnName="timestamp" />
+
+        <dropPrimaryKey tableName="market_datum" />
+        <addPrimaryKey tableName="market_datum" columnNames="station_id,commodity_id,timestamp" constraintName="pk_market_datum" />
+
+    </changeSet>
+</databaseChangeLog>
