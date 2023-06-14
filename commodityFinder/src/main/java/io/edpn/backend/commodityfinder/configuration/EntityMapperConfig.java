@@ -1,6 +1,11 @@
 package io.edpn.backend.commodityfinder.configuration;
 
-import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity.*;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity.CommodityMapper;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity.CommodityMarketInfoMapper;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity.MarketDatumMapper;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity.RequestDataMessageMapper;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity.StationMapper;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity.SystemMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -30,5 +35,10 @@ public class EntityMapperConfig {
     @Bean
     public CommodityMarketInfoMapper bestCommodityPriceMapper(CommodityMapper commodityMapper, StationMapper stationMapper) {
         return new CommodityMarketInfoMapper(commodityMapper, stationMapper);
+    }
+
+    @Bean
+    public RequestDataMessageMapper requestDataMessageMapper() {
+        return new RequestDataMessageMapper();
     }
 }

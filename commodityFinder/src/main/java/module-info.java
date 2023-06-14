@@ -22,4 +22,5 @@ module edpn.commodity.finder {
     exports io.edpn.backend.commodityfinder.application.controller;
     exports io.edpn.backend.commodityfinder.application.dto;
     exports io.edpn.backend.commodityfinder.application.service;
+    exports io.edpn.backend.commodityfinder.domain.service;
 }

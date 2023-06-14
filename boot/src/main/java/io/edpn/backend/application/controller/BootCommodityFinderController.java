@@ -1,6 +1,6 @@
 package io.edpn.backend.application.controller;
 
-import io.edpn.backend.commodityfinder.application.service.BestCommodityPriceService;
+import io.edpn.backend.commodityfinder.domain.service.BestCommodityPriceService;
 import io.edpn.backend.commodityfinder.application.controller.CommodityFinderController;
 import io.edpn.backend.commodityfinder.application.dto.CommodityMarketInfoResponse;
 import lombok.RequiredArgsConstructor;

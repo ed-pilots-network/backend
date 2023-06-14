@@ -1,25 +1,33 @@
 package io.edpn.backend.commodityfinder.configuration;
 
-import io.edpn.backend.commodityfinder.domain.repository.CommodityRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.commodityfinder.domain.repository.CommodityMarketInfoRepository;
+import io.edpn.backend.commodityfinder.domain.repository.CommodityRepository;
+import io.edpn.backend.commodityfinder.domain.repository.RequestDataMessageRepository;
 import io.edpn.backend.commodityfinder.domain.repository.StationRepository;
 import io.edpn.backend.commodityfinder.domain.repository.SystemRepository;
-import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity.CommodityMarketInfoMapper;
+import io.edpn.backend.commodityfinder.infrastructure.kafka.KafkaTopicHandler;
+import io.edpn.backend.commodityfinder.infrastructure.kafka.sender.KafkaMessageSender;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity.CommodityMapper;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity.CommodityMarketInfoMapper;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity.RequestDataMessageMapper;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity.StationMapper;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity.SystemMapper;
-import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.CommodityMarketInfoEntityMapper;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.CommodityEntityMapper;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.CommodityMarketInfoEntityMapper;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.MarketDatumEntityMapper;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.RequestDataMessageEntityMapper;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.StationEntityMapper;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.SystemEntityMapper;
-import io.edpn.backend.commodityfinder.infrastructure.persistence.repository.MybatisCommodityRepository;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.repository.MybatisCommodityMarketInfoRepository;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.repository.MybatisCommodityRepository;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.repository.MybatisStationRepository;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.repository.MybatisSystemRepository;
 import io.edpn.backend.util.IdGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.core.KafkaTemplate;
 
 @Configuration("CommodityFinderRepositoryConfig")
 public class RepositoryConfig {
@@ -30,8 +38,8 @@ public class RepositoryConfig {
     }
 
     @Bean
-    public CommodityMarketInfoRepository marketDatumRepository(CommodityMarketInfoMapper commodityMarketInfoMapper, CommodityEntityMapper commodityEntityMapper, CommodityMarketInfoEntityMapper commodityMarketInfoEntityMapper) {
-        return new MybatisCommodityMarketInfoRepository(commodityMarketInfoMapper, commodityEntityMapper, commodityMarketInfoEntityMapper);
+    public CommodityMarketInfoRepository marketDatumRepository(CommodityMarketInfoMapper commodityMarketInfoMapper, CommodityMarketInfoEntityMapper commodityMarketInfoEntityMapper) {
+        return new MybatisCommodityMarketInfoRepository(commodityMarketInfoMapper, commodityMarketInfoEntityMapper);
     }
 
     @Bean
@@ -42,5 +50,10 @@ public class RepositoryConfig {
     @Bean
     public SystemRepository systemRepository(IdGenerator idGenerator, SystemMapper systemMapper, SystemEntityMapper systemEntityMapper) {
         return new MybatisSystemRepository(idGenerator, systemMapper, systemEntityMapper);
+    }
+
+    @Bean
+    public RequestDataMessageRepository requestDataMessageRepository(ObjectMapper objectMapper, RequestDataMessageEntityMapper requestDataMessageEntityMapper, RequestDataMessageMapper requestDataMessageMapper, KafkaTopicHandler kafkaTopicHandler, KafkaTemplate<String, JsonNode> jsonNodekafkaTemplate) {
+        return new KafkaMessageSender(objectMapper, requestDataMessageEntityMapper, requestDataMessageMapper, kafkaTopicHandler, jsonNodekafkaTemplate);
     }
 }

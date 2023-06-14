@@ -8,12 +8,14 @@ import io.edpn.backend.commodityfinder.domain.repository.CommodityRepository;
 import io.edpn.backend.commodityfinder.domain.repository.StationRepository;
 import io.edpn.backend.commodityfinder.domain.repository.SystemRepository;
 import io.edpn.backend.commodityfinder.domain.usecase.ReceiveCommodityMessageUseCase;
+import io.edpn.backend.commodityfinder.domain.service.RequestDataService;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.CommodityMessage;
 import io.edpn.backend.util.CollectionUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +30,8 @@ public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMe
     private final CommodityRepository commodityRepository;
     private final SystemRepository systemRepository;
     private final StationRepository stationRepository;
+    private final List<RequestDataService<Station>> stationRequestDataServices;
+    private final List<RequestDataService<System>> systemRequestDataServices;
 
     @Override
     @Transactional
@@ -40,8 +44,6 @@ public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMe
 
         var updateTimestamp = message.getMessageTimeStamp();
 
-        // TODO check if message is newer but not in the future!
-
         CommodityMessage.V3.Message payload = message.getMessage();
         CommodityMessage.V3.Commodity[] commodities = payload.getCommodities();
         long marketId = payload.getMarketId();
@@ -51,7 +53,16 @@ public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMe
 
 
         // get system
-        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> systemRepository.findOrCreateByName(systemName));
+        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> systemRepository.findOrCreateByName(systemName))
+                .whenComplete((system, throwable) -> {
+                    if (throwable != null) {
+                        log.error("Exception occurred in retrieving system", throwable);
+                    } else {
+                        systemRequestDataServices.stream()
+                                .filter(useCase -> useCase.isApplicable(system))
+                                .forEach(useCase -> useCase.request(system));
+                    }
+                });
 
         // get station
         CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> stationRepository.findOrCreateBySystemAndStationName(systemCompletableFuture.copy().join(), stationName));
@@ -62,6 +73,14 @@ public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMe
                 if (Objects.isNull(station.getMarketId())) {
                     station.setMarketId(marketId);
                 }
+
+                if (Objects.isNull(station.getMarketUpdatedAt()) || updateTimestamp.isAfter(station.getMarketUpdatedAt())) {
+                    station.setMarketUpdatedAt(updateTimestamp);
+                }
+
+                stationRequestDataServices.stream()
+                        .filter(useCase -> useCase.isApplicable(station))
+                        .forEach(useCase -> useCase.request(station));
             }
         });
 

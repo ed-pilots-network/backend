@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 public class MybatisCommodityMarketInfoRepository implements CommodityMarketInfoRepository {
 
     private final CommodityMarketInfoMapper commodityMarketInfoMapper;
-    private final CommodityEntityMapper commodityEntityMapper;
     private final CommodityMarketInfoEntityMapper commodityMarketInfoEntityMapper;
 
     @Override
