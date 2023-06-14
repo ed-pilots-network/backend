@@ -8,7 +8,7 @@
             <![CDATA[
             WITH
                 latest_market_data as (
-                    SELECT DISTINCT ON (station_id, commodity_id)
+                    SELECT
                         station_id,
                         commodity_id,
                         mean_price,
@@ -21,7 +21,14 @@
                         status_flags,
                         prohibited
                     FROM market_datum
-                    ORDER BY station_id, commodity_id, timestamp DESC
+                    WHERE (station_id, timestamp) IN (
+                        SELECT DISTINCT ON (station_id)
+                            station_id,
+                            timestamp
+                        FROM market_datum
+                        ORDER BY station_id,
+                            timestamp DESC
+                    )
                 ),
                 mean_prices AS (
                     SELECT

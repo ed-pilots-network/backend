@@ -21,7 +21,14 @@
                 prohibited,
                 timestamp
             FROM market_datum
-            ORDER BY station_id, commodity_id, timestamp DESC;
+            WHERE (station_id, timestamp) IN (
+                SELECT DISTINCT ON (station_id)
+                    station_id,
+                    timestamp
+                FROM market_datum
+                ORDER BY station_id,
+                    timestamp DESC
+            );
             ]]>
         </createView>
     </changeSet>
