@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.commodityfinder.domain.repository.CommodityMarketInfoRepository;
 import io.edpn.backend.commodityfinder.domain.repository.CommodityRepository;
+import io.edpn.backend.commodityfinder.domain.repository.MarketDatumRepository;
 import io.edpn.backend.commodityfinder.domain.repository.RequestDataMessageRepository;
 import io.edpn.backend.commodityfinder.domain.repository.StationRepository;
 import io.edpn.backend.commodityfinder.domain.repository.SystemRepository;
@@ -22,6 +23,7 @@ import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybati
 import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.mybatis.SystemEntityMapper;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.repository.MybatisCommodityMarketInfoRepository;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.repository.MybatisCommodityRepository;
+import io.edpn.backend.commodityfinder.infrastructure.persistence.repository.MybatisMarkerDatumRepository;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.repository.MybatisStationRepository;
 import io.edpn.backend.commodityfinder.infrastructure.persistence.repository.MybatisSystemRepository;
 import io.edpn.backend.util.IdGenerator;
@@ -55,5 +57,10 @@ public class RepositoryConfig {
     @Bean
     public RequestDataMessageRepository requestDataMessageRepository(ObjectMapper objectMapper, RequestDataMessageEntityMapper requestDataMessageEntityMapper, RequestDataMessageMapper requestDataMessageMapper, KafkaTopicHandler kafkaTopicHandler, KafkaTemplate<String, JsonNode> jsonNodekafkaTemplate) {
         return new KafkaMessageSender(objectMapper, requestDataMessageEntityMapper, requestDataMessageMapper, kafkaTopicHandler, jsonNodekafkaTemplate);
+    }
+
+    @Bean
+    public MarketDatumRepository marketDatumRepository(MarketDatumEntityMapper marketDatumEntityMapper) {
+        return new MybatisMarkerDatumRepository(marketDatumEntityMapper);
     }
 }

@@ -5,6 +5,7 @@ import io.edpn.backend.commodityfinder.domain.model.MarketDatum;
 import io.edpn.backend.commodityfinder.domain.model.Station;
 import io.edpn.backend.commodityfinder.domain.model.System;
 import io.edpn.backend.commodityfinder.domain.repository.CommodityRepository;
+import io.edpn.backend.commodityfinder.domain.repository.MarketDatumRepository;
 import io.edpn.backend.commodityfinder.domain.repository.StationRepository;
 import io.edpn.backend.commodityfinder.domain.repository.SystemRepository;
 import io.edpn.backend.commodityfinder.domain.usecase.ReceiveCommodityMessageUseCase;
@@ -30,6 +31,7 @@ public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMe
     private final CommodityRepository commodityRepository;
     private final SystemRepository systemRepository;
     private final StationRepository stationRepository;
+    private final MarketDatumRepository marketDatumRepository;
     private final List<RequestDataService<Station>> stationRequestDataServices;
     private final List<RequestDataService<System>> systemRequestDataServices;
 
@@ -50,6 +52,12 @@ public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMe
         String systemName = payload.getSystemName();
         String stationName = payload.getStationName();
         String[] prohibitedCommodities = payload.getProhibited();
+
+        //do we have this data already?
+        if (marketDatumRepository.existsByStationNameAndSystemNameAndTimestamp(systemName, stationName, updateTimestamp)) {
+            log.debug("data with the same key as received message already present in database. SKIPPING");
+            return;
+        }
 
 
         // get system
