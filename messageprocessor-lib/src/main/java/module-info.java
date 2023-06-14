@@ -6,4 +6,5 @@ module edpn.messageprocessor.lib {
 
     exports io.edpn.backend.messageprocessorlib.application.dto.eddn;
     exports io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor;
+    exports io.edpn.backend.messageprocessorlib.application.dto.eddn.data;
 }

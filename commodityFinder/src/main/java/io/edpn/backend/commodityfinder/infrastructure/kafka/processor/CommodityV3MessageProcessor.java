@@ -16,7 +16,7 @@ public class CommodityV3MessageProcessor implements MessageProcessor<CommodityMe
     private final ObjectMapper objectMapper;
 
     @Override
-    @KafkaListener(topics = "https___eddn.edcd.io_schemas_commodity_3", groupId = "commodityFinder", containerFactory = "eddnCommodityFinderKafkaListenerContainerFactory")
+    @KafkaListener(topics = "https___eddn.edcd.io_schemas_commodity_3", groupId = "commodityFinder", containerFactory = "commodityFinderKafkaListenerContainerFactory")
     public void listen(JsonNode json) throws JsonProcessingException {
         handle(processJson(json));
     }

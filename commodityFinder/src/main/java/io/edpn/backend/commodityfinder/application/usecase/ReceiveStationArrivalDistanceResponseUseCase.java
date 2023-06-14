@@ -1,11 +1,11 @@
 package io.edpn.backend.commodityfinder.application.usecase;
 
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationArrivalDistanceResponse;
 import io.edpn.backend.commodityfinder.domain.model.Station;
 import io.edpn.backend.commodityfinder.domain.model.System;
 import io.edpn.backend.commodityfinder.domain.repository.StationRepository;
 import io.edpn.backend.commodityfinder.domain.repository.SystemRepository;
-import io.edpn.backend.commodityfinder.domain.usecase.ReceiveStationArrivalDistanceResponseUseCase;
-import io.edpn.backend.commodityfinder.infrastructure.kafka.processor.StationArrivalDistanceResponseMessageProcessor;
+import io.edpn.backend.commodityfinder.domain.usecase.ReceiveDataRequestResponseUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,13 +13,13 @@ import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 @Slf4j
-public class DefaultReceiveStationArrivalDistanceResponseUseCase implements ReceiveStationArrivalDistanceResponseUseCase {
+public class ReceiveStationArrivalDistanceResponseUseCase implements ReceiveDataRequestResponseUseCase<StationArrivalDistanceResponse> {
 
     private final SystemRepository systemRepository;
     private final StationRepository stationRepository;
 
     @Override
-    public void receive(StationArrivalDistanceResponseMessageProcessor.StationArrivalDistanceResponse message) {
+    public void receive(StationArrivalDistanceResponse message) {
         String systemName = message.getSystemName();
         String stationName = message.getStationName();
         double arrivalDistance = message.getArrivalDistance();

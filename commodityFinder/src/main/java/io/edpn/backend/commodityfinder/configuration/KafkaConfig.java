@@ -51,7 +51,7 @@ public interface KafkaConfig {
         }
 
         @Bean
-        public ConcurrentKafkaListenerContainerFactory<String, JsonNode> eddnCommodityFinderKafkaListenerContainerFactory(EddnJsonKafkaConsumerConfig kafkaConfig) {
+        public ConcurrentKafkaListenerContainerFactory<String, JsonNode> commodityFinderKafkaListenerContainerFactory(EddnJsonKafkaConsumerConfig kafkaConfig) {
             return kafkaConfig.kafkaListenerContainerFactory("commodityFinder");
         }
     }

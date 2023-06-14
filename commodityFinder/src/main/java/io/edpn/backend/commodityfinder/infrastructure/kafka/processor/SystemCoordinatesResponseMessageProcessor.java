@@ -3,31 +3,31 @@ package io.edpn.backend.commodityfinder.infrastructure.kafka.processor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationArrivalDistanceResponse;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.commodityfinder.domain.usecase.ReceiveDataRequestResponseUseCase;
 import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.MessageProcessor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 
 @RequiredArgsConstructor
-public class StationArrivalDistanceResponseMessageProcessor implements MessageProcessor<StationArrivalDistanceResponse> {
+public class SystemCoordinatesResponseMessageProcessor implements MessageProcessor<SystemCoordinatesResponse> {
 
-    private final ReceiveDataRequestResponseUseCase<StationArrivalDistanceResponse> receiveDataRequestResponseUseCase;
+    private final ReceiveDataRequestResponseUseCase<SystemCoordinatesResponse> receiveDataRequestResponseUseCase;
     private final ObjectMapper objectMapper;
 
     @Override
-    @KafkaListener(topics = "stationArrivalDistanceDataResponse", groupId = "commodityFinder", containerFactory = "commodityFinderKafkaListenerContainerFactory")
+    @KafkaListener(topics = "systemCoordinatesResponse", groupId = "commodityFinder", containerFactory = "commodityFinderKafkaListenerContainerFactory")
     public void listen(JsonNode json) throws JsonProcessingException {
         handle(processJson(json));
     }
 
     @Override
-    public void handle(StationArrivalDistanceResponse message) {
+    public void handle(SystemCoordinatesResponse message) {
         receiveDataRequestResponseUseCase.receive(message);
     }
 
     @Override
-    public StationArrivalDistanceResponse processJson(JsonNode json) throws JsonProcessingException {
-        return objectMapper.treeToValue(json, StationArrivalDistanceResponse.class);
+    public SystemCoordinatesResponse processJson(JsonNode json) throws JsonProcessingException {
+        return objectMapper.treeToValue(json, SystemCoordinatesResponse.class);
     }
 }
