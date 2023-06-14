@@ -4,8 +4,6 @@
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="latest_market_data_view" author="pveeckhout" runOnChange="true">
-        <dropView viewName="latest_market_data_view" />
-
         <createView viewName="latest_market_data_view" replaceIfExists="true">
             <![CDATA[
             SELECT DISTINCT
