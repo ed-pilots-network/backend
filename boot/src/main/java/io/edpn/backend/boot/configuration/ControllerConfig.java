@@ -1,4 +1,4 @@
-package io.edpn.backend.configuration;
+package io.edpn.backend.boot.configuration;
 
 import org.springframework.context.annotation.Configuration;
 

@@ -8,5 +8,5 @@ module edpn.boot {
     requires spring.web;
     requires spring.beans;
 
-    opens io.edpn.backend.application.controller to spring.core;
+    opens io.edpn.backend.boot.application.controller to spring.core;
 }

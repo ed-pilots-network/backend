@@ -1,4 +1,4 @@
-package io.edpn.backend.application.controller;
+package io.edpn.backend.boot.application.controller;
 
 import io.edpn.backend.commodityfinder.domain.service.BestCommodityPriceService;
 import io.edpn.backend.commodityfinder.application.controller.CommodityFinderController;
