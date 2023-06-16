@@ -9,12 +9,14 @@
     <include file="db/changelog/create_commodity_table.xml"/>
     <include file="db/changelog/create_station_table.xml"/>
     <include file="db/changelog/create_market_datum_table.xml"/>
-    <include file="db/changelog/create_commodity_market_info_view.xml"/>
     <include file="db/changelog/add_foreign_key_indexes.xml"/>
     <include file="db/changelog/add_commodity_market_view_query_performance_indexes.xml"/>
     <include file="db/changelog/add_unique_indexes.xml"/>
     <include file="db/changelog/create_request_data_message_table.xml"/>
     <include file="db/changelog/add_timestamp_market_datum_table.xml"/>
+
+    <!-- views always last as they might depend on new columns -->
+    <include file="db/changelog/create_commodity_market_info_view.xml"/>
     <include file="db/changelog/create_latest_market_data_view.xml"/>
 
 </databaseChangeLog>

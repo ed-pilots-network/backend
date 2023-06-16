@@ -1,4 +1,4 @@
-package io.edpn.backend.boot;
+package io.edpn.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
