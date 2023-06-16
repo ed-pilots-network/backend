@@ -13,8 +13,12 @@ dependencies {
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
 
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+
 
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
@@ -32,4 +36,11 @@ extraJavaModuleInfo {
     automaticModule("liquibase-core-4.17.2.jar","liquibase.core")
     automaticModule("mybatis-3.5.11.jar", "org.apache.ibatis")
     automaticModule("swagger-ui-4.18.2.jar", "org.webjars.swagger.ui")
+
+    automaticModule("simpleclient-0.16.0.jar","io.prometheus")
+    automaticModule("simpleclient_common-0.16.0.jar","io.prometheus")
+    automaticModule("simpleclient_tracer_common-0.16.0.jar","io.prometheus")
+    automaticModule("simpleclient_tracer_otel-0.16.0.jar","io.prometheus")
+    automaticModule("simpleclient_tracer_otel_agent-0.16.0.jar","io.prometheus")
+    automaticModule("simpleclient_tracer_common-0.16.0.jar","io.prometheus")
 }

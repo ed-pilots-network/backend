@@ -61,6 +61,7 @@ subprojects {
         liquibaseVersion = '4.22.0'
         postgresqlVersion = '42.6.0'
         springdocOpenapiVersion = '2.1.0'
+        prometheusVersion = '1.11.1'
     }
 
     dependencies {
@@ -79,6 +80,7 @@ subprojects {
             implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
             implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
             runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
+            runtimeOnly "io.micrometer:micrometer-registry-prometheus:${prometheusVersion}"
             compileOnly "org.projectlombok:lombok:${lombokVersion}"
             annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
             testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
