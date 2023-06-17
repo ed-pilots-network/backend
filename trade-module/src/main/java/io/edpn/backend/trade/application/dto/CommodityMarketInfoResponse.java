@@ -3,7 +3,7 @@ package io.edpn.backend.trade.application.dto;
 import lombok.Builder;
 import lombok.Value;
 
-@Value(staticConstructor = "of")
+@Value
 @Builder
 public class CommodityMarketInfoResponse {
 
@@ -27,7 +27,7 @@ public class CommodityMarketInfoResponse {
     private Station highestSellingToStation;
     private Station lowestBuyingFromStation;
 
-    @Value(staticConstructor = "of")
+    @Value
     @Builder
     public static class Station {
 
@@ -36,7 +36,7 @@ public class CommodityMarketInfoResponse {
         System system;
     }
 
-    @Value(staticConstructor = "of")
+    @Value
     @Builder
     public static class System {
 
