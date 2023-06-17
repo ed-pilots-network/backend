@@ -50,8 +50,8 @@ public interface KafkaConfig {
             return new DefaultKafkaConsumerFactory<>(configProps);
         }
 
-        @Bean
-        public ConcurrentKafkaListenerContainerFactory<String, JsonNode> commodityFinderKafkaListenerContainerFactory(EddnJsonKafkaConsumerConfig kafkaConfig) {
+        @Bean(name = "tradeModuleKafkaListenerContainerFactory")
+        public ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory(EddnJsonKafkaConsumerConfig kafkaConfig) {
             return kafkaConfig.kafkaListenerContainerFactory("tradeModule");
         }
     }

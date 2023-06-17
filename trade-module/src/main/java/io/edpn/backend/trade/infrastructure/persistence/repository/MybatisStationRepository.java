@@ -10,12 +10,14 @@ import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.StationE
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.exception.DatabaseEntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
+@Slf4j
 public class MybatisStationRepository implements StationRepository {
 
     private final IdGenerator idGenerator;
@@ -49,7 +51,13 @@ public class MybatisStationRepository implements StationRepository {
     }
 
     private void saveMarketData(StationEntity entity) {
-        entity.getMarketData().forEach(marketDatumEntity -> marketDatumEntityMapper.insert(entity.getId(), marketDatumEntity));
+        entity.getMarketData().forEach(marketDatumEntity -> {
+            if (marketDatumEntityMapper.findById(entity.getId(), marketDatumEntity.getCommodity().getId(), marketDatumEntity.getTimestamp()).isEmpty()) {
+                marketDatumEntityMapper.insert(entity.getId(), marketDatumEntity);
+            } else {
+                log.warn("Did not save marketDatum because of record with identical key already exists");
+            }
+        });
     }
 
     @Override
