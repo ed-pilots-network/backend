@@ -32,7 +32,7 @@ public class RequestSystemEliteIdService implements RequestDataService<System> {
         JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
 
         RequestDataMessage requestDataMessage = RequestDataMessage.builder()
-                .topic("systemEliteIdDataRequest")
+                .topic("tradeModuleSystemEliteIdDataRequest")
                 .message(jsonNode)
                 .build();
 

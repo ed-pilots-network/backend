@@ -32,7 +32,7 @@ public class RequestSystemCoordinatesService implements RequestDataService<Syste
         JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
 
         RequestDataMessage requestDataMessage = RequestDataMessage.builder()
-                .topic("systemCoordinatesDataRequest")
+                .topic("tradeModuleSystemCoordinatesDataRequest")
                 .message(jsonNode)
                 .build();
 

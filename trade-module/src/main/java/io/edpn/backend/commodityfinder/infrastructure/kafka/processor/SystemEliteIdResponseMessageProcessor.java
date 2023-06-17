@@ -16,7 +16,7 @@ public class SystemEliteIdResponseMessageProcessor implements MessageProcessor<S
     private final ObjectMapper objectMapper;
 
     @Override
-    @KafkaListener(topics = "systemEliteIdResponse", groupId = "commodityFinder", containerFactory = "commodityFinderKafkaListenerContainerFactory")
+    @KafkaListener(topics = "tradeModuleSystemEliteIdResponse", groupId = "commodityFinder", containerFactory = "commodityFinderKafkaListenerContainerFactory")
     public void listen(JsonNode json) throws JsonProcessingException {
         handle(processJson(json));
     }
