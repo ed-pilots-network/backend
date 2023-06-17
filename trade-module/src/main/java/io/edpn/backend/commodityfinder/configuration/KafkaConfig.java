@@ -27,7 +27,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 public interface KafkaConfig {
 
     @EnableKafka
-    @Configuration("CommodityFinderEddnJsonKafkaConsumerConfig")
+    @Configuration("TradeModuleEddnJsonKafkaConsumerConfig")
     class EddnJsonKafkaConsumerConfig {
         @Value(value = "${spring.kafka.bootstrap-servers}")
         private String bootstrapServers;
@@ -52,11 +52,11 @@ public interface KafkaConfig {
 
         @Bean
         public ConcurrentKafkaListenerContainerFactory<String, JsonNode> commodityFinderKafkaListenerContainerFactory(EddnJsonKafkaConsumerConfig kafkaConfig) {
-            return kafkaConfig.kafkaListenerContainerFactory("commodityFinder");
+            return kafkaConfig.kafkaListenerContainerFactory("tradeModule");
         }
     }
 
-    @Configuration("CommodityFinderJsonNodeKafkaProducerConfig")
+    @Configuration("TradeModuleJsonNodeKafkaProducerConfig")
     class JsonNodeKafkaProducerConfig {
         @Value(value = "${spring.kafka.bootstrap-servers}")
         private String bootstrapServers;
@@ -76,7 +76,7 @@ public interface KafkaConfig {
         }
     }
 
-    @Configuration("CommodityFinderKafkaAdminConfig")
+    @Configuration("TradeModuleKafkaAdminConfig")
     class KafkaAdminConfig {
         @Value(value = "${spring.kafka.bootstrap-servers}")
         private String bootstrapServers;

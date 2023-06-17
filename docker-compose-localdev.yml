@@ -42,7 +42,7 @@ services:
     image: "postgres:15-alpine"
     restart: on-failure
     environment:
-      - POSTGRES_USER=edpn_commodityfinder
+      - POSTGRES_USER=edpn_trademodule
       - POSTGRES_PASSWORD=MSDVq372rNk3AwRq
       - POSTGRES_DB=commodityfinder
     volumes:

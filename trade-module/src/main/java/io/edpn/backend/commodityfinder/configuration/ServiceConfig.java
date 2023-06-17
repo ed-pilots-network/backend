@@ -16,30 +16,30 @@ import io.edpn.backend.commodityfinder.domain.usecase.FindCommodityMarketInfoUse
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration("CommodityFinderServiceConfig")
+@Configuration("TradeModuleServiceConfig")
 public class ServiceConfig {
 
-    @Bean(name = "CommodityFinderBestCommodityPriceService")
+    @Bean(name = "TradeModuleBestCommodityPriceService")
     public BestCommodityPriceService bestCommodityPriceController(FindCommodityMarketInfoUseCase findCommodityMarketInfoUseCase, CommodityMarketInfoResponseMapper commodityMarketInfoResponseMapper) {
         return new DefaultBestCommodityPriceService(findCommodityMarketInfoUseCase, commodityMarketInfoResponseMapper);
     }
 
-    @Bean(name = "CommodityFinderRequestStationArrivalDistanceService")
+    @Bean(name = "TradeModuleRequestStationArrivalDistanceService")
     public RequestDataService<Station> requestStationArrivalDistanceService(RequestDataMessageRepository requestDataMessageRepository, ObjectMapper objectMapper) {
         return new RequestStationArrivalDistanceService(requestDataMessageRepository, objectMapper);
     }
 
-    @Bean(name = "CommodityFinderRequestStationLandingPadSizeService")
+    @Bean(name = "TradeModuleRequestStationLandingPadSizeService")
     public RequestDataService<Station> requestStationLandingPadSizeService(RequestDataMessageRepository requestDataMessageRepository, ObjectMapper objectMapper) {
         return new RequestStationLandingPadSizeService(requestDataMessageRepository, objectMapper);
     }
 
-    @Bean(name = "CommodityFinderRequestSystemCoordinatesService")
+    @Bean(name = "TradeModuleRequestSystemCoordinatesService")
     public RequestDataService<System> requestSystemCoordinatesService(RequestDataMessageRepository requestDataMessageRepository, ObjectMapper objectMapper) {
         return new RequestSystemCoordinatesService(requestDataMessageRepository, objectMapper);
     }
 
-    @Bean(name = "CommodityFinderRequestSystemEliteIdService")
+    @Bean(name = "TradeModuleRequestSystemEliteIdService")
     public RequestDataService<System> requestSystemEliteIdService(RequestDataMessageRepository requestDataMessageRepository, ObjectMapper objectMapper) {
         return new RequestSystemEliteIdService(requestDataMessageRepository, objectMapper);
     }

@@ -9,7 +9,7 @@ import io.edpn.backend.commodityfinder.infrastructure.persistence.mappers.entity
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration("CommodityFinderEntityMapperConfig")
+@Configuration("TradeModuleEntityMapperConfig")
 public class EntityMapperConfig {
 
     @Bean

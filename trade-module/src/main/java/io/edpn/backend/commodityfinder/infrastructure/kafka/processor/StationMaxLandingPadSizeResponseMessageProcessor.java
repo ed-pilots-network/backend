@@ -16,7 +16,7 @@ public class StationMaxLandingPadSizeResponseMessageProcessor implements Message
     private final ObjectMapper objectMapper;
 
     @Override
-    @KafkaListener(topics = "tradeModuleStationMaxLandingPadSizeResponse", groupId = "commodityFinder", containerFactory = "commodityFinderKafkaListenerContainerFactory")
+    @KafkaListener(topics = "tradeModuleStationMaxLandingPadSizeResponse", groupId = "tradeModule", containerFactory = "tradeModuleKafkaListenerContainerFactory")
     public void listen(JsonNode json) throws JsonProcessingException {
         handle(processJson(json));
     }

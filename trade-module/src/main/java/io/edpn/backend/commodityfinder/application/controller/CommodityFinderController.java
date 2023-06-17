@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
-@RequestMapping("commodityfinder")
+@RequestMapping("trade")
 public interface CommodityFinderController {
 
     @GetMapping("/best-price")

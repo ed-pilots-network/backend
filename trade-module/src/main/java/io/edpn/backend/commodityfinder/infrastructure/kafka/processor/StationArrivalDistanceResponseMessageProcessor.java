@@ -16,7 +16,7 @@ public class StationArrivalDistanceResponseMessageProcessor implements MessagePr
     private final ObjectMapper objectMapper;
 
     @Override
-    @KafkaListener(topics = "tradeModuleStationArrivalDistanceDataResponse", groupId = "commodityFinder", containerFactory = "commodityFinderKafkaListenerContainerFactory")
+    @KafkaListener(topics = "tradeModuleStationArrivalDistanceDataResponse", groupId = "tradeModule", containerFactory = "tradeModuleKafkaListenerContainerFactory")
     public void listen(JsonNode json) throws JsonProcessingException {
         handle(processJson(json));
     }

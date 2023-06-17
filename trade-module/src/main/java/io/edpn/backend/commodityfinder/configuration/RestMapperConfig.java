@@ -4,7 +4,7 @@ import io.edpn.backend.commodityfinder.application.mappers.CommodityMarketInfoRe
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration("CommodityFinderRestMapperConfig")
+@Configuration("TradeModuleRestMapperConfig")
 public class RestMapperConfig {
 
     @Bean
