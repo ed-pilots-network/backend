@@ -36,13 +36,13 @@ services:
       zookeeper:
         condition: service_healthy
 
-  commoddityfinder_postgres:
+  trademodule_postgres:
     image: "postgres:15-alpine"
     restart: on-failure
     env_file:
-      - env/.env_commoddityfinder
+      - env/.env_trademodule
     volumes:
-      - "commoddityfinder_postgres:/var/lib/postgresql/data"
+      - "trademodule_postgres:/var/lib/postgresql/data"
     healthcheck:
       test: pg_isready
       interval: 10s
@@ -82,7 +82,7 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
-      commoddityfinder_postgres:
+      trademodule_postgres:
         condition: service_healthy
 
 volumes:
@@ -90,5 +90,5 @@ volumes:
     driver: local
   kafka:
     driver: local
-  commoddityfinder_postgres:
+  trademodule_postgres:
     driver: local
