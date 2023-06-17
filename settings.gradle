@@ -7,4 +7,4 @@ include 'mybatis-util'
 
 // modules
 include 'boot'
-include 'commodityFinder'
+include 'trade-module'
