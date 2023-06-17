@@ -38,15 +38,15 @@ services:
       zookeeper:
         condition: service_healthy
 
-  commoddityfinder_postgres:
+  trademodule_postgres:
     image: "postgres:15-alpine"
     restart: on-failure
     environment:
       - POSTGRES_USER=edpn_trademodule
       - POSTGRES_PASSWORD=MSDVq372rNk3AwRq
-      - POSTGRES_DB=commodityfinder
+      - POSTGRES_DB=trademodule
     volumes:
-      - "commoddityfinder_postgres:/var/lib/postgresql/data"
+      - "trademodule_postgres:/var/lib/postgresql/data"
     ports:
       - "54321:5432"
     healthcheck:
@@ -60,5 +60,5 @@ volumes:
     driver: local
   kafka:
     driver: local
-  commoddityfinder_postgres:
+  trademodule_postgres:
     driver: local

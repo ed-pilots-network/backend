@@ -19,8 +19,8 @@ module edpn.commodity.finder {
     requires spring.web;
     requires org.mybatis;
 
-    exports io.edpn.backend.commodityfinder.application.controller;
-    exports io.edpn.backend.commodityfinder.application.dto;
-    exports io.edpn.backend.commodityfinder.application.service;
-    exports io.edpn.backend.commodityfinder.domain.service;
+    exports io.edpn.backend.trade.application.controller;
+    exports io.edpn.backend.trade.application.dto;
+    exports io.edpn.backend.trade.application.service;
+    exports io.edpn.backend.trade.domain.service;
 }
