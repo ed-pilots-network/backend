@@ -10,9 +10,9 @@ module edpn.commodity.finder {
     requires spring.kafka;
     requires java.sql;
     requires org.slf4j;
-    requires edpn.mybatis.util;
-    requires edpn.util;
-    requires edpn.messageprocessor.lib;
+    requires io.edpn.backend.util;
+    requires io.edpn.backend.mybatis.util;
+    requires io.edpn.backend.messageprocessor.lib;
     requires org.mybatis.spring;
     requires spring.beans;
     requires kafka.clients;

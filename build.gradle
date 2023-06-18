@@ -11,6 +11,9 @@ repositories {
             gradleMetadata()
         }
     }
+    maven {
+        url 'C:/Users/hoakt/.m2/repository'
+    }
 }
 
 allprojects {
@@ -27,6 +30,9 @@ subprojects {
 
     repositories {
         mavenCentral()
+        maven {
+            url 'https://nexus.edpn.io'
+        }
     }
 
     task prepareKotlinBuildScriptModel {}
@@ -62,10 +68,16 @@ subprojects {
         postgresqlVersion = '42.6.0'
         springdocOpenapiVersion = '2.1.0'
         prometheusVersion = '1.11.1'
+        backendUtilVersion = '0.0.1-SNAPSHOT'
+        backendMybatisUtilVersion = '0.0.1-SNAPSHOT'
+        backendMessageProcessorLibVersion = '0.0.1-SNAPSHOT'
     }
 
     dependencies {
         constraints {
+            implementation "io.edpn.backend:backend-util:${backendUtilVersion}"
+            implementation "io.edpn.backend:backend-mybatis-util:${backendUtilVersion}"
+            implementation "io.edpn.backend:backend-messageprocessor-lib:${backendUtilVersion}"
             implementation "org.springframework.boot:spring-boot-starter:${springBootVersion}"
             implementation "org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}"
             implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"

@@ -1,7 +1,7 @@
 dependencies {
-    implementation project(':util')
-    implementation project(':mybatis-util')
-    implementation project(':messageprocessor-lib')
+    implementation 'io.edpn.backend:backend-util'
+    implementation 'io.edpn.backend:backend-mybatis-util'
+    implementation 'io.edpn.backend:backend-messageprocessor-lib'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-integration'
     implementation 'org.springframework.integration:spring-integration-http'

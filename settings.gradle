@@ -1,10 +1,5 @@
 rootProject.name = 'backend'
 
-// libs
-include 'util'
-include 'messageprocessor-lib'
-include 'mybatis-util'
-
 // modules
 include 'boot'
 include 'trade-module'
