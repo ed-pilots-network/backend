@@ -25,8 +25,8 @@ public class Station {
     private String name;
     private Double arrivalDistance;
     private System system;
-    private boolean planetary;
-    private boolean requireOdyssey;
+    private Boolean planetary;
+    private Boolean requireOdyssey;
     private boolean fleetCarrier;
     @Builder.Default
     private LandingPadSize maxLandingPadSize = LandingPadSize.UNKNOWN;

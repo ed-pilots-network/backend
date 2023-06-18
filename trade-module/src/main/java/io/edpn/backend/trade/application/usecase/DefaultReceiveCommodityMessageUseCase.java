@@ -78,6 +78,9 @@ public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMe
             if (throwable != null) {
                 log.error("Exception occurred in retrieving station", throwable);
             } else {
+                //if we get the message here, it always is NOT a fleet carrier
+                station.setFleetCarrier(false);
+
                 if (Objects.isNull(station.getMarketId())) {
                     station.setMarketId(marketId);
                 }

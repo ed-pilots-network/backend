@@ -25,8 +25,8 @@ public class StationEntity {
     private String name;
     private Double arrivalDistance;
     private SystemEntity system;
-    private boolean planetary;
-    private boolean requireOdyssey;
+    private Boolean planetary;
+    private Boolean requireOdyssey;
     private boolean fleetCarrier;
     private String maxLandingPadSize;
     private LocalDateTime marketUpdatedAt;
