@@ -4,7 +4,7 @@ module edpn.boot {
     requires org.mybatis.spring;
     requires spring.boot.autoconfigure;
     requires spring.context;
-    requires edpn.commodity.finder;
+    requires io.edpn.backend.trade;
     requires spring.web;
     requires spring.beans;
 

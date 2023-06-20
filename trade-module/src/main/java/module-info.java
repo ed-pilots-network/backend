@@ -1,4 +1,4 @@
-module edpn.commodity.finder {
+module io.edpn.backend.trade {
     requires static lombok;
     requires spring.boot;
     requires spring.boot.autoconfigure;

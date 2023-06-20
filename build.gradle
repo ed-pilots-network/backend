@@ -12,7 +12,7 @@ repositories {
         }
     }
     maven {
-        url 'C:/Users/hoakt/.m2/repository'
+        url 'https://nexus.edpn.io'
     }
 }
 
