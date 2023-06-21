@@ -31,7 +31,6 @@ subprojects {
     apply plugin: "java"
     apply plugin: "org.javamodularity.moduleplugin"
     apply plugin: "org.gradlex.extra-java-module-info"
-    version = '0.0.1-SNAPSHOT'
 
     repositories {
         mavenCentral()
