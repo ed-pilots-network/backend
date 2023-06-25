@@ -13,6 +13,8 @@ module io.edpn.backend.user {
     requires io.jsonwebtoken;
     requires jakarta.servlet;
     requires spring.boot.starter.security;
+    requires io.github.bucket4j.core;
+    requires spring.security.core;
 
     exports io.edpn.backend.user.application.controller;
     exports io.edpn.backend.user.application.dto;
