@@ -80,6 +80,9 @@ subprojects {
         backendUtilVersion = '0.0.1-SNAPSHOT'
         backendMybatisUtilVersion = '0.0.1-SNAPSHOT'
         backendMessageProcessorLibVersion = '0.0.1-SNAPSHOT'
+        bucket4jCoreVersion = '7.6.0'
+        jjwtVersion='0.9.1'
+        jakartaVersion='6.0.0'
     }
 
     dependencies {
@@ -88,7 +91,9 @@ subprojects {
             implementation "io.edpn.backend:backend-mybatis-util:${backendUtilVersion}"
             implementation "io.edpn.backend:backend-messageprocessor-lib:${backendUtilVersion}"
             implementation "org.springframework.boot:spring-boot-starter:${springBootVersion}"
+            implementation "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
             implementation "org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}"
+            implementation "org.springframework.boot:spring-boot-starter-jersey:${springBootVersion}"
             implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
             implementation "org.springframework.boot:spring-boot-starter-integration:${springBootVersion}"
             implementation "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
@@ -100,9 +105,12 @@ subprojects {
             implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
             implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
             implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+            implementation "com.github.vladimir-bukhtoyarov:bucket4j-core:${bucket4jCoreVersion}"
+            implementation "io.jsonwebtoken:jjwt:${jjwtVersion}"
             runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
             runtimeOnly "io.micrometer:micrometer-registry-prometheus:${prometheusVersion}"
             compileOnly "org.projectlombok:lombok:${lombokVersion}"
+            compileOnly "jakarta.servlet:jakarta.servlet-api:${jakartaVersion}"
             annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
             testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
             testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"

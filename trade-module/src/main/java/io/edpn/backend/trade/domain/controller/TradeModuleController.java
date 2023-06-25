@@ -1,4 +1,4 @@
-package io.edpn.backend.trade.application.controller;
+package io.edpn.backend.trade.domain.controller;
 
 import io.edpn.backend.trade.application.dto.CommodityMarketInfoResponse;
 import org.springframework.web.bind.annotation.GetMapping;
