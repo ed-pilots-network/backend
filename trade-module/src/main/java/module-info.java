@@ -23,4 +23,5 @@ module io.edpn.backend.trade {
     exports io.edpn.backend.trade.application.dto;
     exports io.edpn.backend.trade.application.service;
     exports io.edpn.backend.trade.domain.service;
+    exports io.edpn.backend.trade.domain.controller;
 }
