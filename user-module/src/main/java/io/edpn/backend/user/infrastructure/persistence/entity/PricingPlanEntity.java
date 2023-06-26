@@ -1,4 +1,4 @@
-package io.edpn.backend.user.infrastructure.entity;
+package io.edpn.backend.user.infrastructure.persistence.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -16,9 +15,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserRoleEntity {
+public class PricingPlanEntity {
 
     private UUID id;
     private String name;
-    private Set<String> grants;
+    private long capacityPerMinute;
 }

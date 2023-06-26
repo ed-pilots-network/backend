@@ -55,6 +55,23 @@ services:
       timeout: 5s
       retries: 5
 
+  trademodule_postgres:
+    image: "postgres:15-alpine"
+    restart: on-failure
+    environment:
+      - POSTGRES_USER=edpn_usermodule
+      - POSTGRES_PASSWORD=MSDVq372rNk3AwRq
+      - POSTGRES_DB=usermodule
+    volumes:
+      - "usermodule_postgres:/var/lib/postgresql/data"
+    ports:
+      - "54322:5432"
+    healthcheck:
+      test: pg_isready
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   zookeeper:
     driver: local

@@ -16,7 +16,7 @@ public class ApiKey {
     String keyHash;
     String name;
     Set<ApiRole> roles;
-    Set<String> grants;
+    Set<ApiGrant> grants;
     LocalDateTime expiryTimestamp;
     boolean enabled;
 

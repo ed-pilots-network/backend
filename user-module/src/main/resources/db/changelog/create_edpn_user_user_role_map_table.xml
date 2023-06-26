@@ -1,0 +1,25 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="create-edpn_user_user_role_map-table" author="pveeckhout">
+        <createTable tableName="edpn_user_user_role_map">
+            <column name="edpn_user" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey tableName="edpn_user_user_role_map" columnNames="edpn_user,grant"/>
+        <addForeignKeyConstraint baseTableName="edpn_user_user_role_map" baseColumnNames="edpn_user"
+                                 constraintName="fk_edpn_user_user_grant_map_edpn_user" referencedTableName="edpn_user"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="edpn_user_user_role_map" baseColumnNames="role"
+                                 constraintName="fk_edpn_user_user_role_map_grant" referencedTableName="user_grant"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,16 +1,17 @@
-package io.edpn.backend.user.infrastructure.mapper;
+package io.edpn.backend.user.infrastructure.persistence.mappers.entity;
 
 import io.edpn.backend.user.domain.model.EdpnUser;
-import io.edpn.backend.user.infrastructure.entity.EdpnUserEntity;
+import io.edpn.backend.user.infrastructure.persistence.entity.EdpnUserEntity;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 
-import java.util.stream.Collectors;
-
 @RequiredArgsConstructor
-public class EdpnMapper {
+public class EdpnUserMapper {
 
     private final UserRoleMapper userRoleMapper;
     private final ApiKeyMapper apiKeyMapper;
+    private final UserGrantMapper userGrantMapper;
+    private final PricingPlanMapper pricingPlanMapper;
 
     public EdpnUser map(EdpnUserEntity entity) {
         return EdpnUser.builder()
@@ -22,8 +23,9 @@ public class EdpnMapper {
                 .enabled(entity.isEnabled())
                 .locked(entity.isLocked())
                 .roles(entity.getRoles().stream().map(userRoleMapper::map).collect(Collectors.toSet()))
-                .grants(entity.getGrants())
+                .grants(entity.getGrants().stream().map(userGrantMapper::map).collect(Collectors.toSet()))
                 .apiKeys(entity.getApiKeys().stream().map(apiKeyMapper::map).collect(Collectors.toSet()))
+                .pricingPlan(pricingPlanMapper.map(entity.getPricingPlan()))
                 .build();
     }
 
@@ -37,8 +39,9 @@ public class EdpnMapper {
                 .enabled(user.isEnabled())
                 .locked(user.isLocked())
                 .roles(user.getRoles().stream().map(userRoleMapper::map).collect(Collectors.toSet()))
-                .grants(user.getGrants())
+                .grants(user.getGrants().stream().map(userGrantMapper::map).collect(Collectors.toSet()))
                 .apiKeys(user.getApiKeys().stream().map(apiKeyMapper::map).collect(Collectors.toSet()))
+                .pricingPlan(pricingPlanMapper.map(user.getPricingPlan()))
                 .build();
     }
 }

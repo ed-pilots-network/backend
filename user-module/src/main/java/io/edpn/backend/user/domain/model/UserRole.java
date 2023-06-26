@@ -12,5 +12,5 @@ public class UserRole {
 
     UUID id;
     String name;
-    Set<String> grants;
+    Set<UserGrant> grants;
 }

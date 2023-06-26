@@ -1,4 +1,5 @@
 dependencies {
+    implementation 'io.edpn.backend:backend-mybatis-util'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -18,24 +19,8 @@ dependencies {
 
 extraJavaModuleInfo {
     automaticModule("dependency-management-plugin-1.1.0.jar","dependency.management.plugin")
-    //automaticModule("tomlj-1.0.0.jar","tomlj")
     automaticModule("jsr305-3.0.2.jar","jsr305")
     automaticModule("snappy-java-1.1.8.4.jar","snappy.java")
     automaticModule("liquibase-core-4.17.2.jar","liquibase.core")
     automaticModule("jjwt-0.9.1.jar", "io.jsonwebtoken")
-    /*
-    automaticModule("jersey-media-json-jackson-3.1.1.jar", "jersy.jackson")
-    automaticModule("jersey-container-servlet-3.1.1.jar", "jersy.jackson")
-    automaticModule("jersey-spring6-3.1.1.jar", "jersy.jackson")
-    automaticModule("jersey-container-servlet-core-3.1.1.jar", "jersy.jackson")
-    automaticModule("jersey-bean-validation-3.1.1.jar", "jersy.jackson")
-    automaticModule("jersey-server-3.1.1.jar", "jersy.jackson")
-    automaticModule("jersey-client-3.1.1.jar", "jersy.jackson")
-    automaticModule("jersey-hk2-3.1.1.jar", "jersy.jackson")
-    automaticModule("hk2-3.0.3.jar", "jersy.jackson")
-    automaticModule("jersey-entity-filtering-3.1.1.jar", "jersy.jackson")
-    automaticModule("osgi-resource-locator-1.0.3.jar", "jersy.jackson")
-    automaticModule("javassist-3.29.0-GA.jar", "jersy.jackson")
-    automaticModule("jersey-common-3.1.1.jar", "jersy.jackson")*/
-
 }

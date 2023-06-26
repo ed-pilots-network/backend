@@ -1,7 +1,5 @@
-package io.edpn.backend.user.infrastructure.entity;
+package io.edpn.backend.user.infrastructure.persistence.entity;
 
-import io.edpn.backend.user.domain.model.ApiKey;
-import io.edpn.backend.user.domain.model.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,6 +27,7 @@ public class EdpnUserEntity {
     private boolean enabled;
     private boolean locked;
     private Set<UserRoleEntity> roles;
-    private Set<String> grants;
+    private Set<UserGrantEntity> grants;
     private Set<ApiKeyEntity> apiKeys;
+    private PricingPlanEntity pricingPlan;
 }
