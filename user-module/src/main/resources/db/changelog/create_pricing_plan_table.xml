@@ -11,14 +11,14 @@
             <column name="name" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            <column name="capacity_per_minute" type="long">
+            <column name="capacity_per_minute" type="bigint">
                 <constraints nullable="false" />
             </column>
 
         </createTable>
 
         <createIndex tableName="pricing_plan" indexName="idx_pricing_plan_name">
-            <column>name</column>
+            <column name="name" />
         </createIndex>
     </changeSet>
 

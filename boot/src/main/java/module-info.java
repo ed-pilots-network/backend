@@ -7,6 +7,8 @@ module io.edpn.backend.boot {
     requires spring.web;
     requires spring.beans;
     requires spring.boot.starter.security;
+    requires spring.security.crypto;
+    requires spring.security.core;
 
     requires io.edpn.backend.trade;
     requires io.edpn.backend.user;

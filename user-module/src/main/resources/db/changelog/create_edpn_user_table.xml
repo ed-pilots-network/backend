@@ -30,7 +30,7 @@
         <addForeignKeyConstraint baseTableName="edpn_user" baseColumnNames="pricing_plan" constraintName="fk_edpn_user_pricing_plan" referencedTableName="pricing_plan"
                                  referencedColumnNames="id" />
         <createIndex tableName="pricing_plan" indexName="idx_pricing_plan">
-            <column>name</column>
+            <column name="name" />
         </createIndex>
     </changeSet>
 

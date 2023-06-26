@@ -15,8 +15,8 @@
 
         <addPrimaryKey tableName="edpn_user_user_grant_map" columnNames="edpn_user,grant"/>
         <addForeignKeyConstraint baseTableName="edpn_user_user_grant_map" baseColumnNames="edpn_user"
-                                 constraintName="fk_edpn_user_user_grant_map_user" referencedTableName="edn_user"
-                                 referencedColumnNames="edpn_user"/>
+                                 constraintName="fk_edpn_user_user_grant_map_user" referencedTableName="edpn_user"
+                                 referencedColumnNames="id"/>
         <addForeignKeyConstraint baseTableName="edpn_user_user_grant_map" baseColumnNames="grant"
                                  constraintName="fk_edpn_user_user_grant_map_grant" referencedTableName="user_grant"
                                  referencedColumnNames="id"/>

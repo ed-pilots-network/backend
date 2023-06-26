@@ -8,7 +8,7 @@ import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.Messag
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@Configuration("TradeModuleMessagingConfig")
 public class MessagingConfig {
 
     @Bean

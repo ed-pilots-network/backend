@@ -11,7 +11,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-@Configuration
+@Configuration("UserModuleSecurityConfig")
 public class SecurityConfiguration {
 
     @Bean

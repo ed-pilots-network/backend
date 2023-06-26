@@ -55,12 +55,12 @@ services:
       timeout: 5s
       retries: 5
 
-  trademodule_postgres:
+  usermodule_postgres:
     image: "postgres:15-alpine"
     restart: on-failure
     environment:
       - POSTGRES_USER=edpn_usermodule
-      - POSTGRES_PASSWORD=MSDVq372rNk3AwRq
+      - POSTGRES_PASSWORD=hvWYDHqG3yXCKReH
       - POSTGRES_DB=usermodule
     volumes:
       - "usermodule_postgres:/var/lib/postgresql/data"
@@ -78,4 +78,6 @@ volumes:
   kafka:
     driver: local
   trademodule_postgres:
+    driver: local
+  usermodule_postgres:
     driver: local

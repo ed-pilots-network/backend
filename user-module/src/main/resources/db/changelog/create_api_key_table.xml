@@ -9,33 +9,34 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="prefix" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="key_hash" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="name" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="expiry_timestamp" type="timestamp">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="enabled" type="boolean"/>
             <column name="edpn_user" type="uuid">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
         </createTable>
 
-        <addUniqueConstraint tableName="api_key" columnNames="prefix,key_hash" />
+        <addUniqueConstraint tableName="api_key" columnNames="prefix,key_hash"/>
         <createIndex tableName="api_key" indexName="idx_prefix_key_hash">
-            <column>prefix</column>
-            <column>key_hash</column>
+            <column name="prefix"/>
+            <column name="key_hash"/>
         </createIndex>
 
-        <addForeignKeyConstraint baseTableName="api_key" baseColumnNames="edpn_user" constraintName="fk_api_key_user" referencedTableName="edpn_user"
-                                 referencedColumnNames="id" />
+        <addForeignKeyConstraint baseTableName="api_key" baseColumnNames="edpn_user" constraintName="fk_api_key_user"
+                                 referencedTableName="edpn_user"
+                                 referencedColumnNames="id"/>
         <createIndex tableName="api_key" indexName="idx_edpn_user">
-            <column>edpn_user</column>
+            <column name="edpn_user"/>
         </createIndex>
     </changeSet>
 

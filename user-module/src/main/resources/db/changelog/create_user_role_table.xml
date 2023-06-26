@@ -15,7 +15,7 @@
         </createTable>
 
         <createIndex tableName="user_role" indexName="idx_user_role_name">
-            <column>name</column>
+            <column name="name" />
         </createIndex>
     </changeSet>
 

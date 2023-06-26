@@ -15,7 +15,7 @@
         </createTable>
 
         <createIndex tableName="api_grant" indexName="idx_api_grant_name">
-            <column>name</column>
+            <column name="name" />
         </createIndex>
     </changeSet>
 
