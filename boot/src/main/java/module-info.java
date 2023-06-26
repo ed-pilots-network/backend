@@ -1,4 +1,4 @@
-module edpn.boot {
+module io.edpn.backend.boot {
     requires static lombok;
     requires spring.boot;
     requires org.mybatis.spring;
