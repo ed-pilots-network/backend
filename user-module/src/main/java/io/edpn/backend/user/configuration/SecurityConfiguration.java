@@ -18,6 +18,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain endpointSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authz) -> authz
+                        .requestMatchers("/actuator/**").anonymous()
+
                         .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults());

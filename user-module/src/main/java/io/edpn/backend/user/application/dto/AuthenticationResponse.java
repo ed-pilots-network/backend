@@ -4,7 +4,7 @@ import io.edpn.backend.user.domain.controller.AuthenticationController;
 import lombok.Builder;
 import lombok.Value;
 
-@Value(staticConstructor = "of")
+@Value
 @Builder
 public class AuthenticationResponse implements AuthenticationController.AuthenticationResponse {
     String jwt;
