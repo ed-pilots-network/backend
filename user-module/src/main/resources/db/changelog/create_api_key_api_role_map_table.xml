@@ -3,8 +3,8 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
-    <changeSet id="create-api_key_api_rol_map-table" author="pveeckhout">
-        <createTable tableName="api_key_api_rol_map">
+    <changeSet id="create-api_key_api_role_map-table" author="pveeckhout">
+        <createTable tableName="api_key_api_role_map">
             <column name="key" type="uuid">
                 <constraints nullable="false"/>
             </column>
@@ -13,10 +13,10 @@
             </column>
         </createTable>
 
-        <addPrimaryKey tableName="api_key_api_rol_map" columnNames="key,rol"/>
-        <addForeignKeyConstraint baseTableName="api_key_api_rol_map" baseColumnNames="key" constraintName="fk_api_key_api_rol_map_key" referencedTableName="api_key"
+        <addPrimaryKey tableName="api_key_api_role_map" columnNames="key,rol"/>
+        <addForeignKeyConstraint baseTableName="api_key_api_role_map" baseColumnNames="key" constraintName="fk_api_key_api_role_map_key" referencedTableName="api_key"
                                  referencedColumnNames="id" />
-        <addForeignKeyConstraint baseTableName="api_key_api_rol_map" baseColumnNames="rol" constraintName="fk_api_key_api_rol_map_rol" referencedTableName="api_rol"
+        <addForeignKeyConstraint baseTableName="api_key_api_role_map" baseColumnNames="rol" constraintName="fk_api_key_api_role_map_rol" referencedTableName="api_role"
                                  referencedColumnNames="id" />
     </changeSet>
 

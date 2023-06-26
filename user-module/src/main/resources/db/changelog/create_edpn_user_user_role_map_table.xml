@@ -13,12 +13,12 @@
             </column>
         </createTable>
 
-        <addPrimaryKey tableName="edpn_user_user_role_map" columnNames="edpn_user,grant"/>
+        <addPrimaryKey tableName="edpn_user_user_role_map" columnNames="edpn_user,role"/>
         <addForeignKeyConstraint baseTableName="edpn_user_user_role_map" baseColumnNames="edpn_user"
-                                 constraintName="fk_edpn_user_user_grant_map_edpn_user" referencedTableName="edpn_user"
+                                 constraintName="fk_edpn_user_user_role_map_edpn_user" referencedTableName="edpn_user"
                                  referencedColumnNames="id"/>
         <addForeignKeyConstraint baseTableName="edpn_user_user_role_map" baseColumnNames="role"
-                                 constraintName="fk_edpn_user_user_role_map_grant" referencedTableName="user_grant"
+                                 constraintName="fk_edpn_user_user_role_map_role" referencedTableName="user_role"
                                  referencedColumnNames="id"/>
     </changeSet>
 

@@ -2,6 +2,8 @@ package io.edpn.backend.application.controller;
 
 import io.edpn.backend.user.application.controller.DefaultJwtAuthenticationController;
 import io.edpn.backend.user.domain.service.JwtTokenService;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController

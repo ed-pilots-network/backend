@@ -35,6 +35,8 @@ extraJavaModuleInfo {
     automaticModule("mybatis-3.5.11.jar", "org.apache.ibatis")
     automaticModule("swagger-ui-4.18.2.jar", "org.webjars.swagger.ui")
 
+    automaticModule("jjwt-0.9.1.jar", "io.jsonwebtoken")
+
     automaticModule("simpleclient-0.16.0.jar","io.prometheus")
     automaticModule("simpleclient_common-0.16.0.jar","io.prometheus")
     automaticModule("simpleclient_tracer_common-0.16.0.jar","io.prometheus")
