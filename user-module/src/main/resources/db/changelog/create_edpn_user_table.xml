@@ -1,0 +1,37 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="create-edpn_user-table" author="pveeckhout">
+        <createTable tableName="edpn_user">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_expiry_timestamp" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_expiry_timestamp" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="boolean"/>
+            <column name="locked" type="boolean"/>
+            <column name="pricing_plan" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="edpn_user" baseColumnNames="pricing_plan" constraintName="fk_edpn_user_pricing_plan" referencedTableName="pricing_plan"
+                                 referencedColumnNames="id" />
+        <createIndex tableName="pricing_plan" indexName="idx_pricing_plan">
+            <column>name</column>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

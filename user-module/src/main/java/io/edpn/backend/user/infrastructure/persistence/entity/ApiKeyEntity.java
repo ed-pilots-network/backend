@@ -1,6 +1,5 @@
-package io.edpn.backend.user.infrastructure.entity;
+package io.edpn.backend.user.infrastructure.persistence.entity;
 
-import io.edpn.backend.user.domain.model.ApiRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,7 +24,7 @@ public class ApiKeyEntity {
     private String keyHash;
     private String name;
     private Set<ApiRoleEntity> roles;
-    private Set<String> grants;
+    private Set<ApiGrantEntity> grants;
     private LocalDateTime expiryTimestamp;
     private boolean enabled;
 

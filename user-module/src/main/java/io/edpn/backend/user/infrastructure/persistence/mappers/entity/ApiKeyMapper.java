@@ -1,7 +1,7 @@
-package io.edpn.backend.user.infrastructure.mapper;
+package io.edpn.backend.user.infrastructure.persistence.mappers.entity;
 
 import io.edpn.backend.user.domain.model.ApiKey;
-import io.edpn.backend.user.infrastructure.entity.ApiKeyEntity;
+import io.edpn.backend.user.infrastructure.persistence.entity.ApiKeyEntity;
 import lombok.RequiredArgsConstructor;
 
 import java.util.stream.Collectors;
@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public class ApiKeyMapper {
 
     private final ApiRoleMapper apiRoleMapper;
+    private final ApiGrantMapper apiGrantMapper;
 
     public ApiKey map(ApiKeyEntity entity) {
         return ApiKey.builder()
@@ -18,7 +19,7 @@ public class ApiKeyMapper {
                 .prefix(entity.getPrefix())
                 .keyHash(entity.getKeyHash())
                 .roles(entity.getRoles().stream().map(apiRoleMapper::map).collect(Collectors.toSet()))
-                .grants(entity.getGrants())
+                .grants(entity.getGrants().stream().map(apiGrantMapper::map).collect(Collectors.toSet()))
                 .expiryTimestamp(entity.getExpiryTimestamp())
                 .build();
     }
@@ -30,7 +31,7 @@ public class ApiKeyMapper {
                 .prefix(key.getPrefix())
                 .keyHash(key.getKeyHash())
                 .roles(key.getRoles().stream().map(apiRoleMapper::map).collect(Collectors.toSet()))
-                .grants(key.getGrants())
+                .grants(key.getGrants().stream().map(apiGrantMapper::map).collect(Collectors.toSet()))
                 .expiryTimestamp(key.getExpiryTimestamp())
                 .build();
     }

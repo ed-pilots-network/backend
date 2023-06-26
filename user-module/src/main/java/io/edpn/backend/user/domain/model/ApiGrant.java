@@ -1,16 +1,13 @@
 package io.edpn.backend.user.domain.model;
 
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Value;
 
-import java.util.Set;
-import java.util.UUID;
-
 @Value
 @Builder
-public class ApiRole {
+public class ApiGrant {
 
     UUID id;
     String name;
-    Set<ApiGrant> grants;
 }

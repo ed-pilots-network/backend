@@ -49,6 +49,19 @@ services:
       timeout: 5s
       retries: 5
 
+  usermodule_postgres:
+    image: "postgres:15-alpine"
+    restart: on-failure
+    env_file:
+      - env/.env_usermodule
+    volumes:
+      - "usermodule_postgres:/var/lib/postgresql/data"
+    healthcheck:
+      test: pg_isready
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   eddn-message-listener:
     image: nexus.edpn.io/edpn/backend/eddn-message-listener:0.0.1-SNAPSHOT
     restart: on-failure
@@ -91,4 +104,6 @@ volumes:
   kafka:
     driver: local
   trademodule_postgres:
+    driver: local
+  usermodule_postgres:
     driver: local

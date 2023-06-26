@@ -3,7 +3,6 @@ package io.edpn.backend.user.domain.model;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
-
 import lombok.Builder;
 import lombok.Value;
 
@@ -19,6 +18,7 @@ public class EdpnUser {
     boolean enabled;
     boolean locked;
     Set<UserRole> roles;
-    Set<String> grants;
+    Set<UserGrant> grants;
     Set<ApiKey> apiKeys;
+    PricingPlan pricingPlan;
 }

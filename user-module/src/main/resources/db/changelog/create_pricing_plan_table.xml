@@ -1,0 +1,25 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="create-pricing_plan-table" author="pveeckhout">
+        <createTable tableName="pricing_plan">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="capacity_per_minute" type="long">
+                <constraints nullable="false" />
+            </column>
+
+        </createTable>
+
+        <createIndex tableName="pricing_plan" indexName="idx_pricing_plan_name">
+            <column>name</column>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
