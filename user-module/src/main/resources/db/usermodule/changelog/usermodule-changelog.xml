@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+
+    <include file="/db/usermodule/changelog/create_api_grant_table.xmlnt_table.xml"/>
+    <include file="/db/usermodule/changelog/create_api_role_table.xmlle_table.xml"/>
+    <include file="/db/usermodule/changelog/create_api_role_api_grant_map_table.xmlap_table.xml"/>
+
+    <include file="/db/usermodule/changelog/create_user_grant_table.xmlnt_table.xml"/>
+    <include file="/db/usermodule/changelog/create_user_role_table.xmlle_table.xml"/>
+    <include file="/db/usermodule/changelog/create_user_role_user_grant_map_table.xmlap_table.xml"/>
+
+    <include file="/db/usermodule/changelog/create_pricing_plan_table.xmlan_table.xml"/>
+
+    <include file="/db/usermodule/changelog/create_edpn_user_table.xmler_table.xml"/>
+    <include file="/db/usermodule/changelog/create_edpn_user_user_role_map_table.xmlap_table.xml"/>
+    <include file="/db/usermodule/changelog/create_edpn_user_user_grant_map_table.xmlap_table.xml"/>
+
+    <include file="/db/usermodule/changelog/create_api_key_table.xmley_table.xml"/>
+    <include file="/db/usermodule/changelog/create_api_key_api_grant_map_table.xmlap_table.xml"/>
+    <include file="/db/usermodule/changelog/create_api_key_api_role_map_table.xmlap_table.xml"/>
+
+    <!-- views always last as they might depend on new columns -->
+
+
+</databaseChangeLog>
