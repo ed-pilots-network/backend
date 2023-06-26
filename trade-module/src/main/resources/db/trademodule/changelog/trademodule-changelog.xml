@@ -5,18 +5,18 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <include file="/db/trademodule/changelog/create_system_table.xmltem_table.xml"/>
-    <include file="/db/trademodule/changelog/create_commodity_table.xmlity_table.xml"/>
-    <include file="/db/trademodule/changelog/create_station_table.xmlion_table.xml"/>
-    <include file="/db/trademodule/changelog/create_market_datum_table.xmltum_table.xml"/>
-    <include file="/db/trademodule/changelog/add_foreign_key_indexes.xmly_indexes.xml"/>
-    <include file="/db/trademodule/changelog/add_commodity_market_view_query_performance_indexes.xmle_indexes.xml"/>
-    <include file="/db/trademodule/changelog/add_unique_indexes.xmle_indexes.xml"/>
-    <include file="/db/trademodule/changelog/create_request_data_message_table.xmlage_table.xml"/>
-    <include file="/db/trademodule/changelog/add_timestamp_market_datum_table.xmltum_table.xml"/>
+    <include file="/db/trademodule/changelog/create_system_table.xml"/>
+    <include file="/db/trademodule/changelog/create_commodity_table.xml"/>
+    <include file="/db/trademodule/changelog/create_station_table.xml"/>
+    <include file="/db/trademodule/changelog/create_market_datum_table.xml"/>
+    <include file="/db/trademodule/changelog/add_foreign_key_indexes.xml"/>
+    <include file="/db/trademodule/changelog/add_commodity_market_view_query_performance_indexes.xml"/>
+    <include file="/db/trademodule/changelog/add_unique_indexes.xml"/>
+    <include file="/db/trademodule/changelog/create_request_data_message_table.xml"/>
+    <include file="/db/trademodule/changelog/add_timestamp_market_datum_table.xml"/>
 
     <!-- views always last as they might depend on new columns -->
-    <include file="/db/trademodule/changelog/create_commodity_market_info_view.xmlinfo_view.xml"/>
-    <include file="/db/trademodule/changelog/create_latest_market_data_view.xmldata_view.xml"/>
+    <include file="/db/trademodule/changelog/create_commodity_market_info_view.xml"/>
+    <include file="/db/trademodule/changelog/create_latest_market_data_view.xml"/>
 
 </databaseChangeLog>
