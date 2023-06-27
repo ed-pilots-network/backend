@@ -15,7 +15,7 @@ module io.edpn.backend.user {
     requires spring.boot.starter.security;
     requires io.github.bucket4j.core;
     requires spring.security.core;
-    requires io.edpn.backend.mybatis.util;
+    requires edpn.backend.mybatisutil;
     requires spring.security.crypto;
     requires spring.security.web;
     requires spring.security.config;
