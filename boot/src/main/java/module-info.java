@@ -10,8 +10,8 @@ module edpn.backend.boot {
     requires spring.security.crypto;
     requires spring.security.core;
 
-    requires io.edpn.backend.trade;
-    requires io.edpn.backend.user;
+    requires edpn.backend.trade;
+    requires edpn.backend.user;
 
     opens io.edpn.backend.application.controller to spring.core;
 }
