@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:54322/usermodule
+    username: edpn_usermodule
+    password: hvWYDHqG3yXCKReH

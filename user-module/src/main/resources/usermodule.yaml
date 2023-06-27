@@ -1,0 +1,10 @@
+spring:
+  liquibase:
+    enabled: true
+    change-log: classpath:db/usermodule/changelog/usermodule-changelog.xml
+
+  datasource:
+    url: ${USERMODULE_DB_URL}
+    username: ${USERMODULE_DB_USERNAME}
+    password: ${USERMODULE_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
