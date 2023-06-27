@@ -95,7 +95,7 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
-      trademodule_postgres:
+      usermodule_postgres:
         condition: service_healthy
 
 volumes:
