@@ -1,4 +1,4 @@
-module io.edpn.backend.trade {
+module edpn.backend.trade {
     requires static lombok;
     requires spring.boot;
     requires spring.boot.autoconfigure;
@@ -10,9 +10,9 @@ module io.edpn.backend.trade {
     requires spring.kafka;
     requires java.sql;
     requires org.slf4j;
-    requires io.edpn.backend.util;
-    requires io.edpn.backend.mybatis.util;
-    requires io.edpn.backend.messageprocessor.lib;
+    requires edpn.backend.util;
+    requires edpn.backend.mybatisutil;
+    requires edpn.backend.messageprocessorlib;
     requires org.mybatis.spring;
     requires spring.beans;
     requires kafka.clients;
