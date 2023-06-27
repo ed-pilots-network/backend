@@ -1,4 +1,4 @@
-module io.edpn.backend.user {
+module edpn.backend.user {
     requires static lombok;
     requires spring.boot;
     requires spring.boot.autoconfigure;
