@@ -65,6 +65,3 @@ jobs:
       - name: Push Docker image to Nexus registry
         if: github.event_name != 'pull_request'
         run: docker push nexus.edpn.io/edpn/backend/modulith:${{ env.VERSION }}
-      - name: Push PR Docker image to Nexus registry
-        if: github.event_name == 'pull_request'
-        run: docker push nexus.edpn.io/edpn/backend/modulith:${{ env.VERSION }}-${{ github.event.pull_request.number || github.event.issue.number }}
