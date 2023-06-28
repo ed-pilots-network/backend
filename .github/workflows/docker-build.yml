@@ -69,3 +69,13 @@ jobs:
           registry: nexus.edpn.io
       - name: Push Docker image to Nexus registry
         run: docker push nexus.edpn.io/edpn/backend/modulith:${{ env.VERSION }}
+      - name: Add additional tags to Docker image
+        if: github.event_name != 'pull_request'
+        run: |
+          if [[ "${{ github.ref }}" == 'refs/heads/development' ]]; then
+            docker tag nexus.edpn.io/edpn/backend/modulith:${{ env.VERSION }} nexus.edpn.io/edpn/backend/modulith:latest-snapshot
+          elif [[ "${{ github.ref }}" == 'refs/heads/main' ]]; then
+            docker tag nexus.edpn.io/edpn/backend/modulith:${{ env.VERSION }} nexus.edpn.io/edpn/backend/modulith:latest
+          fi
+          docker push nexus.edpn.io/edpn/backend/modulith:latest-snapshot
+          docker push nexus.edpn.io/edpn
