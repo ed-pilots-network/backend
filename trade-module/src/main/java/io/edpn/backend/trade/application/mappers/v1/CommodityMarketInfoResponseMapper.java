@@ -1,6 +1,6 @@
-package io.edpn.backend.trade.application.mappers;
+package io.edpn.backend.trade.application.mappers.v1;
 
-import io.edpn.backend.trade.application.dto.CommodityMarketInfoResponse;
+import io.edpn.backend.trade.application.dto.v1.CommodityMarketInfoResponse;
 import io.edpn.backend.trade.domain.model.CommodityMarketInfo;
 import io.edpn.backend.trade.domain.model.Station;
 import lombok.RequiredArgsConstructor;
