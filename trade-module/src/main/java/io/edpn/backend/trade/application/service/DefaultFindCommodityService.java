@@ -17,7 +17,7 @@ public class DefaultFindCommodityService implements FindCommodityService {
     private final FindCommodityUseCase findCommodityUseCase;
     private final FindCommodityMapper findCommodityMapper;
     
-    
+   //TODO: expand to convert findCommodityResponse -> queryable arguments
     @Override
     public List<FindCommodityResponse> findCommoditiesNearby(FindCommodityRequest findCommodityRequest) {
         return findCommodityUseCase

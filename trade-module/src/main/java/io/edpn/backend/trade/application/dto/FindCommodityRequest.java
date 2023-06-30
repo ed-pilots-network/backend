@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
-
+//TODO: fix conflict between jackson + lombok for serializing RequestBody ( Post Body )
 @Data
 @Builder
 @Jacksonized

@@ -64,6 +64,7 @@ public interface MarketDatumEntityMapper {
             "prohibited = #{prohibited} WHERE station_id = #{stationId} AND commodity_id = #{commodityId} AND timestamp = #{timestamp}")
     void update(MarketDatumEntity marketDatum);
     
+    //TODO: Expand to full Request + Response information
     @Select("SELECT * FROM latest_market_data_view WHERE commodity_id=#{commodityId) ORDER_BY distance DESC")
     @ResultMap("marketDatumResultMap")
     List<MarketDatumEntity> findAllOrderByDistance(@Param("commodityId") UUID commodityId);
