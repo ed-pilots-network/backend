@@ -1,6 +1,6 @@
 version: "3.8"
 
-name: "edpn"
+name: "edpn-backend"
 services:
   zookeeper:
     image: "bitnami/zookeeper:3.8"
@@ -64,13 +64,11 @@ services:
       kafka:
         condition: service_healthy
 
-  backend:
-    build:
-      context: ./
-      dockerfile: Dockerfile
+  modulith:
+    image: nexus.edpn.io/edpn/backend/modulith:0.0.1-SNAPSHOT
     restart: on-failure
     env_file:
-      - env/.env_boot
+      - env/.env_modulith
     ports:
       - "8080:8080"
     healthcheck:
@@ -81,8 +79,6 @@ services:
       start_period: 30s
     depends_on:
       kafka:
-        condition: service_healthy
-      trademodule_postgres:
         condition: service_healthy
 
 volumes:
