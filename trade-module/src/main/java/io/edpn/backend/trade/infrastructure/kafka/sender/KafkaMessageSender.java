@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.trade.domain.model.RequestDataMessage;
 import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
 import io.edpn.backend.trade.infrastructure.kafka.KafkaTopicHandler;
+import io.edpn.backend.trade.infrastructure.persistence.entity.RequestDataMessageEntity;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.RequestDataMessageMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.RequestDataMessageEntityMapper;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +29,13 @@ public class KafkaMessageSender implements RequestDataMessageRepository {
 
     @Override
     public void sendToKafka(RequestDataMessage requestDataMessage) {
-        requestDataMessageEntityMapper.insert(requestDataMessageMapper.map(requestDataMessage));
-
-        sendPendingMessages();
+        RequestDataMessageEntity entity = requestDataMessageMapper.map(requestDataMessage);
+        if (requestDataMessageEntityMapper.find(entity).isEmpty()) {
+            requestDataMessageEntityMapper.insert(requestDataMessageMapper.map(requestDataMessage));
+            sendPendingMessages();
+        } else {
+            log.debug("info request already queued");
+        }
     }
 
     private void sendPendingMessages() {
