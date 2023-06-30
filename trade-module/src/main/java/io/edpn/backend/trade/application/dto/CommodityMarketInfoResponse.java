@@ -7,25 +7,25 @@ import lombok.Value;
 @Builder
 public class CommodityMarketInfoResponse {
 
-    private String commodityName;
-    private Double maxBuyPrice;
-    private Double minBuyPrice;
-    private Double avgBuyPrice;
-    private Double maxSellPrice;
-    private Double minSellPrice;
-    private Double avgSellPrice;
-    private Double minMeanPrice;
-    private Double maxMeanPrice;
-    private Double averageMeanPrice;
-    private Integer totalStock;
-    private Integer totalDemand;
-    private Integer totalStations;
-    private Integer stationsWithBuyPrice;
-    private Integer stationsWithSellPrice;
-    private Integer stationsWithBuyPriceLowerThanAverage;
-    private Integer stationsWithSellPriceHigherThanAverage;
-    private Station highestSellingToStation;
-    private Station lowestBuyingFromStation;
+    String commodityName;
+    Double maxBuyPrice;
+    Double minBuyPrice;
+    Double avgBuyPrice;
+    Double maxSellPrice;
+    Double minSellPrice;
+    Double avgSellPrice;
+    Double minMeanPrice;
+    Double maxMeanPrice;
+    Double averageMeanPrice;
+    Integer totalStock;
+    Integer totalDemand;
+    Integer totalStations;
+    Integer stationsWithBuyPrice;
+    Integer stationsWithSellPrice;
+    Integer stationsWithBuyPriceLowerThanAverage;
+    Integer stationsWithSellPriceHigherThanAverage;
+    Station highestSellingToStation;
+    Station lowestBuyingFromStation;
 
     @Value
     @Builder

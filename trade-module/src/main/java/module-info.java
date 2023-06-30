@@ -18,6 +18,7 @@ module edpn.backend.trade {
     requires kafka.clients;
     requires spring.web;
     requires org.mybatis;
+    requires jakarta.validation;
 
     exports io.edpn.backend.trade.application.controller;
     exports io.edpn.backend.trade.application.dto;

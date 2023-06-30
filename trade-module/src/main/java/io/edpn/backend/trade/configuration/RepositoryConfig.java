@@ -10,11 +10,7 @@ import io.edpn.backend.trade.domain.repository.StationRepository;
 import io.edpn.backend.trade.domain.repository.SystemRepository;
 import io.edpn.backend.trade.infrastructure.kafka.KafkaTopicHandler;
 import io.edpn.backend.trade.infrastructure.kafka.sender.KafkaMessageSender;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.CommodityMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.CommodityMarketInfoMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.RequestDataMessageMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.StationMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.SystemMapper;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.*;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.CommodityEntityMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.CommodityMarketInfoEntityMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.MarketDatumEntityMapper;
@@ -60,7 +56,7 @@ public class RepositoryConfig {
     }
 
     @Bean
-    public MarketDatumRepository marketDatumRepository(MarketDatumEntityMapper marketDatumEntityMapper) {
-        return new MybatisMarkerDatumRepository(marketDatumEntityMapper);
+    public MarketDatumRepository marketDatumRepository(MarketDatumEntityMapper marketDatumEntityMapper, MarketDatumMapper marketDatumMapper) {
+        return new MybatisMarkerDatumRepository(marketDatumEntityMapper, marketDatumMapper);
     }
 }
