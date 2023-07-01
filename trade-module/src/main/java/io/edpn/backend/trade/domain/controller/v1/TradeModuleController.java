@@ -1,12 +1,12 @@
-package io.edpn.backend.trade.application.controller;
+package io.edpn.backend.trade.domain.controller.v1;
 
-import io.edpn.backend.trade.application.dto.CommodityMarketInfoResponse;
+import io.edpn.backend.trade.application.dto.v1.CommodityMarketInfoResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
-@RequestMapping("trade")
+@RequestMapping("/api/v1/trade")
 public interface TradeModuleController {
 
     @GetMapping("/best-price")

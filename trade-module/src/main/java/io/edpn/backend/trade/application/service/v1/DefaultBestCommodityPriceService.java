@@ -1,8 +1,8 @@
-package io.edpn.backend.trade.application.service;
+package io.edpn.backend.trade.application.service.v1;
 
-import io.edpn.backend.trade.application.dto.CommodityMarketInfoResponse;
-import io.edpn.backend.trade.application.mappers.CommodityMarketInfoResponseMapper;
-import io.edpn.backend.trade.domain.service.BestCommodityPriceService;
+import io.edpn.backend.trade.application.dto.v1.CommodityMarketInfoResponse;
+import io.edpn.backend.trade.application.mappers.v1.CommodityMarketInfoResponseMapper;
+import io.edpn.backend.trade.domain.service.v1.BestCommodityPriceService;
 import io.edpn.backend.trade.domain.usecase.FindCommodityMarketInfoUseCase;
 import lombok.RequiredArgsConstructor;
 

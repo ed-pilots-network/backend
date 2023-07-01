@@ -1,8 +1,8 @@
 package io.edpn.backend.trade.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.trade.application.mappers.CommodityMarketInfoResponseMapper;
-import io.edpn.backend.trade.application.service.DefaultBestCommodityPriceService;
+import io.edpn.backend.trade.application.mappers.v1.CommodityMarketInfoResponseMapper;
+import io.edpn.backend.trade.application.service.v1.DefaultBestCommodityPriceService;
 import io.edpn.backend.trade.application.service.RequestStationArrivalDistanceService;
 import io.edpn.backend.trade.application.service.RequestStationLandingPadSizeService;
 import io.edpn.backend.trade.application.service.RequestSystemCoordinatesService;
@@ -10,7 +10,7 @@ import io.edpn.backend.trade.application.service.RequestSystemEliteIdService;
 import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.model.System;
 import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
-import io.edpn.backend.trade.domain.service.BestCommodityPriceService;
+import io.edpn.backend.trade.domain.service.v1.BestCommodityPriceService;
 import io.edpn.backend.trade.domain.service.RequestDataService;
 import io.edpn.backend.trade.domain.usecase.FindCommodityMarketInfoUseCase;
 import org.springframework.context.annotation.Bean;
