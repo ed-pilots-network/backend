@@ -1,9 +1,12 @@
 package io.edpn.backend.trade.application.mappers;
 
 import io.edpn.backend.trade.application.dto.CommodityMarketInfoResponse;
+import io.edpn.backend.trade.application.dto.CoordinateDTO;
 import io.edpn.backend.trade.domain.model.CommodityMarketInfo;
 import io.edpn.backend.trade.domain.model.Station;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Objects;
 
 @RequiredArgsConstructor
 public class CommodityMarketInfoResponseMapper {
@@ -38,10 +41,20 @@ public class CommodityMarketInfoResponseMapper {
                 .name(station.getName())
                 .system(CommodityMarketInfoResponse.System.builder()
                         .name(station.getSystem().getName())
-                        .xCoordinate(station.getSystem().getXCoordinate())
-                        .yCoordinate(station.getSystem().getYCoordinate())
-                        .zCoordinate(station.getSystem().getZCoordinate())
+                        .coordinates(coordinateFromSystem(station.getSystem()))
                         .build())
                 .build();
+    }
+
+    private CoordinateDTO coordinateFromSystem(io.edpn.backend.trade.domain.model.System system) {
+        if (Objects.isNull(system.getXCoordinate())) {
+            return null;
+        } else {
+            return CoordinateDTO.builder()
+                    .xCoordinate(system.getXCoordinate())
+                    .yCoordinate(system.getYCoordinate())
+                    .zCoordinate(system.getZCoordinate())
+                    .build();
+        }
     }
 }

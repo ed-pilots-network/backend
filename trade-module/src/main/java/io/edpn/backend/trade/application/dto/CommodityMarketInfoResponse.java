@@ -41,8 +41,6 @@ public class CommodityMarketInfoResponse {
     public static class System {
 
         String name;
-        Double xCoordinate;
-        Double yCoordinate;
-        Double zCoordinate;
+        CoordinateDTO coordinates;
     }
 }
