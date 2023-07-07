@@ -1,6 +1,6 @@
-package io.edpn.backend.trade.domain.service;
+package io.edpn.backend.trade.domain.service.v1;
 
-import io.edpn.backend.trade.application.dto.CommodityMarketInfoResponse;
+import io.edpn.backend.trade.application.dto.v1.CommodityMarketInfoResponse;
 
 import java.util.List;
 

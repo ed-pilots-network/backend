@@ -1,6 +1,6 @@
 version: "3.8"
 
-name: "edpn"
+name: "edpn-backend"
 services:
   zookeeper:
     image: "bitnami/zookeeper:3.8"
@@ -50,12 +50,12 @@ services:
       retries: 5
 
   eddn-message-listener:
-    image: nexus.edpn.io/edpn/backend/eddn-message-listener:0.0.1-SNAPSHOT
+    image: nexus.edpn.io/edpn/backend/eddn-message-listener:latest-snapshot
     restart: on-failure
     env_file:
       - env/.env_eddn_message_listener
     healthcheck:
-      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      test: "wget -qO- localhost:8080/actuator/health | grep UP || exit 1"
       interval: 20s
       timeout: 5s
       retries: 5
@@ -64,25 +64,21 @@ services:
       kafka:
         condition: service_healthy
 
-  backend:
-    build:
-      context: ./
-      dockerfile: Dockerfile
+  modulith:
+    image: nexus.edpn.io/edpn/backend/modulith:latest-snapshot
     restart: on-failure
     env_file:
-      - env/.env_boot
+      - env/.env_modulith
     ports:
       - "8080:8080"
     healthcheck:
-      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      test: "wget -qO- localhost:8080/actuator/health | grep UP || exit 1"
       interval: 20s
       timeout: 5s
       retries: 5
       start_period: 30s
     depends_on:
       kafka:
-        condition: service_healthy
-      trademodule_postgres:
         condition: service_healthy
 
 volumes:

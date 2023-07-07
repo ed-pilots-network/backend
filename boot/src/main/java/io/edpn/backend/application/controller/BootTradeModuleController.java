@@ -9,23 +9,11 @@ import io.edpn.backend.trade.domain.service.FindCommodityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 
 @RestController
-@RequiredArgsConstructor
-public class BootTradeModuleController implements TradeModuleController {
+public class BootTradeModuleController extends DefaultTradeModuleController {
 
-    private final BestCommodityPriceService bestCommodityPriceService;
-    private final FindCommodityService findCommodityService;
-
-    @Override
-    public List<CommodityMarketInfoResponse> getBestCommodityPrice() {
-        return bestCommodityPriceService.getCommodityMarketInfo();
-    }
-    
-    @Override
-    public List<FindCommodityResponse> findByCommodityWithFilters(FindCommodityRequest locateCommodityRequest) {
-        return findCommodityService.findCommoditiesNearby(locateCommodityRequest);
+    public BootTradeModuleController(BestCommodityPriceService bestCommodityPriceService) {
+        super(bestCommodityPriceService);
     }
 }

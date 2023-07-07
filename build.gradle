@@ -85,8 +85,8 @@ subprojects {
     dependencies {
         constraints {
             implementation "io.edpn.backend:backend-util:${backendUtilVersion}"
-            implementation "io.edpn.backend:backend-mybatis-util:${backendUtilVersion}"
-            implementation "io.edpn.backend:backend-messageprocessor-lib:${backendUtilVersion}"
+            implementation "io.edpn.backend:backend-mybatis-util:${backendMybatisUtilVersion}"
+            implementation "io.edpn.backend:backend-messageprocessor-lib:${backendMessageProcessorLibVersion}"
             implementation "org.springframework.boot:spring-boot-starter:${springBootVersion}"
             implementation "org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}"
             implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"

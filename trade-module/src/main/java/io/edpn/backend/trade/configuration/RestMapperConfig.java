@@ -1,6 +1,6 @@
 package io.edpn.backend.trade.configuration;
 
-import io.edpn.backend.trade.application.mappers.CommodityMarketInfoResponseMapper;
+import io.edpn.backend.trade.application.mappers.v1.CommodityMarketInfoResponseMapper;
 import io.edpn.backend.trade.application.mappers.FindCommodityDTOMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +12,7 @@ public class RestMapperConfig {
     public CommodityMarketInfoResponseMapper bestCommodityPriceResponseMapper() {
         return new CommodityMarketInfoResponseMapper();
     }
-    
+
     @Bean
     public FindCommodityDTOMapper findCommodityDTOMapper() {
         return new FindCommodityDTOMapper();
