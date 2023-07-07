@@ -1,18 +1,19 @@
-package io.edpn.backend.trade.application.mappers;
+package io.edpn.backend.trade.application.mappers.v1;
 
-import io.edpn.backend.trade.application.dto.CoordinateDTO;
-import io.edpn.backend.trade.application.dto.FindCommodityRequest;
-import io.edpn.backend.trade.application.dto.FindCommodityResponse;
-import io.edpn.backend.trade.domain.model.*;
+import io.edpn.backend.trade.application.dto.v1.CoordinateDTO;
+import io.edpn.backend.trade.application.dto.v1.FindCommodityRequest;
+import io.edpn.backend.trade.application.dto.v1.FindCommodityResponse;
+import io.edpn.backend.trade.domain.model.FindCommodity;
+import io.edpn.backend.trade.domain.model.FindCommodityFilter;
+import io.edpn.backend.trade.domain.model.LandingPadSize;
+import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.model.System;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Optional;
-
 @RequiredArgsConstructor
 public class FindCommodityDTOMapper {
-    
-    public FindCommodityResponse map(FindCommodity findCommodity){
+
+    public FindCommodityResponse map(FindCommodity findCommodity) {
         return FindCommodityResponse.builder()
                 .pricesUpdate(findCommodity.getPricesUpdatedAt())
                 .commodityName(findCommodity.getCommodity().getName())
@@ -20,8 +21,8 @@ public class FindCommodityDTOMapper {
                 .system(mapSystem(findCommodity.getSystem()))
                 .build();
     }
-    
-    public FindCommodityFilter map(FindCommodityRequest findCommodityRequest){
+
+    public FindCommodityFilter map(FindCommodityRequest findCommodityRequest) {
         return FindCommodityFilter.builder()
                 .commodityId(findCommodityRequest.getCommodityId())
                 .xCoordinate(findCommodityRequest.getReferenceLocation().getXCoordinate())
@@ -35,8 +36,8 @@ public class FindCommodityDTOMapper {
                 .minDemand(findCommodityRequest.getMinDemand())
                 .build();
     }
-    
-    private FindCommodityResponse.Station mapStation(Station station){
+
+    private FindCommodityResponse.Station mapStation(Station station) {
         return FindCommodityResponse.Station.builder()
                 .name(station.getName())
                 .arrivalDistance(station.getArrivalDistance())
@@ -46,9 +47,9 @@ public class FindCommodityDTOMapper {
                 .fleetCarrier(station.isFleetCarrier())
                 .build();
     }
-    
+
     //TODO: nullable coords? fix view?
-    private FindCommodityResponse.System mapSystem(System system){
+    private FindCommodityResponse.System mapSystem(System system) {
         return FindCommodityResponse.System.builder()
                 .name(system.getName())
                 .coordinateDTO(
@@ -60,5 +61,5 @@ public class FindCommodityDTOMapper {
                 )
                 .build();
     }
-    
+
 }

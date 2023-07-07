@@ -1,9 +1,9 @@
-package io.edpn.backend.trade.application.service;
+package io.edpn.backend.trade.application.service.v1;
 
-import io.edpn.backend.trade.application.dto.FindCommodityRequest;
-import io.edpn.backend.trade.application.dto.FindCommodityResponse;
-import io.edpn.backend.trade.application.mappers.FindCommodityDTOMapper;
-import io.edpn.backend.trade.domain.service.FindCommodityService;
+import io.edpn.backend.trade.application.dto.v1.FindCommodityRequest;
+import io.edpn.backend.trade.application.dto.v1.FindCommodityResponse;
+import io.edpn.backend.trade.application.mappers.v1.FindCommodityDTOMapper;
+import io.edpn.backend.trade.domain.service.v1.FindCommodityService;
 import io.edpn.backend.trade.domain.usecase.FindCommodityUseCase;
 import lombok.RequiredArgsConstructor;
 

@@ -1,6 +1,9 @@
-package io.edpn.backend.trade.application.dto;
+package io.edpn.backend.trade.application.dto.v1;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
 
 @Getter

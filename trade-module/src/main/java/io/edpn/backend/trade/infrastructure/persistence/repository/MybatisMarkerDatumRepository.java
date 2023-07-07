@@ -1,15 +1,10 @@
 package io.edpn.backend.trade.infrastructure.persistence.repository;
 
-import io.edpn.backend.trade.domain.model.MarketDatum;
 import io.edpn.backend.trade.domain.repository.MarketDatumRepository;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.MarketDatumMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.MarketDatumEntityMapper;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 public class MybatisMarkerDatumRepository implements MarketDatumRepository {

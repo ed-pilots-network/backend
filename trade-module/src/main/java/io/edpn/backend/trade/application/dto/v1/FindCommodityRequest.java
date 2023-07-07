@@ -1,9 +1,10 @@
-package io.edpn.backend.trade.application.dto;
+package io.edpn.backend.trade.application.dto.v1;
 
-import io.edpn.backend.trade.domain.model.Commodity;
-import io.edpn.backend.trade.domain.model.LandingPadSize;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
 
 import java.util.UUID;

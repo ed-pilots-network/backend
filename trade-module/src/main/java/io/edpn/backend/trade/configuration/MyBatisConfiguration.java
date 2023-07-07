@@ -1,11 +1,15 @@
 package io.edpn.backend.trade.configuration;
 
-import io.edpn.backend.trade.infrastructure.persistence.entity.FindCommodityEntity;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.FindCommodityMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.*;
 import io.edpn.backend.mybatisutil.StringListToArrayTypeHandler;
 import io.edpn.backend.mybatisutil.StringTrimmingTypeHandler;
 import io.edpn.backend.mybatisutil.UuidTypeHandler;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.CommodityEntityMapper;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.CommodityMarketInfoEntityMapper;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.FindCommodityEntityMapper;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.MarketDatumEntityMapper;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.RequestDataMessageEntityMapper;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.StationEntityMapper;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.SystemEntityMapper;
 import io.edpn.backend.util.IdGenerator;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -79,7 +83,7 @@ public class MyBatisConfiguration {
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }
-    
+
     @Bean
     public MapperFactoryBean<FindCommodityEntityMapper> FindCommodityMapper(SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<FindCommodityEntityMapper> factoryBean = new MapperFactoryBean<>(FindCommodityEntityMapper.class);

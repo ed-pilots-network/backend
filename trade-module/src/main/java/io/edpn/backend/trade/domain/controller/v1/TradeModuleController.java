@@ -1,8 +1,8 @@
 package io.edpn.backend.trade.domain.controller.v1;
 
 import io.edpn.backend.trade.application.dto.v1.CommodityMarketInfoResponse;
-import io.edpn.backend.trade.application.dto.FindCommodityRequest;
-import io.edpn.backend.trade.application.dto.FindCommodityResponse;
+import io.edpn.backend.trade.application.dto.v1.FindCommodityRequest;
+import io.edpn.backend.trade.application.dto.v1.FindCommodityResponse;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

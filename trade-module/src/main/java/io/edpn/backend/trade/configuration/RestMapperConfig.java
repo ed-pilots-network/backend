@@ -1,7 +1,7 @@
 package io.edpn.backend.trade.configuration;
 
 import io.edpn.backend.trade.application.mappers.v1.CommodityMarketInfoResponseMapper;
-import io.edpn.backend.trade.application.mappers.FindCommodityDTOMapper;
+import io.edpn.backend.trade.application.mappers.v1.FindCommodityDTOMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
