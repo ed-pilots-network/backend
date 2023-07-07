@@ -19,6 +19,6 @@ public class DefaultBestCommodityPriceService implements BestCommodityPriceServi
     public List<CommodityMarketInfoResponse> getCommodityMarketInfo() {
         return findCommodityMarketInfoUseCase.findAll().stream()
                 .map(commodityMarketInfoResponseMapper::map)
-                .collect(Collectors.toCollection(LinkedList::new));
+                .toList();
     }
 }
