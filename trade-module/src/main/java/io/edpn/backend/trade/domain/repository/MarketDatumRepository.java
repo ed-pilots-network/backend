@@ -9,8 +9,4 @@ import java.util.UUID;
 public interface MarketDatumRepository {
 
     boolean existsByStationNameAndSystemNameAndTimestamp(String systemName, String stationName, LocalDateTime timestamp);
-    
-    //TODO: replace Id with appropriate fields/body
-    List<MarketDatum> findAllOrderByDistance(UUID commodityId);
-
 }

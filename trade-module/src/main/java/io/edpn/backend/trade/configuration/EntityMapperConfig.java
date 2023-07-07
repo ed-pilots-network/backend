@@ -1,12 +1,7 @@
 package io.edpn.backend.trade.configuration;
 
-import io.edpn.backend.trade.application.mappers.FindCommodityMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.CommodityMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.CommodityMarketInfoMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.MarketDatumMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.RequestDataMessageMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.StationMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.SystemMapper;
+
+import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,8 +19,8 @@ public class EntityMapperConfig {
     }
     
     @Bean
-    public FindCommodityMapper findCommodityMapper() {
-        return new FindCommodityMapper();
+    public FindCommodityMapper findCommodityMapper(CommodityMapper commodityMapper, SystemMapper systemMapper, StationMapper stationMapper) {
+        return new FindCommodityMapper(commodityMapper, systemMapper, stationMapper);
     }
 
     @Bean

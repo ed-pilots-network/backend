@@ -25,8 +25,8 @@ public class CommodityMarketInfo {
     private Double minMeanPrice;
     private Double maxMeanPrice;
     private Double averageMeanPrice;
-    private Integer totalStock;
-    private Integer totalDemand;
+    private Long totalStock;
+    private Long totalDemand;
     private Integer totalStations;
     private Integer stationsWithBuyPrice;
     private Integer stationsWithSellPrice;

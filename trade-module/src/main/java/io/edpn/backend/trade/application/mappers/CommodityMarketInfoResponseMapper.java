@@ -32,7 +32,7 @@ public class CommodityMarketInfoResponseMapper {
                 .build();
     }
 
-    public CommodityMarketInfoResponse.Station mapStation(Station station) {
+    private CommodityMarketInfoResponse.Station mapStation(Station station) {
         return CommodityMarketInfoResponse.Station.builder()
                 .arrivalDistance(station.getArrivalDistance())
                 .name(station.getName())

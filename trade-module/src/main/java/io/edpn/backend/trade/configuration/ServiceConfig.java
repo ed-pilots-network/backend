@@ -2,7 +2,7 @@ package io.edpn.backend.trade.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.trade.application.mappers.CommodityMarketInfoResponseMapper;
-import io.edpn.backend.trade.application.mappers.FindCommodityMapper;
+import io.edpn.backend.trade.application.mappers.FindCommodityDTOMapper;
 import io.edpn.backend.trade.application.service.*;
 import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.model.System;
@@ -44,7 +44,7 @@ public class ServiceConfig {
     }
     
     @Bean(name = "TradeModuleFindCommodityService")
-    public FindCommodityService findCommodityService(FindCommodityUseCase findCommodityUseCase, FindCommodityMapper findCommodityMapper){
-        return new DefaultFindCommodityService(findCommodityUseCase, findCommodityMapper);
+    public FindCommodityService findCommodityService(FindCommodityUseCase findCommodityUseCase, FindCommodityDTOMapper findCommodityDTOMapper){
+        return new DefaultFindCommodityService(findCommodityUseCase, findCommodityDTOMapper);
     }
 }

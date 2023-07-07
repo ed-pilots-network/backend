@@ -3,11 +3,7 @@ package io.edpn.backend.trade.configuration;
 import io.edpn.backend.trade.application.usecase.*;
 import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.model.System;
-import io.edpn.backend.trade.domain.repository.CommodityMarketInfoRepository;
-import io.edpn.backend.trade.domain.repository.CommodityRepository;
-import io.edpn.backend.trade.domain.repository.MarketDatumRepository;
-import io.edpn.backend.trade.domain.repository.StationRepository;
-import io.edpn.backend.trade.domain.repository.SystemRepository;
+import io.edpn.backend.trade.domain.repository.*;
 import io.edpn.backend.trade.domain.service.RequestDataService;
 import io.edpn.backend.trade.domain.usecase.FindCommodityMarketInfoUseCase;
 import io.edpn.backend.trade.domain.usecase.FindCommodityUseCase;
@@ -43,7 +39,7 @@ public class UseCaseConfig {
     }
     
     @Bean(name = "findCommodityUseCase")
-    public FindCommodityUseCase findCommodityUseCase(MarketDatumRepository marketDatumRepository){
-        return new DefaultFindCommodityUseCase(marketDatumRepository);
+    public FindCommodityUseCase findCommodityUseCase(FindCommodityRepository findCommodityRepository){
+        return new DefaultFindCommodityUseCase(findCommodityRepository);
     }
 }

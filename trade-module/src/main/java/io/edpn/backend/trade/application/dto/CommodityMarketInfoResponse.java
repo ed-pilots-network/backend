@@ -17,8 +17,8 @@ public class CommodityMarketInfoResponse {
     Double minMeanPrice;
     Double maxMeanPrice;
     Double averageMeanPrice;
-    Integer totalStock;
-    Integer totalDemand;
+    Long totalStock;
+    Long totalDemand;
     Integer totalStations;
     Integer stationsWithBuyPrice;
     Integer stationsWithSellPrice;

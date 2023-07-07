@@ -63,13 +63,4 @@ public interface MarketDatumEntityMapper {
             "sell_price = #{sellPrice}, demand = #{demand}, demand_bracket = #{demandBracket}, status_flags = #{statusFlags, jdbcType=ARRAY, typeHandler=io.edpn.backend.mybatisutil.StringListToArrayTypeHandler}, " +
             "prohibited = #{prohibited} WHERE station_id = #{stationId} AND commodity_id = #{commodityId} AND timestamp = #{timestamp}")
     void update(MarketDatumEntity marketDatum);
-    
-    //TODO: Expand to full Request + Response information
-    @Select("SELECT * FROM latest_market_data_view WHERE commodity_id=#{commodityId) ORDER_BY distance DESC")
-    @ResultMap("marketDatumResultMap")
-    List<MarketDatumEntity> findAllOrderByDistance(@Param("commodityId") UUID commodityId);
-    
-//    @Select("SELECT * FROM market_datum WHERE station_id = #{stationId} AND commodity_id = #{commodityId} AND timestamp = #{timestamp}")
-//    @ResultMap("marketDatumResultMap")
-//    List<MarketDatumEntity> findAllOrderByPrice(MarketDatumEntity exampleOf);
 }

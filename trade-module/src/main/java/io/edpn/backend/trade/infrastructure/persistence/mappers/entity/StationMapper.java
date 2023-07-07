@@ -22,7 +22,7 @@ public class StationMapper {
                 .system(systemMapper.map(stationEntity.getSystem()))
                 .planetary(stationEntity.getPlanetary())
                 .requireOdyssey(stationEntity.getRequireOdyssey())
-                .fleetCarrier(stationEntity.isFleetCarrier())
+                .fleetCarrier(stationEntity.getFleetCarrier())
                 .maxLandingPadSize(LandingPadSize.valueOf(stationEntity.getMaxLandingPadSize()))
                 .marketUpdatedAt(stationEntity.getMarketUpdatedAt())
                 .marketData(marketDatumMapper.map(stationEntity.getMarketData()))

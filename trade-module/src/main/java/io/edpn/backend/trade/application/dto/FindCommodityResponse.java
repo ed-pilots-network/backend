@@ -1,6 +1,6 @@
 package io.edpn.backend.trade.application.dto;
 
-import io.edpn.backend.trade.domain.model.LandingPadSize;
+
 import lombok.Builder;
 import lombok.Value;
 
@@ -9,24 +9,25 @@ import java.time.LocalDateTime;
 @Value
 @Builder
 public class FindCommodityResponse {
-    LandingPadSize landingPadSize;
-    double arrivalDistance;
-    LocalDateTime PricesUpdate;
-    double distanceToSol;
+    LocalDateTime pricesUpdate;
+    String commodityName;
+    Station station;
+    System system;
     
     @Value
     @Builder
     public static class Station {
-        
         String name;
         Double arrivalDistance;
-        System system;
+        String landingPadSize;
+        Boolean planetary;
+        Boolean requireOdyssey;
+        Boolean fleetCarrier;
     }
     
     @Value
     @Builder
     public static class System {
-        
         String name;
         CoordinateDTO coordinateDTO;
     }
