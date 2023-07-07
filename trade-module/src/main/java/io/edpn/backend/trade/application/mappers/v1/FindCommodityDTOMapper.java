@@ -4,7 +4,8 @@ import io.edpn.backend.trade.application.dto.v1.CoordinateDTO;
 import io.edpn.backend.trade.application.dto.v1.FindCommodityRequest;
 import io.edpn.backend.trade.application.dto.v1.FindCommodityResponse;
 import io.edpn.backend.trade.domain.model.FindCommodity;
-import io.edpn.backend.trade.domain.model.FindCommodityFilter;
+import io.edpn.backend.trade.domain.filter.FindCommodityFilter;
+import io.edpn.backend.trade.domain.model.FindCommodityFilterImpl;
 import io.edpn.backend.trade.domain.model.LandingPadSize;
 import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.model.System;
@@ -23,7 +24,7 @@ public class FindCommodityDTOMapper {
     }
 
     public FindCommodityFilter map(FindCommodityRequest findCommodityRequest) {
-        return FindCommodityFilter.builder()
+        return FindCommodityFilterImpl.builder()
                 .commodityId(findCommodityRequest.getCommodityId())
                 .xCoordinate(findCommodityRequest.getReferenceLocation().getXCoordinate())
                 .yCoordinate(findCommodityRequest.getReferenceLocation().getYCoordinate())

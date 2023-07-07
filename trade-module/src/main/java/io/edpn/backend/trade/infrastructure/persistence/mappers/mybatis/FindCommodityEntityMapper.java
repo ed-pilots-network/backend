@@ -1,7 +1,6 @@
 package io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis;
 
-import io.edpn.backend.mybatisutil.StringListToArrayTypeHandler;
-import io.edpn.backend.trade.domain.model.FindCommodityFilter;
+import io.edpn.backend.trade.infrastructure.persistence.filter.FindCommodityFilter;
 import io.edpn.backend.trade.infrastructure.persistence.entity.CommodityEntity;
 import io.edpn.backend.trade.infrastructure.persistence.entity.FindCommodityEntity;
 import io.edpn.backend.trade.infrastructure.persistence.entity.StationEntity;
@@ -13,8 +12,6 @@ import org.apache.ibatis.annotations.Select;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static org.apache.ibatis.type.JdbcType.ARRAY;
 
 public interface FindCommodityEntityMapper {
     
