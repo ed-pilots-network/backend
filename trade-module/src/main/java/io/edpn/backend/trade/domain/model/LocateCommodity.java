@@ -15,9 +15,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FindCommodity {
+public class LocateCommodity {
     private LocalDateTime pricesUpdatedAt;
     private Commodity commodity;
     private Station station;
     private System system;
+    private Long supply;
+    private Long demand;
+    private Long buyPrice;
+    private Long sellPrice;
+    private Double distance;
 }

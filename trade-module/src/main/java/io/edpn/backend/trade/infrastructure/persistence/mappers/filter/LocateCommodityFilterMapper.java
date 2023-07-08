@@ -1,13 +1,14 @@
 package io.edpn.backend.trade.infrastructure.persistence.mappers.filter;
 
-import io.edpn.backend.trade.domain.filter.FindCommodityFilter;
+import io.edpn.backend.trade.domain.filter.LocateCommodityFilter;
+import io.edpn.backend.trade.infrastructure.persistence.filter.LocateCommodityFilterPersistence;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class FindCommodityFilterMapper {
+public class LocateCommodityFilterMapper {
 
-    public io.edpn.backend.trade.infrastructure.persistence.filter.FindCommodityFilter map(FindCommodityFilter filter) {
-        return io.edpn.backend.trade.infrastructure.persistence.filter.FindCommodityFilter.builder()
+    public LocateCommodityFilterPersistence map(LocateCommodityFilter filter) {
+        return LocateCommodityFilterPersistence.builder()
                 .commodityId(filter.getCommodityId())
                 .xCoordinate(filter.getXCoordinate())
                 .yCoordinate(filter.getYCoordinate())
@@ -15,7 +16,7 @@ public class FindCommodityFilterMapper {
                 .includePlanetary(filter.getIncludePlanetary())
                 .includeOdyssey(filter.getIncludeOdyssey())
                 .includeFleetCarriers(filter.getIncludeFleetCarriers())
-                .landingPadSize(filter.getLandingPadSize())
+                .maxLandingPadSize(filter.getMaxLandingPadSize().name())
                 .minSupply(filter.getMinSupply())
                 .minDemand(filter.getMinDemand())
                 .build();

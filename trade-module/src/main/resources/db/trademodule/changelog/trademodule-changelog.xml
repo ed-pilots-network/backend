@@ -18,6 +18,6 @@
     <!-- views always last as they might depend on new columns -->
     <include file="/db/trademodule/changelog/create_commodity_market_info_view.xml"/>
     <include file="/db/trademodule/changelog/create_latest_market_data_view.xml"/>
-    <include file="/db/trademodule/changelog/create_find_commodity_view.xml"/>
+    <include file="/db/trademodule/changelog/create_locate_commodity_view.xml"/>
 
 </databaseChangeLog>

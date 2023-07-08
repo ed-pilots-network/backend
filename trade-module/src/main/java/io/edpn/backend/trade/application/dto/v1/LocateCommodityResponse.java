@@ -8,18 +8,23 @@ import java.time.LocalDateTime;
 
 @Value
 @Builder
-public class FindCommodityResponse {
-    LocalDateTime pricesUpdate;
+public class LocateCommodityResponse {
+    LocalDateTime pricesUpdatedAt;
     String commodityName;
     Station station;
     System system;
+    Long supply;
+    Long demand;
+    Long buyPrice;
+    Long sellPrice;
+//    Double distance;
     
     @Value
     @Builder
     public static class Station {
         String name;
         Double arrivalDistance;
-        String landingPadSize;
+        String maxLandingPadSize;
         Boolean planetary;
         Boolean requireOdyssey;
         Boolean fleetCarrier;

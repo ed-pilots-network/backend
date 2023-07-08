@@ -3,8 +3,8 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="find_commodity_view" author="daniel-j-mason" runOnChange="true">
-        <createView viewName="find_commodity_view" replaceIfExists="true">
+    <changeSet id="locate_commodity_view" author="daniel-j-mason" runOnChange="true">
+        <createView viewName="locate_commodity_view" replaceIfExists="true">
             <![CDATA[
             SELECT md."timestamp",
                     md.station_id,

@@ -1,4 +1,4 @@
-package io.edpn.backend.trade.infrastructure.persistence.filter;
+package io.edpn.backend.trade.domain.filter;
 
 import io.edpn.backend.trade.domain.model.LandingPadSize;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FindCommodityFilter {
+public class LocateCommodityFilter {
     private UUID commodityId;
     private Double xCoordinate;
     private Double yCoordinate;
@@ -24,7 +24,7 @@ public class FindCommodityFilter {
     private Boolean includePlanetary;
     private Boolean includeOdyssey;
     private Boolean includeFleetCarriers;
-    private LandingPadSize landingPadSize;
+    private LandingPadSize maxLandingPadSize;
     private Long minSupply;
     private Long minDemand;
 }
