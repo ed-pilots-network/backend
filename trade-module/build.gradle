@@ -18,6 +18,11 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation 'org.mockito:mockito-junit-jupiter'
+    testImplementation 'org.hamcrest:hamcrest'
+
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 }
@@ -30,4 +35,7 @@ extraJavaModuleInfo {
     automaticModule("jsr305-3.0.2.jar","jsr305")
     automaticModule("snappy-java-1.1.8.4.jar","snappy.java")
     automaticModule("liquibase-core-4.17.2.jar","liquibase.core")
+
+    automaticModule("mockito-junit-jupiter-3.5.15.jar", "testing")
+    automaticModule("mockito-core-3.5.15.jar", "testing")
 }

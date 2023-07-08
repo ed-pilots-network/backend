@@ -28,7 +28,7 @@ public class MybatisCommodityMarketInfoRepository implements CommodityMarketInfo
     public List<CommodityMarketInfo> findAllCommodityMarketInfo() {
         return commodityMarketInfoEntityMapper.findAll()
                 .stream().map(commodityMarketInfoMapper::map)
-                .collect(Collectors.toCollection(LinkedList::new));
+                .toList();
     }
 
 }

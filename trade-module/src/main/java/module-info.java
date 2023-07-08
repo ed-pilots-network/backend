@@ -20,6 +20,8 @@ module edpn.backend.trade {
     requires org.mybatis;
     requires jakarta.validation;
 
+    requires testing;
+
     exports io.edpn.backend.trade.domain.service.v1;
     exports io.edpn.backend.trade.domain.controller.v1;
     exports io.edpn.backend.trade.application.service.v1;

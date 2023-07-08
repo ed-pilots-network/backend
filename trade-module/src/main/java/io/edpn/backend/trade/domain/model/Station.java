@@ -27,7 +27,7 @@ public class Station {
     private System system;
     private Boolean planetary;
     private Boolean requireOdyssey;
-    private boolean fleetCarrier;
+    private Boolean fleetCarrier;
     @Builder.Default
     private LandingPadSize maxLandingPadSize = LandingPadSize.UNKNOWN;
     private LocalDateTime marketUpdatedAt;

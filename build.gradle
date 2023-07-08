@@ -80,6 +80,9 @@ subprojects {
         backendUtilVersion = '0.0.1-SNAPSHOT'
         backendMybatisUtilVersion = '0.0.1-SNAPSHOT'
         backendMessageProcessorLibVersion = '0.0.1-SNAPSHOT'
+        junitJupiterVersion = "5.7.0"
+        mockitoJunitVersion = "3.5.15"
+        hamcrestVersion = "2.2"
     }
 
     dependencies {
@@ -104,6 +107,11 @@ subprojects {
             runtimeOnly "io.micrometer:micrometer-registry-prometheus:${prometheusVersion}"
             compileOnly "org.projectlombok:lombok:${lombokVersion}"
             annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+            testImplementation "org.springframework.boot:spring-boot-starter-test${springBootVersion}"
+            testImplementation "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
+            testImplementation "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
+            testImplementation "org.mockito:mockito-junit-jupiter:${mockitoJunitVersion}"
+            testImplementation "org.hamcrest:hamcrest:${hamcrestVersion}"
             testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
             testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
         }
