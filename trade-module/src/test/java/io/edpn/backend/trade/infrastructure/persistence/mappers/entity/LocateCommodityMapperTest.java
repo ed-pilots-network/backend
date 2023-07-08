@@ -1,11 +1,11 @@
 package io.edpn.backend.trade.infrastructure.persistence.mappers.entity;
 
 import io.edpn.backend.trade.domain.model.Commodity;
-import io.edpn.backend.trade.domain.model.FindCommodity;
+import io.edpn.backend.trade.domain.model.LocateCommodity;
 import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.model.System;
 import io.edpn.backend.trade.infrastructure.persistence.entity.CommodityEntity;
-import io.edpn.backend.trade.infrastructure.persistence.entity.FindCommodityEntity;
+import io.edpn.backend.trade.infrastructure.persistence.entity.LocateCommodityEntity;
 import io.edpn.backend.trade.infrastructure.persistence.entity.StationEntity;
 import io.edpn.backend.trade.infrastructure.persistence.entity.SystemEntity;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class FindCommodityMapperTest {
+public class LocateCommodityMapperTest {
 
     @Mock
     private CommodityMapper commodityMapper;
@@ -37,11 +37,11 @@ public class FindCommodityMapperTest {
     private StationMapper stationMapper;
 
     @InjectMocks
-    private FindCommodityMapper underTest;
+    private LocateCommodityMapper underTest;
 
     @BeforeEach
     public void setUp() {
-        underTest = new FindCommodityMapper(commodityMapper, systemMapper, stationMapper);
+        underTest = new LocateCommodityMapper(commodityMapper, systemMapper, stationMapper);
     }
 
     @Test
@@ -55,7 +55,7 @@ public class FindCommodityMapperTest {
         System mockSystem = mock(System.class);
 
         LocalDateTime pricesUpdatedAt = LocalDateTime.now();
-        FindCommodityEntity findCommodityEntity = FindCommodityEntity.builder()
+        LocateCommodityEntity locateCommodityEntity = LocateCommodityEntity.builder()
                 .pricesUpdatedAt(pricesUpdatedAt)
                 .commodity(mockCommodityEntity)
                 .station(mockStationEntity)
@@ -66,12 +66,12 @@ public class FindCommodityMapperTest {
         when(stationMapper.map(mockStationEntity)).thenReturn(mockStation);
         when(systemMapper.map(mockSystemEntity)).thenReturn(mockSystem);
 
-        FindCommodity findCommodity = underTest.map(findCommodityEntity);
+        LocateCommodity locateCommodity = underTest.map(locateCommodityEntity);
 
-        assertThat(findCommodity.getPricesUpdatedAt(), is(pricesUpdatedAt));
-        assertThat(findCommodity.getCommodity(), is(mockCommodity));
-        assertThat(findCommodity.getStation(), is(mockStation));
-        assertThat(findCommodity.getSystem(), is(mockSystem));
+        assertThat(locateCommodityEntity.getPricesUpdatedAt(), is(pricesUpdatedAt));
+        assertThat(locateCommodityEntity.getCommodity(), is(mockCommodity));
+        assertThat(locateCommodityEntity.getStation(), is(mockStation));
+        assertThat(locateCommodityEntity.getSystem(), is(mockSystem));
 
         verify(commodityMapper, times(1)).map(mockCommodityEntity);
         verify(stationMapper, times(1)).map(mockStationEntity);

@@ -7,13 +7,13 @@ import io.edpn.backend.trade.application.service.RequestStationArrivalDistanceSe
 import io.edpn.backend.trade.application.service.RequestStationLandingPadSizeService;
 import io.edpn.backend.trade.application.service.RequestSystemCoordinatesService;
 import io.edpn.backend.trade.application.service.RequestSystemEliteIdService;
-import io.edpn.backend.trade.application.service.v1.DefaultBestCommodityPriceService;
+import io.edpn.backend.trade.application.service.v1.DefaultFindCommodityMarketInfoService;
 import io.edpn.backend.trade.application.service.v1.DefaultLocateCommodityService;
 import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.model.System;
 import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
 import io.edpn.backend.trade.domain.service.RequestDataService;
-import io.edpn.backend.trade.domain.service.v1.BestCommodityPriceService;
+import io.edpn.backend.trade.domain.service.v1.FindCommodityMarketInfoService;
 import io.edpn.backend.trade.domain.service.v1.LocateCommodityService;
 import io.edpn.backend.trade.domain.usecase.FindCommodityMarketInfoUseCase;
 import io.edpn.backend.trade.domain.usecase.LocateCommodityUseCase;
@@ -23,9 +23,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration("TradeModuleServiceConfig")
 public class ServiceConfig {
 
-    @Bean(name = "TradeModuleBestCommodityPriceService")
-    public BestCommodityPriceService bestCommodityPriceController(FindCommodityMarketInfoUseCase findCommodityMarketInfoUseCase, CommodityMarketInfoResponseMapper commodityMarketInfoResponseMapper) {
-        return new DefaultBestCommodityPriceService(findCommodityMarketInfoUseCase, commodityMarketInfoResponseMapper);
+    @Bean(name = "TradeModuleFindCommodityMarketInfoService")
+    public FindCommodityMarketInfoService findCommodityMarketInfoService(FindCommodityMarketInfoUseCase findCommodityMarketInfoUseCase, CommodityMarketInfoResponseMapper commodityMarketInfoResponseMapper) {
+        return new DefaultFindCommodityMarketInfoService(findCommodityMarketInfoUseCase, commodityMarketInfoResponseMapper);
     }
 
     @Bean(name = "TradeModuleRequestStationArrivalDistanceService")
@@ -49,7 +49,7 @@ public class ServiceConfig {
     }
 
     @Bean(name = "TradeModuleFindCommodityService")
-    public LocateCommodityService findCommodityService(LocateCommodityUseCase locateCommodityUseCase, LocateCommodityDTOMapper locateCommodityDTOMapper) {
+    public LocateCommodityService locateCommodityService(LocateCommodityUseCase locateCommodityUseCase, LocateCommodityDTOMapper locateCommodityDTOMapper) {
         return new DefaultLocateCommodityService(locateCommodityUseCase, locateCommodityDTOMapper);
     }
 }

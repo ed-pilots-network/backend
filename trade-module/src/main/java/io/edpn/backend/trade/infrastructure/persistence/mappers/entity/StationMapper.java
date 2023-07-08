@@ -38,7 +38,7 @@ public class StationMapper {
                 .system(systemMapper.map(station.getSystem()))
                 .planetary(station.getPlanetary())
                 .requireOdyssey(station.getRequireOdyssey())
-                .fleetCarrier(station.isFleetCarrier())
+                .fleetCarrier(station.getFleetCarrier())
                 .maxLandingPadSize(Optional.ofNullable(station.getMaxLandingPadSize()).map(LandingPadSize::name).orElse(LandingPadSize.UNKNOWN.name()))
                 .marketUpdatedAt(station.getMarketUpdatedAt())
                 .marketData(marketDatumMapper.mapToEntity(station.getMarketData()))

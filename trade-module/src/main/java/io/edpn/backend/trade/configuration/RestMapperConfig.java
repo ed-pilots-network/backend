@@ -14,7 +14,7 @@ public class RestMapperConfig {
     }
 
     @Bean
-    public LocateCommodityDTOMapper findCommodityDTOMapper() {
+    public LocateCommodityDTOMapper locateCommodityDTOMapper() {
         return new LocateCommodityDTOMapper();
     }
 }

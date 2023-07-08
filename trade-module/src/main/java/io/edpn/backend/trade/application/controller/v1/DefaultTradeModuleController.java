@@ -5,7 +5,7 @@ import io.edpn.backend.trade.application.dto.v1.LocateCommodityRequest;
 import io.edpn.backend.trade.application.dto.v1.LocateCommodityResponse;
 import io.edpn.backend.trade.domain.controller.v1.TradeModuleController;
 import io.edpn.backend.trade.domain.service.v1.LocateCommodityService;
-import io.edpn.backend.trade.domain.service.v1.BestCommodityPriceService;
+import io.edpn.backend.trade.domain.service.v1.FindCommodityMarketInfoService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -13,12 +13,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DefaultTradeModuleController implements TradeModuleController {
 
-    private final BestCommodityPriceService bestCommodityPriceService;
+    private final FindCommodityMarketInfoService findCommodityMarketInfoService;
     private final LocateCommodityService locateCommodityService;
 
     @Override
     public List<CommodityMarketInfoResponse> getBestCommodityPrice() {
-        return bestCommodityPriceService.getCommodityMarketInfo();
+        return findCommodityMarketInfoService.getCommodityMarketInfo();
     }
 
     @Override

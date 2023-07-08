@@ -29,7 +29,7 @@ import java.util.List;
 public class UseCaseConfig {
 
     @Bean(name = "findBestCommodityPriceUseCase")
-    public FindCommodityMarketInfoUseCase findBestCommodityPriceUseCase(CommodityMarketInfoRepository commodityMarketInfoRepository) {
+    public FindCommodityMarketInfoUseCase findCommodityMarketInfoCase(CommodityMarketInfoRepository commodityMarketInfoRepository) {
         return new DefaultFindCommodityMarketInfoUseCase(commodityMarketInfoRepository);
     }
 
@@ -49,7 +49,7 @@ public class UseCaseConfig {
     }
 
     @Bean(name = "findCommodityUseCase")
-    public LocateCommodityUseCase findCommodityUseCase(LocateCommodityRepository locateCommodityRepository) {
+    public LocateCommodityUseCase locateCommodityUseCase(LocateCommodityRepository locateCommodityRepository) {
         return new DefaultLocateCommodityUseCase(locateCommodityRepository);
     }
 }

@@ -25,7 +25,7 @@ public class EntityMapperConfig {
     }
 
     @Bean
-    public LocateCommodityMapper findCommodityMapper(CommodityMapper commodityMapper, SystemMapper systemMapper, StationMapper stationMapper) {
+    public LocateCommodityMapper locateCommodityMapper(CommodityMapper commodityMapper, SystemMapper systemMapper, StationMapper stationMapper) {
         return new LocateCommodityMapper(commodityMapper, systemMapper, stationMapper);
     }
 

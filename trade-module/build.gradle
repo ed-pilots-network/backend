@@ -36,6 +36,6 @@ extraJavaModuleInfo {
     automaticModule("snappy-java-1.1.8.4.jar","snappy.java")
     automaticModule("liquibase-core-4.17.2.jar","liquibase.core")
 
-    automaticModule("mockito-junit-jupiter-3.5.15.jar", "testing")
-    automaticModule("mockito-core-3.5.15.jar", "testing")
+    automaticModule("mockito-junit-jupiter-3.5.15.jar", "edpn.backend.testing")
+    automaticModule("mockito-core-3.5.15.jar", "edpn.backend.testing")
 }

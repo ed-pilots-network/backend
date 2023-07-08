@@ -48,7 +48,7 @@ public class LocateCommodityDTOMapper {
                 .maxLandingPadSize(station.getMaxLandingPadSize().name())
                 .planetary(station.getPlanetary())
                 .requireOdyssey(station.getRequireOdyssey())
-                .fleetCarrier(station.isFleetCarrier())
+                .fleetCarrier(station.getFleetCarrier())
                 .build();
     }
     
