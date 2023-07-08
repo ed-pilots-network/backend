@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Value
 @Builder
 public class LocateCommodityResponse {
-    LocalDateTime pricesUpdate;
+    LocalDateTime pricesUpdatedAt;
     String commodityName;
     Station station;
     System system;

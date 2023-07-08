@@ -15,7 +15,7 @@ public class LocateCommodityDTOMapper {
 
     public LocateCommodityResponse map(LocateCommodity locateCommodity) {
         return LocateCommodityResponse.builder()
-                .pricesUpdate(locateCommodity.getPricesUpdatedAt())
+                .pricesUpdatedAt(locateCommodity.getPricesUpdatedAt())
                 .commodityName(locateCommodity.getCommodity().getName())
                 .station(mapStation(locateCommodity.getStation()))
                 .system(mapSystem(locateCommodity.getSystem()))
