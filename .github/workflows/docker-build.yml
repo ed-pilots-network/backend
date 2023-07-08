@@ -12,6 +12,7 @@ on:
 
 jobs:
   validation:
+    if: github.event.pull_request.draft == 'false'
     name: "Validation"
     runs-on: ubuntu-latest
     steps:
