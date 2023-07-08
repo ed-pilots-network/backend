@@ -22,4 +22,7 @@ public class LocateCommodityEntity {
     private SystemEntity system;
     private Long supply;
     private Long demand;
+    private Long buyPrice;
+    private Long sellPrice;
+    private Double distance;
 }

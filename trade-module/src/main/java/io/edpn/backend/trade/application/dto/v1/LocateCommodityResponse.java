@@ -15,6 +15,9 @@ public class LocateCommodityResponse {
     System system;
     Long supply;
     Long demand;
+    Long buyPrice;
+    Long sellPrice;
+//    Double distance;
     
     @Value
     @Builder

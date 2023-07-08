@@ -20,6 +20,9 @@ public class LocateCommodityMapper {
                 .system(systemMapper.map(locateCommodityEntity.getSystem()))
                 .supply(locateCommodityEntity.getSupply())
                 .demand(locateCommodityEntity.getDemand())
+                .buyPrice(locateCommodityEntity.getBuyPrice())
+                .sellPrice(locateCommodityEntity.getSellPrice())
+                .distance(locateCommodityEntity.getDistance())
                 .build();
     }
 }

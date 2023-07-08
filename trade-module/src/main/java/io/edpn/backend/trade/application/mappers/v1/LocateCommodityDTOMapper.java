@@ -21,6 +21,8 @@ public class LocateCommodityDTOMapper {
                 .system(mapSystem(locateCommodity.getSystem()))
                 .supply(locateCommodity.getSupply())
                 .demand(locateCommodity.getDemand())
+                .buyPrice(locateCommodity.getBuyPrice())
+                .sellPrice(locateCommodity.getSellPrice())
                 .build();
     }
 
@@ -33,7 +35,7 @@ public class LocateCommodityDTOMapper {
                 .includePlanetary(locateCommodityRequest.getIncludePlanetary())
                 .includeOdyssey(locateCommodityRequest.getIncludePlanetary())
                 .includeFleetCarriers(locateCommodityRequest.getIncludeFleetCarriers())
-                .maxLandingPadSize(LandingPadSize.valueOf(locateCommodityRequest.getLandingPadSize()))
+                .maxLandingPadSize(LandingPadSize.valueOf(locateCommodityRequest.getMaxLandingPadSize()))
                 .minSupply(locateCommodityRequest.getMinSupply())
                 .minDemand(locateCommodityRequest.getMinDemand())
                 .build();

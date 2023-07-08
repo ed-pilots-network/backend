@@ -18,7 +18,7 @@ public interface LocateCommodityEntityMapper {
     //TODO: update order by distance function for postgis
     @Select("""
             <script>
-            SELECT timestamp, commodity_id, station_id, system_id, stock, demand FROM locate_commodity_view
+            SELECT timestamp, commodity_id, station_id, system_id, stock, demand, buy_price, sell_price FROM locate_commodity_view
             WHERE
             commodity_id=#{commodityId}
             <if test='!includePlanetary'>AND planetary = false </if>
@@ -40,7 +40,10 @@ public interface LocateCommodityEntityMapper {
             @Result(property = "system", column = "system_id", javaType = SystemEntity.class,
                     one = @One(select = "io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.SystemEntityMapper.findById")),
             @Result(property = "supply", column = "stock", javaType = Long.class),
-            @Result(property = "demand", column = "demand", javaType = Long.class)
+            @Result(property = "demand", column = "demand", javaType = Long.class),
+            @Result(property = "buyPrice", column = "buy_price", javaType = Long.class),
+            @Result(property = "sellPrice", column = "sell_price", javaType = Long.class)
+
     })
     List<LocateCommodityEntity> locateCommodityByFilter(LocateCommodityFilterPersistence locateCommodityFilterPersistence);
     

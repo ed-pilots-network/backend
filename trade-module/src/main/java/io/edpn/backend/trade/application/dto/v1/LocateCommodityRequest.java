@@ -22,7 +22,7 @@ public class LocateCommodityRequest {
     Boolean includePlanetary;
     Boolean includeOdyssey;
     Boolean includeFleetCarriers;
-    String landingPadSize;
+    String maxLandingPadSize;
     Long minSupply;
     Long minDemand;
 }
