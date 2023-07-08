@@ -13,13 +13,15 @@ public class LocateCommodityResponse {
     String commodityName;
     Station station;
     System system;
+    Long supply;
+    Long demand;
     
     @Value
     @Builder
     public static class Station {
         String name;
         Double arrivalDistance;
-        String landingPadSize;
+        String maxLandingPadSize;
         Boolean planetary;
         Boolean requireOdyssey;
         Boolean fleetCarrier;

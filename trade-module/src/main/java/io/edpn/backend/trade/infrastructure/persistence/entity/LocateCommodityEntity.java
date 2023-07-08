@@ -20,4 +20,6 @@ public class LocateCommodityEntity {
     private CommodityEntity commodity;
     private StationEntity station;
     private SystemEntity system;
+    private Long supply;
+    private Long demand;
 }

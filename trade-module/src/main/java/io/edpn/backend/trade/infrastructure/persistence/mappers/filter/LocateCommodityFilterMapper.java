@@ -16,7 +16,7 @@ public class LocateCommodityFilterMapper {
                 .includePlanetary(filter.getIncludePlanetary())
                 .includeOdyssey(filter.getIncludeOdyssey())
                 .includeFleetCarriers(filter.getIncludeFleetCarriers())
-                .landingPadSize(filter.getLandingPadSize())
+                .maxLandingPadSize(filter.getMaxLandingPadSize().name())
                 .minSupply(filter.getMinSupply())
                 .minDemand(filter.getMinDemand())
                 .build();

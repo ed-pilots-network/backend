@@ -24,7 +24,7 @@ public class LocateCommodityFilter {
     private Boolean includePlanetary;
     private Boolean includeOdyssey;
     private Boolean includeFleetCarriers;
-    private LandingPadSize landingPadSize;
+    private LandingPadSize maxLandingPadSize;
     private Long minSupply;
     private Long minDemand;
 }

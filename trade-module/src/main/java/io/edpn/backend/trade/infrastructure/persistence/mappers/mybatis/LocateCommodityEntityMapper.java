@@ -15,18 +15,22 @@ import java.util.List;
 
 public interface LocateCommodityEntityMapper {
     
-    //TODO: findCommodityFilterEntity? add xyz, sort out landing_pad_size query for less than or equal to, sort out if statement
-    @Select("<script>" +
-            "SELECT timestamp, commodity_id, station_id, system_id FROM find_commodity_view " +
-            "WHERE " +
-            "commodity_id=#{commodityId} " +
-            "<if test='!#{includePlanetary}'>AND planetary = false </if>" +
-            "<if test='!#{includeOdyssey}'>AND require_odyssey = false </if>" +
-            "<if test='!#{includeFleetCarriers}'>AND fleet_carrier = false </if>" +
-//            "<if test='#{minSupply} > 0'>AND stock >= #{minSupply} </if>" +
-//            "<if test='#{minDemand} > 0'>AND demand >= #{minDemand} </if>" +
-            "</script>"
-       )
+    //TODO: update order by distance function for postgis
+    @Select("""
+            <script>
+            SELECT timestamp, commodity_id, station_id, system_id, stock, demand FROM locate_commodity_view
+            WHERE
+            commodity_id=#{commodityId}
+            <if test='!includePlanetary'>AND planetary = false </if>
+            <if test='!includeOdyssey'>AND require_odyssey = false </if>
+            <if test='!includeFleetCarriers'>AND fleet_carrier = false </if>
+            AND stock >= #{minSupply}
+            AND demand >= #{minDemand}
+            <if test='maxLandingPadSize == "SMALL"'>AND max_landing_pad_size = 'SMALL'</if>
+            <if test='maxLandingPadSize == "MEDIUM"'>AND max_landing_pad_size IN ('SMALL', 'MEDIUM')</if>
+            ORDER BY sqrt(pow(#{xCoordinate} - x_coordinate, 2) + pow(#{yCoordinate} - y_coordinate, 2) + pow(#{zCoordinate} - z_coordinate, 2))
+            </script>"""
+    )
     @Results(id = "findCommodityResultMap", value = {
             @Result(property = "pricesUpdatedAt", column = "timestamp", javaType = LocalDateTime.class),
             @Result(property = "commodity", column = "commodity_id", javaType = CommodityEntity.class,
@@ -35,6 +39,8 @@ public interface LocateCommodityEntityMapper {
                     one = @One(select = "io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.StationEntityMapper.findById")),
             @Result(property = "system", column = "system_id", javaType = SystemEntity.class,
                     one = @One(select = "io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.SystemEntityMapper.findById")),
+            @Result(property = "supply", column = "stock", javaType = Long.class),
+            @Result(property = "demand", column = "demand", javaType = Long.class)
     })
     List<LocateCommodityEntity> locateCommodityByFilter(LocateCommodityFilterPersistence locateCommodityFilterPersistence);
     

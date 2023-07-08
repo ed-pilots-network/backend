@@ -13,27 +13,29 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LocateCommodityDTOMapper {
 
-    public LocateCommodityResponse map(LocateCommodity findCommodity) {
+    public LocateCommodityResponse map(LocateCommodity locateCommodity) {
         return LocateCommodityResponse.builder()
-                .pricesUpdate(findCommodity.getPricesUpdatedAt())
-                .commodityName(findCommodity.getCommodity().getName())
-                .station(mapStation(findCommodity.getStation()))
-                .system(mapSystem(findCommodity.getSystem()))
+                .pricesUpdate(locateCommodity.getPricesUpdatedAt())
+                .commodityName(locateCommodity.getCommodity().getName())
+                .station(mapStation(locateCommodity.getStation()))
+                .system(mapSystem(locateCommodity.getSystem()))
+                .supply(locateCommodity.getSupply())
+                .demand(locateCommodity.getDemand())
                 .build();
     }
 
-    public LocateCommodityFilter map(LocateCommodityRequest findCommodityRequest) {
+    public LocateCommodityFilter map(LocateCommodityRequest locateCommodityRequest) {
         return LocateCommodityFilter.builder()
-                .commodityId(findCommodityRequest.getCommodityId())
-                .xCoordinate(findCommodityRequest.getReferenceLocation().getXCoordinate())
-                .yCoordinate(findCommodityRequest.getReferenceLocation().getYCoordinate())
-                .zCoordinate(findCommodityRequest.getReferenceLocation().getZCoordinate())
-                .includePlanetary(findCommodityRequest.getIncludePlanetary())
-                .includeOdyssey(findCommodityRequest.getIncludePlanetary())
-                .includeFleetCarriers(findCommodityRequest.getIncludeFleetCarriers())
-                .landingPadSize(LandingPadSize.valueOf(findCommodityRequest.getLandingPadSize()))
-                .minSupply(findCommodityRequest.getMinSupply())
-                .minDemand(findCommodityRequest.getMinDemand())
+                .commodityId(locateCommodityRequest.getCommodityId())
+                .xCoordinate(locateCommodityRequest.getReferenceLocation().getXCoordinate())
+                .yCoordinate(locateCommodityRequest.getReferenceLocation().getYCoordinate())
+                .zCoordinate(locateCommodityRequest.getReferenceLocation().getZCoordinate())
+                .includePlanetary(locateCommodityRequest.getIncludePlanetary())
+                .includeOdyssey(locateCommodityRequest.getIncludePlanetary())
+                .includeFleetCarriers(locateCommodityRequest.getIncludeFleetCarriers())
+                .maxLandingPadSize(LandingPadSize.valueOf(locateCommodityRequest.getLandingPadSize()))
+                .minSupply(locateCommodityRequest.getMinSupply())
+                .minDemand(locateCommodityRequest.getMinDemand())
                 .build();
     }
 
@@ -41,7 +43,7 @@ public class LocateCommodityDTOMapper {
         return LocateCommodityResponse.Station.builder()
                 .name(station.getName())
                 .arrivalDistance(station.getArrivalDistance())
-                .landingPadSize(station.getMaxLandingPadSize().name())
+                .maxLandingPadSize(station.getMaxLandingPadSize().name())
                 .planetary(station.getPlanetary())
                 .requireOdyssey(station.getRequireOdyssey())
                 .fleetCarrier(station.isFleetCarrier())

@@ -20,4 +20,6 @@ public class LocateCommodity {
     private Commodity commodity;
     private Station station;
     private System system;
+    private Long supply;
+    private Long demand;
 }

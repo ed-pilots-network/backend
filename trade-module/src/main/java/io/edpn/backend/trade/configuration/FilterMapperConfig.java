@@ -4,7 +4,7 @@ import io.edpn.backend.trade.infrastructure.persistence.mappers.filter.LocateCom
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration("TradeModuleEntityMapperConfig")
+@Configuration("TradeModuleFilterMapperConfig")
 public class FilterMapperConfig {
 
     @Bean
