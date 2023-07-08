@@ -14,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Jacksonized
-public class FindCommodityRequest {
+public class LocateCommodityRequest {
     @NotNull(message = "Commodity id is mandatory")
     UUID commodityId; //Convert to String or UUID
     @NotNull(message = "Reference coordinates are mandatory")

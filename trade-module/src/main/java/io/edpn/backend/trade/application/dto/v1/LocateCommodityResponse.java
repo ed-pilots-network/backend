@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Value
 @Builder
-public class FindCommodityResponse {
+public class LocateCommodityResponse {
     LocalDateTime pricesUpdate;
     String commodityName;
     Station station;

@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FindCommodityFilter {
+public class LocateCommodityFilter {
     private UUID commodityId;
     private Double xCoordinate;
     private Double yCoordinate;

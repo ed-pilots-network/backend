@@ -1,8 +1,8 @@
 package io.edpn.backend.trade.domain.controller.v1;
 
 import io.edpn.backend.trade.application.dto.v1.CommodityMarketInfoResponse;
-import io.edpn.backend.trade.application.dto.v1.FindCommodityRequest;
-import io.edpn.backend.trade.application.dto.v1.FindCommodityResponse;
+import io.edpn.backend.trade.application.dto.v1.LocateCommodityRequest;
+import io.edpn.backend.trade.application.dto.v1.LocateCommodityResponse;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,5 +18,5 @@ public interface TradeModuleController {
     List<CommodityMarketInfoResponse> getBestCommodityPrice();
 
     @PostMapping("/commodity")
-    List<FindCommodityResponse> findByCommodityWithFilters(@Valid @RequestBody FindCommodityRequest locateCommodityRequest);
+    List<LocateCommodityResponse> locateByCommodityWithFilters(@Valid @RequestBody LocateCommodityRequest locateCommodityRequest);
 }

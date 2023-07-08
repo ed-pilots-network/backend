@@ -1,4 +1,4 @@
-package io.edpn.backend.trade.infrastructure.persistence.entity;
+package io.edpn.backend.trade.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,9 +15,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FindCommodityEntity {
+public class LocateCommodity {
     private LocalDateTime pricesUpdatedAt;
-    private CommodityEntity commodity;
-    private StationEntity station;
-    private SystemEntity system;
+    private Commodity commodity;
+    private Station station;
+    private System system;
 }
