@@ -1,7 +1,7 @@
 package io.edpn.backend.trade.application.usecase;
 
 import io.edpn.backend.trade.domain.model.LocateCommodity;
-import io.edpn.backend.trade.domain.model.LocateCommodityFilter;
+import io.edpn.backend.trade.domain.filter.LocateCommodityFilter;
 import io.edpn.backend.trade.domain.repository.LocateCommodityRepository;
 import io.edpn.backend.trade.domain.usecase.LocateCommodityUseCase;
 import lombok.RequiredArgsConstructor;

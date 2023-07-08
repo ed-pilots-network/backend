@@ -1,8 +1,8 @@
 package io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis;
 
-import io.edpn.backend.trade.domain.model.LocateCommodityFilter;
-import io.edpn.backend.trade.infrastructure.persistence.entity.CommodityEntity;
 import io.edpn.backend.trade.infrastructure.persistence.entity.LocateCommodityEntity;
+import io.edpn.backend.trade.infrastructure.persistence.filter.LocateCommodityFilterPersistence;
+import io.edpn.backend.trade.infrastructure.persistence.entity.CommodityEntity;
 import io.edpn.backend.trade.infrastructure.persistence.entity.StationEntity;
 import io.edpn.backend.trade.infrastructure.persistence.entity.SystemEntity;
 import org.apache.ibatis.annotations.One;
@@ -17,7 +17,7 @@ public interface LocateCommodityEntityMapper {
     
     //TODO: findCommodityFilterEntity? add xyz, sort out landing_pad_size query for less than or equal to, sort out if statement
     @Select("<script>" +
-            "SELECT timestamp, commodity_id, station_id, system_id FROM locate_commodity_view " +
+            "SELECT timestamp, commodity_id, station_id, system_id FROM find_commodity_view " +
             "WHERE " +
             "commodity_id=#{commodityId} " +
             "<if test='!#{includePlanetary}'>AND planetary = false </if>" +
@@ -36,6 +36,6 @@ public interface LocateCommodityEntityMapper {
             @Result(property = "system", column = "system_id", javaType = SystemEntity.class,
                     one = @One(select = "io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.SystemEntityMapper.findById")),
     })
-    List<LocateCommodityEntity> locateCommodityByFilter(LocateCommodityFilter locateCommodityFilter);
+    List<LocateCommodityEntity> locateCommodityByFilter(LocateCommodityFilterPersistence locateCommodityFilterPersistence);
     
 }

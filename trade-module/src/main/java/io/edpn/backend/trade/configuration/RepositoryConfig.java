@@ -2,34 +2,13 @@ package io.edpn.backend.trade.configuration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.trade.domain.repository.CommodityMarketInfoRepository;
-import io.edpn.backend.trade.domain.repository.CommodityRepository;
-import io.edpn.backend.trade.domain.repository.LocateCommodityRepository;
-import io.edpn.backend.trade.domain.repository.MarketDatumRepository;
-import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
-import io.edpn.backend.trade.domain.repository.StationRepository;
-import io.edpn.backend.trade.domain.repository.SystemRepository;
+import io.edpn.backend.trade.domain.repository.*;
 import io.edpn.backend.trade.infrastructure.kafka.KafkaTopicHandler;
 import io.edpn.backend.trade.infrastructure.kafka.sender.KafkaMessageSender;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.CommodityMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.CommodityMarketInfoMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.LocateCommodityMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.RequestDataMessageMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.StationMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.SystemMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.CommodityEntityMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.CommodityMarketInfoEntityMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.LocateCommodityEntityMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.MarketDatumEntityMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.RequestDataMessageEntityMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.StationEntityMapper;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.SystemEntityMapper;
-import io.edpn.backend.trade.infrastructure.persistence.repository.MybatisCommodityMarketInfoRepository;
-import io.edpn.backend.trade.infrastructure.persistence.repository.MybatisCommodityRepository;
-import io.edpn.backend.trade.infrastructure.persistence.repository.MybatisLocateCommodityRepository;
-import io.edpn.backend.trade.infrastructure.persistence.repository.MybatisMarkerDatumRepository;
-import io.edpn.backend.trade.infrastructure.persistence.repository.MybatisStationRepository;
-import io.edpn.backend.trade.infrastructure.persistence.repository.MybatisSystemRepository;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.*;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.filter.LocateCommodityFilterMapper;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.*;
+import io.edpn.backend.trade.infrastructure.persistence.repository.*;
 import io.edpn.backend.util.IdGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -69,7 +48,7 @@ public class RepositoryConfig {
     }
 
     @Bean
-    public LocateCommodityRepository findCommodityRepository(LocateCommodityMapper locateCommodityMapper, LocateCommodityEntityMapper locateCommodityEntityMapper) {
-        return new MybatisLocateCommodityRepository(locateCommodityMapper, locateCommodityEntityMapper);
+    public LocateCommodityRepository locateCommodityRepository(LocateCommodityMapper locateCommodityMapper, LocateCommodityEntityMapper locateCommodityEntityMapper, LocateCommodityFilterMapper locateCommodityFilterMapper) {
+        return new MybatisLocateCommodityRepository(locateCommodityMapper, locateCommodityEntityMapper, locateCommodityFilterMapper);
     }
 }
