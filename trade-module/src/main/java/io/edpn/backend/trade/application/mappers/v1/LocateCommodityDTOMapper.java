@@ -49,8 +49,7 @@ public class LocateCommodityDTOMapper {
                 .fleetCarrier(station.isFleetCarrier())
                 .build();
     }
-
-    //TODO: nullable coords? fix view?
+    
     private LocateCommodityResponse.System mapSystem(System system) {
         return LocateCommodityResponse.System.builder()
                 .name(system.getName())
