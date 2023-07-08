@@ -17,6 +17,7 @@ import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.FindCommo
 import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.RequestDataMessageMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.StationMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.SystemMapper;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.filter.FindCommodityFilterMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.CommodityEntityMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.CommodityMarketInfoEntityMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.FindCommodityEntityMapper;
@@ -69,7 +70,7 @@ public class RepositoryConfig {
     }
 
     @Bean
-    public FindCommodityRepository findCommodityRepository(FindCommodityMapper findCommodityMapper, FindCommodityEntityMapper findCommodityEntityMapper) {
-        return new MybatisFindCommodityRepository(findCommodityMapper, findCommodityEntityMapper);
+    public FindCommodityRepository findCommodityRepository(FindCommodityMapper findCommodityMapper, FindCommodityEntityMapper findCommodityEntityMapper, FindCommodityFilterMapper findCommodityFilterMapper) {
+        return new MybatisFindCommodityRepository(findCommodityMapper, findCommodityEntityMapper, findCommodityFilterMapper);
     }
 }
