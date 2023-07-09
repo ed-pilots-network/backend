@@ -25,6 +25,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,6 +57,7 @@ class MybatisCommodityRepositoryTest {
 
         verify(commodityEntityMapper).findById(id);
         verify(commodityMapper).map(mockCommodityEntity);
+        verifyNoMoreInteractions(commodityEntityMapper, commodityMapper, idGenerator);
 
         assertThat(results.isPresent(), is(true));
         assertThat(results.get(), equalTo(mockCommodity));
@@ -70,6 +72,7 @@ class MybatisCommodityRepositoryTest {
 
         verify(commodityEntityMapper).findById(id);
         verify(commodityMapper, never()).map(any(CommodityEntity.class));
+        verifyNoMoreInteractions(commodityEntityMapper, commodityMapper, idGenerator);
 
         assertThat(result, equalTo(Optional.empty()));
     }
@@ -98,6 +101,7 @@ class MybatisCommodityRepositoryTest {
         verify(commodityEntityMapper).insert(any());
         verify(commodityEntityMapper).findById(id);
         verify(commodityMapper).map(mockSavedCommodityEntity);
+        verifyNoMoreInteractions(commodityEntityMapper, commodityMapper, idGenerator);
 
         assertThat(result, is(expected));
     }
@@ -125,6 +129,7 @@ class MybatisCommodityRepositoryTest {
         verify(commodityEntityMapper).insert(any());
         verify(commodityEntityMapper).findById(id);
         verify(commodityMapper).map(mockCommodityEntity);
+        verifyNoMoreInteractions(commodityEntityMapper, commodityMapper, idGenerator);
 
         assertThat(result, is(expected));
     }
@@ -148,6 +153,7 @@ class MybatisCommodityRepositoryTest {
         verify(idGenerator, never()).generateId();
         verify(commodityEntityMapper).insert(any());
         verify(commodityEntityMapper).findById(id);
+        verifyNoMoreInteractions(commodityEntityMapper, commodityMapper, idGenerator);
 
         assertThat(result.getMessage(), is("commodity with id: " + id + " could not be found after create"));
     }
@@ -176,6 +182,7 @@ class MybatisCommodityRepositoryTest {
         verify(commodityEntityMapper).insert(any());
         verify(commodityEntityMapper).findById(id);
         verify(commodityMapper).map(mockSavedCommodityEntity);
+        verifyNoMoreInteractions(commodityEntityMapper, commodityMapper, idGenerator);
 
         assertThat(result, is(expected));
     }
@@ -194,6 +201,7 @@ class MybatisCommodityRepositoryTest {
 
         verify(commodityEntityMapper).findByName(name);
         verify(commodityMapper).map(mockSavedCommodityEntity);
+        verifyNoMoreInteractions(commodityEntityMapper, commodityMapper, idGenerator);
 
         assertThat(result, is(expected));
     }

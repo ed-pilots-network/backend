@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -52,6 +53,7 @@ public class MybatisCommodityMarketInfoRepositoryTest {
 
         verify(commodityMarketInfoEntityMapper).findByCommodityId(commodityId);
         verify(commodityMarketInfoMapper).map(marketInfoEntity);
+        verifyNoMoreInteractions(commodityMarketInfoEntityMapper, commodityMarketInfoMapper);
 
         assertThat(result, equalTo(Optional.of(marketInfo)));
     }
@@ -69,6 +71,7 @@ public class MybatisCommodityMarketInfoRepositoryTest {
 
         verify(commodityMarketInfoEntityMapper).findByCommodityId(commodityId);
         verify(commodityMarketInfoMapper, never()).map(marketInfoEntity);
+        verifyNoMoreInteractions(commodityMarketInfoEntityMapper, commodityMarketInfoMapper);
 
         assertThat(result, equalTo(Optional.empty()));
     }
@@ -86,6 +89,7 @@ public class MybatisCommodityMarketInfoRepositoryTest {
 
         verify(commodityMarketInfoEntityMapper).findAll();
         verify(commodityMarketInfoMapper).map(marketInfoEntity);
+        verifyNoMoreInteractions(commodityMarketInfoEntityMapper, commodityMarketInfoMapper);
 
         assertThat(result, equalTo(Collections.singletonList(marketInfo)));
     }
