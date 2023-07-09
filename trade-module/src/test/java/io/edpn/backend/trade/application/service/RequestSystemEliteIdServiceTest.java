@@ -1,9 +1,9 @@
 package io.edpn.backend.trade.application.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.trade.domain.model.RequestDataMessage;
-import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.model.System;
 import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
 import io.edpn.backend.trade.domain.service.RequestDataService;
@@ -26,33 +26,34 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class RequestStationArrivalDistanceServiceTest {
+public class RequestSystemEliteIdServiceTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Mock
     private RequestDataMessageRepository requestDataMessageRepository;
-    private RequestDataService<Station> underTest;
+    private RequestDataService<System> underTest;
 
-    public static Stream<Arguments> provideDoublesForCheckApplicability() {
+    public static Stream<Arguments> provideLongForCheckApplicability() {
         return Stream.of(
                 Arguments.of(null, true),
-                Arguments.of(0.0, false),
-                Arguments.of(Double.MAX_VALUE, false)
+                Arguments.of(0L, false),
+                Arguments.of(Long.MAX_VALUE, false)
         );
     }
 
     @BeforeEach
     void setUp() {
-        underTest = new RequestStationArrivalDistanceService(requestDataMessageRepository, objectMapper);
+        underTest = new RequestSystemEliteIdService(requestDataMessageRepository, objectMapper);
     }
 
     @ParameterizedTest
-    @MethodSource("provideDoublesForCheckApplicability")
-    void shouldCheckApplicability(Double input, boolean expected) {
-        Station stationWithArrivalDistance = new Station();
-        stationWithArrivalDistance.setArrivalDistance(input);
+    @MethodSource("provideLongForCheckApplicability")
+    void shouldCheckApplicability(Long eliteId, boolean expected) {
+        System systemWithEliteId = System.builder()
+                .eliteId(eliteId)
+                .build();
 
-        assertThat(underTest.isApplicable(stationWithArrivalDistance), is(expected));
+        assertThat(underTest.isApplicable(systemWithEliteId), is(expected));
     }
 
     @Test
@@ -60,23 +61,18 @@ public class RequestStationArrivalDistanceServiceTest {
         System system = System.builder()
                 .name("Test System")
                 .build();
-        Station station = Station.builder()
-                .name("Test Station")
-                .system(system)
-                .build();
 
-        underTest.request(station);
+        underTest.request(system);
 
         ArgumentCaptor<RequestDataMessage> argumentCaptor = ArgumentCaptor.forClass(RequestDataMessage.class);
         verify(requestDataMessageRepository, times(1)).sendToKafka(argumentCaptor.capture());
 
         RequestDataMessage message = argumentCaptor.getValue();
         assertThat(message, is(notNullValue()));
-        assertThat(message.getTopic(), is("tradeModuleStationArrivalDistanceDataRequest"));
+        assertThat(message.getTopic(), is("tradeModuleSystemEliteIdDataRequest"));
         assertThat(message.getMessage(), is(notNullValue()));
 
-        StationDataRequest actualStationDataRequest = objectMapper.treeToValue(message.getMessage(), StationDataRequest.class);
-        assertThat(actualStationDataRequest.getStationName(), is(station.getName()));
-        assertThat(actualStationDataRequest.getSystemName(), is(system.getName()));
+        SystemDataRequest actualSystemDataRequest = objectMapper.treeToValue(message.getMessage(), SystemDataRequest.class);
+        assertThat(actualSystemDataRequest.getSystemName(), is(system.getName()));
     }
 }

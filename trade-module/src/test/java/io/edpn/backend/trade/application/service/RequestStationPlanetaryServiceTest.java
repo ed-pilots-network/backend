@@ -26,33 +26,33 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class RequestStationArrivalDistanceServiceTest {
+public class RequestStationPlanetaryServiceTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Mock
     private RequestDataMessageRepository requestDataMessageRepository;
     private RequestDataService<Station> underTest;
 
-    public static Stream<Arguments> provideDoublesForCheckApplicability() {
+    public static Stream<Arguments> provideBooleansForCheckApplicability() {
         return Stream.of(
                 Arguments.of(null, true),
-                Arguments.of(0.0, false),
-                Arguments.of(Double.MAX_VALUE, false)
+                Arguments.of(Boolean.TRUE, false),
+                Arguments.of(Boolean.FALSE, false)
         );
     }
 
     @BeforeEach
     void setUp() {
-        underTest = new RequestStationArrivalDistanceService(requestDataMessageRepository, objectMapper);
+        underTest = new RequestStationPlanetaryService(requestDataMessageRepository, objectMapper);
     }
 
     @ParameterizedTest
-    @MethodSource("provideDoublesForCheckApplicability")
-    void shouldCheckApplicability(Double input, boolean expected) {
-        Station stationWithArrivalDistance = new Station();
-        stationWithArrivalDistance.setArrivalDistance(input);
+    @MethodSource("provideBooleansForCheckApplicability")
+    void shouldCheckApplicability(Boolean input, boolean expected) {
+        Station stationWithPlanetary = new Station();
+        stationWithPlanetary.setPlanetary(input);
 
-        assertThat(underTest.isApplicable(stationWithArrivalDistance), is(expected));
+        assertThat(underTest.isApplicable(stationWithPlanetary), is(expected));
     }
 
     @Test
@@ -72,7 +72,7 @@ public class RequestStationArrivalDistanceServiceTest {
 
         RequestDataMessage message = argumentCaptor.getValue();
         assertThat(message, is(notNullValue()));
-        assertThat(message.getTopic(), is("tradeModuleStationArrivalDistanceDataRequest"));
+        assertThat(message.getTopic(), is("tradeModuleStationPlanetaryDataRequest"));
         assertThat(message.getMessage(), is(notNullValue()));
 
         StationDataRequest actualStationDataRequest = objectMapper.treeToValue(message.getMessage(), StationDataRequest.class);

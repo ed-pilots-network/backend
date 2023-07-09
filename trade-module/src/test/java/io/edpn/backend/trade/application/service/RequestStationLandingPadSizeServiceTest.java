@@ -2,6 +2,7 @@ package io.edpn.backend.trade.application.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
+import io.edpn.backend.trade.domain.model.LandingPadSize;
 import io.edpn.backend.trade.domain.model.RequestDataMessage;
 import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.model.System;
@@ -26,33 +27,35 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class RequestStationArrivalDistanceServiceTest {
+public class RequestStationLandingPadSizeServiceTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Mock
     private RequestDataMessageRepository requestDataMessageRepository;
     private RequestDataService<Station> underTest;
 
-    public static Stream<Arguments> provideDoublesForCheckApplicability() {
+    public static Stream<Arguments> providePadSizesForCheckApplicability() {
         return Stream.of(
                 Arguments.of(null, true),
-                Arguments.of(0.0, false),
-                Arguments.of(Double.MAX_VALUE, false)
+                Arguments.of(LandingPadSize.UNKNOWN, true),
+                Arguments.of(LandingPadSize.SMALL, false),
+                Arguments.of(LandingPadSize.MEDIUM, false),
+                Arguments.of(LandingPadSize.LARGE, false)
         );
     }
 
     @BeforeEach
     void setUp() {
-        underTest = new RequestStationArrivalDistanceService(requestDataMessageRepository, objectMapper);
+        underTest = new RequestStationLandingPadSizeService(requestDataMessageRepository, objectMapper);
     }
 
     @ParameterizedTest
-    @MethodSource("provideDoublesForCheckApplicability")
-    void shouldCheckApplicability(Double input, boolean expected) {
-        Station stationWithArrivalDistance = new Station();
-        stationWithArrivalDistance.setArrivalDistance(input);
+    @MethodSource("providePadSizesForCheckApplicability")
+    void shouldCheckApplicability(LandingPadSize input, boolean expected) {
+        Station stationWithPadSize = new Station();
+        stationWithPadSize.setMaxLandingPadSize(input);
 
-        assertThat(underTest.isApplicable(stationWithArrivalDistance), is(expected));
+        assertThat(underTest.isApplicable(stationWithPadSize), is(expected));
     }
 
     @Test
@@ -72,7 +75,7 @@ public class RequestStationArrivalDistanceServiceTest {
 
         RequestDataMessage message = argumentCaptor.getValue();
         assertThat(message, is(notNullValue()));
-        assertThat(message.getTopic(), is("tradeModuleStationArrivalDistanceDataRequest"));
+        assertThat(message.getTopic(), is("tradeModuleStationMaxLandingPadSizeDataRequest"));
         assertThat(message.getMessage(), is(notNullValue()));
 
         StationDataRequest actualStationDataRequest = objectMapper.treeToValue(message.getMessage(), StationDataRequest.class);
