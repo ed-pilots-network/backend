@@ -19,6 +19,8 @@ import java.util.UUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,7 +50,27 @@ public class MybatisCommodityMarketInfoRepositoryTest {
 
         Optional<CommodityMarketInfo> result = underTest.findCommodityMarketInfoByCommodityId(commodityId);
 
+        verify(commodityMarketInfoEntityMapper).findByCommodityId(commodityId);
+        verify(commodityMarketInfoMapper).map(marketInfoEntity);
+
         assertThat(result, equalTo(Optional.of(marketInfo)));
+    }
+
+    @Test
+    public void testFindCommodityMarketInfoByCommodityIdNotFound() {
+        // mock objects
+        UUID commodityId = UUID.randomUUID();
+        CommodityMarketInfoEntity marketInfoEntity = mock(CommodityMarketInfoEntity.class);
+        CommodityMarketInfo marketInfo = mock(CommodityMarketInfo.class);
+
+        when(commodityMarketInfoEntityMapper.findByCommodityId(commodityId)).thenReturn(Optional.empty());
+
+        Optional<CommodityMarketInfo> result = underTest.findCommodityMarketInfoByCommodityId(commodityId);
+
+        verify(commodityMarketInfoEntityMapper).findByCommodityId(commodityId);
+        verify(commodityMarketInfoMapper, never()).map(marketInfoEntity);
+
+        assertThat(result, equalTo(Optional.empty()));
     }
 
     @Test
@@ -61,6 +83,9 @@ public class MybatisCommodityMarketInfoRepositoryTest {
         when(commodityMarketInfoMapper.map(marketInfoEntity)).thenReturn(marketInfo);
 
         List<CommodityMarketInfo> result = underTest.findAllCommodityMarketInfo();
+
+        verify(commodityMarketInfoEntityMapper).findAll();
+        verify(commodityMarketInfoMapper).map(marketInfoEntity);
 
         assertThat(result, equalTo(Collections.singletonList(marketInfo)));
     }

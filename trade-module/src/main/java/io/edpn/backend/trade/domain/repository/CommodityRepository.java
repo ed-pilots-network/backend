@@ -10,7 +10,7 @@ public interface CommodityRepository {
 
     Commodity findOrCreateByName(String name) throws DatabaseEntityNotFoundException;
 
-    Commodity create(Commodity entity) throws DatabaseEntityNotFoundException;
+    Commodity create(Commodity commodity) throws DatabaseEntityNotFoundException;
 
     Optional<Commodity> findById(UUID id);
 }

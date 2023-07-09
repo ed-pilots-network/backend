@@ -68,10 +68,10 @@ public class LocateCommodityMapperTest {
 
         LocateCommodity locateCommodity = underTest.map(locateCommodityEntity);
 
-        assertThat(locateCommodityEntity.getPricesUpdatedAt(), is(pricesUpdatedAt));
-        assertThat(locateCommodityEntity.getCommodity(), is(mockCommodity));
-        assertThat(locateCommodityEntity.getStation(), is(mockStation));
-        assertThat(locateCommodityEntity.getSystem(), is(mockSystem));
+        assertThat(locateCommodity.getPricesUpdatedAt(), is(pricesUpdatedAt));
+        assertThat(locateCommodity.getCommodity(), is(mockCommodity));
+        assertThat(locateCommodity.getStation(), is(mockStation));
+        assertThat(locateCommodity.getSystem(), is(mockSystem));
 
         verify(commodityMapper, times(1)).map(mockCommodityEntity);
         verify(stationMapper, times(1)).map(mockStationEntity);
