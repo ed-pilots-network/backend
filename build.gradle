@@ -80,7 +80,7 @@ subprojects {
         backendUtilVersion = '0.0.1-SNAPSHOT'
         backendMybatisUtilVersion = '0.0.1-SNAPSHOT'
         backendMessageProcessorLibVersion = '0.0.1-SNAPSHOT'
-        junitJupiterVersion = "5.7.0"
+        junitJupiterVersion = "5.9.3"
         mockitoJunitVersion = "3.5.15"
         hamcrestVersion = "2.2"
     }
@@ -110,6 +110,7 @@ subprojects {
             testImplementation "org.springframework.boot:spring-boot-starter-test${springBootVersion}"
             testImplementation "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
             testImplementation "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
+            testImplementation "org.junit.jupiter:junit-jupiter-params:${junitJupiterVersion}"
             testImplementation "org.mockito:mockito-junit-jupiter:${mockitoJunitVersion}"
             testImplementation "org.hamcrest:hamcrest:${hamcrestVersion}"
             testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
