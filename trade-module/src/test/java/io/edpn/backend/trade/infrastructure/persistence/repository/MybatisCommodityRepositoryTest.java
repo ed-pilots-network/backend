@@ -80,9 +80,7 @@ class MybatisCommodityRepositoryTest {
     @Test
     void createWithoutId() {
         UUID id = UUID.randomUUID();
-        Commodity inputCommodity = Commodity.builder()
-                .name("Test Commodity")
-                .build();
+        Commodity inputCommodity = mock(Commodity.class);
         CommodityEntity mockCommodityEntityWithoutId = mock(CommodityEntity.class);
         CommodityEntity mockSavedCommodityEntity = mock(CommodityEntity.class);
 
@@ -109,10 +107,7 @@ class MybatisCommodityRepositoryTest {
     @Test
     void createWithId() {
         UUID id = UUID.randomUUID();
-        Commodity inputCommodity = Commodity.builder()
-                .id(id)
-                .name("Test Commodity")
-                .build();
+        Commodity inputCommodity = mock(Commodity.class);
         CommodityEntity mockCommodityEntity = mock(CommodityEntity.class);
 
         Commodity expected = mock(Commodity.class);
@@ -137,12 +132,10 @@ class MybatisCommodityRepositoryTest {
     @Test
     void createWithError() {
         UUID id = UUID.randomUUID();
-        Commodity inputCommodity = Commodity.builder()
-                .id(id)
-                .name("Test Commodity")
-                .build();
+        Commodity inputCommodity = mock(Commodity.class);
         CommodityEntity mockCommodityEntity = mock(CommodityEntity.class);
 
+        when(inputCommodity.getId()).thenReturn(id);
         when(commodityMapper.map(inputCommodity)).thenReturn(mockCommodityEntity);
         when(mockCommodityEntity.getId()).thenReturn(id);
         when(commodityEntityMapper.findById(id)).thenReturn(Optional.empty());
