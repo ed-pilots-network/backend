@@ -2,6 +2,7 @@ package io.edpn.backend.trade.application.usecase;
 
 import io.edpn.backend.trade.domain.model.CommodityMarketInfo;
 import io.edpn.backend.trade.domain.repository.CommodityMarketInfoRepository;
+import io.edpn.backend.trade.domain.usecase.FindCommodityMarketInfoUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +25,7 @@ public class DefaultFindCommodityMarketInfoUseCaseTest {
     @Mock
     private CommodityMarketInfoRepository commodityMarketInfoRepository;
 
-    private DefaultFindCommodityMarketInfoUseCase underTest;
+    private FindCommodityMarketInfoUseCase underTest;
 
     @BeforeEach
     public void setup() {
