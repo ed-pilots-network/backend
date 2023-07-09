@@ -1,4 +1,4 @@
-package io.edpn.backend.trade.domain.filter;
+package io.edpn.backend.trade.domain.filter.v1;
 
 import io.edpn.backend.trade.domain.model.LandingPadSize;
 import lombok.AllArgsConstructor;

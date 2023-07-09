@@ -3,7 +3,7 @@ package io.edpn.backend.trade.application.mappers.v1;
 import io.edpn.backend.trade.application.dto.v1.CoordinateDTO;
 import io.edpn.backend.trade.application.dto.v1.LocateCommodityRequest;
 import io.edpn.backend.trade.application.dto.v1.LocateCommodityResponse;
-import io.edpn.backend.trade.domain.filter.LocateCommodityFilter;
+import io.edpn.backend.trade.domain.filter.v1.LocateCommodityFilter;
 import io.edpn.backend.trade.domain.model.LocateCommodity;
 import io.edpn.backend.trade.domain.model.LandingPadSize;
 import io.edpn.backend.trade.domain.model.Station;

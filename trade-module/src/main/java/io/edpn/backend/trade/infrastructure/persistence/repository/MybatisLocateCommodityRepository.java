@@ -1,6 +1,6 @@
 package io.edpn.backend.trade.infrastructure.persistence.repository;
 
-import io.edpn.backend.trade.domain.filter.LocateCommodityFilter;
+import io.edpn.backend.trade.domain.filter.v1.LocateCommodityFilter;
 import io.edpn.backend.trade.domain.model.LocateCommodity;
 import io.edpn.backend.trade.domain.repository.LocateCommodityRepository;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.LocateCommodityMapper;

@@ -1,6 +1,6 @@
 package io.edpn.backend.trade.infrastructure.persistence.mappers.filter;
 
-import io.edpn.backend.trade.domain.filter.LocateCommodityFilter;
+import io.edpn.backend.trade.domain.filter.v1.LocateCommodityFilter;
 import io.edpn.backend.trade.infrastructure.persistence.filter.LocateCommodityFilterPersistence;
 import lombok.RequiredArgsConstructor;
 
