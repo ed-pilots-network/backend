@@ -1,7 +1,9 @@
 package io.edpn.backend.trade.configuration;
 
+
 import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.CommodityMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.CommodityMarketInfoMapper;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.LocateCommodityMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.MarketDatumMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.RequestDataMessageMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.StationMapper;
@@ -20,6 +22,11 @@ public class EntityMapperConfig {
     @Bean
     public CommodityMapper commodityMapper() {
         return new CommodityMapper();
+    }
+
+    @Bean
+    public LocateCommodityMapper locateCommodityMapper(CommodityMapper commodityMapper, SystemMapper systemMapper, StationMapper stationMapper) {
+        return new LocateCommodityMapper(commodityMapper, systemMapper, stationMapper);
     }
 
     @Bean
