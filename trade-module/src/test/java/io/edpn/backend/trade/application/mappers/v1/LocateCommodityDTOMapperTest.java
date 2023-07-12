@@ -58,6 +58,7 @@ public class LocateCommodityDTOMapperTest {
         locateCommodity.setDemand(2000L);
         locateCommodity.setBuyPrice(100L);
         locateCommodity.setSellPrice(150L);
+        locateCommodity.setDistance(80.0);
 
         // When
         LocateCommodityResponse response = mapper.map(locateCommodity);
@@ -78,6 +79,7 @@ public class LocateCommodityDTOMapperTest {
         assertThat(response.getDemand(), is(equalTo(locateCommodity.getDemand())));
         assertThat(response.getBuyPrice(), is(equalTo(locateCommodity.getBuyPrice())));
         assertThat(response.getSellPrice(), is(equalTo(locateCommodity.getSellPrice())));
+        assertThat(response.getDistance(), is(equalTo(locateCommodity.getDistance())));
     }
 
     @Test
