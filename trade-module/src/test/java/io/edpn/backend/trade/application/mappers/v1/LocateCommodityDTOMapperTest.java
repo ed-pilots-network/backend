@@ -73,12 +73,7 @@ public class LocateCommodityDTOMapperTest {
         assertThat(response.getStation().getPlanetary(), is(equalTo(station.getPlanetary())));
         assertThat(response.getStation().getRequireOdyssey(), is(equalTo(station.getRequireOdyssey())));
         assertThat(response.getStation().getFleetCarrier(), is(equalTo(station.getFleetCarrier())));
-        assertThat(response.getSystem(), is(notNullValue()));
-        assertThat(response.getSystem().getName(), is(equalTo(system.getName())));
-        assertThat(response.getSystem().getCoordinateDTO(), is(notNullValue()));
-        assertThat(response.getSystem().getCoordinateDTO().getXCoordinate(), is(equalTo(system.getXCoordinate())));
-        assertThat(response.getSystem().getCoordinateDTO().getYCoordinate(), is(equalTo(system.getYCoordinate())));
-        assertThat(response.getSystem().getCoordinateDTO().getZCoordinate(), is(equalTo(system.getZCoordinate())));
+        assertThat(response.getSystemName(), is(equalTo(system.getName())));
         assertThat(response.getSupply(), is(equalTo(locateCommodity.getSupply())));
         assertThat(response.getDemand(), is(equalTo(locateCommodity.getDemand())));
         assertThat(response.getBuyPrice(), is(equalTo(locateCommodity.getBuyPrice())));
