@@ -13,6 +13,7 @@ public class LocateCommodityMapper {
     
     public LocateCommodity map(LocateCommodityEntity locateCommodityEntity) {
         
+        System.out.println("Distance from persistence: " + locateCommodityEntity.getDistance());
         return LocateCommodity.builder()
                 .pricesUpdatedAt(locateCommodityEntity.getPricesUpdatedAt())
                 .commodity(commodityMapper.map(locateCommodityEntity.getCommodity()))

@@ -18,7 +18,13 @@ public interface LocateCommodityEntityMapper {
     //TODO: update order by distance function for postgis
     @Select("""
             <script>
-            SELECT timestamp, commodity_id, station_id, system_id, stock, demand, buy_price, sell_price FROM locate_commodity_view
+            SELECT
+            timestamp, commodity_id, station_id, system_id, stock, demand, buy_price, sell_price,
+            sqrt(pow(#{xCoordinate} - x_coordinate, 2) + pow(#{yCoordinate} - y_coordinate, 2) + pow(#{zCoordinate} - z_coordinate, 2)) as distance,
+            planetary,
+            require_odyssey,
+            fleet_carrier
+            FROM locate_commodity_view
             WHERE
             commodity_id=#{commodityId}
             <if test='!includePlanetary'>AND planetary = false </if>
@@ -28,7 +34,7 @@ public interface LocateCommodityEntityMapper {
             AND demand >= #{minDemand}
             <if test='maxLandingPadSize == "SMALL"'>AND max_landing_pad_size = 'SMALL'</if>
             <if test='maxLandingPadSize == "MEDIUM"'>AND max_landing_pad_size IN ('SMALL', 'MEDIUM')</if>
-            ORDER BY sqrt(pow(#{xCoordinate} - x_coordinate, 2) + pow(#{yCoordinate} - y_coordinate, 2) + pow(#{zCoordinate} - z_coordinate, 2))
+            ORDER BY distance
             </script>"""
     )
     @Results(id = "findCommodityResultMap", value = {
@@ -42,7 +48,8 @@ public interface LocateCommodityEntityMapper {
             @Result(property = "supply", column = "stock", javaType = Long.class),
             @Result(property = "demand", column = "demand", javaType = Long.class),
             @Result(property = "buyPrice", column = "buy_price", javaType = Long.class),
-            @Result(property = "sellPrice", column = "sell_price", javaType = Long.class)
+            @Result(property = "sellPrice", column = "sell_price", javaType = Long.class),
+            @Result(property = "distance", column = "distance", javaType = Double.class)
 
     })
     List<LocateCommodityEntity> locateCommodityByFilter(LocateCommodityFilterPersistence locateCommodityFilterPersistence);

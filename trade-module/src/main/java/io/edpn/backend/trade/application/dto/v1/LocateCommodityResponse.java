@@ -12,12 +12,12 @@ public class LocateCommodityResponse {
     LocalDateTime pricesUpdatedAt;
     String commodityName;
     Station station;
-    System system;
+    String systemName;
     Long supply;
     Long demand;
     Long buyPrice;
     Long sellPrice;
-//    Double distance;
+    Double distance;
     
     @Value
     @Builder
@@ -29,12 +29,4 @@ public class LocateCommodityResponse {
         Boolean requireOdyssey;
         Boolean fleetCarrier;
     }
-    
-    @Value
-    @Builder
-    public static class System {
-        String name;
-        CoordinateDTO coordinateDTO;
-    }
-    
 }

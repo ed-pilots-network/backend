@@ -7,7 +7,6 @@ import io.edpn.backend.trade.domain.filter.v1.LocateCommodityFilter;
 import io.edpn.backend.trade.domain.model.LocateCommodity;
 import io.edpn.backend.trade.domain.model.LandingPadSize;
 import io.edpn.backend.trade.domain.model.Station;
-import io.edpn.backend.trade.domain.model.System;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -18,11 +17,12 @@ public class LocateCommodityDTOMapper {
                 .pricesUpdatedAt(locateCommodity.getPricesUpdatedAt())
                 .commodityName(locateCommodity.getCommodity().getName())
                 .station(mapStation(locateCommodity.getStation()))
-                .system(mapSystem(locateCommodity.getSystem()))
+                .systemName(locateCommodity.getSystem().getName())
                 .supply(locateCommodity.getSupply())
                 .demand(locateCommodity.getDemand())
                 .buyPrice(locateCommodity.getBuyPrice())
                 .sellPrice(locateCommodity.getSellPrice())
+                .distance(locateCommodity.getDistance())
                 .build();
     }
 
@@ -49,19 +49,6 @@ public class LocateCommodityDTOMapper {
                 .planetary(station.getPlanetary())
                 .requireOdyssey(station.getRequireOdyssey())
                 .fleetCarrier(station.getFleetCarrier())
-                .build();
-    }
-    
-    private LocateCommodityResponse.System mapSystem(System system) {
-        return LocateCommodityResponse.System.builder()
-                .name(system.getName())
-                .coordinateDTO(
-                        CoordinateDTO.builder()
-                                .xCoordinate(system.getXCoordinate())
-                                .yCoordinate(system.getYCoordinate())
-                                .zCoordinate(system.getZCoordinate())
-                                .build()
-                )
                 .build();
     }
 
