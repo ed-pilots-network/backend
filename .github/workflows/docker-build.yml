@@ -39,6 +39,7 @@ jobs:
           retention-days: 2
 
   docker:
+    if: success()
     needs: validation
     runs-on: ubuntu-latest
     steps:
