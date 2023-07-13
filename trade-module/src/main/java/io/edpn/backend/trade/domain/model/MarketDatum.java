@@ -15,7 +15,6 @@ import java.util.List;
 @Setter
 @ToString
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class MarketDatum {
 

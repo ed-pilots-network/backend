@@ -16,7 +16,6 @@ import java.util.UUID;
 @Setter
 @ToString
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class Station {
 

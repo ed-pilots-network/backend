@@ -12,7 +12,7 @@ import lombok.extern.jackson.Jacksonized;
 @NoArgsConstructor
 @Jacksonized
 public class CoordinateDTO {
-    Double xCoordinate;
-    Double yCoordinate;
-    Double zCoordinate;
+    private Double xCoordinate;
+    private Double yCoordinate;
+    private Double zCoordinate;
 }

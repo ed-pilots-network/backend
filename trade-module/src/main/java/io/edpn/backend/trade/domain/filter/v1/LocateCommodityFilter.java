@@ -1,14 +1,13 @@
 package io.edpn.backend.trade.domain.filter.v1;
 
 import io.edpn.backend.trade.domain.model.LandingPadSize;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.UUID;
 
 @Getter
 @Setter

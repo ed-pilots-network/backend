@@ -34,9 +34,10 @@ public class ReceiveSystemCoordinatesResponseUseCaseTest {
         message.setYCoordinate(2.0);
         message.setZCoordinate(3.0);
 
-        System system = new System();
-        system.setName("system");
-        when(systemRepository.findOrCreateByName(anyString())).thenReturn(system);
+        System system = System.builder()
+                .name("system")
+                .build();
+        when(systemRepository.findOrCreateByName("system")).thenReturn(system);
 
         underTest.receive(message);
 

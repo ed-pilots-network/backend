@@ -38,13 +38,13 @@ public class ReceiveStationRequireOdysseyResponseUseCaseTest {
         message.setStationName("station");
         message.setRequireOdyssey(true);
 
-        System system = new System();
-        system.setName("system");
-        when(systemRepository.findOrCreateByName(anyString())).thenReturn(system);
+        System system = mock(System.class);
+        when(systemRepository.findOrCreateByName("system")).thenReturn(system);
 
-        Station station = new Station();
-        station.setName("station");
-        when(stationRepository.findOrCreateBySystemAndStationName(any(), anyString())).thenReturn(station);
+        Station station = Station.builder()
+                .name("station")
+                .build();
+        when(stationRepository.findOrCreateBySystemAndStationName(system, "station")).thenReturn(station);
 
         underTest.receive(message);
 

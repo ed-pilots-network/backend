@@ -11,7 +11,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ReceiveSystemEliteIdResponseUseCaseTest {
@@ -32,15 +35,16 @@ public class ReceiveSystemEliteIdResponseUseCaseTest {
         message.setSystemName("system");
         message.setEliteId(1234);
 
-        System system = new System();
-        system.setName("system");
-        when(systemRepository.findOrCreateByName(anyString())).thenReturn(system);
+        System system = System.builder()
+                .name("system")
+                .build();
+        when(systemRepository.findOrCreateByName("system")).thenReturn(system);
 
         underTest.receive(message);
 
         verify(systemRepository, times(1)).findOrCreateByName(anyString());
         verify(systemRepository, times(1)).update(any());
 
-        assert(system.getEliteId() == 1234);
+        assert (system.getEliteId() == 1234);
     }
 }

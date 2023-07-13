@@ -7,6 +7,7 @@ import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.model.System;
 import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
 import io.edpn.backend.trade.domain.service.RequestDataService;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,13 +18,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.stream.Stream;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class RequestStationArrivalDistanceServiceTest {
@@ -49,8 +50,8 @@ public class RequestStationArrivalDistanceServiceTest {
     @ParameterizedTest
     @MethodSource("provideDoublesForCheckApplicability")
     void shouldCheckApplicability(Double input, boolean expected) {
-        Station stationWithArrivalDistance = new Station();
-        stationWithArrivalDistance.setArrivalDistance(input);
+        Station stationWithArrivalDistance = mock(Station.class);
+        when(stationWithArrivalDistance.getArrivalDistance()).thenReturn(input);
 
         assertThat(underTest.isApplicable(stationWithArrivalDistance), is(expected));
     }

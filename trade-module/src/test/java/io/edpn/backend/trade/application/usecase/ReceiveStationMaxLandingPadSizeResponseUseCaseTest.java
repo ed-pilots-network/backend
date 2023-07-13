@@ -14,7 +14,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ReceiveStationMaxLandingPadSizeResponseUseCaseTest {
@@ -39,13 +43,13 @@ public class ReceiveStationMaxLandingPadSizeResponseUseCaseTest {
         message.setStationName("station");
         message.setMaxLandingPadSize("LARGE");
 
-        System system = new System();
-        system.setName("system");
-        when(systemRepository.findOrCreateByName(anyString())).thenReturn(system);
+        System system = mock(System.class);
+        when(systemRepository.findOrCreateByName("system")).thenReturn(system);
 
-        Station station = new Station();
-        station.setName("station");
-        when(stationRepository.findOrCreateBySystemAndStationName(any(), anyString())).thenReturn(station);
+        Station station = Station.builder()
+                .name("station")
+                .build();
+        when(stationRepository.findOrCreateBySystemAndStationName(system, "station")).thenReturn(station);
 
         underTest.receive(message);
 
@@ -53,6 +57,6 @@ public class ReceiveStationMaxLandingPadSizeResponseUseCaseTest {
         verify(stationRepository, times(1)).findOrCreateBySystemAndStationName(any(), anyString());
         verify(stationRepository, times(1)).update(any());
 
-        assert(station.getMaxLandingPadSize() == LandingPadSize.LARGE);
+        assert (station.getMaxLandingPadSize() == LandingPadSize.LARGE);
     }
 }

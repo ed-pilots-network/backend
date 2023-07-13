@@ -1,10 +1,15 @@
 package io.edpn.backend.trade.application.dto.v1;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
 @Value
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
+@Jacksonized
 public class CommodityMarketInfoResponse {
 
     String commodityName;
@@ -28,7 +33,9 @@ public class CommodityMarketInfoResponse {
     Station lowestBuyingFromStation;
 
     @Value
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Builder
+    @Jacksonized
     public static class Station {
 
         String name;
@@ -37,7 +44,9 @@ public class CommodityMarketInfoResponse {
     }
 
     @Value
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Builder
+    @Jacksonized
     public static class System {
 
         String name;

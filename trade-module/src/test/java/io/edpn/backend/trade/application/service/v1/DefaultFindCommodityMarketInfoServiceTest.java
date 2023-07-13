@@ -4,16 +4,16 @@ import io.edpn.backend.trade.application.dto.v1.CommodityMarketInfoResponse;
 import io.edpn.backend.trade.application.mappers.v1.CommodityMarketInfoResponseMapper;
 import io.edpn.backend.trade.domain.model.CommodityMarketInfo;
 import io.edpn.backend.trade.domain.usecase.FindCommodityMarketInfoUseCase;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,8 +33,8 @@ public class DefaultFindCommodityMarketInfoServiceTest {
 
     @Test
     void shouldGetCommodityMarketInfo() {
-        CommodityMarketInfo commodityMarketInfo = new CommodityMarketInfo();
-        CommodityMarketInfoResponse commodityMarketInfoResponse = CommodityMarketInfoResponse.builder().build();
+        CommodityMarketInfo commodityMarketInfo = mock(CommodityMarketInfo.class);
+        CommodityMarketInfoResponse commodityMarketInfoResponse = mock(CommodityMarketInfoResponse.class);
 
         when(findCommodityMarketInfoUseCase.findAll()).thenReturn(List.of(commodityMarketInfo));
         when(commodityMarketInfoResponseMapper.map(commodityMarketInfo)).thenReturn(commodityMarketInfoResponse);

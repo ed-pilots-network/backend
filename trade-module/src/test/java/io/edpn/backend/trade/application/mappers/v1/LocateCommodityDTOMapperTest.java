@@ -9,11 +9,10 @@ import io.edpn.backend.trade.domain.model.LandingPadSize;
 import io.edpn.backend.trade.domain.model.LocateCommodity;
 import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.model.System;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -32,33 +31,37 @@ public class LocateCommodityDTOMapperTest {
     @Test
     void shouldMapLocateCommodityToResponse() {
         // Given
-        Commodity commodity = new Commodity();
-        commodity.setName("Gold");
+        Commodity commodity = Commodity.builder()
+                .name("Gold")
+                .build();
 
-        Station station = new Station();
-        station.setName("Station 1");
-        station.setArrivalDistance(20.0);
-        station.setMaxLandingPadSize(LandingPadSize.LARGE);
-        station.setPlanetary(false);
-        station.setRequireOdyssey(false);
-        station.setFleetCarrier(false);
+        Station station = Station.builder()
+                .name("Station 1")
+                .arrivalDistance(20.0)
+                .maxLandingPadSize(LandingPadSize.LARGE)
+                .planetary(false)
+                .requireOdyssey(false)
+                .fleetCarrier(false)
+                .build();
 
-        System system = new System();
-        system.setName("System 1");
-        system.setXCoordinate(1.0);
-        system.setYCoordinate(2.0);
-        system.setZCoordinate(3.0);
+        System system = System.builder()
+                .name("System 1")
+                .xCoordinate(1.0)
+                .yCoordinate(2.0)
+                .zCoordinate(3.0)
+                .build();
 
-        LocateCommodity locateCommodity = new LocateCommodity();
-        locateCommodity.setPricesUpdatedAt(LocalDateTime.now());
-        locateCommodity.setCommodity(commodity);
-        locateCommodity.setStation(station);
-        locateCommodity.setSystem(system);
-        locateCommodity.setSupply(1000L);
-        locateCommodity.setDemand(2000L);
-        locateCommodity.setBuyPrice(100L);
-        locateCommodity.setSellPrice(150L);
-        locateCommodity.setDistance(80.0);
+        LocateCommodity locateCommodity = LocateCommodity.builder()
+                .pricesUpdatedAt(LocalDateTime.now())
+                .commodity(commodity)
+                .station(station)
+                .system(system)
+                .supply(1000L)
+                .demand(2000L)
+                .buyPrice(100L)
+                .sellPrice(150L)
+                .distance(80.0)
+                .build();
 
         // When
         LocateCommodityResponse response = mapper.map(locateCommodity);

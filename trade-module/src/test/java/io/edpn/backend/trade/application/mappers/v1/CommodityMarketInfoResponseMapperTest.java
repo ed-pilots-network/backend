@@ -12,6 +12,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
 class CommodityMarketInfoResponseMapperTest {
 
@@ -25,41 +26,58 @@ class CommodityMarketInfoResponseMapperTest {
     @Test
     void shouldMapCommodityMarketInfoToResponse() {
         // Given
-        Commodity commodity = new Commodity();
-        commodity.setName("Gold");
+        Commodity commodity = Commodity.builder()
+                .name("Gold")
+                .build();
 
-        Station station = new Station();
-        station.setName("Station 1");
-        station.setArrivalDistance(20.0);
+        Station station1 = Station.builder()
+                .name("Station 1")
+                .arrivalDistance(20.0)
+                .build();
 
-        System system = new System();
-        system.setName("System 1");
-        system.setXCoordinate(1.0);
-        system.setYCoordinate(2.0);
-        system.setZCoordinate(3.0);
+        Station station2 = Station.builder()
+                .name("Station 2")
+                .arrivalDistance(46.0)
+                .build();
 
-        station.setSystem(system);
+        System system1 = System.builder()
+                .name("System 1")
+                .xCoordinate(1.0)
+                .yCoordinate(2.0)
+                .zCoordinate(3.0)
+                .build();
 
-        CommodityMarketInfo commodityMarketInfo = new CommodityMarketInfo();
-        commodityMarketInfo.setCommodity(commodity);
-        commodityMarketInfo.setMaxBuyPrice(100.0);
-        commodityMarketInfo.setMinBuyPrice(50.0);
-        commodityMarketInfo.setAvgBuyPrice(75.0);
-        commodityMarketInfo.setMaxSellPrice(150.0);
-        commodityMarketInfo.setMinSellPrice(100.0);
-        commodityMarketInfo.setAvgSellPrice(125.0);
-        commodityMarketInfo.setMinMeanPrice(60.0);
-        commodityMarketInfo.setMaxMeanPrice(140.0);
-        commodityMarketInfo.setAverageMeanPrice(100.0);
-        commodityMarketInfo.setTotalStock(1000L);
-        commodityMarketInfo.setTotalDemand(2000L);
-        commodityMarketInfo.setTotalStations(10);
-        commodityMarketInfo.setStationsWithBuyPrice(5);
-        commodityMarketInfo.setStationsWithSellPrice(6);
-        commodityMarketInfo.setStationsWithBuyPriceLowerThanAverage(2);
-        commodityMarketInfo.setStationsWithSellPriceHigherThanAverage(3);
-        commodityMarketInfo.setHighestSellingToStation(station);
-        commodityMarketInfo.setLowestBuyingFromStation(station);
+        System system2 = System.builder()
+                .name("System 2")
+                .xCoordinate(null)
+                .yCoordinate(null)
+                .zCoordinate(null)
+                .build();
+
+        station1.setSystem(system1);
+        station2.setSystem(system2);
+
+        CommodityMarketInfo commodityMarketInfo = CommodityMarketInfo.builder()
+                .commodity(commodity)
+                .maxBuyPrice(100.0)
+                .minBuyPrice(50.0)
+                .avgBuyPrice(75.0)
+                .maxSellPrice(150.0)
+                .minSellPrice(100.0)
+                .avgSellPrice(125.0)
+                .minMeanPrice(60.0)
+                .maxMeanPrice(140.0)
+                .averageMeanPrice(100.0)
+                .totalStock(1000L)
+                .totalDemand(2000L)
+                .totalStations(10)
+                .stationsWithBuyPrice(5)
+                .stationsWithSellPrice(6)
+                .stationsWithBuyPriceLowerThanAverage(2)
+                .stationsWithSellPriceHigherThanAverage(3)
+                .highestSellingToStation(station1)
+                .lowestBuyingFromStation(station2)
+                .build();
 
         // When
         CommodityMarketInfoResponse response = mapper.map(commodityMarketInfo);
@@ -84,20 +102,17 @@ class CommodityMarketInfoResponseMapperTest {
         assertThat(response.getStationsWithBuyPriceLowerThanAverage(), is(equalTo(commodityMarketInfo.getStationsWithBuyPriceLowerThanAverage())));
         assertThat(response.getStationsWithSellPriceHigherThanAverage(), is(equalTo(commodityMarketInfo.getStationsWithSellPriceHigherThanAverage())));
         assertThat(response.getHighestSellingToStation(), is(notNullValue()));
-        assertThat(response.getHighestSellingToStation().getName(), is(equalTo(station.getName())));
+        assertThat(response.getHighestSellingToStation().getName(), is(equalTo(station1.getName())));
         assertThat(response.getHighestSellingToStation().getSystem(), is(notNullValue()));
-        assertThat(response.getHighestSellingToStation().getSystem().getName(), is(equalTo(system.getName())));
+        assertThat(response.getHighestSellingToStation().getSystem().getName(), is(equalTo(system1.getName())));
         assertThat(response.getHighestSellingToStation().getSystem().getCoordinates(), is(notNullValue()));
-        assertThat(response.getHighestSellingToStation().getSystem().getCoordinates().getXCoordinate(), is(equalTo(system.getXCoordinate())));
-        assertThat(response.getHighestSellingToStation().getSystem().getCoordinates().getYCoordinate(), is(equalTo(system.getYCoordinate())));
-        assertThat(response.getHighestSellingToStation().getSystem().getCoordinates().getZCoordinate(), is(equalTo(system.getZCoordinate())));
+        assertThat(response.getHighestSellingToStation().getSystem().getCoordinates().getXCoordinate(), is(equalTo(system1.getXCoordinate())));
+        assertThat(response.getHighestSellingToStation().getSystem().getCoordinates().getYCoordinate(), is(equalTo(system1.getYCoordinate())));
+        assertThat(response.getHighestSellingToStation().getSystem().getCoordinates().getZCoordinate(), is(equalTo(system1.getZCoordinate())));
         assertThat(response.getLowestBuyingFromStation(), is(notNullValue()));
-        assertThat(response.getLowestBuyingFromStation().getName(), is(equalTo(station.getName())));
+        assertThat(response.getLowestBuyingFromStation().getName(), is(equalTo(station2.getName())));
         assertThat(response.getLowestBuyingFromStation().getSystem(), is(notNullValue()));
-        assertThat(response.getLowestBuyingFromStation().getSystem().getName(), is(equalTo(system.getName())));
-        assertThat(response.getLowestBuyingFromStation().getSystem().getCoordinates(), is(notNullValue()));
-        assertThat(response.getLowestBuyingFromStation().getSystem().getCoordinates().getXCoordinate(), is(equalTo(system.getXCoordinate())));
-        assertThat(response.getLowestBuyingFromStation().getSystem().getCoordinates().getYCoordinate(), is(equalTo(system.getYCoordinate())));
-        assertThat(response.getLowestBuyingFromStation().getSystem().getCoordinates().getZCoordinate(), is(equalTo(system.getZCoordinate())));
+        assertThat(response.getLowestBuyingFromStation().getSystem().getName(), is(equalTo(system2.getName())));
+        assertThat(response.getLowestBuyingFromStation().getSystem().getCoordinates(), is(nullValue()));
     }
 }

@@ -13,7 +13,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ReceiveStationPlanetaryResponseUseCaseTest {
@@ -38,13 +42,13 @@ public class ReceiveStationPlanetaryResponseUseCaseTest {
         message.setStationName("station");
         message.setPlanetary(true);
 
-        System system = new System();
-        system.setName("system");
+        System system = mock(System.class);
         when(systemRepository.findOrCreateByName(anyString())).thenReturn(system);
 
-        Station station = new Station();
-        station.setName("station");
-        when(stationRepository.findOrCreateBySystemAndStationName(any(), anyString())).thenReturn(station);
+        Station station = Station.builder()
+                .name("station")
+                .build();
+        when(stationRepository.findOrCreateBySystemAndStationName(system, "station")).thenReturn(station);
 
         underTest.receive(message);
 
@@ -52,6 +56,6 @@ public class ReceiveStationPlanetaryResponseUseCaseTest {
         verify(stationRepository, times(1)).findOrCreateBySystemAndStationName(any(), anyString());
         verify(stationRepository, times(1)).update(any());
 
-        assert(station.getPlanetary());
+        assert (station.getPlanetary());
     }
 }

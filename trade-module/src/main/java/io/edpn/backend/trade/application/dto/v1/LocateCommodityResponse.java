@@ -1,13 +1,17 @@
 package io.edpn.backend.trade.application.dto.v1;
 
 
+import java.time.LocalDateTime;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
-
-import java.time.LocalDateTime;
+import lombok.extern.jackson.Jacksonized;
 
 @Value
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
+@Jacksonized
 public class LocateCommodityResponse {
     LocalDateTime pricesUpdatedAt;
     String commodityName;
@@ -18,9 +22,11 @@ public class LocateCommodityResponse {
     Long buyPrice;
     Long sellPrice;
     Double distance;
-    
+
     @Value
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Builder
+    @Jacksonized
     public static class Station {
         String name;
         Double arrivalDistance;

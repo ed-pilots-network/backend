@@ -20,10 +20,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.in;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class RequestStationPlanetaryServiceTest {
@@ -49,8 +52,8 @@ public class RequestStationPlanetaryServiceTest {
     @ParameterizedTest
     @MethodSource("provideBooleansForCheckApplicability")
     void shouldCheckApplicability(Boolean input, boolean expected) {
-        Station stationWithPlanetary = new Station();
-        stationWithPlanetary.setPlanetary(input);
+        Station stationWithPlanetary = mock(Station.class);
+        when(stationWithPlanetary.getPlanetary()).thenReturn(input);
 
         assertThat(underTest.isApplicable(stationWithPlanetary), is(expected));
     }
