@@ -31,6 +31,7 @@ jobs:
       - name: Execute Gradle build
         run: ./gradlew build test
       - name: Archive code coverage results
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: Test Results
