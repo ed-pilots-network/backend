@@ -20,8 +20,6 @@ public class MybatisLocateCommodityRepository implements LocateCommodityReposito
     
     @Override
     public List<LocateCommodity> locateCommodityByFilter(LocateCommodityFilter locateCommodityFilter) {
-        System.out.println(locateCommodityFilter);
-        System.out.println(locateCommodityFilterMapper.map(locateCommodityFilter));
         return locateCommodityEntityMapper.locateCommodityByFilter(locateCommodityFilterMapper.map(locateCommodityFilter))
                 .stream()
                 .map(locateCommodityMapper::map)
