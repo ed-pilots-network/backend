@@ -26,4 +26,9 @@ jobs:
         run: chmod +x ./gradlew
       - name: Execute Gradle build
         run: ./gradlew build test
+      - name: Publish test report
+        uses: actions/upload-artifact@v2
+        with:
+          name: \'trade-module\' Test Report
+          path: trade-module/build/reports/tests/test/index.html
 
