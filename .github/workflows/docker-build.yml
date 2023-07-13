@@ -31,13 +31,17 @@ jobs:
         run: chmod +x ./gradlew
       - name: Execute Gradle build
         run: ./gradlew build test
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v3
+        if: always()
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'
       - name: Archive code coverage results
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: Test Results
           path: "**/*.html"
-          retention-days: 2
 
   docker:
     needs: validation
