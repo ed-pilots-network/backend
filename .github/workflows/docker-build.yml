@@ -12,6 +12,7 @@ on:
 
 jobs:
   validation:
+    if: github.event.pull_request.draft == 'false'
     name: "Validate, build and test"
     runs-on: ubuntu-latest
     steps:
@@ -39,7 +40,6 @@ jobs:
           retention-days: 2
 
   docker:
-    if: success()
     needs: validation
     runs-on: ubuntu-latest
     steps:
