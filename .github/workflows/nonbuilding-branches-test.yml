@@ -10,4 +10,5 @@ jobs:
   validation:
     name: "Validate, build and test"
     runs-on: ubuntu-latest
-    steps: *branch-validation-test-steps
+    steps:
+      - uses: ./.github/workflows/branch-validation-test-steps.yml
