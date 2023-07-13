@@ -30,6 +30,18 @@ jobs:
         run: chmod +x ./gradlew
       - name: Execute Gradle build
         run: ./gradlew build test
+      - name: Upload test reports
+        run: |
+          find . -type f -name "index.html" -path "*/build/reports/tests/test/index.html" -execdir bash -c 'test_dir=$(basename $(pwd)); mv "$1" "$test_dir.html"' bash {} \;
+          find . -type f -name "*.html" -path "*/build/reports/tests/test/*.html" -execdir bash -c 'test_dir=$(basename $(pwd)); mv "$1" "$test_dir-$(basename "$1")"' bash {} \;
+          find . -type f -name "*.html" -execdir bash -c 'mv "$1" "${PWD##*/}-$(basename "$1")"' bash {} \;
+          find . -type f -name "*.html" -execdir bash -c 'mv "$1" "${PWD##*/}.html"' bash {} \;
+          ls -R **/*.html | awk '{print substr($1, 3)}' | xargs -I {} echo "::set-output name=test_reports::{}"
+          - name: Publish test reports
+            uses: actions/upload-artifact@v2
+            with:
+              name: Test Reports
+              path: ${{ steps.publish_test_reports.outputs.test_reports }}
 
   docker:
     needs: validation
