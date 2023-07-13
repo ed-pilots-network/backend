@@ -31,5 +31,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Test Results
-          path: "**/*.html"
-          retention-days: 2
+          path: "**/reports/*"
+          retention-days: 5
