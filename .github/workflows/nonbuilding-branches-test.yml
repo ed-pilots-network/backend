@@ -1,0 +1,13 @@
+name: Branch test
+
+on:
+  push:
+    branches-ignore:
+      - master
+      - development
+
+jobs:
+  validation:
+    name: "Validate, build and test"
+    runs-on: ubuntu-latest
+    steps: *branch-validation-test-steps
