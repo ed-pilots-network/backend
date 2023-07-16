@@ -9,6 +9,7 @@ services:
       - ALLOW_ANONYMOUS_LOGIN=yes
     volumes:
       - "zookeeper:/bitnami"
+      - "./container_config/zookeeper/log4j.properties:/opt/bitnami/zookeeper/conf/log4j.properties"
     healthcheck:
       test: nc -vz localhost 2181 || exit -1
       interval: 10s
@@ -24,6 +25,8 @@ services:
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_CFG_COMPRESSION_TYPE=gzip
+      - KAFKA_LOG_RETENTION_HOURS=240
+      - KAFKA_LOG_RETENTION_BYTES=2147483648
     volumes:
       - "kafka:/bitnami/kafka"
     healthcheck:
