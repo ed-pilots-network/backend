@@ -11,7 +11,7 @@ services:
       - "zookeeper:/bitnami"
       - "./container_config/zookeeper/log4j.properties:/opt/bitnami/zookeeper/conf/log4j.properties"
     healthcheck:
-      test: nc -vz localhost 2181 || exit -1
+      test: nc -vz zookeeper 2181 || exit -1
       interval: 10s
       timeout: 5s
       retries: 3
@@ -30,11 +30,11 @@ services:
     volumes:
       - "kafka:/bitnami/kafka"
     healthcheck:
-      test: kafka-topics.sh --list --bootstrap-server localhost:9092
+      test: kafka-topics.sh --list --bootstrap-server kafka:9092
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 40s
     depends_on:
       zookeeper:
         condition: service_healthy
@@ -58,11 +58,11 @@ services:
     env_file:
       - env/.env_eddn_message_listener
     healthcheck:
-      test: "wget -qO- localhost:8080/actuator/health | grep UP || exit 1"
+      test: "wget -qO- eddn-message-listener:8080/actuator/health | grep UP || exit 1"
       interval: 20s
       timeout: 5s
       retries: 5
-      start_period: 30s
+      start_period: 40s
     depends_on:
       kafka:
         condition: service_healthy
@@ -75,11 +75,11 @@ services:
     ports:
       - "8080:8080"
     healthcheck:
-      test: "wget -qO- localhost:8080/actuator/health | grep UP || exit 1"
+      test: "wget -qO- modulith:8080/actuator/health | grep UP || exit 1"
       interval: 20s
       timeout: 5s
       retries: 5
-      start_period: 30s
+      start_period: 40s
     depends_on:
       kafka:
         condition: service_healthy
