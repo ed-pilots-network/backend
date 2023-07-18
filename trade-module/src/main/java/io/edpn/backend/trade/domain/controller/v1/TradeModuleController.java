@@ -18,5 +18,5 @@ public interface TradeModuleController {
     List<CommodityMarketInfoResponse> getBestCommodityPrice();
 
     @PostMapping("/commodity")
-    List<LocateCommodityResponse> locateByCommodityWithFilters(@Valid @RequestBody LocateCommodityRequest locateCommodityRequest);
+    List<LocateCommodityResponse> locateCommodityWithFilters(@Valid @RequestBody LocateCommodityRequest locateCommodityRequest);
 }

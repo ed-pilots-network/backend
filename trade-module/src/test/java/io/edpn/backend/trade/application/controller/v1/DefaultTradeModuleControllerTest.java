@@ -47,9 +47,9 @@ public class DefaultTradeModuleControllerTest {
     void shouldLocateByCommodityWithFilters() {
         LocateCommodityRequest request = mock(LocateCommodityRequest.class);
         LocateCommodityResponse response = LocateCommodityResponse.builder().build();
-        when(locateCommodityService.locateCommoditiesNearby(request)).thenReturn(List.of(response));
+        when(locateCommodityService.locateCommoditiesOrderByDistance(request)).thenReturn(List.of(response));
 
-        List<LocateCommodityResponse> result = underTest.locateByCommodityWithFilters(request);
+        List<LocateCommodityResponse> result = underTest.locateCommodityWithFilters(request);
 
         assertThat(result, equalTo(List.of(response)));
     }

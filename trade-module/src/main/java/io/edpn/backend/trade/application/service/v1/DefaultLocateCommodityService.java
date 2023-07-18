@@ -16,7 +16,7 @@ public class DefaultLocateCommodityService implements LocateCommodityService {
     private final LocateCommodityDTOMapper locateCommodityDTOMapper;
     
     @Override
-    public List<LocateCommodityResponse> locateCommoditiesNearby(LocateCommodityRequest locateCommodityRequest) {
+    public List<LocateCommodityResponse> locateCommoditiesOrderByDistance(LocateCommodityRequest locateCommodityRequest) {
         return locateCommodityUseCase
                 .locateCommoditiesOrderByDistance(locateCommodityDTOMapper.map(locateCommodityRequest))
                 .stream()

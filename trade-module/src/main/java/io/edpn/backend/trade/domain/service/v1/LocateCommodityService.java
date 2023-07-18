@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface LocateCommodityService {
     
-    List<LocateCommodityResponse> locateCommoditiesNearby(LocateCommodityRequest locateCommodityRequest);
+    List<LocateCommodityResponse> locateCommoditiesOrderByDistance(LocateCommodityRequest locateCommodityRequest);
 }

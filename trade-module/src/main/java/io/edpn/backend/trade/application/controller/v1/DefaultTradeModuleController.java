@@ -22,7 +22,7 @@ public class DefaultTradeModuleController implements TradeModuleController {
     }
 
     @Override
-    public List<LocateCommodityResponse> locateByCommodityWithFilters(LocateCommodityRequest locateCommodityRequest) {
-        return locateCommodityService.locateCommoditiesNearby(locateCommodityRequest);
+    public List<LocateCommodityResponse> locateCommodityWithFilters(LocateCommodityRequest locateCommodityRequest) {
+        return locateCommodityService.locateCommoditiesOrderByDistance(locateCommodityRequest);
     }
 }

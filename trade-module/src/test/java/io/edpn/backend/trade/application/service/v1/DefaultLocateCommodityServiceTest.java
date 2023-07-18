@@ -48,7 +48,7 @@ public class DefaultLocateCommodityServiceTest {
         when(locateCommodityUseCase.locateCommoditiesOrderByDistance(locateCommodityFilter)).thenReturn(List.of(locateCommodity));
         when(locateCommodityDTOMapper.map(locateCommodity)).thenReturn(locateCommodityResponse);
 
-        List<LocateCommodityResponse> responses = underTest.locateCommoditiesNearby(locateCommodityRequest);
+        List<LocateCommodityResponse> responses = underTest.locateCommoditiesOrderByDistance(locateCommodityRequest);
 
         ArgumentCaptor<LocateCommodityFilter> argumentCaptor = ArgumentCaptor.forClass(LocateCommodityFilter.class);
         verify(locateCommodityUseCase).locateCommoditiesOrderByDistance(argumentCaptor.capture());
