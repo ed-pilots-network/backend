@@ -18,7 +18,7 @@ import java.util.UUID;
 @Jacksonized
 public class LocateCommodityRequest {
     @NotNull(message = "Commodity id is mandatory")
-    UUID commodityId; //Convert to String or UUID
+    UUID commodityId;
     @NotNull(message = "Reference coordinates are mandatory")
     @Valid
     CoordinateDTO referenceLocation;
