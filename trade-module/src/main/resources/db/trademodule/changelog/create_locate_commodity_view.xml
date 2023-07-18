@@ -16,6 +16,8 @@
                     st.fleet_carrier,
                     md.stock,
                     md.demand,
+                    md.buy_price,
+                    md.sell_price,
                     sys.x_coordinate,
                     sys.y_coordinate,
                     sys.z_coordinate
