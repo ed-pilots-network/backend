@@ -19,6 +19,7 @@ module edpn.backend.trade {
     requires kafka.clients;
     requires org.mybatis;
     requires jakarta.validation;
+    requires io.swagger.v3.oas.annotations;
 
     exports io.edpn.backend.trade.domain.service.v1;
     exports io.edpn.backend.trade.domain.controller.v1;

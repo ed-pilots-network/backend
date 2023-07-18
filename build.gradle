@@ -85,6 +85,7 @@ subprojects {
         junitJupiterVersion = "5.9.3"
         mockitoVersion = "5.4.0"
         hamcrestVersion = "2.2"
+        swaggerAnnotationsVersion = "2.1.13"
     }
 
     dependencies {
@@ -106,6 +107,7 @@ subprojects {
             implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
             implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
             implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+            implementation "io.swagger.core.v3:swagger-annotations-jakarta:${swaggerAnnotationsVersion}"
             runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
             runtimeOnly "io.micrometer:micrometer-registry-prometheus:${prometheusVersion}"
             compileOnly "org.projectlombok:lombok:${lombokVersion}"

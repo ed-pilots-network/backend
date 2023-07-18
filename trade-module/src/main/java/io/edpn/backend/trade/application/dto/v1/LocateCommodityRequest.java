@@ -1,5 +1,6 @@
 package io.edpn.backend.trade.application.dto.v1;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,10 +20,12 @@ public class LocateCommodityRequest {
     UUID commodityId; //Convert to String or UUID
     @NotNull(message = "Reference coordinates are mandatory")
     CoordinateDTO referenceLocation;
-    Boolean includePlanetary;
-    Boolean includeOdyssey;
-    Boolean includeFleetCarriers;
+    @Schema(example = "SMALL", allowableValues = "UNKNOWN, SMALL, MEDIUM, LARGE")
     String maxLandingPadSize;
     Long minSupply;
     Long minDemand;
+    Boolean includeFleetCarriers;
+    Boolean includeOdyssey;
+    Boolean includePlanetary;
+
 }

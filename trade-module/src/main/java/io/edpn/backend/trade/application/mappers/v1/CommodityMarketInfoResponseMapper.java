@@ -51,9 +51,9 @@ public class CommodityMarketInfoResponseMapper {
             return null;
         } else {
             return CoordinateDTO.builder()
-                    .xCoordinate(system.getXCoordinate())
-                    .yCoordinate(system.getYCoordinate())
-                    .zCoordinate(system.getZCoordinate())
+                    .x(system.getXCoordinate())
+                    .y(system.getYCoordinate())
+                    .z(system.getZCoordinate())
                     .build();
         }
     }

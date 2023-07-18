@@ -106,9 +106,9 @@ class CommodityMarketInfoResponseMapperTest {
         assertThat(response.getHighestSellingToStation().getSystem(), is(notNullValue()));
         assertThat(response.getHighestSellingToStation().getSystem().getName(), is(equalTo(system1.getName())));
         assertThat(response.getHighestSellingToStation().getSystem().getCoordinates(), is(notNullValue()));
-        assertThat(response.getHighestSellingToStation().getSystem().getCoordinates().getXCoordinate(), is(equalTo(system1.getXCoordinate())));
-        assertThat(response.getHighestSellingToStation().getSystem().getCoordinates().getYCoordinate(), is(equalTo(system1.getYCoordinate())));
-        assertThat(response.getHighestSellingToStation().getSystem().getCoordinates().getZCoordinate(), is(equalTo(system1.getZCoordinate())));
+        assertThat(response.getHighestSellingToStation().getSystem().getCoordinates().getX(), is(equalTo(system1.getXCoordinate())));
+        assertThat(response.getHighestSellingToStation().getSystem().getCoordinates().getY(), is(equalTo(system1.getYCoordinate())));
+        assertThat(response.getHighestSellingToStation().getSystem().getCoordinates().getZ(), is(equalTo(system1.getZCoordinate())));
         assertThat(response.getLowestBuyingFromStation(), is(notNullValue()));
         assertThat(response.getLowestBuyingFromStation().getName(), is(equalTo(station2.getName())));
         assertThat(response.getLowestBuyingFromStation().getSystem(), is(notNullValue()));

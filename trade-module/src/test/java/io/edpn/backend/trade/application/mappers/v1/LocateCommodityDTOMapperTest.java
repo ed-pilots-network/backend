@@ -106,9 +106,9 @@ public class LocateCommodityDTOMapperTest {
         // Then
         assertThat(filter, is(notNullValue()));
         assertThat(filter.getCommodityId(), is(equalTo(request.getCommodityId())));
-        assertThat(filter.getXCoordinate(), is(equalTo(request.getReferenceLocation().getXCoordinate())));
-        assertThat(filter.getYCoordinate(), is(equalTo(request.getReferenceLocation().getYCoordinate())));
-        assertThat(filter.getZCoordinate(), is(equalTo(request.getReferenceLocation().getZCoordinate())));
+        assertThat(filter.getXCoordinate(), is(equalTo(request.getReferenceLocation().getX())));
+        assertThat(filter.getYCoordinate(), is(equalTo(request.getReferenceLocation().getY())));
+        assertThat(filter.getZCoordinate(), is(equalTo(request.getReferenceLocation().getZ())));
         assertThat(filter.getIncludePlanetary(), is(equalTo(request.getIncludePlanetary())));
         assertThat(filter.getIncludeOdyssey(), is(equalTo(request.getIncludeOdyssey())));
         assertThat(filter.getIncludeFleetCarriers(), is(equalTo(request.getIncludeFleetCarriers())));
