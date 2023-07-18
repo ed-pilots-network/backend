@@ -1,34 +1,41 @@
 package io.edpn.backend.trade.application.dto.v1;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
 @Value
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
+@Jacksonized
 public class CommodityMarketInfoResponse {
 
-    private String commodityName;
-    private Double maxBuyPrice;
-    private Double minBuyPrice;
-    private Double avgBuyPrice;
-    private Double maxSellPrice;
-    private Double minSellPrice;
-    private Double avgSellPrice;
-    private Double minMeanPrice;
-    private Double maxMeanPrice;
-    private Double averageMeanPrice;
-    private Integer totalStock;
-    private Integer totalDemand;
-    private Integer totalStations;
-    private Integer stationsWithBuyPrice;
-    private Integer stationsWithSellPrice;
-    private Integer stationsWithBuyPriceLowerThanAverage;
-    private Integer stationsWithSellPriceHigherThanAverage;
-    private Station highestSellingToStation;
-    private Station lowestBuyingFromStation;
+    String commodityName;
+    Double maxBuyPrice;
+    Double minBuyPrice;
+    Double avgBuyPrice;
+    Double maxSellPrice;
+    Double minSellPrice;
+    Double avgSellPrice;
+    Double minMeanPrice;
+    Double maxMeanPrice;
+    Double averageMeanPrice;
+    Long totalStock;
+    Long totalDemand;
+    Integer totalStations;
+    Integer stationsWithBuyPrice;
+    Integer stationsWithSellPrice;
+    Integer stationsWithBuyPriceLowerThanAverage;
+    Integer stationsWithSellPriceHigherThanAverage;
+    Station highestSellingToStation;
+    Station lowestBuyingFromStation;
 
     @Value
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Builder
+    @Jacksonized
     public static class Station {
 
         String name;
@@ -37,12 +44,12 @@ public class CommodityMarketInfoResponse {
     }
 
     @Value
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Builder
+    @Jacksonized
     public static class System {
 
         String name;
-        Double xCoordinate;
-        Double yCoordinate;
-        Double zCoordinate;
+        CoordinateDTO coordinates;
     }
 }

@@ -4,7 +4,7 @@ import io.edpn.backend.trade.application.dto.v1.CommodityMarketInfoResponse;
 
 import java.util.List;
 
-public interface BestCommodityPriceService {
+public interface FindCommodityMarketInfoService {
 
     List<CommodityMarketInfoResponse> getCommodityMarketInfo();
 }

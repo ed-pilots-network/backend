@@ -12,7 +12,6 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class System {
 

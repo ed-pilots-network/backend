@@ -1,0 +1,35 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="locate_commodity_view" author="daniel-j-mason" runOnChange="true">
+        <createView viewName="locate_commodity_view" replaceIfExists="true">
+            <![CDATA[
+            SELECT md."timestamp",
+                    md.station_id,
+                    md.commodity_id,
+                    sys.id AS system_id,
+                    st.max_landing_pad_size,
+                    st.require_odyssey,
+                    st.planetary,
+                    st.fleet_carrier,
+                    md.stock,
+                    md.demand,
+                    md.buy_price,
+                    md.sell_price,
+                    sys.x_coordinate,
+                    sys.y_coordinate,
+                    sys.z_coordinate
+                    FROM market_datum md
+                    JOIN station st ON md.station_id = st.id
+                    JOIN system sys ON st.system_id = sys.id
+                    WHERE ((md.station_id, md."timestamp") IN (SELECT DISTINCT ON (market_datum_1.station_id) market_datum_1.station_id,
+                    market_datum_1."timestamp"
+                    FROM market_datum market_datum_1
+                    ORDER BY market_datum_1.station_id, market_datum_1."timestamp" DESC))
+            ]]>
+        </createView>
+    </changeSet>
+
+</databaseChangeLog>

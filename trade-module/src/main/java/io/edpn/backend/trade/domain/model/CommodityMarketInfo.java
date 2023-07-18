@@ -3,7 +3,6 @@ package io.edpn.backend.trade.domain.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -11,7 +10,6 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class CommodityMarketInfo {
 
@@ -25,8 +23,8 @@ public class CommodityMarketInfo {
     private Double minMeanPrice;
     private Double maxMeanPrice;
     private Double averageMeanPrice;
-    private Integer totalStock;
-    private Integer totalDemand;
+    private Long totalStock;
+    private Long totalDemand;
     private Integer totalStations;
     private Integer stationsWithBuyPrice;
     private Integer stationsWithSellPrice;

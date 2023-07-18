@@ -27,7 +27,7 @@ public class StationEntity {
     private SystemEntity system;
     private Boolean planetary;
     private Boolean requireOdyssey;
-    private boolean fleetCarrier;
+    private Boolean fleetCarrier;
     private String maxLandingPadSize;
     private LocalDateTime marketUpdatedAt;
     @Builder.Default
