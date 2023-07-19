@@ -55,10 +55,14 @@ jobs:
       - name: Get version from build.gradle
         id: get-version
         run: |
-          if [[ "${{ github.event_name }}" == 'pull_request' ]]; then
-            echo "VERSION=$(grep -oP "version\s*=\s*'\K[^']+" build.gradle)-${{ github.event.pull_request.number || github.event.issue.number }}" >> $GITHUB_ENV
+          iif [[ "${{ github.event_name }}" == 'pull_request' ]]; then
+            VERSION=$(grep -oP "version\s*=\s*'\K[^']+" build.gradle)-
+            echo $VERSION
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
           else
-            echo "VERSION=$(grep -oP "version\s*=\s*'\K[^']+" build.gradle)" >> $GITHUB_ENV
+            VERSION=$(grep -oP "version\s*=\s*'\K[^']+" build.gradle)
+            echo $VERSION
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
           fi
       - name: Set up JDK 17
         uses: actions/setup-java@v3
