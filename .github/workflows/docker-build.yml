@@ -55,7 +55,7 @@ jobs:
       - name: Get version from build.gradle
         id: get-version
         run: |
-          iif [[ "${{ github.event_name }}" == 'pull_request' ]]; then
+          if [[ "${{ github.event_name }}" == 'pull_request' ]]; then
             VERSION=$(grep -oP "version\s*=\s*'\K[^']+" build.gradle)-
             echo $VERSION
             echo "VERSION=$VERSION" >> $GITHUB_ENV
