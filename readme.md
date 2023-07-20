@@ -9,6 +9,7 @@ The Elite Dangerous Pilot Network Backend (EDPN Backend) project provides a REST
 - [Installation](#installation)
 - [Local Development](#local-development)
 - [Data flow](#data-flow)
+- [Deploying (Operations)](#deploying)
 - [Reporting Issues](#reporting-issues)
 - [Contributing](#contributing)
 - [License](#license)
@@ -128,6 +129,19 @@ to run the stack for local development, follow these steps:
 
 in short: docker compose up the stack, run both of the projects from IDE
 
+---
+## Deploying (Operations)
+Note to Ops, you need the following files/folders from the repository:
+
+- docker-compose.yml
+- .env
+- env/dev (if deploying to a hosted dev environment)
+
+Save the files, using the existing folder structure from this repository, starting at `/opt/edpn-backend` - set file permissions appropriately (ops group, and 660 on files). Next, edit the `.env` file, setting `ENVIRONMENT=dev`. 
+
+Finally, in that directory, `docker compose up`. Everything should come up and show healthy within a few minutes.
+
+In future, we should automate this via pipeline, etc.
 ___
 ## Reporting Issues
 To report an issue with the EDPN Backend project or to request a feature, please open an issue on the project's GitHub repository. You can also join the [discord](https://discord.gg/RrhRmDQD) and make a suggestion there in `ideas` section.
