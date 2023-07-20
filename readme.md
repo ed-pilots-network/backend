@@ -8,8 +8,8 @@ The Elite Dangerous Pilot Network Backend (EDPN Backend) project provides a REST
     - [Code structure](#code-structure)
 - [Installation](#installation)
 - [Local Development](#local-development)
+- [Deploying](#deploying)
 - [Data flow](#data-flow)
-- [Deploying (Operations)](#deploying)
 - [Reporting Issues](#reporting-issues)
 - [Contributing](#contributing)
 - [License](#license)
@@ -20,7 +20,7 @@ ___
 ## Technologies Used
 The EDPN Backend project is built using the following technologies:
 
-- [Sp[readme.md](readme.md)ring Boot](https://spring.io/projects/spring-boot): An open-source Java-based framework used to create stand-alone, production-grade Spring applications quickly and easily.
+- [Spring Boot](https://spring.io/projects/spring-boot): An open-source Java-based framework used to create stand-alone, production-grade Spring applications quickly and easily.
 - [Maven](https://maven.apache.org/): A build automation tool used to manage dependencies and build Java projects.
 - [Kafka](https://kafka.apache.org/): A distributed streaming platform used to build real-time data pipelines and streaming applications.
 - [Postgres](https://www.postgresql.org/): An open-source relational database management system used to store data for the EDPN Backend project.
@@ -130,7 +130,7 @@ to run the stack for local development, follow these steps:
 in short: docker compose up the stack, run both of the projects from IDE
 
 ---
-## Deploying (Operations)
+## Deploying
 Note to Ops, you need the following files/folders from the repository:
 
 - docker-compose.yml
