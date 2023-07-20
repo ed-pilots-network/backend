@@ -49,6 +49,19 @@ services:
       timeout: 5s
       retries: 5
 
+  explorationmodule_postgres:
+    image: "postgres:15-alpine"
+    restart: on-failure
+    env_file:
+      - env/.env_explorationmodule
+    volumes:
+      - "explorationmodule_postgres:/var/lib/postgresql/data"
+    healthcheck:
+      test: pg_isready
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   eddn-message-listener:
     image: nexus.edpn.io/edpn/backend/eddn-message-listener:latest-snapshot
     restart: on-failure
@@ -80,6 +93,10 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
+      trademodule_postgres:
+        condition: service_healthy
+      explorationmodule_postgres:
+        condition: service_healthy
 
 volumes:
   zookeeper:
@@ -87,4 +104,6 @@ volumes:
   kafka:
     driver: local
   trademodule_postgres:
+    driver: local
+  explorationmodule_postgress:
     driver: local

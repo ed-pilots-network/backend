@@ -8,6 +8,7 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 import java.util.HashMap;
 import java.util.Map;
 
+@Configuration("ExplorationModuleKafkaConfig")
 public interface KafkaConfig {
 
     @EnableKafka
@@ -52,7 +54,7 @@ public interface KafkaConfig {
 
         @Bean(name = "ExplorationModuleKafkaListenerContainerFactory")
         public ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory(EddnJsonKafkaConsumerConfig kafkaConfig) {
-            return kafkaConfig.kafkaListenerContainerFactory("tradeModule");
+            return kafkaConfig.kafkaListenerContainerFactory("explorationModule");
         }
     }
 
@@ -61,7 +63,7 @@ public interface KafkaConfig {
         @Value(value = "${spring.kafka.bootstrap-servers}")
         private String bootstrapServers;
 
-        @Bean
+        @Bean(name = "explorationJsonNodeProducerFactory")
         public ProducerFactory<String, JsonNode> jsonNodeProducerFactory() {
             Map<String, Object> configProps = new HashMap<>();
             configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -70,8 +72,8 @@ public interface KafkaConfig {
             return new DefaultKafkaProducerFactory<>(configProps);
         }
 
-        @Bean
-        public KafkaTemplate<String, JsonNode> jsonNodekafkaTemplate(ProducerFactory<String, JsonNode> jsonNodeProducerFactory) {
+        @Bean(name = "explorationJsonNodekafkaTemplate")
+        public KafkaTemplate<String, JsonNode> jsonNodekafkaTemplate(@Qualifier("explorationJsonNodeProducerFactory") ProducerFactory<String, JsonNode> jsonNodeProducerFactory) {
             return new KafkaTemplate<>(jsonNodeProducerFactory);
         }
     }
@@ -81,15 +83,15 @@ public interface KafkaConfig {
         @Value(value = "${spring.kafka.bootstrap-servers}")
         private String bootstrapServers;
 
-        @Bean
+        @Bean(name = "explorationKafkaAdminClient")
         public AdminClient kafkaAdminClient() {
             Map<String, Object> configs = new HashMap<>();
             configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
             return AdminClient.create(configs);
         }
 
-        @Bean
-        public KafkaTopicHandler kafkaTopicCreator(AdminClient adminClient,
+        @Bean(name = "explorationKafkaTopicCreator")
+        public KafkaTopicHandler kafkaTopicCreator(@Qualifier("explorationKafkaAdminClient") AdminClient adminClient,
                                                    @Value(value = "${spring.kafka.topic.partitions:1}") final int topicPartitions,
                                                    @Value(value = "${spring.kafka.topic.replicationfactor:1}") final short topicReplicationFactor) {
             return new KafkaTopicHandler(adminClient, topicPartitions, topicReplicationFactor);

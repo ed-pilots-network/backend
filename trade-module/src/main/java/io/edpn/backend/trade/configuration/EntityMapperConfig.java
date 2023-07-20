@@ -8,43 +8,44 @@ import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.MarketDat
 import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.RequestDataMessageMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.StationMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.SystemMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration("TradeModuleEntityMapperConfig")
 public class EntityMapperConfig {
 
-    @Bean
+    @Bean(name = "tradeSystemMapper")
     public SystemMapper systemMapper() {
         return new SystemMapper();
     }
 
-    @Bean
+    @Bean(name = "tradeCommodityMapper")
     public CommodityMapper commodityMapper() {
         return new CommodityMapper();
     }
 
-    @Bean
+    @Bean(name = "tradeLocateCommodityMapper")
     public LocateCommodityMapper locateCommodityMapper(CommodityMapper commodityMapper, SystemMapper systemMapper, StationMapper stationMapper) {
         return new LocateCommodityMapper(commodityMapper, systemMapper, stationMapper);
     }
 
-    @Bean
+    @Bean(name = "tradeMarketDatumMapper")
     public MarketDatumMapper marketDatumMapper(CommodityMapper commodityMapper) {
         return new MarketDatumMapper(commodityMapper);
     }
 
-    @Bean
+    @Bean(name = "tradeStationMapper")
     public StationMapper stationMapper(SystemMapper systemMapper, MarketDatumMapper marketDatumMapper) {
         return new StationMapper(systemMapper, marketDatumMapper);
     }
 
-    @Bean
+    @Bean(name = "tradeBestCommodityPriceMapper")
     public CommodityMarketInfoMapper bestCommodityPriceMapper(CommodityMapper commodityMapper, StationMapper stationMapper) {
         return new CommodityMarketInfoMapper(commodityMapper, stationMapper);
     }
 
-    @Bean
+    @Bean(name = "tradeRequestDataMessageMapper")
     public RequestDataMessageMapper requestDataMessageMapper() {
         return new RequestDataMessageMapper();
     }

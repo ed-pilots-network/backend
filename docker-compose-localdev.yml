@@ -55,10 +55,29 @@ services:
       timeout: 5s
       retries: 5
 
+  explorationmodule_postgres:
+    image: "postgres:15-alpine"
+    restart: on-failure
+    environment:
+      - POSTGRES_USER=edpn_explorationmodule
+      - POSTGRES_PASSWORD=TvhRZP7b6Hrw64Ct
+      - POSTGRES_DB=explorationmodule
+    volumes:
+      - "explorationmodule_postgres:/var/lib/postgresql/data"
+    ports:
+      - "54322:5432"
+    healthcheck:
+      test: pg_isready
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   zookeeper:
     driver: local
   kafka:
     driver: local
   trademodule_postgres:
+    driver: local
+  explorationmodule_postgres:
     driver: local

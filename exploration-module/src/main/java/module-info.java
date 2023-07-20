@@ -21,9 +21,9 @@ module edpn.backend.exploration {
     requires jakarta.validation;
     requires io.swagger.v3.oas.annotations;
 
-    exports io.edpn.backend.exploration.domain.service.v1;
+    //exports io.edpn.backend.exploration.domain.service.v1;
     exports io.edpn.backend.exploration.domain.controller.v1;
-    exports io.edpn.backend.exploration.application.service.v1;
+    //exports io.edpn.backend.exploration.application.service.v1;
     exports io.edpn.backend.exploration.application.controller.v1;
-    exports io.edpn.backend.exploration.application.dto.v1;
+    //exports io.edpn.backend.exploration.application.dto.v1;
 }

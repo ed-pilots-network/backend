@@ -5,6 +5,8 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
+    <include file="/db/explorationmodule/changelog/create_system_table.xml"/>
+    <include file="/db/explorationmodule/changelog/create_system_coordinate_data_request_table.xml" />
 
     <!-- views always last as they might depend on new columns -->
 
