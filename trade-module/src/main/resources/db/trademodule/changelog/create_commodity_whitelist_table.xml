@@ -9,6 +9,7 @@
             <column name="technical_name" type="varchar(255)"/>
             <column name="display_name" type="varchar(255)"/>
             <column name="type" type="varchar(255)"/>
+            <column name="is_rare" type="varchar(5)"/>
         </createTable>
         <loadData file="/db/trademodule/data/commodity_whitelist.csv" tableName="commodity_whitelist"/>
     </changeSet>

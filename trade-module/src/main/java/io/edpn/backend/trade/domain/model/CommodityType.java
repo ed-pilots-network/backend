@@ -10,7 +10,6 @@ public enum CommodityType {
     MEDICINES,
     METALS,
     MINERALS,
-    RARE,
     SALVAGE,
     SLAVES,
     TECHNOLOGY,

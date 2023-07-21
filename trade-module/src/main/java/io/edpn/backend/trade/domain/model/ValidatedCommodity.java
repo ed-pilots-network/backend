@@ -15,4 +15,5 @@ public class ValidatedCommodity {
     private String commodityName;
     private String displayName;
     private CommodityType type;
+    private Boolean isRare;
 }
