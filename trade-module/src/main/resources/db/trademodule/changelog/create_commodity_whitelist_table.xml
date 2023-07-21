@@ -4,7 +4,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="create_system_table" author="daniel-j-mason">
+    <changeSet id="create_commodity_whitelist_table" author="daniel-j-mason">
         <createTable tableName="commodity_whitelist">
             <column name="technical_name" type="varchar(255)"/>
             <column name="display_name" type="varchar(255)"/>
