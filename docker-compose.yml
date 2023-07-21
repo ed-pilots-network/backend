@@ -3,6 +3,7 @@ version: "3.8"
 name: "edpn-backend"
 services:
   zookeeper:
+  ## TODO: Tag this image locally
     image: "bitnami/zookeeper:3.8"
     restart: on-failure
     environment:
@@ -17,13 +18,11 @@ services:
       start_period: 0s
 
   kafka:
+  ## TODO: Tag this image locally
     image: "bitnami/kafka:3.4"
     restart: on-failure
-    environment:
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
-      - ALLOW_PLAINTEXT_LISTENER=yes
-      - KAFKA_CFG_COMPRESSION_TYPE=gzip
+    env_file:
+          - env/${ENVIRONMENT}/.env_kafka
     volumes:
       - "kafka:/bitnami/kafka"
     healthcheck:
@@ -36,15 +35,16 @@ services:
       zookeeper:
         condition: service_healthy
 
-  trademodule_postgres:
+  trademodule-postgres:
+  ## TODO: Tag this image locally
     image: "postgres:15-alpine"
     restart: on-failure
     env_file:
-      - env/.env_trademodule
+      - env/${ENVIRONMENT}/.env_trademodule
     volumes:
       - "trademodule_postgres:/var/lib/postgresql/data"
     healthcheck:
-      test: pg_isready
+      test: ["CMD-SHELL", "pg_isready -d trademodule -U edpn_trademodule"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -53,7 +53,7 @@ services:
     image: nexus.edpn.io/edpn/backend/eddn-message-listener:latest-snapshot
     restart: on-failure
     env_file:
-      - env/.env_eddn_message_listener
+      - env/${ENVIRONMENT}/.env_eddn_message_listener
     healthcheck:
       test: "wget -qO- localhost:8080/actuator/health | grep UP || exit 1"
       interval: 20s
@@ -68,7 +68,7 @@ services:
     image: nexus.edpn.io/edpn/backend/modulith:latest-snapshot
     restart: on-failure
     env_file:
-      - env/.env_modulith
+      - env/${ENVIRONMENT}/.env_modulith
     ports:
       - "8080:8080"
     healthcheck:
