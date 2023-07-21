@@ -20,4 +20,7 @@ public interface SystemCoordinateDataRequestEntityMapper {
 
     @Select("SELECT * FROM system_coordinate_data_request WHERE requesting_module = #{requestingModule} AND system_name = #{systemName}")
     Optional<SystemCoordinateDataRequestEntity> find(SystemCoordinateDataRequestEntity requestDataMessageEntity);
+
+    @Select("SELECT * FROM system_coordinate_data_request WHERE system_name = #{systemName}")
+    List<SystemCoordinateDataRequestEntity> findBySystemName(String requestDataMessageEntity);
 }

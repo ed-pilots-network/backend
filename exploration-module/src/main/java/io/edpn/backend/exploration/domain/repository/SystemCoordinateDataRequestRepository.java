@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public interface SystemCoordinateDataRequestRepository {
     Optional<SystemCoordinateDataRequest> find(SystemCoordinateDataRequest entity) throws DatabaseEntityNotFoundException;
+    List<SystemCoordinateDataRequest> findBySystemName(String systemName) throws DatabaseEntityNotFoundException;
 
     SystemCoordinateDataRequest create(SystemCoordinateDataRequest entity) throws DatabaseEntityNotFoundException;
 

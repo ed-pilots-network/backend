@@ -6,10 +6,11 @@ import io.edpn.backend.exploration.infrastructure.persistence.mappers.entity.Sys
 import io.edpn.backend.exploration.infrastructure.persistence.mappers.mybatis.SystemEntityMapper;
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.exception.DatabaseEntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class MybatisSystemRepository implements SystemRepository {
@@ -60,6 +61,7 @@ public class MybatisSystemRepository implements SystemRepository {
 
     @Override
     public Optional<System> findByName(String name) {
-        return Optional.empty(); //TODO
+        return systemEntityMapper.findByName(name)
+                .map(systemMapper::map);
     }
 }

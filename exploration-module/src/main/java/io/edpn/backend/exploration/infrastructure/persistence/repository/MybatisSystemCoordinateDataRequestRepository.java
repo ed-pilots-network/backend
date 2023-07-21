@@ -22,6 +22,13 @@ public class MybatisSystemCoordinateDataRequestRepository implements SystemCoord
     }
 
     @Override
+    public List<SystemCoordinateDataRequest> findBySystemName(String systemName) throws DatabaseEntityNotFoundException {
+        return systemCoordinateDataRequestEntityMapper.findBySystemName(systemName).stream()
+                .map(systemCoordinateDataRequestMapper::map)
+                .toList();
+    }
+
+    @Override
     public SystemCoordinateDataRequest create(SystemCoordinateDataRequest systemCoordinateDataRequest) throws DatabaseEntityNotFoundException {
         var entity = systemCoordinateDataRequestMapper.map(systemCoordinateDataRequest);
 

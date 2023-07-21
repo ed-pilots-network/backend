@@ -10,6 +10,7 @@
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="name" type="varchar(255)"/>
+            <column name="star_class" type="varchar(255)"/>
             <column name="elite_id" type="bigint"/>
             <column name="x_coordinate" type="double"/>
             <column name="y_coordinate" type="double"/>

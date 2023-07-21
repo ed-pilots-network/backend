@@ -17,6 +17,7 @@ public class System {
     private UUID id;
     private Long eliteId;
     private String name;
+    private String starClass;
     private Double xCoordinate;
     private Double yCoordinate;
     private Double zCoordinate;

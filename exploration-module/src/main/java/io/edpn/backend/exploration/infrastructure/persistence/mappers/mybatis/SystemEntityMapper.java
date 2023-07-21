@@ -20,6 +20,7 @@ public interface SystemEntityMapper {
     @Results(id = "systemResultMap", value = {
             @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name", javaType = String.class),
+            @Result(property = "starClass", column = "star_class", javaType = String.class),
             @Result(property = "eliteId", column = "elite_id", javaType = Long.class),
             @Result(property = "xCoordinate", column = "x_coordinate", javaType = Double.class),
             @Result(property = "yCoordinate", column = "y_coordinate", javaType = Double.class),
@@ -31,11 +32,11 @@ public interface SystemEntityMapper {
     @ResultMap("systemResultMap")
     Optional<SystemEntity> findByName(@Param("name") String name);
 
-    @Insert("INSERT INTO system (id, name, elite_id, x_coordinate, y_coordinate, z_coordinate) " +
-            "VALUES (#{id}, #{name}, #{eliteId}, #{xCoordinate}, #{yCoordinate}, #{zCoordinate})")
+    @Insert("INSERT INTO system (id, name, star_class, elite_id, x_coordinate, y_coordinate, z_coordinate) " +
+            "VALUES (#{id}, #{name}, #{starClass}, #{eliteId}, #{xCoordinate}, #{yCoordinate}, #{zCoordinate})")
     void insert(SystemEntity system);
 
-    @Update("UPDATE system SET name = #{name}, elite_id = #{eliteId}, x_coordinate = #{xCoordinate}, " +
+    @Update("UPDATE system SET name = #{name}, star_class = #{starClass}, elite_id = #{eliteId}, x_coordinate = #{xCoordinate}, " +
             "y_coordinate = #{yCoordinate}, z_coordinate = #{zCoordinate} WHERE id = #{id}")
     void update(SystemEntity system);
 

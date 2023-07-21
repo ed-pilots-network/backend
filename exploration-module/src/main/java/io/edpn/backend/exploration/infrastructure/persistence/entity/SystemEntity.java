@@ -18,6 +18,7 @@ public class SystemEntity {
 
     private UUID id;
     private String name;
+    private String starClass;
     private Long eliteId;
     private Double xCoordinate;
     private Double yCoordinate;
