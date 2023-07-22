@@ -1,7 +1,6 @@
 package io.edpn.backend.trade.domain.controller.v1;
 
 import io.edpn.backend.trade.application.dto.v1.*;
-import io.edpn.backend.trade.domain.model.ValidatedCommodity;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
