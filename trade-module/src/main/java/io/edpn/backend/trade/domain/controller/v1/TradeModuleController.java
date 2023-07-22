@@ -24,6 +24,6 @@ public interface TradeModuleController {
     @GetMapping("/commodity")
     List<FindCommodityResponse> findAllValidatedCommodities();
     
-    @PostMapping("/commodity/query")
+    @PostMapping("/commodity/filter")
     List<FindCommodityResponse> findValidatedCommodityByFilter(@Valid @RequestBody FindCommodityRequest findCommodityRequest);
 }
