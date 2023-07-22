@@ -6,6 +6,7 @@ import io.edpn.backend.trade.domain.repository.*;
 import io.edpn.backend.trade.infrastructure.kafka.KafkaTopicHandler;
 import io.edpn.backend.trade.infrastructure.kafka.sender.KafkaMessageSender;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.*;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.filter.FindCommodityFilterMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.filter.LocateCommodityFilterMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.*;
 import io.edpn.backend.trade.infrastructure.persistence.repository.*;
@@ -50,5 +51,10 @@ public class RepositoryConfig {
     @Bean
     public LocateCommodityRepository locateCommodityRepository(LocateCommodityMapper locateCommodityMapper, LocateCommodityEntityMapper locateCommodityEntityMapper, LocateCommodityFilterMapper locateCommodityFilterMapper) {
         return new MybatisLocateCommodityRepository(locateCommodityMapper, locateCommodityEntityMapper, locateCommodityFilterMapper);
+    }
+    
+    @Bean
+    public ValidatedCommodityRepository validatedCommodityRepository(ValidatedCommodityMapper validatedCommodityMapper, ValidatedCommodityEntityMapper validatedCommodityEntityMapper, FindCommodityFilterMapper findCommodityFilterMapper) {
+        return new MybatisValidatedCommodityRepository(validatedCommodityMapper, validatedCommodityEntityMapper, findCommodityFilterMapper);
     }
 }
