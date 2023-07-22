@@ -8,6 +8,7 @@ The Elite Dangerous Pilot Network Backend (EDPN Backend) project provides a REST
     - [Code structure](#code-structure)
 - [Installation](#installation)
 - [Local Development](#local-development)
+- [Deploying](#deploying)
 - [Data flow](#data-flow)
 - [Reporting Issues](#reporting-issues)
 - [Contributing](#contributing)
@@ -19,7 +20,7 @@ ___
 ## Technologies Used
 The EDPN Backend project is built using the following technologies:
 
-- [Sp[readme.md](readme.md)ring Boot](https://spring.io/projects/spring-boot): An open-source Java-based framework used to create stand-alone, production-grade Spring applications quickly and easily.
+- [Spring Boot](https://spring.io/projects/spring-boot): An open-source Java-based framework used to create stand-alone, production-grade Spring applications quickly and easily.
 - [Maven](https://maven.apache.org/): A build automation tool used to manage dependencies and build Java projects.
 - [Kafka](https://kafka.apache.org/): A distributed streaming platform used to build real-time data pipelines and streaming applications.
 - [Postgres](https://www.postgresql.org/): An open-source relational database management system used to store data for the EDPN Backend project.
@@ -139,6 +140,19 @@ to run the stack for local development, follow these steps:
 
 in short: docker compose up the stack, run both of the projects from IDE
 
+---
+## Deploying
+Note to Ops, you need the following files/folders from the repository:
+
+- docker-compose.yml
+- .env
+- env/dev (if deploying to a hosted dev environment)
+
+Save the files, using the existing folder structure from this repository, starting at `/opt/edpn-backend` - set file permissions appropriately (ops group, and 660 on files). Next, edit the `.env` file, setting `ENVIRONMENT=dev`. 
+
+Finally, in that directory, `docker compose up`. Everything should come up and show healthy within a few minutes.
+
+In future, we should automate this via pipeline, etc.
 ___
 ## Reporting Issues
 To report an issue with the EDPN Backend project or to request a feature, please open an issue on the project's GitHub repository. You can also join the [discord](https://discord.gg/RrhRmDQD) and make a suggestion there in `ideas` section.
