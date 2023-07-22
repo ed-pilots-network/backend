@@ -18,7 +18,7 @@ import lombok.extern.jackson.Jacksonized;
 public class FindCommodityRequest {
     
     @NotNull(message = "Type is mandatory")
-    @Schema(example = "SMALL", allowableValues = " CHEMICALS, CONSUMER_ITEMS, LEGAL_DRUGS, FOODS, INDUSTRIAL_MATERIALS, " +
+    @Schema(example = "CHEMICALS", allowableValues = " CHEMICALS, CONSUMER_ITEMS, LEGAL_DRUGS, FOODS, INDUSTRIAL_MATERIALS, " +
             "MACHINERY, MEDICINES, METALS, MINERALS, SALVAGE, SLAVES, TECHNOLOGY, TEXTILES, WASTE, WEAPONS")
     String type;
     Boolean isRare;
