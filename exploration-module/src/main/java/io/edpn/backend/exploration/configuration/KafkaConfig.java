@@ -31,7 +31,7 @@ public interface KafkaConfig {
     @EnableKafka
     @Configuration("ExplorationModuleEddnJsonKafkaConsumerConfig")
     class EddnJsonKafkaConsumerConfig {
-        @Value(value = "${spring.kafka.bootstrap-servers}")
+        @Value(value = "${exploration.spring.kafka.bootstrap-servers}")
         private String bootstrapServers;
 
         public ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory(String groupId) {
@@ -52,7 +52,7 @@ public interface KafkaConfig {
             return new DefaultKafkaConsumerFactory<>(configProps);
         }
 
-        @Bean(name = "ExplorationModuleKafkaListenerContainerFactory")
+        @Bean(name = "explorationModuleKafkaListenerContainerFactory")
         public ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory(EddnJsonKafkaConsumerConfig kafkaConfig) {
             return kafkaConfig.kafkaListenerContainerFactory("explorationModule");
         }
@@ -60,7 +60,7 @@ public interface KafkaConfig {
 
     @Configuration("ExplorationModuleJsonNodeKafkaProducerConfig")
     class JsonNodeKafkaProducerConfig {
-        @Value(value = "${spring.kafka.bootstrap-servers}")
+        @Value(value = "${exploration.spring.kafka.bootstrap-servers}")
         private String bootstrapServers;
 
         @Bean(name = "explorationJsonNodeProducerFactory")
@@ -80,7 +80,7 @@ public interface KafkaConfig {
 
     @Configuration("ExplorationModuleKafkaAdminConfig")
     class KafkaAdminConfig {
-        @Value(value = "${spring.kafka.bootstrap-servers}")
+        @Value(value = "${exploration.spring.kafka.bootstrap-servers}")
         private String bootstrapServers;
 
         @Bean(name = "explorationKafkaAdminClient")
@@ -92,8 +92,8 @@ public interface KafkaConfig {
 
         @Bean(name = "explorationKafkaTopicCreator")
         public KafkaTopicHandler kafkaTopicCreator(@Qualifier("explorationKafkaAdminClient") AdminClient adminClient,
-                                                   @Value(value = "${spring.kafka.topic.partitions:1}") final int topicPartitions,
-                                                   @Value(value = "${spring.kafka.topic.replicationfactor:1}") final short topicReplicationFactor) {
+                                                   @Value(value = "${exploration.spring.kafka.topic.partitions:1}") final int topicPartitions,
+                                                   @Value(value = "${exploration.spring.kafka.topic.replicationfactor:1}") final short topicReplicationFactor) {
             return new KafkaTopicHandler(adminClient, topicPartitions, topicReplicationFactor);
         }
     }

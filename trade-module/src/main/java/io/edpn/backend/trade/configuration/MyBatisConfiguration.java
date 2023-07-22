@@ -27,7 +27,7 @@ import javax.sql.DataSource;
 public class MyBatisConfiguration {
 
     @Bean(name = "tradeSqlSessionFactory")
-    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
+    public SqlSessionFactory sqlSessionFactory(@Qualifier("tradeDataSource") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
         sessionFactoryBean.setDataSource(dataSource);
         sessionFactoryBean.setTypeHandlers(new UuidTypeHandler(), new StringTrimmingTypeHandler(), new StringListToArrayTypeHandler());
@@ -36,12 +36,12 @@ public class MyBatisConfiguration {
     }
 
     @Bean(name = "tradeTransactionManager")
-    public PlatformTransactionManager transactionManager(DataSource dataSource) {
+    public PlatformTransactionManager transactionManager(@Qualifier("tradeDataSource") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 
     @Bean(name = "tradeSqlSessionTemplate")
-    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
+    public SqlSessionTemplate sqlSessionTemplate(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
 
@@ -51,49 +51,49 @@ public class MyBatisConfiguration {
     }
 
     @Bean(name = "tradeCommodityEntityMapper")
-    public MapperFactoryBean<CommodityEntityMapper> commodityEntityMapper(SqlSessionFactory sqlSessionFactory) {
+    public MapperFactoryBean<CommodityEntityMapper> commodityEntityMapper(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<CommodityEntityMapper> factoryBean = new MapperFactoryBean<>(CommodityEntityMapper.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }
 
     @Bean(name = "tradeMarketDatumEntityMapper")
-    public MapperFactoryBean<MarketDatumEntityMapper> marketDatumEntityMapper(SqlSessionFactory sqlSessionFactory) {
+    public MapperFactoryBean<MarketDatumEntityMapper> marketDatumEntityMapper(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<MarketDatumEntityMapper> factoryBean = new MapperFactoryBean<>(MarketDatumEntityMapper.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }
 
     @Bean(name = "tradeStationEntityMapper")
-    public MapperFactoryBean<StationEntityMapper> stationEntityMapper(SqlSessionFactory sqlSessionFactory) {
+    public MapperFactoryBean<StationEntityMapper> stationEntityMapper(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<StationEntityMapper> factoryBean = new MapperFactoryBean<>(StationEntityMapper.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }
 
-    @Bean(name = "tradesSystemEntityMapper")
-    public MapperFactoryBean<SystemEntityMapper> systemEntityMapper(SqlSessionFactory sqlSessionFactory) {
+    @Bean(name = "tradeSystemEntityMapper")
+    public MapperFactoryBean<SystemEntityMapper> systemEntityMapper(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<SystemEntityMapper> factoryBean = new MapperFactoryBean<>(SystemEntityMapper.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }
 
     @Bean(name = "tradeBestCommodityPriceEntityMapper")
-    public MapperFactoryBean<CommodityMarketInfoEntityMapper> bestCommodityPriceEntityMapper(SqlSessionFactory sqlSessionFactory) {
+    public MapperFactoryBean<CommodityMarketInfoEntityMapper> bestCommodityPriceEntityMapper(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<CommodityMarketInfoEntityMapper> factoryBean = new MapperFactoryBean<>(CommodityMarketInfoEntityMapper.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }
 
     @Bean(name = "tradeLocateCommodityEntityMapper")
-    public MapperFactoryBean<LocateCommodityEntityMapper> locateCommodityEntityMapper(SqlSessionFactory sqlSessionFactory) {
+    public MapperFactoryBean<LocateCommodityEntityMapper> locateCommodityEntityMapper(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<LocateCommodityEntityMapper> factoryBean = new MapperFactoryBean<>(LocateCommodityEntityMapper.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }
 
     @Bean(name = "tradeRequestDataMessageEntityMapper")
-    public MapperFactoryBean<RequestDataMessageEntityMapper> requestDataMessageEntityMapper(SqlSessionFactory sqlSessionFactory) {
+    public MapperFactoryBean<RequestDataMessageEntityMapper> requestDataMessageEntityMapper(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<RequestDataMessageEntityMapper> factoryBean = new MapperFactoryBean<>(RequestDataMessageEntityMapper.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;

@@ -1,8 +1,10 @@
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:54322/explorationmodule
-    username: edpn_explorationmodule
-    password: TvhRZP7b6Hrw64Ct
+exploration:
+  spring:
+    datasource:
+      url: jdbc:postgresql://localhost:54322/explorationmodule
+      username: edpn_explorationmodule
+      password: TvhRZP7b6Hrw64Ct
+      driver-class-name: org.postgresql.Driver
 
-  kafka:
-    bootstrap-servers: localhost:9092
+    kafka:
+      bootstrap-servers: localhost:9092

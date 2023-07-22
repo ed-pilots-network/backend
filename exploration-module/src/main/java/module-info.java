@@ -20,6 +20,7 @@ module edpn.backend.exploration {
     requires org.mybatis;
     requires jakarta.validation;
     requires io.swagger.v3.oas.annotations;
+    requires liquibase.core;
 
     //exports io.edpn.backend.exploration.domain.service.v1;
     exports io.edpn.backend.exploration.domain.controller.v1;

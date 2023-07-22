@@ -28,27 +28,27 @@ import java.util.List;
 @Configuration("TradeModuleUseCaseConfig")
 public class UseCaseConfig {
 
-    @Bean(name = "findBestCommodityPriceUseCase")
+    @Bean(name = "tradeFindBestCommodityPriceUseCase")
     public FindCommodityMarketInfoUseCase findCommodityMarketInfoCase(CommodityMarketInfoRepository commodityMarketInfoRepository) {
         return new DefaultFindCommodityMarketInfoUseCase(commodityMarketInfoRepository);
     }
 
-    @Bean(name = "receiveCommodityMessageUseCase")
+    @Bean(name = "tradeReceiveCommodityMessageUseCase")
     public ReceiveCommodityMessageUseCase receiveCommodityMessageUseCase(CommodityRepository commodityRepository, SystemRepository systemRepository, StationRepository stationRepository, MarketDatumRepository marketDatumRepository, List<RequestDataService<Station>> stationRequestDataServices, List<RequestDataService<System>> systemRequestDataServices) {
         return new DefaultReceiveCommodityMessageUseCase(commodityRepository, systemRepository, stationRepository, marketDatumRepository, stationRequestDataServices, systemRequestDataServices);
     }
 
-    @Bean(name = "receiveStationArrivalDistanceResponseUseCase")
+    @Bean(name = "tradeReceiveStationArrivalDistanceResponseUseCase")
     public ReceiveDataRequestResponseUseCase<StationArrivalDistanceResponse> receiveStationArrivalDistanceResponseUseCase(SystemRepository systemRepository, StationRepository stationRepository) {
         return new ReceiveStationArrivalDistanceResponseUseCase(systemRepository, stationRepository);
     }
 
-    @Bean(name = "receiveStationMaxLandingPadSizeResponseUseCase")
+    @Bean(name = "tradeReceiveStationMaxLandingPadSizeResponseUseCase")
     public ReceiveDataRequestResponseUseCase<StationMaxLandingPadSizeResponse> receiveStationMaxLandingPadSizeResponseUseCase(SystemRepository systemRepository, StationRepository stationRepository) {
         return new ReceiveStationMaxLandingPadSizeResponseUseCase(systemRepository, stationRepository);
     }
 
-    @Bean(name = "findCommodityUseCase")
+    @Bean(name = "tradeFindCommodityUseCase")
     public LocateCommodityUseCase locateCommodityUseCase(LocateCommodityRepository locateCommodityRepository) {
         return new DefaultLocateCommodityUseCase(locateCommodityRepository);
     }

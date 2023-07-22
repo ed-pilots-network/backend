@@ -19,7 +19,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 public class RepositoryConfig {
 
     @Bean(name = "tradeCommodityRepository")
-    public CommodityRepository commodityRepository(IdGenerator idGenerator, CommodityMapper commodityMapper, CommodityEntityMapper commodityEntityMapper) {
+    public CommodityRepository commodityRepository(@Qualifier("tradeIdGenerator") IdGenerator idGenerator, CommodityMapper commodityMapper, CommodityEntityMapper commodityEntityMapper) {
         return new MybatisCommodityRepository(idGenerator, commodityMapper, commodityEntityMapper);
     }
 
@@ -29,12 +29,12 @@ public class RepositoryConfig {
     }
 
     @Bean(name = "tradeStationRepository")
-    public StationRepository stationRepository(IdGenerator idGenerator, StationMapper stationMapper, StationEntityMapper stationEntityMapper, MarketDatumEntityMapper marketDatumEntityMapper) {
+    public StationRepository stationRepository(@Qualifier("tradeIdGenerator") IdGenerator idGenerator, StationMapper stationMapper, StationEntityMapper stationEntityMapper, MarketDatumEntityMapper marketDatumEntityMapper) {
         return new MybatisStationRepository(idGenerator, stationMapper, stationEntityMapper, marketDatumEntityMapper);
     }
 
     @Bean(name = "tradeSystemRepository")
-    public SystemRepository systemRepository(IdGenerator idGenerator, SystemMapper systemMapper, SystemEntityMapper systemEntityMapper) {
+    public SystemRepository systemRepository(@Qualifier("tradeIdGenerator") IdGenerator idGenerator, SystemMapper systemMapper, SystemEntityMapper systemEntityMapper) {
         return new MybatisSystemRepository(idGenerator, systemMapper, systemEntityMapper);
     }
 

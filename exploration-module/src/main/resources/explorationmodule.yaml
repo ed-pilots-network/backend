@@ -1,15 +1,14 @@
-spring:
-  liquibase:
-    enabled: true
-    change-log: classpath:db/explorationmodule/changelog/explorationmodule-changelog.xml
+exploration:
+  spring:
+    liquibase:
+      enabled: true
+      change-log: classpath:db/explorationmodule/changelog/explorationmodule-changelog.xml
 
-  datasource:
-    url: ${EXPLORATIONMODULE_DB_URL}
-    username: ${EXPLORATIONMODULE_DB_USERNAME}
-    password: ${EXPLORATIONMODULE_DB_PASSWORD}
-    driver-class-name: org.postgresql.Driver
+    datasource:
+      url: ${EXPLORATIONMODULE_DB_URL}
+      username: ${EXPLORATIONMODULE_DB_USERNAME}
+      password: ${EXPLORATIONMODULE_DB_PASSWORD}
+      driver-class-name: org.postgresql.Driver
 
-  kafka:
-    bootstrap-servers: ${KAFKA_URL}
-    consumer:
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    kafka:
+      bootstrap-servers: ${KAFKA_URL}

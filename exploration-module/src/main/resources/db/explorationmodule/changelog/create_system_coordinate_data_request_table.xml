@@ -14,7 +14,7 @@
             </column>
         </createTable>
 
-        <addPrimaryKey tableName="request_data_message" columnNames="topic,message" constraintName="pk_request_data_message" />
+        <addPrimaryKey tableName="system_coordinate_data_request" columnNames="requesting_module,system_name" constraintName="pk_system_coordinate_data_request" />
     </changeSet>
 
 </databaseChangeLog>

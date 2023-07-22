@@ -31,7 +31,7 @@ public interface KafkaConfig {
     @EnableKafka
     @Configuration("TradeModuleEddnJsonKafkaConsumerConfig")
     class EddnJsonKafkaConsumerConfig {
-        @Value(value = "${spring.kafka.bootstrap-servers}")
+        @Value(value = "${trade.spring.kafka.bootstrap-servers}")
         private String bootstrapServers;
 
         public ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory(String groupId) {
@@ -60,7 +60,7 @@ public interface KafkaConfig {
 
     @Configuration("TradeModuleJsonNodeKafkaProducerConfig")
     class JsonNodeKafkaProducerConfig {
-        @Value(value = "${spring.kafka.bootstrap-servers}")
+        @Value(value = "${trade.spring.kafka.bootstrap-servers}")
         private String bootstrapServers;
 
         @Bean(name = "tradeJsonNodeProducerFactory")
@@ -80,7 +80,7 @@ public interface KafkaConfig {
 
     @Configuration("TradeModuleKafkaAdminConfig")
     class KafkaAdminConfig {
-        @Value(value = "${spring.kafka.bootstrap-servers}")
+        @Value(value = "${trade.spring.kafka.bootstrap-servers}")
         private String bootstrapServers;
 
         @Bean(name = "tradeKafkaAdminClient")
@@ -92,8 +92,8 @@ public interface KafkaConfig {
 
         @Bean(name = "tradeKafkaTopicCreator")
         public KafkaTopicHandler kafkaTopicCreator(@Qualifier("tradeKafkaAdminClient") AdminClient adminClient,
-                                                   @Value(value = "${spring.kafka.topic.partitions:1}") final int topicPartitions,
-                                                   @Value(value = "${spring.kafka.topic.replicationfactor:1}") final short topicReplicationFactor) {
+                                                   @Value(value = "${trade.spring.kafka.topic.partitions:1}") final int topicPartitions,
+                                                   @Value(value = "${trade.spring.kafka.topic.replicationfactor:1}") final short topicReplicationFactor) {
             return new KafkaTopicHandler(adminClient, topicPartitions, topicReplicationFactor);
         }
     }

@@ -18,7 +18,7 @@ import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 @Slf4j
-public class ReceiveSystemCoordinatesRequestUseCase implements ReceiveDataRequestUseCase<SystemDataRequest> {
+public class DefaultReceiveSystemCoordinatesRequestUseCase implements ReceiveDataRequestUseCase<SystemDataRequest> {
 
     private final SystemRepository systemRepository;
     private final RequestDataMessageRepository requestDataMessageRepository;
