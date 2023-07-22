@@ -1,15 +1,13 @@
 package io.edpn.backend.trade.domain.controller.v1;
 
-import io.edpn.backend.trade.application.dto.v1.CommodityMarketInfoResponse;
-import io.edpn.backend.trade.application.dto.v1.LocateCommodityRequest;
-import io.edpn.backend.trade.application.dto.v1.LocateCommodityResponse;
+import io.edpn.backend.trade.application.dto.v1.*;
+import io.edpn.backend.trade.domain.model.ValidatedCommodity;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RequestMapping("/api/v1/trade")
 public interface TradeModuleController {
@@ -19,4 +17,13 @@ public interface TradeModuleController {
 
     @PostMapping("/locate-commodity")
     List<LocateCommodityResponse> locateCommodityWithFilters(@Valid @RequestBody LocateCommodityRequest locateCommodityRequest);
+    
+    @GetMapping("/commodity/{id}")
+    Optional<FindCommodityResponse> findValidatedCommodityById(@PathVariable UUID id);
+    
+    @GetMapping("/commodity")
+    List<FindCommodityResponse> findAllValidatedCommodities();
+    
+    @PostMapping("/commodity/query")
+    List<FindCommodityResponse> findValidatedCommodityByFilter(@Valid @RequestBody FindCommodityRequest findCommodityRequest);
 }
