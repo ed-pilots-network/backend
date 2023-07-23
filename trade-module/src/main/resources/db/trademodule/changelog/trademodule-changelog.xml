@@ -14,6 +14,7 @@
     <include file="/db/trademodule/changelog/add_unique_indexes.xml"/>
     <include file="/db/trademodule/changelog/create_request_data_message_table.xml"/>
     <include file="/db/trademodule/changelog/add_timestamp_market_datum_table.xml"/>
+    <include file="/db/trademodule/changelog/add_send_request_data_message_table.xml"/>
 
     <!-- views always last as they might depend on new columns -->
     <include file="/db/trademodule/changelog/create_commodity_market_info_view.xml"/>

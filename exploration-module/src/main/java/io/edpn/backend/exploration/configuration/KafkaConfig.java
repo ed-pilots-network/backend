@@ -31,6 +31,7 @@ public interface KafkaConfig {
     @EnableKafka
     @Configuration("ExplorationModuleEddnJsonKafkaConsumerConfig")
     class EddnJsonKafkaConsumerConfig {
+
         @Value(value = "${exploration.spring.kafka.bootstrap-servers}")
         private String bootstrapServers;
 

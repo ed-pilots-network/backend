@@ -26,12 +26,12 @@ public class DefaultReceiveSystemCoordinatesRequestUseCase implements ReceiveDat
     private final ObjectMapper objectMapper;
 
     @Override
-    public void receive(SystemDataRequest message, String requestingModule) {
+    public void receive(SystemDataRequest message) {
         CompletableFuture.supplyAsync(() -> systemRepository.findByName(message.getSystemName()))
                 .thenAcceptAsync(optionalSystem ->
                         optionalSystem.ifPresentOrElse(
-                                system -> sendCoordinatesToKafka(system, requestingModule),
-                                () -> createSystemCoordinateDataRequest(message, requestingModule)
+                                system -> sendCoordinatesToKafka(system, message.getRequestingModule()),
+                                () -> createSystemCoordinateDataRequest(message)
                         )
                 );
     }
@@ -43,7 +43,7 @@ public class DefaultReceiveSystemCoordinatesRequestUseCase implements ReceiveDat
             JsonNode jsonNode = objectMapper.valueToTree(systemCoordinatesResponse);
 
             RequestDataMessage requestDataMessage = RequestDataMessage.builder()
-                    .topic(requestingModule + "StationArrivalDistanceDataRequest")
+                    .topic(requestingModule + "_systemCoordinatesDataResponse")
                     .message(jsonNode)
                     .build();
 
@@ -51,10 +51,10 @@ public class DefaultReceiveSystemCoordinatesRequestUseCase implements ReceiveDat
         });
     }
 
-    private void createSystemCoordinateDataRequest(SystemDataRequest message, String requestingModule) {
+    private void createSystemCoordinateDataRequest(SystemDataRequest message) {
         systemCoordinateDataRequestRepository.create(
                 SystemCoordinateDataRequest.builder()
-                        .requestingModule(requestingModule)
+                        .requestingModule(message.getRequestingModule())
                         .systemName(message.getSystemName())
                         .build()
         );

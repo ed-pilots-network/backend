@@ -16,14 +16,14 @@ public class TradeModuleSystemCoordinatesRequestMessageProcessor implements Mess
     private final ObjectMapper objectMapper;
 
     @Override
-    @KafkaListener(topics = "tradeModuleSystemCoordinatesDataRequest", groupId = "explorationModule", containerFactory = "explorationModuleKafkaListenerContainerFactory")
+    @KafkaListener(topics = "systemCoordinatesDataRequest", groupId = "explorationModule", containerFactory = "explorationModuleKafkaListenerContainerFactory")
     public void listen(JsonNode json) throws JsonProcessingException {
         handle(processJson(json));
     }
 
     @Override
     public void handle(SystemDataRequest message) {
-        receiveDataRequestUseCase.receive(message, "tradeModule");
+        receiveDataRequestUseCase.receive(message);
     }
 
     @Override

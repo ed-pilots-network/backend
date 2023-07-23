@@ -29,11 +29,12 @@ public class RequestStationRequireOdysseyService implements RequestDataService<S
         StationDataRequest stationDataRequest = new StationDataRequest();
         stationDataRequest.setStationName(station.getName());
         stationDataRequest.setSystemName(station.getSystem().getName());
+        stationDataRequest.setRequestingModule("trade");
 
         JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
 
         RequestDataMessage requestDataMessage = RequestDataMessage.builder()
-                .topic("tradeModuleStationRequireOdeysseyDataRequest")
+                .topic("stationRequireOdeysseyDataRequest")
                 .message(jsonNode)
                 .build();
 

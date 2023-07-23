@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.Objects;
+import java.util.function.Predicate;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -39,34 +40,37 @@ public class KafkaMessageSender implements RequestDataMessageRepository {
     }
 
     private void sendPendingMessages() {
-        requestDataMessageEntityMapper.findAll().forEach(requestDataMessageEntity -> {
-            try {
-                JsonNode jsonNode = objectMapper.readTree(requestDataMessageEntity.getMessage());
+        requestDataMessageEntityMapper.findAll()
+                .stream().filter(Predicate.not(RequestDataMessageEntity::isSend))
+                .forEach(requestDataMessageEntity -> {
+                    try {
+                        JsonNode jsonNode = objectMapper.readTree(requestDataMessageEntity.getMessage());
 
-                kafkaTopicHandler.createTopicIfNotExists(requestDataMessageEntity.getTopic())
-                        .whenComplete((tName, kafkaTopicCreateException) -> {
-                            if (Objects.isNull(kafkaTopicCreateException)) {
-                                jsonNodekafkaTemplate.send(tName, jsonNode).whenComplete(
-                                        (kafkaResult, kafkaSendException) -> {
-                                            if (Objects.nonNull(kafkaSendException)) {
-                                                //TODO handle kafka exception
-                                                log.error("could not send message to Kafka", kafkaSendException);
-                                                throw new RuntimeException(kafkaSendException.getMessage());
-                                            } else {
-                                                requestDataMessageEntityMapper.delete(requestDataMessageEntity);
-                                            }
-                                        }
-                                );
-                            } else {
-                                //TODO handle kafka exception
-                                log.error("could not create topic on Kafka", kafkaTopicCreateException);
-                                throw new RuntimeException(kafkaTopicCreateException.getMessage());
-                            }
-                        });
-            } catch (JsonProcessingException e) {
-                log.error("could not convert message to json", e);
-                throw new RuntimeException(e);
-            }
-        });
+                        kafkaTopicHandler.createTopicIfNotExists(requestDataMessageEntity.getTopic())
+                                .whenComplete((tName, kafkaTopicCreateException) -> {
+                                    if (Objects.isNull(kafkaTopicCreateException)) {
+                                        jsonNodekafkaTemplate.send(tName, jsonNode).whenComplete(
+                                                (kafkaResult, kafkaSendException) -> {
+                                                    if (Objects.nonNull(kafkaSendException)) {
+                                                        //TODO handle kafka exception
+                                                        log.error("could not send message to Kafka", kafkaSendException);
+                                                        throw new RuntimeException(kafkaSendException.getMessage());
+                                                    } else {
+                                                        requestDataMessageEntity.setSend(true);
+                                                        requestDataMessageEntityMapper.update(requestDataMessageEntity);
+                                                    }
+                                                }
+                                        );
+                                    } else {
+                                        //TODO handle kafka exception
+                                        log.error("could not create topic on Kafka", kafkaTopicCreateException);
+                                        throw new RuntimeException(kafkaTopicCreateException.getMessage());
+                                    }
+                                });
+                    } catch (JsonProcessingException e) {
+                        log.error("could not convert message to json", e);
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 }

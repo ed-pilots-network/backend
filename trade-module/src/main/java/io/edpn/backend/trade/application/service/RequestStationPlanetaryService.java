@@ -29,11 +29,12 @@ public class RequestStationPlanetaryService implements RequestDataService<Statio
         StationDataRequest stationDataRequest = new StationDataRequest();
         stationDataRequest.setStationName(station.getName());
         stationDataRequest.setSystemName(station.getSystem().getName());
+        stationDataRequest.setRequestingModule("trade");
 
         JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
 
         RequestDataMessage requestDataMessage = RequestDataMessage.builder()
-                .topic("tradeModuleStationPlanetaryDataRequest")
+                .topic("stationPlanetaryDataRequest")
                 .message(jsonNode)
                 .build();
 

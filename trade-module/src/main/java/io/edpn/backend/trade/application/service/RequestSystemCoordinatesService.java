@@ -26,13 +26,14 @@ public class RequestSystemCoordinatesService implements RequestDataService<Syste
 
     @Override
     public void request(System system) {
-        SystemDataRequest stationDataRequest = new SystemDataRequest();
-        stationDataRequest.setSystemName(system.getName());
+        SystemDataRequest systemDataRequest = new SystemDataRequest();
+        systemDataRequest.setSystemName(system.getName());
+        systemDataRequest.setRequestingModule("trade");
 
-        JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
+        JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
 
         RequestDataMessage requestDataMessage = RequestDataMessage.builder()
-                .topic("tradeModuleSystemCoordinatesDataRequest")
+                .topic("systemCoordinatesDataRequest")
                 .message(jsonNode)
                 .build();
 

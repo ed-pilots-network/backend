@@ -30,11 +30,12 @@ public class RequestStationLandingPadSizeService implements RequestDataService<S
         StationDataRequest stationDataRequest = new StationDataRequest();
         stationDataRequest.setStationName(station.getName());
         stationDataRequest.setSystemName(station.getSystem().getName());
+        stationDataRequest.setRequestingModule("trade");
 
         JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
 
         RequestDataMessage requestDataMessage = RequestDataMessage.builder()
-                .topic("tradeModuleStationMaxLandingPadSizeDataRequest")
+                .topic("stationMaxLandingPadSizeDataRequest")
                 .message(jsonNode)
                 .build();
 

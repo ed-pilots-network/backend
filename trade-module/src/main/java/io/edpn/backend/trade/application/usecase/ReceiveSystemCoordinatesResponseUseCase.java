@@ -1,12 +1,13 @@
 package io.edpn.backend.trade.application.usecase;
 
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.trade.domain.model.System;
 import io.edpn.backend.trade.domain.repository.SystemRepository;
 import io.edpn.backend.trade.domain.usecase.ReceiveDataRequestResponseUseCase;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
-import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 @Slf4j

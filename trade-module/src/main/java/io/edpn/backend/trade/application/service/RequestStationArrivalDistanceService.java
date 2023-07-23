@@ -2,11 +2,11 @@ package io.edpn.backend.trade.application.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
 import io.edpn.backend.trade.domain.model.RequestDataMessage;
 import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
 import io.edpn.backend.trade.domain.service.RequestDataService;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,11 +29,12 @@ public class RequestStationArrivalDistanceService implements RequestDataService<
         StationDataRequest stationDataRequest = new StationDataRequest();
         stationDataRequest.setStationName(station.getName());
         stationDataRequest.setSystemName(station.getSystem().getName());
+        stationDataRequest.setRequestingModule("trade");
 
         JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
 
         RequestDataMessage requestDataMessage = RequestDataMessage.builder()
-                .topic("tradeModuleStationArrivalDistanceDataRequest")
+                .topic("stationArrivalDistanceDataRequest")
                 .message(jsonNode)
                 .build();
 

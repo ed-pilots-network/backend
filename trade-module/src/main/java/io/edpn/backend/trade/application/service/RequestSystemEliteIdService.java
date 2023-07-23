@@ -28,11 +28,12 @@ public class RequestSystemEliteIdService implements RequestDataService<System> {
     public void request(System system) {
         SystemDataRequest systemDataRequest = new SystemDataRequest();
         systemDataRequest.setSystemName(system.getName());
+        systemDataRequest.setRequestingModule("trade");
 
         JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
 
         RequestDataMessage requestDataMessage = RequestDataMessage.builder()
-                .topic("tradeModuleSystemEliteIdDataRequest")
+                .topic("systemEliteIdDataRequest")
                 .message(jsonNode)
                 .build();
 
