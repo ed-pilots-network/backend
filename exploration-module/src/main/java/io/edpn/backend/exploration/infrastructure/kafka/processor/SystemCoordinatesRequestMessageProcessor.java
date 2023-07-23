@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 
 @RequiredArgsConstructor
-public class TradeModuleSystemCoordinatesRequestMessageProcessor implements MessageProcessor<SystemDataRequest> {
+public class SystemCoordinatesRequestMessageProcessor implements MessageProcessor<SystemDataRequest> {
 
     private final ReceiveDataRequestUseCase<SystemDataRequest> receiveDataRequestUseCase;
     private final ObjectMapper objectMapper;

@@ -16,7 +16,7 @@ public class SystemCoordinatesResponseMessageProcessor implements MessageProcess
     private final ObjectMapper objectMapper;
 
     @Override
-    @KafkaListener(topics = "tradeModuleSystemCoordinatesResponse", groupId = "tradeModule", containerFactory = "tradeModuleKafkaListenerContainerFactory")
+    @KafkaListener(topics = "trade_systemCoordinatesDataResponse", groupId = "tradeModule", containerFactory = "tradeModuleKafkaListenerContainerFactory")
     public void listen(JsonNode json) throws JsonProcessingException {
         handle(processJson(json));
     }

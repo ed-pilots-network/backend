@@ -9,7 +9,7 @@ public class RequestDataMessageMapper {
 
     public RequestDataMessageEntity map(RequestDataMessage requestDataMessage) {
         String sanitizedTopicName = this.sanitizeTopicName(requestDataMessage.getTopic());
-        return RequestDataMessageEntity.builder().topic(sanitizedTopicName).message(requestDataMessage.getMessage().asText()).build();
+        return RequestDataMessageEntity.builder().topic(sanitizedTopicName).message(requestDataMessage.getMessage().toString()).build();
     }
 
     private String sanitizeTopicName(String topicName) {

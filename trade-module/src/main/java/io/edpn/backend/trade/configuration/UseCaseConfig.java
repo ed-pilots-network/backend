@@ -2,11 +2,15 @@ package io.edpn.backend.trade.configuration;
 
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationArrivalDistanceResponse;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationMaxLandingPadSizeResponse;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
 import io.edpn.backend.trade.application.usecase.DefaultFindCommodityMarketInfoUseCase;
 import io.edpn.backend.trade.application.usecase.DefaultLocateCommodityUseCase;
 import io.edpn.backend.trade.application.usecase.DefaultReceiveCommodityMessageUseCase;
 import io.edpn.backend.trade.application.usecase.ReceiveStationArrivalDistanceResponseUseCase;
 import io.edpn.backend.trade.application.usecase.ReceiveStationMaxLandingPadSizeResponseUseCase;
+import io.edpn.backend.trade.application.usecase.ReceiveSystemCoordinatesResponseUseCase;
+import io.edpn.backend.trade.application.usecase.ReceiveSystemEliteIdResponseUseCase;
 import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.model.System;
 import io.edpn.backend.trade.domain.repository.CommodityMarketInfoRepository;
@@ -46,6 +50,16 @@ public class UseCaseConfig {
     @Bean(name = "tradeReceiveStationMaxLandingPadSizeResponseUseCase")
     public ReceiveDataRequestResponseUseCase<StationMaxLandingPadSizeResponse> receiveStationMaxLandingPadSizeResponseUseCase(SystemRepository systemRepository, StationRepository stationRepository) {
         return new ReceiveStationMaxLandingPadSizeResponseUseCase(systemRepository, stationRepository);
+    }
+
+    @Bean(name = "tradeReceiveSystemCoordinatesResponseUseCase")
+    public ReceiveDataRequestResponseUseCase<SystemCoordinatesResponse> receiveSystemCoordinatesResponseUseCase(SystemRepository systemRepository) {
+        return new ReceiveSystemCoordinatesResponseUseCase(systemRepository);
+    }
+
+    @Bean(name = "tradeReceiveSystemEliteIdResponseUseCase")
+    public ReceiveDataRequestResponseUseCase<SystemEliteIdResponse> receiveSystemEliteIdResponseUseCase(SystemRepository systemRepository) {
+        return new ReceiveSystemEliteIdResponseUseCase(systemRepository);
     }
 
     @Bean(name = "tradeFindCommodityUseCase")

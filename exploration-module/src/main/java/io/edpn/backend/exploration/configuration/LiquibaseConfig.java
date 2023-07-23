@@ -16,7 +16,8 @@ public class LiquibaseConfig {
     public SpringLiquibase liquibase(@Qualifier("explorationDataSource") DataSource dataSource, DataSourceProperties dataSourceProperties) {
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setDataSource(dataSource);
-        liquibase.setChangeLog(dataSourceProperties.changeLog);
+        liquibase.setChangeLog(dataSourceProperties.getChangeLog());
+        liquibase.setShouldRun(dataSourceProperties.isEnabled());
         return liquibase;
     }
 
@@ -26,5 +27,6 @@ public class LiquibaseConfig {
     public static class DataSourceProperties {
 
         private String changeLog;
+        private boolean enabled;
     }
 }

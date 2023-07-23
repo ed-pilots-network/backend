@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.Objects;
+import java.util.concurrent.Semaphore;
 import java.util.function.Predicate;
 
 @RequiredArgsConstructor
@@ -28,20 +29,29 @@ public class KafkaMessageSender implements RequestDataMessageRepository {
     private final KafkaTopicHandler kafkaTopicHandler;
     private final KafkaTemplate<String, JsonNode> jsonNodekafkaTemplate;
 
+    private final Semaphore semaphore = new Semaphore(1);
+
     @Override
     public void sendToKafka(RequestDataMessage requestDataMessage) {
-        RequestDataMessageEntity entity = requestDataMessageMapper.map(requestDataMessage);
-        if (requestDataMessageEntityMapper.find(entity).isEmpty()) {
-            requestDataMessageEntityMapper.insert(requestDataMessageMapper.map(requestDataMessage));
-            sendPendingMessages();
-        } else {
-            log.debug("info request already queued");
+        try {
+            semaphore.acquire();
+            RequestDataMessageEntity entity = requestDataMessageMapper.map(requestDataMessage);
+            if (requestDataMessageEntityMapper.find(entity).isEmpty()) {
+                requestDataMessageEntityMapper.insert(requestDataMessageMapper.map(requestDataMessage));
+                sendPendingMessages();
+            } else {
+                log.debug("info request already queued");
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error("Failed to acquire semaphore", e);
+        } finally {
+            semaphore.release();
         }
     }
 
     private void sendPendingMessages() {
-        requestDataMessageEntityMapper.findAll()
-                .stream().filter(Predicate.not(RequestDataMessageEntity::isSend))
+        requestDataMessageEntityMapper.findNotSend()
                 .forEach(requestDataMessageEntity -> {
                     try {
                         JsonNode jsonNode = objectMapper.readTree(requestDataMessageEntity.getMessage());

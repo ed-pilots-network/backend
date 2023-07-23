@@ -33,4 +33,8 @@ public interface RequestDataMessageEntityMapper {
     @Select("SELECT * FROM request_data_message WHERE topic = #{topic} AND message = #{message}")
     @ResultMap("requestDataMessageEntityResultMap")
     Optional<RequestDataMessageEntity> find(RequestDataMessageEntity requestDataMessageEntity);
+
+    @Select("SELECT * FROM request_data_message WHERE send = false")
+    @ResultMap("requestDataMessageEntityResultMap")
+    List<RequestDataMessageEntity> findNotSend();
 }

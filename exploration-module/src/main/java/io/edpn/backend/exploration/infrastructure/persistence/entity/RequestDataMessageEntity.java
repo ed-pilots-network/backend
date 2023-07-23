@@ -17,5 +17,6 @@ public class RequestDataMessageEntity {
 
     private String topic;
     private String message;
+    private boolean send;
 
 }
