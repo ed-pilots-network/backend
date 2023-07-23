@@ -75,7 +75,7 @@ public class RequestStationPlanetaryServiceTest {
 
         RequestDataMessage message = argumentCaptor.getValue();
         assertThat(message, is(notNullValue()));
-        assertThat(message.getTopic(), is("tradeModuleStationPlanetaryDataRequest"));
+        assertThat(message.getTopic(), is("stationPlanetaryDataRequest"));
         assertThat(message.getMessage(), is(notNullValue()));
 
         StationDataRequest actualStationDataRequest = objectMapper.treeToValue(message.getMessage(), StationDataRequest.class);

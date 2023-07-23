@@ -74,7 +74,7 @@ public class RequestSystemCoordinatesServiceTest {
 
         RequestDataMessage message = argumentCaptor.getValue();
         assertThat(message, is(notNullValue()));
-        assertThat(message.getTopic(), is("tradeModuleSystemCoordinatesDataRequest"));
+        assertThat(message.getTopic(), is("systemCoordinatesDataRequest"));
         assertThat(message.getMessage(), is(notNullValue()));
 
         SystemDataRequest actualSystemDataRequest = objectMapper.treeToValue(message.getMessage(), SystemDataRequest.class);

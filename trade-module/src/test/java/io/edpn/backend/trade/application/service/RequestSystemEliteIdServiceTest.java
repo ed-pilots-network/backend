@@ -69,7 +69,7 @@ public class RequestSystemEliteIdServiceTest {
 
         RequestDataMessage message = argumentCaptor.getValue();
         assertThat(message, is(notNullValue()));
-        assertThat(message.getTopic(), is("tradeModuleSystemEliteIdDataRequest"));
+        assertThat(message.getTopic(), is("systemEliteIdDataRequest"));
         assertThat(message.getMessage(), is(notNullValue()));
 
         SystemDataRequest actualSystemDataRequest = objectMapper.treeToValue(message.getMessage(), SystemDataRequest.class);
