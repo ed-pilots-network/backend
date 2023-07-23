@@ -21,15 +21,9 @@ public class FindCommodityDTOMapper {
     }
     
     public FindCommodityFilter map(FindCommodityRequest findCommodityRequest) {
-        if (findCommodityRequest.getType() == null) {
-            return FindCommodityFilter.builder()
-                    .isRare(findCommodityRequest.getIsRare())
-                    .build();
-        } else {
-            return FindCommodityFilter.builder()
-                    .type(CommodityType.valueOf(findCommodityRequest.getType()))
-                    .isRare(findCommodityRequest.getIsRare())
-                    .build();
-        }
+        return FindCommodityFilter.builder()
+                .type(Optional.ofNullable(findCommodityRequest.getType()).map(CommodityType::valueOf).orElse(null))
+                .isRare(findCommodityRequest.getIsRare())
+                .build();
     }
 }

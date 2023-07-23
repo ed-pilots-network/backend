@@ -1,7 +1,14 @@
 package io.edpn.backend.trade.configuration;
 
 
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.*;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.CommodityMapper;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.CommodityMarketInfoMapper;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.LocateCommodityMapper;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.MarketDatumMapper;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.RequestDataMessageMapper;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.StationMapper;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.SystemMapper;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.ValidatedCommodityMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

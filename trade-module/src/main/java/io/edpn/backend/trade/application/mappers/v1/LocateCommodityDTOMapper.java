@@ -26,11 +26,12 @@ public class LocateCommodityDTOMapper {
     }
 
     public LocateCommodityFilter map(LocateCommodityRequest locateCommodityRequest) {
+        System.out.printf("PRINTED: id:%s landingpadString:%s planetary:%s\n", locateCommodityRequest.getCommodityId(), locateCommodityRequest.getMaxLandingPadSize(), locateCommodityRequest.getIncludePlanetary());
         return LocateCommodityFilter.builder()
                 .commodityId(locateCommodityRequest.getCommodityId())
-                .xCoordinate(locateCommodityRequest.getReferenceLocation().getX())
-                .yCoordinate(locateCommodityRequest.getReferenceLocation().getY())
-                .zCoordinate(locateCommodityRequest.getReferenceLocation().getZ())
+                .xCoordinate(locateCommodityRequest.getX())
+                .yCoordinate(locateCommodityRequest.getY())
+                .zCoordinate(locateCommodityRequest.getZ())
                 .includePlanetary(locateCommodityRequest.getIncludePlanetary())
                 .includeOdyssey(locateCommodityRequest.getIncludePlanetary())
                 .includeFleetCarriers(locateCommodityRequest.getIncludeFleetCarriers())

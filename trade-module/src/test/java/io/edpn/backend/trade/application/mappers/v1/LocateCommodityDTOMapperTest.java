@@ -91,7 +91,9 @@ public class LocateCommodityDTOMapperTest {
         UUID commodityId = UUID.randomUUID();
         LocateCommodityRequest request = LocateCommodityRequest.builder()
                 .commodityId(commodityId)
-                .referenceLocation(new CoordinateDTO(1.0, 2.0, 3.0))
+                .x(1.0)
+                .y(2.0)
+                .z(3.0)
                 .includePlanetary(false)
                 .includeOdyssey(false)
                 .includeFleetCarriers(false)
@@ -106,9 +108,9 @@ public class LocateCommodityDTOMapperTest {
         // Then
         assertThat(filter, is(notNullValue()));
         assertThat(filter.getCommodityId(), is(equalTo(request.getCommodityId())));
-        assertThat(filter.getXCoordinate(), is(equalTo(request.getReferenceLocation().getX())));
-        assertThat(filter.getYCoordinate(), is(equalTo(request.getReferenceLocation().getY())));
-        assertThat(filter.getZCoordinate(), is(equalTo(request.getReferenceLocation().getZ())));
+        assertThat(filter.getXCoordinate(), is(equalTo(request.getX())));
+        assertThat(filter.getYCoordinate(), is(equalTo(request.getY())));
+        assertThat(filter.getZCoordinate(), is(equalTo(request.getZ())));
         assertThat(filter.getIncludePlanetary(), is(equalTo(request.getIncludePlanetary())));
         assertThat(filter.getIncludeOdyssey(), is(equalTo(request.getIncludeOdyssey())));
         assertThat(filter.getIncludeFleetCarriers(), is(equalTo(request.getIncludeFleetCarriers())));
