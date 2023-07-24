@@ -3,11 +3,10 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="latest_market_data_view" author="pveeckhout" runOnChange="true">
-        <createView viewName="latest_market_data_view" replaceIfExists="true">
+    <changeSet id="create_validated_commodity_view" author="daniel-j-mason" runOnChange="true">
+        <createView viewName="validated_market_datum_view" replaceIfExists="true">
             <![CDATA[
-            SELECT DISTINCT
-            ON (md.station_id, md.commodity_id)
+            SELECT
                 md.station_id,
                 md.commodity_id,
                 md.mean_price,
@@ -20,15 +19,9 @@
                 md.status_flags,
                 md.prohibited,
                 md.timestamp
-            FROM validated_market_datum_view md
-            WHERE (md.station_id, md.timestamp) IN (
-                SELECT DISTINCT ON (md2.station_id)
-                    md2.station_id,
-                    md2.timestamp
-                FROM validated_market_datum_view md2
-                ORDER BY md2.station_id,
-                    md2.timestamp DESC
-            );
+            FROM market_datum md
+            INNER JOIN validated_commodity_view vcv
+                ON vcv.id = md.commodity_id
             ]]>
         </createView>
     </changeSet>
