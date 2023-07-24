@@ -12,7 +12,7 @@
                    cw.type,
                    cw.is_rare
             FROM commodity_whitelist cw
-                     JOIN commodity c ON c.name = cw.technical_name
+                     INNER JOIN commodity c ON c.name = cw.technical_name
             ORDER BY technical_name;
             ]]>
         </createView>
