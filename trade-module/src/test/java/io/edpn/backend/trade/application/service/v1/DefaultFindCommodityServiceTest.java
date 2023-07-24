@@ -16,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -41,15 +40,15 @@ class DefaultFindCommodityServiceTest {
     }
     
     @Test
-    void shouldFindValidatedCommodityById() {
+    void shouldFindValidatedCommodityByName() {
         ValidatedCommodity validatedCommodity = mock(ValidatedCommodity.class);
         FindCommodityResponse findCommodityResponse = mock(FindCommodityResponse.class);
-        UUID id = UUID.randomUUID();
+        String displayName = "Commodity Name";
         
-        when(findCommodityUseCase.findById(id)).thenReturn(Optional.of(validatedCommodity));
+        when(findCommodityUseCase.findByName(displayName)).thenReturn(Optional.of(validatedCommodity));
         when(findCommodityDTOMapper.map(validatedCommodity)).thenReturn(findCommodityResponse);
         
-        Optional<FindCommodityResponse> response = underTest.findById(id);
+        Optional<FindCommodityResponse> response = underTest.findByName(displayName);
         
         assertThat(response, equalTo(Optional.of(findCommodityResponse)));
     }

@@ -8,8 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.UUID;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -25,7 +23,7 @@ public class LocateCommodityFilterMapperTest {
 
     @Test
     public void shouldMapLocateCommodityFilterToPersistence() {
-        UUID commodityId = UUID.randomUUID();
+        String displayName = "Commodity Name";
         Double xCoordinate = 100.0;
         Double yCoordinate = 200.0;
         Double zCoordinate = 300.0;
@@ -37,7 +35,7 @@ public class LocateCommodityFilterMapperTest {
         Long minDemand = 20L;
 
         LocateCommodityFilter filter = LocateCommodityFilter.builder()
-                .commodityId(commodityId)
+                .commodityDisplayName(displayName)
                 .xCoordinate(xCoordinate)
                 .yCoordinate(yCoordinate)
                 .zCoordinate(zCoordinate)
@@ -51,7 +49,7 @@ public class LocateCommodityFilterMapperTest {
 
         LocateCommodityFilterPersistence persistence = underTest.map(filter);
 
-        assertThat(persistence.getCommodityId(), is(commodityId));
+        assertThat(persistence.getCommodityDisplayName(), is(displayName));
         assertThat(persistence.getXCoordinate(), is(xCoordinate));
         assertThat(persistence.getYCoordinate(), is(yCoordinate));
         assertThat(persistence.getZCoordinate(), is(zCoordinate));

@@ -7,7 +7,6 @@ import io.edpn.backend.trade.domain.model.CommodityType;
 import io.edpn.backend.trade.domain.model.ValidatedCommodity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -25,11 +24,9 @@ public class FindCommodityDTOMapperTest {
     
     @Test
     void shouldMapValidatedCommodityToResponse() {
-        UUID id = UUID.randomUUID();
         
         // Given
         ValidatedCommodity validatedCommodity = ValidatedCommodity.builder()
-                .id(id)
                 .commodityName("commodityname")
                 .displayName("Commodity Name")
                 .type(CommodityType.CONSUMER_ITEMS)
@@ -41,7 +38,7 @@ public class FindCommodityDTOMapperTest {
         
         // Then
         assertThat(response, is(notNullValue()));
-        assertThat(response.getId(), is(equalTo(validatedCommodity.getId())));
+        assertThat(response.getDisplayName(), is(equalTo(validatedCommodity.getDisplayName())));
         assertThat(response.getCommodityName(), is(equalTo(validatedCommodity.getCommodityName())));
         assertThat(response.getDisplayName(), is(equalTo(validatedCommodity.getDisplayName())));
         assertThat(response.getType(), is(equalTo(validatedCommodity.getType().toString())));

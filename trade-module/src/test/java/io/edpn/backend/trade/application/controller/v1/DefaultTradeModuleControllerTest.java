@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -61,13 +60,12 @@ public class DefaultTradeModuleControllerTest {
     }
     
     @Test
-    void shouldFindValidatedCommodityById() {
-        UUID id = UUID.randomUUID();
-        
+    void shouldFindValidatedCommodityByName() {
+        String displayName = "Commodity Name";
         Optional<FindCommodityResponse> response = Optional.ofNullable(mock(FindCommodityResponse.class));
-        when(findCommodityService.findById(id)).thenReturn(response);
+        when(findCommodityService.findByName(displayName)).thenReturn(response);
         
-        Optional<FindCommodityResponse> result = underTest.findValidatedCommodityById(id);
+        Optional<FindCommodityResponse> result = underTest.findValidatedCommodityByName(displayName);
         
         assertThat(result, equalTo(response));
     }

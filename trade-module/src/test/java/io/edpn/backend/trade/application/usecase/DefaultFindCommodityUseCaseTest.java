@@ -12,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -35,15 +34,14 @@ class DefaultFindCommodityUseCaseTest {
     }
     
     @Test
-    public void shouldFindById(){
+    public void shouldFindByName(){
         ValidatedCommodity validatedCommodity = mock(ValidatedCommodity.class);
-        UUID id = UUID.randomUUID();
+        String displayName = "Commodity Name";
+        when(validatedCommodityRepository.findByName(displayName)).thenReturn(Optional.ofNullable(validatedCommodity));
         
-        when(validatedCommodityRepository.findById(id)).thenReturn(Optional.ofNullable(validatedCommodity));
+        Optional<ValidatedCommodity> actualValidatedCommodity = underTest.findByName(displayName);
         
-        Optional<ValidatedCommodity> actualValidatedCommodity = underTest.findById(id);
-        
-        verify(validatedCommodityRepository).findById(id);
+        verify(validatedCommodityRepository).findByName(displayName);
         verifyNoMoreInteractions(validatedCommodity);
         assert validatedCommodity != null;
         assertThat(Optional.of(validatedCommodity), equalTo(actualValidatedCommodity));

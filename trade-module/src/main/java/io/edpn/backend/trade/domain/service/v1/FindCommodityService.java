@@ -5,11 +5,10 @@ import io.edpn.backend.trade.application.dto.v1.FindCommodityResponse;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface FindCommodityService {
     
-    Optional<FindCommodityResponse> findById(UUID id);
+    Optional<FindCommodityResponse> findByName(String displayName);
     
     List<FindCommodityResponse> findAll();
     

@@ -9,7 +9,6 @@ import io.edpn.backend.trade.domain.model.LocateCommodity;
 import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.model.System;
 import java.time.LocalDateTime;
-import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -87,9 +86,9 @@ public class LocateCommodityDTOMapperTest {
     @Test
     void shouldMapLocateCommodityRequestToFilter() {
         // Given
-        UUID commodityId = UUID.randomUUID();
+        String displayName = "Commodity Name";
         LocateCommodityRequest request = LocateCommodityRequest.builder()
-                .commodityId(commodityId)
+                .commodityDisplayName(displayName)
                 .x(1.0)
                 .y(2.0)
                 .z(3.0)
@@ -106,7 +105,7 @@ public class LocateCommodityDTOMapperTest {
 
         // Then
         assertThat(filter, is(notNullValue()));
-        assertThat(filter.getCommodityId(), is(equalTo(request.getCommodityId())));
+        assertThat(filter.getCommodityDisplayName(), is(equalTo(request.getCommodityDisplayName())));
         assertThat(filter.getXCoordinate(), is(equalTo(request.getX())));
         assertThat(filter.getYCoordinate(), is(equalTo(request.getY())));
         assertThat(filter.getZCoordinate(), is(equalTo(request.getZ())));

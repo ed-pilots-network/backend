@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
 
-import java.util.UUID;
-
 @Getter
 @Builder
 @AllArgsConstructor
@@ -15,7 +13,6 @@ import java.util.UUID;
 @Jacksonized
 public class FindCommodityResponse {
     
-    private UUID id;
     private String commodityName;
     private String displayName;
     private String type;

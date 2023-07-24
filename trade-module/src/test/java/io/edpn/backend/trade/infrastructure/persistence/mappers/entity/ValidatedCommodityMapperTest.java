@@ -40,7 +40,6 @@ class ValidatedCommodityMapperTest {
         ValidatedCommodity response = underTest.map(validatedCommodityEntity);
         
         assertThat(response, is(notNullValue()));
-        assertThat(response.getId(), is(validatedCommodityEntity.getId()));
         assertThat(response.getCommodityName(), is(validatedCommodityEntity.getCommodityName()));
         assertThat(response.getDisplayName(), is(validatedCommodityEntity.getDisplayName()));
         assertThat(response.getType(), is(CommodityType.valueOf(validatedCommodityEntity.getType())));

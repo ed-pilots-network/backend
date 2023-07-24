@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -42,18 +41,18 @@ class MybatisValidatedCommodityRepositoryTest {
     }
     
     @Test
-    void findCommodityById() {
+    void findCommodityByName() {
         ValidatedCommodityEntity validatedCommodityEntity = mock(ValidatedCommodityEntity.class);
         ValidatedCommodity validatedCommodity = mock(ValidatedCommodity.class);
-        UUID id = UUID.randomUUID();
+        String displayName = "DisplayName";
         
         
-        when(validatedCommodityEntityMapper.findById(id)).thenReturn(Optional.of(validatedCommodityEntity));
+        when(validatedCommodityEntityMapper.findByName(displayName)).thenReturn(Optional.of(validatedCommodityEntity));
         when(validatedCommodityMapper.map(validatedCommodityEntity)).thenReturn(validatedCommodity);
         
-        Optional<ValidatedCommodity> result = underTest.findById(id);
+        Optional<ValidatedCommodity> result = underTest.findByName(displayName);
         
-        verify(validatedCommodityEntityMapper).findById(id);
+        verify(validatedCommodityEntityMapper).findByName(displayName);
         verify(validatedCommodityMapper).map(validatedCommodityEntity);
         verifyNoMoreInteractions(findCommodityFilterMapper, validatedCommodityEntityMapper, validatedCommodityMapper);
         

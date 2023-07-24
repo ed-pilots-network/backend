@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.jackson.Jacksonized;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @Builder
@@ -18,8 +16,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Jacksonized
 public class LocateCommodityRequest {
-    @NotNull(message = "Commodity id is mandatory")
-    UUID commodityId;
+    @NotNull(message = "Commodity name is mandatory")
+    String commodityDisplayName;
     @NotNull(message = "Reference coordinates are mandatory")
     Double x;
     @NotNull(message = "Reference coordinates are mandatory")

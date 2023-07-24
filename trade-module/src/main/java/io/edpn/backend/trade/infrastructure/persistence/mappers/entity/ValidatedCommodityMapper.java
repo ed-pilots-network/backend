@@ -10,7 +10,6 @@ public class ValidatedCommodityMapper {
     
     public ValidatedCommodity map(ValidatedCommodityEntity validatedCommodityEntity){
         return ValidatedCommodity.builder()
-                .id(validatedCommodityEntity.getId())
                 .commodityName(validatedCommodityEntity.getCommodityName())
                 .displayName(validatedCommodityEntity.getDisplayName())
                 .type(CommodityType.valueOf(validatedCommodityEntity.getType()))

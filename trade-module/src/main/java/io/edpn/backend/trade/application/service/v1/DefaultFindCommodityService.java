@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 public class DefaultFindCommodityService implements FindCommodityService {
@@ -18,8 +17,8 @@ public class DefaultFindCommodityService implements FindCommodityService {
     private final FindCommodityDTOMapper findCommodityDTOMapper;
     
     @Override
-    public Optional<FindCommodityResponse> findById(UUID id) {
-        return findCommodityUseCase.findById(id).map(findCommodityDTOMapper::map);
+    public Optional<FindCommodityResponse> findByName(String displayName) {
+        return findCommodityUseCase.findByName(displayName).map(findCommodityDTOMapper::map);
     }
     
     @Override

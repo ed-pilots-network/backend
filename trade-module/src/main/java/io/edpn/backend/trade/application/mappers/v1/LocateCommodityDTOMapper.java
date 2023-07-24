@@ -26,9 +26,8 @@ public class LocateCommodityDTOMapper {
     }
 
     public LocateCommodityFilter map(LocateCommodityRequest locateCommodityRequest) {
-        System.out.printf("PRINTED: id:%s landingpadString:%s planetary:%s\n", locateCommodityRequest.getCommodityId(), locateCommodityRequest.getMaxLandingPadSize(), locateCommodityRequest.getIncludePlanetary());
         return LocateCommodityFilter.builder()
-                .commodityId(locateCommodityRequest.getCommodityId())
+                .commodityDisplayName(locateCommodityRequest.getCommodityDisplayName())
                 .xCoordinate(locateCommodityRequest.getX())
                 .yCoordinate(locateCommodityRequest.getY())
                 .zCoordinate(locateCommodityRequest.getZ())

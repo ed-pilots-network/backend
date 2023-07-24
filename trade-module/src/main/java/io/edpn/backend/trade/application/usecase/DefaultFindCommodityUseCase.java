@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 public class DefaultFindCommodityUseCase implements FindCommodityUseCase {
@@ -16,8 +15,8 @@ public class DefaultFindCommodityUseCase implements FindCommodityUseCase {
     private final ValidatedCommodityRepository validatedCommodityRepository;
     
     @Override
-    public Optional<ValidatedCommodity> findById(UUID id) {
-        return validatedCommodityRepository.findById(id);
+    public Optional<ValidatedCommodity> findByName(String displayName) {
+        return validatedCommodityRepository.findByName(displayName);
     }
     
     @Override

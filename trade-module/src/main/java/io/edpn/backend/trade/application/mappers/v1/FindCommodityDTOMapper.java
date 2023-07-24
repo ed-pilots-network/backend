@@ -12,7 +12,7 @@ public class FindCommodityDTOMapper {
     
     public FindCommodityResponse map(ValidatedCommodity validatedCommodity) {
         return FindCommodityResponse.builder()
-                .id(validatedCommodity.getId())
+                .displayName(validatedCommodity.getCommodityName())
                 .commodityName(validatedCommodity.getCommodityName())
                 .displayName(validatedCommodity.getDisplayName())
                 .type(validatedCommodity.getType().toString())

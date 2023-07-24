@@ -9,7 +9,7 @@ public class LocateCommodityFilterMapper {
 
     public LocateCommodityFilterPersistence map(LocateCommodityFilter filter) {
         return LocateCommodityFilterPersistence.builder()
-                .commodityId(filter.getCommodityId())
+                .commodityDisplayName(filter.getCommodityDisplayName())
                 .xCoordinate(filter.getXCoordinate())
                 .yCoordinate(filter.getYCoordinate())
                 .zCoordinate(filter.getZCoordinate())

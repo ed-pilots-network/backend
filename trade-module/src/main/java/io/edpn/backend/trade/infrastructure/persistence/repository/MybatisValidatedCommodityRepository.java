@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 public class MybatisValidatedCommodityRepository implements ValidatedCommodityRepository {
@@ -21,8 +20,8 @@ public class MybatisValidatedCommodityRepository implements ValidatedCommodityRe
     
     
     @Override
-    public Optional<ValidatedCommodity> findById(UUID id) {
-        return validatedCommodityEntityMapper.findById(id)
+    public Optional<ValidatedCommodity> findByName(String displayName) {
+        return validatedCommodityEntityMapper.findByName(displayName)
                 .map(validatedCommodityMapper::map);
     }
     

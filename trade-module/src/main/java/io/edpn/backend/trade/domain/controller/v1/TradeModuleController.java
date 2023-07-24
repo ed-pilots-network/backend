@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RequestMapping("/api/v1/trade")
 public interface TradeModuleController {
@@ -23,8 +22,8 @@ public interface TradeModuleController {
     @GetMapping("/locate-commodity/filter")
     List<LocateCommodityResponse> locateCommodityWithFilters(@Valid LocateCommodityRequest locateCommodityRequest);
     
-    @GetMapping("/commodity/{id}")
-    Optional<FindCommodityResponse> findValidatedCommodityById(@PathVariable UUID id);
+    @GetMapping("/commodity/{displayName}")
+    Optional<FindCommodityResponse> findValidatedCommodityByName(@PathVariable String displayName);
     
     @GetMapping("/commodity")
     List<FindCommodityResponse> findAllValidatedCommodities();

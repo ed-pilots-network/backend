@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @ToString
@@ -15,7 +13,6 @@ import java.util.UUID;
 @Builder
 public class ValidatedCommodity {
     
-    private UUID id;
     private String commodityName;
     private String displayName;
     private CommodityType type;
