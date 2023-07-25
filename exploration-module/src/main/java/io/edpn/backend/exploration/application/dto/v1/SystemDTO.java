@@ -15,6 +15,8 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 public class SystemDTO {
 
-   private String name;
-   private CoordinateDTO coordinates;
+    private String name;
+    private CoordinateDTO coordinates;
+    private Long eliteId;
+    private String starClass;
 }

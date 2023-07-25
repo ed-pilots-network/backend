@@ -12,6 +12,7 @@ public class SystemDtoMapper {
     public SystemDTO map(System system) {
         return SystemDTO.builder()
                 .name(system.getName())
+                .eliteId(system.getEliteId())
                 .coordinates(coordinateFromSystem(system))
                 .build();
     }

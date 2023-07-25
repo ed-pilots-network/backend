@@ -36,7 +36,7 @@ services:
         condition: service_healthy
 
   trademodule-postgres:
-  ## TODO: Tag this image locally
+    ## TODO: Tag this image locally
     image: "postgres:15-alpine"
     restart: on-failure
     env_file:
@@ -50,6 +50,7 @@ services:
       retries: 5
 
   explorationmodule_postgres:
+    ## TODO: Tag this image locally
     image: "postgres:15-alpine"
     restart: on-failure
     env_file:
@@ -57,7 +58,7 @@ services:
     volumes:
       - "explorationmodule_postgres:/var/lib/postgresql/data"
     healthcheck:
-      test: pg_isready
+      test: ["CMD-SHELL", "pg_isready -d explorationmodule -U edpn_explorationmodule"]
       interval: 10s
       timeout: 5s
       retries: 5

@@ -60,7 +60,7 @@ public class DefaultReceiveNavRouteMessageUseCase implements ReceiveNavRouteMess
         }
 
         if (Objects.isNull(system.getStarClass())) {
-            system.setEliteId(routeItem.getSystemAddress());
+            system.setStarClass(routeItem.getStarClass());
         }
 
         if (Objects.isNull(system.getXCoordinate()) || Objects.isNull(system.getYCoordinate()) || Objects.isNull(system.getZCoordinate())) {
