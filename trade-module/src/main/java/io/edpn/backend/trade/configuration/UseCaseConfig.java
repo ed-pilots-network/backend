@@ -5,6 +5,7 @@ import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationMaxL
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
 import io.edpn.backend.trade.application.usecase.DefaultFindCommodityMarketInfoUseCase;
+import io.edpn.backend.trade.application.usecase.DefaultFindCommodityUseCase;
 import io.edpn.backend.trade.application.usecase.DefaultLocateCommodityUseCase;
 import io.edpn.backend.trade.application.usecase.DefaultReceiveCommodityMessageUseCase;
 import io.edpn.backend.trade.application.usecase.ReceiveStationArrivalDistanceResponseUseCase;
@@ -19,8 +20,10 @@ import io.edpn.backend.trade.domain.repository.LocateCommodityRepository;
 import io.edpn.backend.trade.domain.repository.MarketDatumRepository;
 import io.edpn.backend.trade.domain.repository.StationRepository;
 import io.edpn.backend.trade.domain.repository.SystemRepository;
+import io.edpn.backend.trade.domain.repository.ValidatedCommodityRepository;
 import io.edpn.backend.trade.domain.service.RequestDataService;
 import io.edpn.backend.trade.domain.usecase.FindCommodityMarketInfoUseCase;
+import io.edpn.backend.trade.domain.usecase.FindCommodityUseCase;
 import io.edpn.backend.trade.domain.usecase.LocateCommodityUseCase;
 import io.edpn.backend.trade.domain.usecase.ReceiveCommodityMessageUseCase;
 import io.edpn.backend.trade.domain.usecase.ReceiveDataRequestResponseUseCase;
@@ -62,8 +65,13 @@ public class UseCaseConfig {
         return new ReceiveSystemEliteIdResponseUseCase(systemRepository);
     }
 
-    @Bean(name = "tradeFindCommodityUseCase")
+    @Bean(name = "tradeLocateCommodityUseCase")
     public LocateCommodityUseCase locateCommodityUseCase(LocateCommodityRepository locateCommodityRepository) {
         return new DefaultLocateCommodityUseCase(locateCommodityRepository);
+    }
+
+    @Bean(name = "tradeFindCommodityUseCase")
+    public FindCommodityUseCase findCommodityUseCase(ValidatedCommodityRepository validatedCommodityRepository) {
+        return new DefaultFindCommodityUseCase(validatedCommodityRepository);
     }
 }

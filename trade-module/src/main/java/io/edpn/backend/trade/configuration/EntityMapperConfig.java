@@ -8,7 +8,7 @@ import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.MarketDat
 import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.RequestDataMessageMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.StationMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.SystemMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.ValidatedCommodityMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -28,6 +28,11 @@ public class EntityMapperConfig {
     @Bean(name = "tradeLocateCommodityMapper")
     public LocateCommodityMapper locateCommodityMapper(CommodityMapper commodityMapper, SystemMapper systemMapper, StationMapper stationMapper) {
         return new LocateCommodityMapper(commodityMapper, systemMapper, stationMapper);
+    }
+
+    @Bean
+    public ValidatedCommodityMapper validatedCommodityMapper() {
+        return new ValidatedCommodityMapper();
     }
 
     @Bean(name = "tradeMarketDatumMapper")

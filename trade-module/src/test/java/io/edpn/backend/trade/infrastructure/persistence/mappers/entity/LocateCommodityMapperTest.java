@@ -45,7 +45,7 @@ public class LocateCommodityMapperTest {
     }
 
     @Test
-    public void shouldMapFindCommodityEntityToFindCommodity() {
+    public void shouldMapLocateCommodityEntityToLocateCommodity() {
         // create mock objects
         CommodityEntity mockCommodityEntity = mock(CommodityEntity.class);
         Commodity mockCommodity = mock(Commodity.class);

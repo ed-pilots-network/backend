@@ -46,20 +46,25 @@ src
 │               │   ├── controller
 │               │   ├── dto
 │               │   ├── mapper
+│               │   ├── service
 │               │   └── usecase
 │               ├── configuration
 │               ├── domain
+│               │   ├── controller
+│               │   ├── filter    
 │               │   ├── model
-│               │   └── repository
-│               │   └── util
+│               │   ├── repository
+│               │   ├── service
+│               │   └── usecase
 │               ├── infrastructure
-│               │   ├── adapter
+│               │   ├── kafka
 │               │   └── persistence
 │               │       ├── entity
+│               │       ├── filter
+│               │       ├── mappers
 │               │       └── repository
 │               └── StationsApplication.java
 ├── resources
-├── application.properties
 └── ...
 ```
 
@@ -67,9 +72,10 @@ src
 
 The application layer contains the following components:
 
-- **controller**: This package contains the REST controllers, which handle incoming HTTP requests and provide appropriate responses.
+- **controller**: This package contains the REST controllers, which handle incoming HTTP requests and provide appropriate responses as defined by the domain controller interface.
 - **dto**: This package contains the Data Transfer Objects (DTOs) used for communication between the application layer and external clients.
 - **mapper**: This package contains mappers responsible for converting between DTO and domain model.
+- **service**: This package contains the implementations of the service defined in the domain.
 - **usecase**: This package contains the implementations of the use cases defined in the domain.
 
 #### Configuration Layer
@@ -80,8 +86,12 @@ The config layer contains all the Bean configurations and annotations needed to 
 
 The domain layer contains the following components:
 
+- **controller**: This package defines the controller interface for the application layer to implement.
+- **filter**: THis packages contains the domain filter object to package complex arguments to the persistence layer using domain concepts.
 - **model**: This package contains the domain models (entities and value objects) that represent the core concepts of the problem domain.
 - **repository**: This package contains the repository interfaces that define the contract for persisting and retrieving domain models.
+- **service**: This package contains the repository interfaces that define the contract for the application layer services.
+- **usecase**: This package contains the usecase interfaces that define the contract for the application layer usecases.
 
 ### Infrastructure Layer
 
@@ -91,6 +101,7 @@ The infrastructure layer contains the following components:
 
 - **persistence**:
   - **entity**: This package contains the entity objects used for storing the data in the database.
+  - **filter**: This package contains the packaged filter objects use for querying complex arguments in the database.
   - **mappers**: 
     - **entity**: This package contains mapper classes for convert between domain and entity objects.
     - **mybatis**: This package contains the mybatis mappers to interface with the database.

@@ -27,10 +27,10 @@ public class LocateCommodityDTOMapper {
 
     public LocateCommodityFilter map(LocateCommodityRequest locateCommodityRequest) {
         return LocateCommodityFilter.builder()
-                .commodityId(locateCommodityRequest.getCommodityId())
-                .xCoordinate(locateCommodityRequest.getReferenceLocation().getX())
-                .yCoordinate(locateCommodityRequest.getReferenceLocation().getY())
-                .zCoordinate(locateCommodityRequest.getReferenceLocation().getZ())
+                .commodityDisplayName(locateCommodityRequest.getCommodityDisplayName())
+                .xCoordinate(locateCommodityRequest.getX())
+                .yCoordinate(locateCommodityRequest.getY())
+                .zCoordinate(locateCommodityRequest.getZ())
                 .includePlanetary(locateCommodityRequest.getIncludePlanetary())
                 .includeOdyssey(locateCommodityRequest.getIncludePlanetary())
                 .includeFleetCarriers(locateCommodityRequest.getIncludeFleetCarriers())
