@@ -25,8 +25,10 @@ public interface LocateCommodityEntityMapper {
             require_odyssey,
             fleet_carrier
             FROM locate_commodity_view
+            INNER JOIN validated_commodity_view vcv
+            ON commodity_id = vcv.id
             WHERE
-            commodity_id=#{commodityId}
+            vcv.display_name =#{commodityDisplayName}
             <if test='!includePlanetary'>AND planetary = false </if>
             <if test='!includeOdyssey'>AND require_odyssey = false </if>
             <if test='!includeFleetCarriers'>AND fleet_carrier = false </if>

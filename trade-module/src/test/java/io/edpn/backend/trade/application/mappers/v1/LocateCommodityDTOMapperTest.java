@@ -1,6 +1,5 @@
 package io.edpn.backend.trade.application.mappers.v1;
 
-import io.edpn.backend.trade.application.dto.v1.CoordinateDTO;
 import io.edpn.backend.trade.application.dto.v1.LocateCommodityRequest;
 import io.edpn.backend.trade.application.dto.v1.LocateCommodityResponse;
 import io.edpn.backend.trade.domain.filter.v1.LocateCommodityFilter;
@@ -10,7 +9,6 @@ import io.edpn.backend.trade.domain.model.LocateCommodity;
 import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.model.System;
 import java.time.LocalDateTime;
-import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -88,10 +86,12 @@ public class LocateCommodityDTOMapperTest {
     @Test
     void shouldMapLocateCommodityRequestToFilter() {
         // Given
-        UUID commodityId = UUID.randomUUID();
+        String displayName = "Commodity Name";
         LocateCommodityRequest request = LocateCommodityRequest.builder()
-                .commodityId(commodityId)
-                .referenceLocation(new CoordinateDTO(1.0, 2.0, 3.0))
+                .commodityDisplayName(displayName)
+                .x(1.0)
+                .y(2.0)
+                .z(3.0)
                 .includePlanetary(false)
                 .includeOdyssey(false)
                 .includeFleetCarriers(false)
@@ -105,10 +105,10 @@ public class LocateCommodityDTOMapperTest {
 
         // Then
         assertThat(filter, is(notNullValue()));
-        assertThat(filter.getCommodityId(), is(equalTo(request.getCommodityId())));
-        assertThat(filter.getXCoordinate(), is(equalTo(request.getReferenceLocation().getX())));
-        assertThat(filter.getYCoordinate(), is(equalTo(request.getReferenceLocation().getY())));
-        assertThat(filter.getZCoordinate(), is(equalTo(request.getReferenceLocation().getZ())));
+        assertThat(filter.getCommodityDisplayName(), is(equalTo(request.getCommodityDisplayName())));
+        assertThat(filter.getXCoordinate(), is(equalTo(request.getX())));
+        assertThat(filter.getYCoordinate(), is(equalTo(request.getY())));
+        assertThat(filter.getZCoordinate(), is(equalTo(request.getZ())));
         assertThat(filter.getIncludePlanetary(), is(equalTo(request.getIncludePlanetary())));
         assertThat(filter.getIncludeOdyssey(), is(equalTo(request.getIncludeOdyssey())));
         assertThat(filter.getIncludeFleetCarriers(), is(equalTo(request.getIncludeFleetCarriers())));

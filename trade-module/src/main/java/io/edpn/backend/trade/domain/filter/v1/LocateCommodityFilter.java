@@ -1,7 +1,6 @@
 package io.edpn.backend.trade.domain.filter.v1;
 
 import io.edpn.backend.trade.domain.model.LandingPadSize;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +15,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 public class LocateCommodityFilter {
-    private UUID commodityId;
+    private String commodityDisplayName;
     private Double xCoordinate;
     private Double yCoordinate;
     private Double zCoordinate;

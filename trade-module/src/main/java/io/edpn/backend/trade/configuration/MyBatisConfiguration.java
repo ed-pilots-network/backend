@@ -10,6 +10,7 @@ import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.MarketDa
 import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.RequestDataMessageEntityMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.StationEntityMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.SystemEntityMapper;
+import io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.ValidatedCommodityEntityMapper;
 import io.edpn.backend.util.IdGenerator;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -85,8 +86,15 @@ public class MyBatisConfiguration {
     }
 
     @Bean
-    public MapperFactoryBean<LocateCommodityEntityMapper> LocateCommodityMapper(SqlSessionFactory sqlSessionFactory) {
+    public MapperFactoryBean<LocateCommodityEntityMapper> locateCommodityEntityMapper(SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<LocateCommodityEntityMapper> factoryBean = new MapperFactoryBean<>(LocateCommodityEntityMapper.class);
+        factoryBean.setSqlSessionFactory(sqlSessionFactory);
+        return factoryBean;
+    }
+    
+    @Bean
+    public MapperFactoryBean<ValidatedCommodityEntityMapper> findCommodityEntityMapper(SqlSessionFactory sqlSessionFactory) {
+        MapperFactoryBean<ValidatedCommodityEntityMapper> factoryBean = new MapperFactoryBean<>(ValidatedCommodityEntityMapper.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }

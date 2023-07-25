@@ -8,8 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface StationRepository {
-
-
+    
     Station findOrCreateBySystemAndStationName(System systemEntity, String stationName) throws DatabaseEntityNotFoundException;
 
     Station update(Station entity) throws DatabaseEntityNotFoundException;

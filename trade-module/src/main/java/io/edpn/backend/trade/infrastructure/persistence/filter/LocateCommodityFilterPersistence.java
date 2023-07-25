@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @ToString
@@ -16,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class LocateCommodityFilterPersistence {
-    private UUID commodityId;
+    private String commodityDisplayName;
     private Double xCoordinate;
     private Double yCoordinate;
     private Double zCoordinate;
