@@ -4,9 +4,9 @@ import io.edpn.backend.trade.application.dto.v1.CommodityMarketInfoResponse;
 import io.edpn.backend.trade.application.dto.v1.CoordinateDTO;
 import io.edpn.backend.trade.domain.model.CommodityMarketInfo;
 import io.edpn.backend.trade.domain.model.Station;
-import lombok.RequiredArgsConstructor;
-
+import io.edpn.backend.trade.domain.model.System;
 import java.util.Objects;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CommodityMarketInfoResponseMapper {
@@ -46,7 +46,7 @@ public class CommodityMarketInfoResponseMapper {
                 .build();
     }
 
-    private CoordinateDTO coordinateFromSystem(io.edpn.backend.trade.domain.model.System system) {
+    private CoordinateDTO coordinateFromSystem(System system) {
         if (Objects.isNull(system.getXCoordinate())) {
             return null;
         } else {

@@ -93,7 +93,7 @@ public class MyBatisConfiguration {
     }
 
     @Bean(name = "tradeFindCommodityEntityMapper")
-    public MapperFactoryBean<ValidatedCommodityEntityMapper> findCommodityEntityMapper(SqlSessionFactory sqlSessionFactory) {
+    public MapperFactoryBean<ValidatedCommodityEntityMapper> findCommodityEntityMapper(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<ValidatedCommodityEntityMapper> factoryBean = new MapperFactoryBean<>(ValidatedCommodityEntityMapper.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;

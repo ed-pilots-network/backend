@@ -3,6 +3,7 @@ package io.edpn.backend.exploration.infrastructure.persistence.mappers.mybatis;
 
 import io.edpn.backend.exploration.infrastructure.persistence.entity.SystemEntity;
 import io.edpn.backend.mybatisutil.UuidTypeHandler;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.apache.ibatis.annotations.Delete;
@@ -41,5 +42,9 @@ public interface SystemEntityMapper {
     void update(SystemEntity system);
 
     @Delete("DELETE FROM system WHERE id = #{id}")
-    void delete(UUID id);
+    void delete(@Param("id") UUID id);
+
+    @Select("SELECT * FROM system WHERE name ILIKE CONCAT('%', #{name}, '%') ORDER BY CASE WHEN name ILIKE CONCAT(#{name}, '%') THEN 0 ELSE 1 END, name LIMIT #{amount}")
+    @ResultMap("systemResultMap")
+    List<SystemEntity> findFromSearchbar(@Param("name") String name, @Param("amount") int amount);
 }

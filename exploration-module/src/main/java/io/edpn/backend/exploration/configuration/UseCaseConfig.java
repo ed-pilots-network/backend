@@ -1,11 +1,13 @@
 package io.edpn.backend.exploration.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.edpn.backend.exploration.application.usecase.DefaultFindSystemsFromSearchbarUseCase;
 import io.edpn.backend.exploration.application.usecase.DefaultReceiveNavRouteMessageUseCase;
 import io.edpn.backend.exploration.application.usecase.DefaultReceiveSystemCoordinatesRequestUseCase;
 import io.edpn.backend.exploration.domain.repository.RequestDataMessageRepository;
 import io.edpn.backend.exploration.domain.repository.SystemCoordinateDataRequestRepository;
 import io.edpn.backend.exploration.domain.repository.SystemRepository;
+import io.edpn.backend.exploration.domain.usecase.FindSystemsFromSearchbarUseCase;
 import io.edpn.backend.exploration.domain.usecase.ReceiveDataRequestUseCase;
 import io.edpn.backend.exploration.domain.usecase.ReceiveNavRouteMessageUseCase;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
@@ -25,9 +27,14 @@ public class UseCaseConfig {
 
     @Bean(name = "explorationReceiveNavRouteMessageUseCase")
     public ReceiveNavRouteMessageUseCase receiveNavRouteMessageUseCase(SystemRepository systemRepository,
-                                                                                SystemCoordinateDataRequestRepository systemCoordinateDataRequestRepository,
-                                                                                RequestDataMessageRepository requestDataMessageRepository,
-                                                                                ObjectMapper objectMapper) {
+                                                                       SystemCoordinateDataRequestRepository systemCoordinateDataRequestRepository,
+                                                                       RequestDataMessageRepository requestDataMessageRepository,
+                                                                       ObjectMapper objectMapper) {
         return new DefaultReceiveNavRouteMessageUseCase(systemRepository, systemCoordinateDataRequestRepository, requestDataMessageRepository, objectMapper);
+    }
+
+    @Bean(name = "explorationFindSystemsFromSearchbarUseCase")
+    public FindSystemsFromSearchbarUseCase findSystemsFromSearchbarUseCase(SystemRepository systemRepository) {
+        return new DefaultFindSystemsFromSearchbarUseCase(systemRepository);
     }
 }
