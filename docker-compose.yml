@@ -35,28 +35,28 @@ services:
       zookeeper:
         condition: service_healthy
 
-  trademodule-postgres:
+  trademodule-postgis:
     ## TODO: Tag this image locally
-    image: "postgres:15-alpine"
+    image: "postgis/postgis:15-3.3-alpine"
     restart: on-failure
     env_file:
       - env/${ENVIRONMENT}/.env_trademodule
     volumes:
-      - "trademodule_postgres:/var/lib/postgresql/data"
+      - "trademodule_postgis:/var/lib/postgresql/data"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d trademodule -U edpn_trademodule"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  explorationmodule_postgres:
+  explorationmodule_postgis:
     ## TODO: Tag this image locally
-    image: "postgres:15-alpine"
+    image: "postgis/postgis:15-3.3-alpine"
     restart: on-failure
     env_file:
       - env/${ENVIRONMENT}/.env_explorationmodule
     volumes:
-      - "explorationmodule_postgres:/var/lib/postgresql/data"
+      - "explorationmodule_postgis:/var/lib/postgresql/data"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d explorationmodule -U edpn_explorationmodule"]
       interval: 10s
@@ -94,9 +94,9 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
-      trademodule_postgres:
+      trademodule_postgis:
         condition: service_healthy
-      explorationmodule_postgres:
+      explorationmodule_postgis:
         condition: service_healthy
 
 volumes:
@@ -104,7 +104,7 @@ volumes:
     driver: local
   kafka:
     driver: local
-  trademodule_postgres:
+  trademodule_postgis:
     driver: local
-  explorationmodule_postgress:
+  explorationmodule_postgis:
     driver: local
