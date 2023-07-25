@@ -3,6 +3,7 @@ package io.edpn.backend.exploration.application.mappers.v1;
 import io.edpn.backend.exploration.application.dto.v1.CoordinateDTO;
 import io.edpn.backend.exploration.application.dto.v1.SystemDTO;
 import io.edpn.backend.exploration.domain.model.System;
+
 import java.util.Objects;
 
 ;
@@ -13,6 +14,7 @@ public class SystemDtoMapper {
         return SystemDTO.builder()
                 .name(system.getName())
                 .eliteId(system.getEliteId())
+                .starClass(system.getStarClass())
                 .coordinates(coordinateFromSystem(system))
                 .build();
     }
