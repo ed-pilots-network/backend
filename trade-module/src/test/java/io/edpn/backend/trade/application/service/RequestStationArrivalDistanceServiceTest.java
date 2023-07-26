@@ -4,8 +4,6 @@ import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationData
 import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.model.System;
 import io.edpn.backend.trade.domain.service.RequestDataService;
-import java.util.stream.Stream;
-
 import io.edpn.backend.trade.domain.service.SendDataRequestService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,10 +15,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.stream.Stream;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

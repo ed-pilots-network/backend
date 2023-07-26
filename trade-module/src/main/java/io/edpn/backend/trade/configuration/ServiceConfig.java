@@ -19,7 +19,6 @@ import io.edpn.backend.trade.domain.service.RequestDataService;
 import io.edpn.backend.trade.domain.service.SendDataRequestService;
 import io.edpn.backend.trade.infrastructure.kafka.KafkaTopicHandler;
 import io.edpn.backend.trade.infrastructure.kafka.sender.RequestDataMessageKafkaSenderService;
-import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.RequestDataMessageMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,7 +48,7 @@ public class ServiceConfig {
     }
 
     @Bean(name = "tradeRequestDataMessageKafkaSenderService")
-    public KafkaSenderService<RequestDataMessage> requestDataMessageKafkaSenderService(ObjectMapper objectMapper, RequestDataMessageRepository requestDataMessageRepository, RequestDataMessageMapper requestDataMessageMapper, KafkaTopicHandler kafkaTopicHandler, @Qualifier("tradeJsonNodekafkaTemplate") KafkaTemplate<String, JsonNode> jsonNodekafkaTemplate) {
+    public KafkaSenderService<RequestDataMessage> requestDataMessageKafkaSenderService(ObjectMapper objectMapper, RequestDataMessageRepository requestDataMessageRepository, KafkaTopicHandler kafkaTopicHandler, @Qualifier("tradeJsonNodekafkaTemplate") KafkaTemplate<String, JsonNode> jsonNodekafkaTemplate) {
         return new RequestDataMessageKafkaSenderService(objectMapper, requestDataMessageRepository, kafkaTopicHandler, jsonNodekafkaTemplate);
     }
 

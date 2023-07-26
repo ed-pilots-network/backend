@@ -9,7 +9,6 @@ import io.edpn.backend.exploration.domain.service.KafkaSenderService;
 import io.edpn.backend.exploration.domain.service.SendDataResponseService;
 import io.edpn.backend.exploration.infrastructure.kafka.KafkaTopicHandler;
 import io.edpn.backend.exploration.infrastructure.kafka.sender.RequestDataMessageKafkaSenderService;
-import io.edpn.backend.exploration.infrastructure.persistence.mappers.entity.RequestDataMessageMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +19,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 public class ServiceConfig {
 
     @Bean(name = "explorationRequestDataMessageKafkaSender")
-    public KafkaSenderService<RequestDataMessage> requestDataMessageKafkaSenderService(ObjectMapper objectMapper, RequestDataMessageRepository requestDataMessageRepository, RequestDataMessageMapper requestDataMessageMapper, KafkaTopicHandler kafkaTopicHandler, @Qualifier("tradeJsonNodekafkaTemplate") KafkaTemplate<String, JsonNode> jsonNodekafkaTemplate) {
+    public KafkaSenderService<RequestDataMessage> requestDataMessageKafkaSenderService(ObjectMapper objectMapper, RequestDataMessageRepository requestDataMessageRepository, KafkaTopicHandler kafkaTopicHandler, @Qualifier("tradeJsonNodekafkaTemplate") KafkaTemplate<String, JsonNode> jsonNodekafkaTemplate) {
         return new RequestDataMessageKafkaSenderService(objectMapper, requestDataMessageRepository, kafkaTopicHandler, jsonNodekafkaTemplate);
     }
 

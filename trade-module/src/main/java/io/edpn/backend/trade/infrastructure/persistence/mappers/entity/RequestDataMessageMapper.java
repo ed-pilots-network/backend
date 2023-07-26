@@ -11,7 +11,7 @@ public class RequestDataMessageMapper {
         String sanitizedTopicName = this.sanitizeTopicName(requestDataMessage.getTopic());
         return RequestDataMessageEntity.builder()
                 .topic(sanitizedTopicName)
-                .message(requestDataMessage.getMessage().toString())
+                .message(requestDataMessage.getMessage())
                 .send(false)
                 .build();
     }

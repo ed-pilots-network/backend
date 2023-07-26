@@ -2,7 +2,6 @@ package io.edpn.backend.trade.application.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.trade.domain.model.RequestDataMessage;
 import io.edpn.backend.trade.domain.service.KafkaSenderService;
 import io.edpn.backend.trade.domain.service.SendDataRequestService;

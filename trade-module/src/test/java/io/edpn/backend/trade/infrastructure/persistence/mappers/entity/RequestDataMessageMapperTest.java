@@ -1,6 +1,5 @@
 package io.edpn.backend.trade.infrastructure.persistence.mappers.entity;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import io.edpn.backend.trade.domain.model.RequestDataMessage;
 import io.edpn.backend.trade.infrastructure.persistence.entity.RequestDataMessageEntity;
