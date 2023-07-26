@@ -22,9 +22,9 @@ module edpn.backend.trade {
     requires io.swagger.v3.oas.annotations;
     requires liquibase.core;
 
-    exports io.edpn.backend.trade.domain.service.v1;
     exports io.edpn.backend.trade.domain.controller.v1;
-    exports io.edpn.backend.trade.application.service.v1;
+    exports io.edpn.backend.trade.domain.usecase;
     exports io.edpn.backend.trade.application.controller.v1;
     exports io.edpn.backend.trade.application.dto.v1;
+    exports io.edpn.backend.trade.application.mappers.v1;
 }

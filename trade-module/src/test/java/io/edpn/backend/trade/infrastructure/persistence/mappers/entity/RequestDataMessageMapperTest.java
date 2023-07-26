@@ -25,7 +25,7 @@ public class RequestDataMessageMapperTest {
     @Test
     public void shouldMapRequestDataMessageToRequestDataMessageEntity() {
         String topic = "Test.Topic.Name";
-        JsonNode message = new TextNode("Test Message");
+        String message = new TextNode("Test Message").toString();
 
         RequestDataMessage requestDataMessage = RequestDataMessage.builder()
                 .topic(topic)
@@ -41,7 +41,7 @@ public class RequestDataMessageMapperTest {
     @Test
     public void shouldSanitizeTopicName() {
         String topic = "Test?Topic:Name";
-        JsonNode message = new TextNode("Test Message");
+        String message = new TextNode("Test Message").toString();
 
         RequestDataMessage requestDataMessage = RequestDataMessage.builder()
                 .topic(topic)

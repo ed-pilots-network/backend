@@ -1,12 +1,9 @@
 package io.edpn.backend.trade.application.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.trade.domain.model.RequestDataMessage;
-import io.edpn.backend.trade.domain.model.System;
-import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
-import io.edpn.backend.trade.domain.service.RequestDataService;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.trade.domain.model.System;
+import io.edpn.backend.trade.domain.service.RequestDataService;
+import io.edpn.backend.trade.domain.service.SendDataRequestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,8 +13,9 @@ import java.util.Objects;
 @Slf4j
 public class RequestSystemEliteIdService implements RequestDataService<System> {
 
-    private final RequestDataMessageRepository requestDataMessageRepository;
-    private final ObjectMapper objectMapper;
+    public static final String TOPIC = "systemEliteIdDataRequest";
+    public static final String REQUESTING_MODULE = "trade";
+    private final SendDataRequestService<SystemDataRequest> systemDataRequestSendDataRequestService;
 
     @Override
     public boolean isApplicable(System system) {
@@ -28,15 +26,8 @@ public class RequestSystemEliteIdService implements RequestDataService<System> {
     public void request(System system) {
         SystemDataRequest systemDataRequest = new SystemDataRequest();
         systemDataRequest.setSystemName(system.getName());
-        systemDataRequest.setRequestingModule("trade");
+        systemDataRequest.setRequestingModule(REQUESTING_MODULE);
 
-        JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
-
-        RequestDataMessage requestDataMessage = RequestDataMessage.builder()
-                .topic("systemEliteIdDataRequest")
-                .message(jsonNode)
-                .build();
-
-        requestDataMessageRepository.sendToKafka(requestDataMessage);
+        systemDataRequestSendDataRequestService.send(systemDataRequest, TOPIC);
     }
 }

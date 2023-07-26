@@ -1,12 +1,9 @@
 package io.edpn.backend.trade.application.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
-import io.edpn.backend.trade.domain.model.RequestDataMessage;
 import io.edpn.backend.trade.domain.model.System;
-import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
 import io.edpn.backend.trade.domain.service.RequestDataService;
+import io.edpn.backend.trade.domain.service.SendDataRequestService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,17 +17,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class RequestSystemCoordinatesServiceTest {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
     @Mock
-    private RequestDataMessageRepository requestDataMessageRepository;
+    private SendDataRequestService<SystemDataRequest> systemDataRequestSendDataRequestService;
     private RequestDataService<System> underTest;
 
     public static Stream<Arguments> provideDoublesForCheckApplicability() {
@@ -46,7 +42,7 @@ public class RequestSystemCoordinatesServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new RequestSystemCoordinatesService(requestDataMessageRepository, objectMapper);
+        underTest = new RequestSystemCoordinatesService(systemDataRequestSendDataRequestService);
     }
 
     @ParameterizedTest
@@ -62,22 +58,21 @@ public class RequestSystemCoordinatesServiceTest {
     }
 
     @Test
-    void shouldSendRequest() throws Exception {
+    void shouldSendRequest() {
         System system = System.builder()
                 .name("Test System")
                 .build();
 
         underTest.request(system);
 
-        ArgumentCaptor<RequestDataMessage> argumentCaptor = ArgumentCaptor.forClass(RequestDataMessage.class);
-        verify(requestDataMessageRepository, times(1)).sendToKafka(argumentCaptor.capture());
+        ArgumentCaptor<SystemDataRequest> systemDataRequestArgumentCaptor = ArgumentCaptor.forClass(SystemDataRequest.class);
+        ArgumentCaptor<String> topicArgumentCaptor = ArgumentCaptor.forClass(String.class);
+        verify(systemDataRequestSendDataRequestService, times(1)).send(systemDataRequestArgumentCaptor.capture(), topicArgumentCaptor.capture());
 
-        RequestDataMessage message = argumentCaptor.getValue();
-        assertThat(message, is(notNullValue()));
-        assertThat(message.getTopic(), is("systemCoordinatesDataRequest"));
-        assertThat(message.getMessage(), is(notNullValue()));
-
-        SystemDataRequest actualSystemDataRequest = objectMapper.treeToValue(message.getMessage(), SystemDataRequest.class);
+        SystemDataRequest actualSystemDataRequest = systemDataRequestArgumentCaptor.getValue();
+        String actualTopic = topicArgumentCaptor.getValue();
         assertThat(actualSystemDataRequest.getSystemName(), is(system.getName()));
+        assertThat(actualSystemDataRequest.getRequestingModule(), is("trade"));
+        assertThat(actualTopic, equalTo("systemCoordinatesDataRequest"));
     }
 }

@@ -9,11 +9,22 @@ public class RequestDataMessageMapper {
 
     public RequestDataMessageEntity map(RequestDataMessage requestDataMessage) {
         String sanitizedTopicName = this.sanitizeTopicName(requestDataMessage.getTopic());
-        return RequestDataMessageEntity.builder().topic(sanitizedTopicName).message(requestDataMessage.getMessage().toString()).build();
+        return RequestDataMessageEntity.builder()
+                .topic(sanitizedTopicName)
+                .message(requestDataMessage.getMessage())
+                .build();
+    }
+
+    public RequestDataMessage map(RequestDataMessageEntity requestDataMessage) {
+        return RequestDataMessage.builder()
+                .topic(requestDataMessage.getTopic())
+                .message(requestDataMessage.getMessage())
+                .build();
     }
 
     private String sanitizeTopicName(String topicName) {
         return topicName.replaceAll("[^A-Za-z0-9._\\-]", "_");
     }
+
 
 }

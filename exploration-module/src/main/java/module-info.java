@@ -23,12 +23,9 @@ module edpn.backend.exploration {
     requires liquibase.core;
 
 
-    //exports io.edpn.backend.exploration.application.service.v1;
+    exports io.edpn.backend.exploration.domain.controller.v1;
+    exports io.edpn.backend.exploration.domain.usecase;
     exports io.edpn.backend.exploration.application.controller.v1;
     exports io.edpn.backend.exploration.application.dto.v1;
     exports io.edpn.backend.exploration.application.mappers.v1;
-    //exports io.edpn.backend.exploration.domain.service.v1;
-    exports io.edpn.backend.exploration.domain.usecase;
-    exports io.edpn.backend.exploration.domain.controller.v1;
-
 }

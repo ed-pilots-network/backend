@@ -1,12 +1,9 @@
 package io.edpn.backend.trade.application.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
-import io.edpn.backend.trade.domain.model.RequestDataMessage;
 import io.edpn.backend.trade.domain.model.Station;
-import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
 import io.edpn.backend.trade.domain.service.RequestDataService;
+import io.edpn.backend.trade.domain.service.SendDataRequestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,8 +13,10 @@ import java.util.Objects;
 @Slf4j
 public class RequestStationArrivalDistanceService implements RequestDataService<Station> {
 
-    private final RequestDataMessageRepository requestDataMessageRepository;
-    private final ObjectMapper objectMapper;
+
+    public static final String REQUESTING_MODULE = "trade";
+    public static final String TOPIC = "stationArrivalDistanceDataRequest";
+    private final SendDataRequestService<StationDataRequest> stationDataRequestSendDataRequestService;
 
     @Override
     public boolean isApplicable(Station station) {
@@ -29,15 +28,8 @@ public class RequestStationArrivalDistanceService implements RequestDataService<
         StationDataRequest stationDataRequest = new StationDataRequest();
         stationDataRequest.setStationName(station.getName());
         stationDataRequest.setSystemName(station.getSystem().getName());
-        stationDataRequest.setRequestingModule("trade");
+        stationDataRequest.setRequestingModule(REQUESTING_MODULE);
 
-        JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
-
-        RequestDataMessage requestDataMessage = RequestDataMessage.builder()
-                .topic("stationArrivalDistanceDataRequest")
-                .message(jsonNode)
-                .build();
-
-        requestDataMessageRepository.sendToKafka(requestDataMessage);
+        stationDataRequestSendDataRequestService.send(stationDataRequest, TOPIC);
     }
 }

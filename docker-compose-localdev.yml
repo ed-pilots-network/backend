@@ -50,7 +50,7 @@ services:
     ports:
       - "54321:5432"
     healthcheck:
-      test: pg_isready
+      test: ["CMD-SHELL", "pg_isready -d trademodule -U edpn_trademodule"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -67,7 +67,7 @@ services:
     ports:
       - "54322:5432"
     healthcheck:
-      test: pg_isready
+      test: ["CMD-SHELL", "pg_isready -d explorationmodule -U edpn_explorationmodule"]
       interval: 10s
       timeout: 5s
       retries: 5

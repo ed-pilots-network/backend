@@ -1,12 +1,9 @@
 package io.edpn.backend.exploration.application.usecase;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.exploration.domain.model.RequestDataMessage;
 import io.edpn.backend.exploration.domain.model.System;
-import io.edpn.backend.exploration.domain.repository.RequestDataMessageRepository;
 import io.edpn.backend.exploration.domain.repository.SystemCoordinateDataRequestRepository;
 import io.edpn.backend.exploration.domain.repository.SystemRepository;
+import io.edpn.backend.exploration.domain.service.SendDataResponseService;
 import io.edpn.backend.exploration.domain.usecase.ReceiveNavRouteMessageUseCase;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
@@ -24,8 +21,8 @@ public class DefaultReceiveNavRouteMessageUseCase implements ReceiveNavRouteMess
 
     private final SystemRepository systemRepository;
     private final SystemCoordinateDataRequestRepository systemCoordinateDataRequestRepository;
-    private final RequestDataMessageRepository requestDataMessageRepository;
-    private final ObjectMapper objectMapper;
+    private final SendDataResponseService<SystemCoordinatesResponse> SendSystemCoordinateDataResponseService;
+
 
     @Override
     public void receive(NavRouteMessage.V1 message) {
@@ -51,7 +48,7 @@ public class DefaultReceiveNavRouteMessageUseCase implements ReceiveNavRouteMess
         return CompletableFuture.supplyAsync(() -> systemRepository.findOrCreateByName(routeItem.getStarSystem()))
                 .thenApply(system -> updateSystemFromItem(system, routeItem))
                 .thenCompose(system -> CompletableFuture.supplyAsync(() -> systemRepository.update(system)))
-                .thenAcceptAsync(this::sendCoordinateDataRequest);
+                .thenAcceptAsync(this::sendCoordinateDataResponse);
     }
 
     private System updateSystemFromItem(System system, NavRouteMessage.V1.Item routeItem) {
@@ -71,18 +68,11 @@ public class DefaultReceiveNavRouteMessageUseCase implements ReceiveNavRouteMess
         return system;
     }
 
-    private void sendCoordinateDataRequest(System system) {
+    private void sendCoordinateDataResponse(System system) {
         systemCoordinateDataRequestRepository.findBySystemName(system.getName())
                 .forEach(systemCoordinateDataRequest -> CompletableFuture.runAsync(() -> {
                     SystemCoordinatesResponse systemCoordinatesResponse = createSystemCoordinatesResponse(system);
-                    JsonNode jsonNode = objectMapper.valueToTree(systemCoordinatesResponse);
-
-                    RequestDataMessage requestDataMessage = RequestDataMessage.builder()
-                            .topic(systemCoordinateDataRequest.getRequestingModule() + "StationArrivalDistanceDataRequest")
-                            .message(jsonNode)
-                            .build();
-
-                    requestDataMessageRepository.sendToKafka(requestDataMessage);
+                    SendSystemCoordinateDataResponseService.send(systemCoordinatesResponse, systemCoordinateDataRequest.getRequestingModule());
                     systemCoordinateDataRequestRepository.delete(systemCoordinateDataRequest);
                 }));
     }

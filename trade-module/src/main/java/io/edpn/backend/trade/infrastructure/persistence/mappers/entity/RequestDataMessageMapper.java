@@ -16,6 +16,13 @@ public class RequestDataMessageMapper {
                 .build();
     }
 
+    public RequestDataMessage map(RequestDataMessageEntity requestDataMessage) {
+        return RequestDataMessage.builder()
+                .topic(requestDataMessage.getTopic())
+                .message(requestDataMessage.getMessage())
+                .build();
+    }
+
     private String sanitizeTopicName(String topicName) {
         return topicName.replaceAll("[^A-Za-z0-9._\\-]", "_");
     }

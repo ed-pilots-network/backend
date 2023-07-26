@@ -1,16 +1,18 @@
 package io.edpn.backend.exploration.infrastructure.persistence.mappers.entity;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import io.edpn.backend.exploration.domain.model.RequestDataMessage;
 import io.edpn.backend.exploration.infrastructure.persistence.entity.RequestDataMessageEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
+@ExtendWith(MockitoExtension.class)
 public class RequestDataMessageMapperTest {
+
 
     private RequestDataMessageMapper underTest;
 
@@ -22,7 +24,7 @@ public class RequestDataMessageMapperTest {
     @Test
     void shouldMapRequestDataMessageToEntity() {
         String topic = "Test.Topic.Name";
-        JsonNode message = JsonNodeFactory.instance.textNode("This is a test message");
+        String message = "This is a test message";
 
         RequestDataMessage requestDataMessage = RequestDataMessage.builder()
                 .topic(topic)
@@ -32,13 +34,29 @@ public class RequestDataMessageMapperTest {
         RequestDataMessageEntity result = underTest.map(requestDataMessage);
 
         assertThat(result.getTopic(), is(topic));
-        assertThat(result.getMessage(), is(message.toString()));
+        assertThat(result.getMessage(), is(message));
+    }
+
+    @Test
+    void shouldMapEntityToRequest() {
+        String topic = "Test.Topic.Name";
+        String message = "This is a test message";
+
+        RequestDataMessageEntity requestDataMessageEntity = RequestDataMessageEntity.builder()
+                .topic(topic)
+                .message(message)
+                .build();
+
+        RequestDataMessage result = underTest.map(requestDataMessageEntity);
+
+        assertThat(result.getTopic(), is(topic));
+        assertThat(result.getMessage(), is(message));
     }
 
     @Test
     void shouldSanitizeTopicName() {
         String topic = "Test@Topic*Name";
-        JsonNode message = JsonNodeFactory.instance.textNode("This is a test message");
+        String message = "This is a test message";
 
         RequestDataMessage requestDataMessage = RequestDataMessage.builder()
                 .topic(topic)
@@ -48,6 +66,6 @@ public class RequestDataMessageMapperTest {
         RequestDataMessageEntity result = underTest.map(requestDataMessage);
 
         assertThat(result.getTopic(), is("Test_Topic_Name"));
-        assertThat(result.getMessage(), is(message.toString()));
+        assertThat(result.getMessage(), is(message));
     }
 }

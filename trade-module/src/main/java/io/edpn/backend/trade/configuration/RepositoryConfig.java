@@ -1,7 +1,5 @@
 package io.edpn.backend.trade.configuration;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.trade.domain.repository.CommodityMarketInfoRepository;
 import io.edpn.backend.trade.domain.repository.CommodityRepository;
 import io.edpn.backend.trade.domain.repository.LocateCommodityRepository;
@@ -10,8 +8,6 @@ import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
 import io.edpn.backend.trade.domain.repository.StationRepository;
 import io.edpn.backend.trade.domain.repository.SystemRepository;
 import io.edpn.backend.trade.domain.repository.ValidatedCommodityRepository;
-import io.edpn.backend.trade.infrastructure.kafka.KafkaTopicHandler;
-import io.edpn.backend.trade.infrastructure.kafka.sender.KafkaMessageSender;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.CommodityMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.CommodityMarketInfoMapper;
 import io.edpn.backend.trade.infrastructure.persistence.mappers.entity.LocateCommodityMapper;
@@ -33,6 +29,7 @@ import io.edpn.backend.trade.infrastructure.persistence.repository.MybatisCommod
 import io.edpn.backend.trade.infrastructure.persistence.repository.MybatisCommodityRepository;
 import io.edpn.backend.trade.infrastructure.persistence.repository.MybatisLocateCommodityRepository;
 import io.edpn.backend.trade.infrastructure.persistence.repository.MybatisMarkerDatumRepository;
+import io.edpn.backend.trade.infrastructure.persistence.repository.MybatisRequestDataMessageRepository;
 import io.edpn.backend.trade.infrastructure.persistence.repository.MybatisStationRepository;
 import io.edpn.backend.trade.infrastructure.persistence.repository.MybatisSystemRepository;
 import io.edpn.backend.trade.infrastructure.persistence.repository.MybatisValidatedCommodityRepository;
@@ -40,7 +37,6 @@ import io.edpn.backend.util.IdGenerator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.core.KafkaTemplate;
 
 @Configuration("TradeModuleRepositoryConfig")
 public class RepositoryConfig {
@@ -65,11 +61,6 @@ public class RepositoryConfig {
         return new MybatisSystemRepository(idGenerator, systemMapper, systemEntityMapper);
     }
 
-    @Bean(name = "tradeRequestDataMessageRepository")
-    public RequestDataMessageRepository requestDataMessageRepository(ObjectMapper objectMapper, RequestDataMessageEntityMapper requestDataMessageEntityMapper, RequestDataMessageMapper requestDataMessageMapper, KafkaTopicHandler kafkaTopicHandler, @Qualifier("tradeJsonNodekafkaTemplate") KafkaTemplate<String, JsonNode> jsonNodekafkaTemplate) {
-        return new KafkaMessageSender(objectMapper, requestDataMessageEntityMapper, requestDataMessageMapper, kafkaTopicHandler, jsonNodekafkaTemplate);
-    }
-
     @Bean(name = "tradeMarketDatumRepository")
     public MarketDatumRepository marketDatumRepository(MarketDatumEntityMapper marketDatumEntityMapper) {
         return new MybatisMarkerDatumRepository(marketDatumEntityMapper);
@@ -83,5 +74,10 @@ public class RepositoryConfig {
     @Bean
     public ValidatedCommodityRepository validatedCommodityRepository(ValidatedCommodityMapper validatedCommodityMapper, ValidatedCommodityEntityMapper validatedCommodityEntityMapper, FindCommodityFilterMapper findCommodityFilterMapper) {
         return new MybatisValidatedCommodityRepository(validatedCommodityMapper, validatedCommodityEntityMapper, findCommodityFilterMapper);
+    }
+
+    @Bean(name = "tradeRequestDataMessageRepository")
+    public RequestDataMessageRepository requestDataMessageRepository(RequestDataMessageEntityMapper requestDataMessageEntityMapper, RequestDataMessageMapper requestDataMessageMapper) {
+        return new MybatisRequestDataMessageRepository(requestDataMessageEntityMapper, requestDataMessageMapper);
     }
 }
