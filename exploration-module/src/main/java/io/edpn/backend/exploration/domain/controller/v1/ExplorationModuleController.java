@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/api/v1/exploration")
 public interface ExplorationModuleController {
     @GetMapping("/system/search-bar")
-    List<SystemDTO> findSystemsFromSearchBar(@RequestParam(name = "name", required = true) String name, @RequestParam(name = "amount", required = false, defaultValue = "10") Integer amount);
+    List<SystemDTO> findSystemsFromSearchBar(@RequestParam(name = "subString", required = true) String subString, @RequestParam(name = "amount", required = false, defaultValue = "10") Integer amount);
 }

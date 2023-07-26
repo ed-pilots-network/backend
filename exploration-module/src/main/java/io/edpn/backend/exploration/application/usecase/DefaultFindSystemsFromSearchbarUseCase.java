@@ -14,7 +14,7 @@ public class DefaultFindSystemsFromSearchbarUseCase implements FindSystemsFromSe
     private final SystemRepository systemRepository;
 
     @Override
-    public List<System> findSystemsFromSearchBar(String name, int amount) {
-        return systemRepository.findFromSearchbar(name, amount);
+    public List<System> findSystemsFromSearchBar(String subString, int amount) {
+        return systemRepository.findFromSearchbar(subString, amount);
     }
 }

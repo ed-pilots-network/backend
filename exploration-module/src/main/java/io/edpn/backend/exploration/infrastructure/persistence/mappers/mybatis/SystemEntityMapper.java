@@ -3,9 +3,6 @@ package io.edpn.backend.exploration.infrastructure.persistence.mappers.mybatis;
 
 import io.edpn.backend.exploration.infrastructure.persistence.entity.SystemEntity;
 import io.edpn.backend.mybatisutil.UuidTypeHandler;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
@@ -14,6 +11,10 @@ import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface SystemEntityMapper {
 
@@ -33,18 +34,22 @@ public interface SystemEntityMapper {
     @ResultMap("systemResultMap")
     Optional<SystemEntity> findByName(@Param("name") String name);
 
-    @Insert("INSERT INTO system (id, name, star_class, elite_id, x_coordinate, y_coordinate, z_coordinate) " +
-            "VALUES (#{id}, #{name}, #{starClass}, #{eliteId}, #{xCoordinate}, #{yCoordinate}, #{zCoordinate})")
+    @Insert({"INSERT INTO system (id, name, star_class, elite_id, x_coordinate, y_coordinate, z_coordinate)",
+            "VALUES (#{id}, #{name}, #{starClass}, #{eliteId}, #{xCoordinate}, #{yCoordinate}, #{zCoordinate})"})
     void insert(SystemEntity system);
 
-    @Update("UPDATE system SET name = #{name}, star_class = #{starClass}, elite_id = #{eliteId}, x_coordinate = #{xCoordinate}, " +
-            "y_coordinate = #{yCoordinate}, z_coordinate = #{zCoordinate} WHERE id = #{id}")
+    @Update({"UPDATE system SET name = #{name}, star_class = #{starClass}, elite_id = #{eliteId}, x_coordinate = #{xCoordinate}, ",
+            "y_coordinate = #{yCoordinate}, z_coordinate = #{zCoordinate} WHERE id = #{id}"})
     void update(SystemEntity system);
 
     @Delete("DELETE FROM system WHERE id = #{id}")
     void delete(@Param("id") UUID id);
 
-    @Select("SELECT * FROM system WHERE name ILIKE CONCAT('%', #{name}, '%') ORDER BY CASE WHEN name ILIKE CONCAT(#{name}, '%') THEN 0 ELSE 1 END, name LIMIT #{amount}")
+    @Select({"SELECT *",
+            "FROM system",
+            "WHERE name ILIKE CONCAT('%', #{name}, '%')",
+            "ORDER BY CASE WHEN name ILIKE CONCAT(#{name}, '%') THEN 0 ELSE 1 END, name",
+            "LIMIT #{amount}"})
     @ResultMap("systemResultMap")
     List<SystemEntity> findFromSearchbar(@Param("name") String name, @Param("amount") int amount);
 }

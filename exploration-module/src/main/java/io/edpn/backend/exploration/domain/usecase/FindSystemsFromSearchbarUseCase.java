@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface FindSystemsFromSearchbarUseCase {
 
-    public List<System> findSystemsFromSearchBar(String name, int amount);
+    List<System> findSystemsFromSearchBar(String subString, int amount);
 }
