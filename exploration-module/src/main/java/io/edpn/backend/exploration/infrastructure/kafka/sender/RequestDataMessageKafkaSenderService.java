@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.Objects;
-import java.util.concurrent.Semaphore;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -25,28 +24,18 @@ public class RequestDataMessageKafkaSenderService implements KafkaSenderService<
     private final KafkaTopicHandler kafkaTopicHandler;
     private final KafkaTemplate<String, JsonNode> jsonNodekafkaTemplate;
 
-    private final Semaphore semaphore = new Semaphore(1);
-
     @Override
-    public void sendToKafka(RequestDataMessage requestDataMessage) {
-        try {
-            semaphore.acquire();
-            if (requestDataMessageRepository.find(requestDataMessage).isEmpty()) {
-                requestDataMessageRepository.create(requestDataMessage);
-            } else {
-                log.debug("info request already queued");
-            }
-
-            sendPendingMessages();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            log.error("Failed to acquire semaphore", e);
-        } finally {
-            semaphore.release();
+    public synchronized void sendToKafka(RequestDataMessage requestDataMessage) {
+        if (requestDataMessageRepository.find(requestDataMessage).isEmpty()) {
+            requestDataMessageRepository.create(requestDataMessage);
+        } else {
+            log.debug("info request already queued");
         }
+
+        sendPendingMessages();
     }
 
-    private void sendPendingMessages() {
+    private synchronized void sendPendingMessages() {
         requestDataMessageRepository.findNotSend()
                 .forEach(requestDataMessage ->
                         kafkaTopicHandler.createTopicIfNotExists(requestDataMessage.getTopic())
