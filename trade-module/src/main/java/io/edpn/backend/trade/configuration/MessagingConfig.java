@@ -1,7 +1,10 @@
 package io.edpn.backend.trade.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.ApproachSettlementMessage;
+import io.edpn.backend.trade.domain.usecase.ReceiveApproachSettlementMessageUseCase;
 import io.edpn.backend.trade.domain.usecase.ReceiveCommodityMessageUseCase;
+import io.edpn.backend.trade.infrastructure.kafka.processor.ApproachSettelementMessageProcessor;
 import io.edpn.backend.trade.infrastructure.kafka.processor.CommodityV3MessageProcessor;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.CommodityMessage;
 import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.MessageProcessor;
@@ -15,4 +18,10 @@ public class MessagingConfig {
     public MessageProcessor<CommodityMessage.V3> commodityV3MessageProcessor(ReceiveCommodityMessageUseCase receiveCommodityMessageUsecase, ObjectMapper objectMapper) {
         return new CommodityV3MessageProcessor(receiveCommodityMessageUsecase, objectMapper);
     }
+
+    @Bean
+    public MessageProcessor<ApproachSettlementMessage.V1> approachSettlementV1MessageProcessor(ReceiveApproachSettlementMessageUseCase receiveApproachSettlementMessageUseCase, ObjectMapper objectMapper) {
+        return new ApproachSettelementMessageProcessor(receiveApproachSettlementMessageUseCase, objectMapper);
+    }
+
 }
