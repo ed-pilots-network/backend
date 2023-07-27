@@ -1,7 +1,7 @@
 package io.edpn.backend.exploration.application.mappers.v1;
 
-import io.edpn.backend.exploration.application.dto.v1.CoordinateDTO;
-import io.edpn.backend.exploration.application.dto.v1.SystemDTO;
+import io.edpn.backend.exploration.application.dto.v1.CoordinateDto;
+import io.edpn.backend.exploration.application.dto.v1.SystemDto;
 import io.edpn.backend.exploration.domain.model.System;
 
 import java.util.Objects;
@@ -10,24 +10,15 @@ import java.util.Objects;
 
 public class SystemDtoMapper {
 
-    public SystemDTO map(System system) {
-        return SystemDTO.builder()
-                .name(system.getName())
-                .eliteId(system.getEliteId())
-                .starClass(system.getStarClass())
-                .coordinates(coordinateFromSystem(system))
-                .build();
+    public io.edpn.backend.exploration.domain.dto.v1.SystemDto map(System system) {
+        return new SystemDto(system.getName(), coordinateFromSystem(system), system.getEliteId(), system.getStarClass());
     }
 
-    private CoordinateDTO coordinateFromSystem(System system) {
+    private io.edpn.backend.exploration.domain.dto.v1.CoordinateDto coordinateFromSystem(System system) {
         if (Objects.isNull(system.getXCoordinate())) {
             return null;
         } else {
-            return CoordinateDTO.builder()
-                    .x(system.getXCoordinate())
-                    .y(system.getYCoordinate())
-                    .z(system.getZCoordinate())
-                    .build();
+            return new CoordinateDto(system.getXCoordinate(), system.getYCoordinate(), system.getZCoordinate());
         }
     }
 }

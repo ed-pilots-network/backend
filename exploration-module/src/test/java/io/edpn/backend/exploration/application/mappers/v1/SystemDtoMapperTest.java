@@ -1,6 +1,6 @@
 package io.edpn.backend.exploration.application.mappers.v1;
 
-import io.edpn.backend.exploration.application.dto.v1.SystemDTO;
+import io.edpn.backend.exploration.domain.dto.v1.SystemDto;
 import io.edpn.backend.exploration.domain.model.System;
 import org.junit.jupiter.api.Test;
 
@@ -24,14 +24,14 @@ public class SystemDtoMapperTest {
                 .zCoordinate(4.0)
                 .build();
 
-        SystemDTO result = underTest.map(system);
+        SystemDto result = underTest.map(system);
 
-        assertThat(system.getName(), equalTo(result.getName()));
-        assertThat(system.getEliteId(), equalTo(result.getEliteId()));
-        assertThat(system.getStarClass(), equalTo(result.getStarClass()));
-        assertThat(system.getXCoordinate(), equalTo(result.getCoordinates().getX()));
-        assertThat(system.getYCoordinate(), equalTo(result.getCoordinates().getY()));
-        assertThat(system.getZCoordinate(), equalTo(result.getCoordinates().getZ()));
+        assertThat(system.getName(), equalTo(result.name()));
+        assertThat(system.getEliteId(), equalTo(result.eliteId()));
+        assertThat(system.getStarClass(), equalTo(result.starClass()));
+        assertThat(system.getXCoordinate(), equalTo(result.coordinates().x()));
+        assertThat(system.getYCoordinate(), equalTo(result.coordinates().y()));
+        assertThat(system.getZCoordinate(), equalTo(result.coordinates().z()));
     }
 
     @Test
@@ -41,10 +41,10 @@ public class SystemDtoMapperTest {
                 .eliteId(1L)
                 .build();
 
-        SystemDTO result = underTest.map(system);
+        SystemDto result = underTest.map(system);
 
-        assertThat(system.getName(), equalTo(result.getName()));
-        assertThat(system.getEliteId(), equalTo(result.getEliteId()));
-        assertThat(result.getCoordinates(), is(nullValue()));
+        assertThat(system.getName(), equalTo(result.name()));
+        assertThat(system.getEliteId(), equalTo(result.eliteId()));
+        assertThat(result.coordinates(), is(nullValue()));
     }
 }

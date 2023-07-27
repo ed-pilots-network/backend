@@ -1,9 +1,10 @@
 package io.edpn.backend.exploration.domain.usecase;
 
-import io.edpn.backend.exploration.domain.model.System;
+import io.edpn.backend.exploration.domain.dto.v1.SystemDto;
+
 import java.util.List;
 
 public interface FindSystemsFromSearchbarUseCase {
 
-    List<System> findSystemsFromSearchBar(String subString, int amount);
+    List<SystemDto> findSystemsFromSearchBar(String subString, int amount);
 }
