@@ -12,7 +12,7 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 public class CommodityMarketInfoResponse {
 
-    String commodityName;
+    String commodityDisplayName;
     Double maxBuyPrice;
     Double minBuyPrice;
     Double avgBuyPrice;
