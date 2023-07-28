@@ -1,8 +1,8 @@
 package io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis;
 
 import io.edpn.backend.trade.infrastructure.persistence.entity.LocateCommodityEntity;
+import io.edpn.backend.trade.infrastructure.persistence.entity.ValidatedCommodityEntity;
 import io.edpn.backend.trade.infrastructure.persistence.filter.LocateCommodityFilterPersistence;
-import io.edpn.backend.trade.infrastructure.persistence.entity.CommodityEntity;
 import io.edpn.backend.trade.infrastructure.persistence.entity.StationEntity;
 import io.edpn.backend.trade.infrastructure.persistence.entity.SystemEntity;
 import org.apache.ibatis.annotations.One;
@@ -41,8 +41,8 @@ public interface LocateCommodityEntityMapper {
     )
     @Results(id = "findCommodityResultMap", value = {
             @Result(property = "pricesUpdatedAt", column = "timestamp", javaType = LocalDateTime.class),
-            @Result(property = "commodity", column = "commodity_id", javaType = CommodityEntity.class,
-                    one = @One(select = "io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.CommodityEntityMapper.findById")),
+            @Result(property = "validatedCommodity", column = "commodity_id", javaType = ValidatedCommodityEntity.class,
+                    one = @One(select = "io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.ValidatedCommodityEntityMapper.findById")),
             @Result(property = "station", column = "station_id", javaType = StationEntity.class,
                     one = @One(select = "io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.StationEntityMapper.findById")),
             @Result(property = "system", column = "system_id", javaType = SystemEntity.class,

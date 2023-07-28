@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Builder
 public class LocateCommodityEntity {
     private LocalDateTime pricesUpdatedAt;
-    private CommodityEntity commodity;
+    private ValidatedCommodityEntity validatedCommodity;
     private StationEntity station;
     private SystemEntity system;
     private Long supply;
