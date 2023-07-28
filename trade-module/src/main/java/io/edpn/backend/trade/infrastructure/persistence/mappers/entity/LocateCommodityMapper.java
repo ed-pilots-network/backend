@@ -1,7 +1,6 @@
 package io.edpn.backend.trade.infrastructure.persistence.mappers.entity;
 
 import io.edpn.backend.trade.domain.model.LocateCommodity;
-import io.edpn.backend.trade.domain.model.ValidatedCommodity;
 import io.edpn.backend.trade.infrastructure.persistence.entity.LocateCommodityEntity;
 import lombok.RequiredArgsConstructor;
 
