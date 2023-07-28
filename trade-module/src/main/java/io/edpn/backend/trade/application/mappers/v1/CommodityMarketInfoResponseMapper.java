@@ -13,8 +13,7 @@ public class CommodityMarketInfoResponseMapper {
 
     public CommodityMarketInfoResponse map(CommodityMarketInfo commoditymarketInfo) {
         return CommodityMarketInfoResponse.builder()
-                .commodityName(commoditymarketInfo.getCommodity().getName())
-                .maxBuyPrice(commoditymarketInfo.getMaxBuyPrice())
+                .commodityDisplayName(commoditymarketInfo.getValidatedCommodity().getDisplayName())                .maxBuyPrice(commoditymarketInfo.getMaxBuyPrice())
                 .minBuyPrice(commoditymarketInfo.getMinBuyPrice())
                 .avgBuyPrice(commoditymarketInfo.getAvgBuyPrice())
                 .maxSellPrice(commoditymarketInfo.getMaxSellPrice())
