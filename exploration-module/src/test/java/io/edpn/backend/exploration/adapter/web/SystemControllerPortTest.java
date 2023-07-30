@@ -1,8 +1,8 @@
 package io.edpn.backend.exploration.adapter.web;
 
 import io.edpn.backend.exploration.application.dto.SystemDto;
-import io.edpn.backend.exploration.application.port.incomming.FindSystemsFromSearchbarUseCase;
-import io.edpn.backend.exploration.application.port.incomming.SystemControllerPort;
+import io.edpn.backend.exploration.application.port.incoming.FindSystemsFromSearchbarUseCase;
+import io.edpn.backend.exploration.application.port.incoming.SystemControllerPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

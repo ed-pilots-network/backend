@@ -3,7 +3,7 @@ package io.edpn.backend.exploration.adapter.kafka.processor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
+import io.edpn.backend.exploration.application.port.incoming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
 import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.MessageProcessor;
 import org.junit.jupiter.api.BeforeEach;

@@ -24,7 +24,7 @@ module edpn.backend.exploration {
     requires spring.retry;
     requires spring.core;
 
-    exports io.edpn.backend.exploration.application.port.incomming;
+    exports io.edpn.backend.exploration.application.port.incoming;
     exports io.edpn.backend.exploration.application.dto;
     exports io.edpn.backend.exploration.adapter.web;
 }

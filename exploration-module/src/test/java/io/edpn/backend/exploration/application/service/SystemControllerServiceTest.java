@@ -3,7 +3,7 @@ package io.edpn.backend.exploration.application.service;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.dto.SystemDto;
 import io.edpn.backend.exploration.application.dto.mapper.SystemDtoMapper;
-import io.edpn.backend.exploration.application.port.incomming.FindSystemsFromSearchbarUseCase;
+import io.edpn.backend.exploration.application.port.incoming.FindSystemsFromSearchbarUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemsByNameContainingPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

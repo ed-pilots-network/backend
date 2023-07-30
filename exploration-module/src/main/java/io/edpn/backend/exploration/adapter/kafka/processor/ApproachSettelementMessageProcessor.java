@@ -1,11 +1,11 @@
-package io.edpn.backend.trade.infrastructure.kafka.processor;
+package io.edpn.backend.exploration.adapter.kafka.processor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.edpn.backend.exploration.application.port.incoming.ReceiveApproachSettlementMessageUseCase;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.ApproachSettlementMessage;
 import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.MessageProcessor;
-import io.edpn.backend.trade.domain.usecase.ReceiveApproachSettlementMessageUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 

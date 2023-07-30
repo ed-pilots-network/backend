@@ -1,8 +1,8 @@
 package io.edpn.backend.exploration.adapter.web;
 
 import io.edpn.backend.exploration.application.dto.SystemDto;
-import io.edpn.backend.exploration.application.port.incomming.FindSystemsFromSearchbarUseCase;
-import io.edpn.backend.exploration.application.port.incomming.SystemControllerPort;
+import io.edpn.backend.exploration.application.port.incoming.FindSystemsFromSearchbarUseCase;
+import io.edpn.backend.exploration.application.port.incoming.SystemControllerPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;

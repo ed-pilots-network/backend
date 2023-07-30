@@ -1,4 +1,4 @@
-package io.edpn.backend.trade.domain.usecase;
+package io.edpn.backend.exploration.application.port.incoming;
 
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.ApproachSettlementMessage;
 

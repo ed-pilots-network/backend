@@ -4,9 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.trade.domain.usecase.ReceiveCommodityMessageUseCase;
 import io.edpn.backend.trade.domain.usecase.ReceiveDataRequestResponseUseCase;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.ApproachSettlementMessage;
-import io.edpn.backend.trade.domain.usecase.ReceiveApproachSettlementMessageUseCase;
-import io.edpn.backend.trade.infrastructure.kafka.processor.ApproachSettelementMessageProcessor;
 import io.edpn.backend.trade.infrastructure.kafka.processor.CommodityV3MessageProcessor;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.CommodityMessage;
 import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.MessageProcessor;
@@ -25,11 +22,6 @@ public class MessagingConfig {
     @Bean(name = "tradeSystemCoordinatesResponseMessageProcessor")
     public MessageProcessor<SystemCoordinatesResponse> systemCoordinatesResponseMessageProcessor(ReceiveDataRequestResponseUseCase<SystemCoordinatesResponse> receiveDataRequestResponseUseCase, ObjectMapper objectMapper) {
         return new SystemCoordinatesResponseMessageProcessor(receiveDataRequestResponseUseCase, objectMapper);
-    }
-
-    @Bean
-    public MessageProcessor<ApproachSettlementMessage.V1> approachSettlementV1MessageProcessor(ReceiveApproachSettlementMessageUseCase receiveApproachSettlementMessageUseCase, ObjectMapper objectMapper) {
-        return new ApproachSettelementMessageProcessor(receiveApproachSettlementMessageUseCase, objectMapper);
     }
 
 }
