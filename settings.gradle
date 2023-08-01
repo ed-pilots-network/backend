@@ -3,4 +3,4 @@ rootProject.name = 'backend'
 // modules
 include 'boot'
 include 'trade-module'
-include 'exploration-module'
+include 'hex-exploration-module'
