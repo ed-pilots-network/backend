@@ -39,7 +39,7 @@ public class ProcessPendingSystemCoordinateRequestService implements ProcessPend
                                     String stringJson = objectMapper.valueToTree(systemCoordinatesResponse).toString();
                                     KafkaMessage kafkaMessage = new KafkaMessage(systemCoordinateRequest.requestingModule() + TOPIC, stringJson);
 
-                                    if (sendKafkaMessagePort.send(kafkaMessage)) {
+                                    if (sendKafkaMessagePort.send(kafkaMessage)) {  //TODO replace with retry template
                                         deleteSystemCoordinateRequestPort.delete(system.getName(), systemCoordinateRequest.requestingModule());
                                     }
                                 }

@@ -94,7 +94,7 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
                     String stringJson = objectMapper.valueToTree(systemCoordinatesResponse).toString();
                     KafkaMessage message = new KafkaMessage(systemCoordinateRequest.requestingModule() + TOPIC, stringJson);
 
-                    if (sendKafkaMessagePort.send(message)) {
+                    if (sendKafkaMessagePort.send(message)) { //TODO replace with retry template
                         deleteSystemCoordinateRequestPort.delete(system.getName(), systemCoordinateRequest.requestingModule());
                     }
                 }));

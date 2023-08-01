@@ -36,7 +36,7 @@ public class ReceiveSystemCoordinateRequestService implements ReceiveKafkaMessag
                     String stringJson = objectMapper.valueToTree(systemCoordinatesResponse).toString();
                     KafkaMessage kafkaMessage = new KafkaMessage(requestingModule + TOPIC, stringJson);
 
-                    if (!sendKafkaMessagePort.send(kafkaMessage)) {
+                    if (!sendKafkaMessagePort.send(kafkaMessage)) {  //TODO replace with retry template
                         createSystemCoordinateRequestPort.create(new SystemCoordinateRequest(systemName, requestingModule));
                     }
                 },
