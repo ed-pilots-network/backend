@@ -1,12 +1,12 @@
 package io.edpn.backend.application.controller;
 
-import io.edpn.backend.exploration.application.controller.v1.DefaultExplorationModuleController;
-import io.edpn.backend.exploration.domain.usecase.FindSystemsFromSearchbarUseCase;
+import io.edpn.backend.exploration.adapter.web.SystemController;
+import io.edpn.backend.exploration.application.port.incomming.FindSystemsFromSearchbarUseCase;
 import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-public class BootExplorationModuleController extends DefaultExplorationModuleController {
+public class BootExplorationModuleController extends SystemController {
 
     public BootExplorationModuleController(FindSystemsFromSearchbarUseCase findSystemsFromSearchbarUseCase) {
         super(findSystemsFromSearchbarUseCase);

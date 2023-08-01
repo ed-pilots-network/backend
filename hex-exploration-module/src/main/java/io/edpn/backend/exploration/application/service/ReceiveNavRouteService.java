@@ -1,6 +1,7 @@
 package io.edpn.backend.exploration.application.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.edpn.backend.exploration.adapter.kafka.dto.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.KafkaMessage;
 import io.edpn.backend.exploration.application.domain.System;
@@ -11,7 +12,6 @@ import io.edpn.backend.exploration.application.port.outgoing.LoadSystemCoordinat
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.SaveSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
-import io.edpn.backend.exploration.util.SystemCoordinatesResponseMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +25,16 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRouteMessage.V1> {
 
+    private final static String TOPIC = "_systemCoordinatesDataResponse";
+
+
     private final CreateSystemPort createSystemPort;
     private final LoadSystemPort loadSystemPort;
     private final SaveSystemPort saveSystemPort;
     private final SendKafkaMessagePort sendKafkaMessagePort;
     private final LoadSystemCoordinateRequestBySystemNamePort loadSystemCoordinateRequestBySystemNamePort;
     private final DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
+    private final SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -86,12 +90,13 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
     private void sendResponse(System system) {
         loadSystemCoordinateRequestBySystemNamePort.load(system.getName()).parallelStream()
                 .forEach(systemCoordinateRequest -> CompletableFuture.runAsync(() -> {
-                    SystemCoordinatesResponse systemCoordinatesResponse = SystemCoordinatesResponseMapper.map(system);
+                    SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
                     String stringJson = objectMapper.valueToTree(systemCoordinatesResponse).toString();
-                    KafkaMessage message = new KafkaMessage(systemCoordinateRequest.requestingModule(), stringJson);
+                    KafkaMessage message = new KafkaMessage(systemCoordinateRequest.requestingModule() + TOPIC, stringJson);
 
-                    sendKafkaMessagePort.send(message);
-                    deleteSystemCoordinateRequestPort.delete(system.getName());
+                    if (sendKafkaMessagePort.send(message)) {
+                        deleteSystemCoordinateRequestPort.delete(system.getName(), systemCoordinateRequest.requestingModule());
+                    }
                 }));
 
     }

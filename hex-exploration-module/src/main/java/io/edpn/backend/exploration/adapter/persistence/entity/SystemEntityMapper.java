@@ -2,9 +2,13 @@ package io.edpn.backend.exploration.adapter.persistence.entity;
 
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.System;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
+@RequiredArgsConstructor
+@Slf4j
 public class SystemEntityMapper {
 
     public System map(SystemEntity systemEntity) {
