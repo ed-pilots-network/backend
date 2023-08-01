@@ -14,7 +14,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 public class CommodityMarketInfoEntity {
-    private CommodityEntity commodity;
+    private ValidatedCommodityEntity validatedCommodity;
     private Double maxBuyPrice;
     private Double minBuyPrice;
     private Double avgBuyPrice;

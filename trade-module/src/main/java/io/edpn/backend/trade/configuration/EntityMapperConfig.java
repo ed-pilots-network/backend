@@ -26,8 +26,8 @@ public class EntityMapperConfig {
     }
 
     @Bean
-    public LocateCommodityMapper locateCommodityMapper(CommodityMapper commodityMapper, SystemMapper systemMapper, StationMapper stationMapper) {
-        return new LocateCommodityMapper(commodityMapper, systemMapper, stationMapper);
+    public LocateCommodityMapper locateCommodityMapper(ValidatedCommodityMapper validatedCommodityMapper, SystemMapper systemMapper, StationMapper stationMapper) {
+        return new LocateCommodityMapper(validatedCommodityMapper, systemMapper, stationMapper);
     }
     
     @Bean
@@ -46,8 +46,8 @@ public class EntityMapperConfig {
     }
 
     @Bean
-    public CommodityMarketInfoMapper bestCommodityPriceMapper(CommodityMapper commodityMapper, StationMapper stationMapper) {
-        return new CommodityMarketInfoMapper(commodityMapper, stationMapper);
+    public CommodityMarketInfoMapper bestCommodityPriceMapper(ValidatedCommodityMapper validatedCommodityMapper, StationMapper stationMapper) {
+        return new CommodityMarketInfoMapper(validatedCommodityMapper, stationMapper);
     }
 
     @Bean

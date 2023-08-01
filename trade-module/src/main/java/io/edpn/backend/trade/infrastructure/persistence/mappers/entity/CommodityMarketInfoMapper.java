@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CommodityMarketInfoMapper {
 
-    private final CommodityMapper commodityMapper;
+    private final ValidatedCommodityMapper validatedCommodityMapper;
     private final StationMapper stationMapper;
 
     public List<CommodityMarketInfo> map(List<CommodityMarketInfoEntity> entities) {
@@ -22,7 +22,7 @@ public class CommodityMarketInfoMapper {
 
     public CommodityMarketInfo map(CommodityMarketInfoEntity entity) {
         return CommodityMarketInfo.builder()
-                .commodity(commodityMapper.map(entity.getCommodity()))
+                .validatedCommodity(validatedCommodityMapper.map(entity.getValidatedCommodity()))
                 .maxBuyPrice(entity.getMaxBuyPrice())
                 .minBuyPrice(entity.getMinBuyPrice())
                 .avgBuyPrice(entity.getAvgBuyPrice())

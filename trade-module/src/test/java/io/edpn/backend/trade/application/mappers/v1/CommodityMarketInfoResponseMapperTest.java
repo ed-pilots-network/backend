@@ -1,10 +1,11 @@
 package io.edpn.backend.trade.application.mappers.v1;
 
 import io.edpn.backend.trade.application.dto.v1.CommodityMarketInfoResponse;
-import io.edpn.backend.trade.domain.model.Commodity;
 import io.edpn.backend.trade.domain.model.CommodityMarketInfo;
+import io.edpn.backend.trade.domain.model.CommodityType;
 import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.model.System;
+import io.edpn.backend.trade.domain.model.ValidatedCommodity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,8 +27,11 @@ class CommodityMarketInfoResponseMapperTest {
     @Test
     void shouldMapCommodityMarketInfoToResponse() {
         // Given
-        Commodity commodity = Commodity.builder()
-                .name("Gold")
+        ValidatedCommodity validatedCommodity = ValidatedCommodity.builder()
+                .commodityName("somethingObscure")
+                .displayName("Tritium")
+                .type(CommodityType.METALS)
+                .isRare(true)
                 .build();
 
         Station station1 = Station.builder()
@@ -58,7 +62,7 @@ class CommodityMarketInfoResponseMapperTest {
         station2.setSystem(system2);
 
         CommodityMarketInfo commodityMarketInfo = CommodityMarketInfo.builder()
-                .commodity(commodity)
+                .validatedCommodity(validatedCommodity)
                 .maxBuyPrice(100.0)
                 .minBuyPrice(50.0)
                 .avgBuyPrice(75.0)
@@ -84,7 +88,7 @@ class CommodityMarketInfoResponseMapperTest {
 
         // Then
         assertThat(response, is(notNullValue()));
-        assertThat(response.getCommodityName(), is(equalTo(commodity.getName())));
+        assertThat(response.getCommodityDisplayName(), is(equalTo(validatedCommodity.getDisplayName())));
         assertThat(response.getMaxBuyPrice(), is(equalTo(commodityMarketInfo.getMaxBuyPrice())));
         assertThat(response.getMinBuyPrice(), is(equalTo(commodityMarketInfo.getMinBuyPrice())));
         assertThat(response.getAvgBuyPrice(), is(equalTo(commodityMarketInfo.getAvgBuyPrice())));

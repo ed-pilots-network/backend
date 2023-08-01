@@ -14,7 +14,7 @@ import lombok.ToString;
 @Builder
 public class LocateCommodity {
     private LocalDateTime pricesUpdatedAt;
-    private Commodity commodity;
+    private ValidatedCommodity validatedCommodity;
     private Station station;
     private System system;
     private Long supply;

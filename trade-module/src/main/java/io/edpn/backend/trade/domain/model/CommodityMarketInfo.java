@@ -13,7 +13,7 @@ import lombok.ToString;
 @Builder
 public class CommodityMarketInfo {
 
-    private Commodity commodity;
+    private ValidatedCommodity validatedCommodity;
     private Double maxBuyPrice;
     private Double minBuyPrice;
     private Double avgBuyPrice;

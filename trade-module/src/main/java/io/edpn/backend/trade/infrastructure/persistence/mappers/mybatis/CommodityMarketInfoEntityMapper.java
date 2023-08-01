@@ -1,12 +1,12 @@
 package io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis;
 
 import io.edpn.backend.trade.infrastructure.persistence.entity.CommodityMarketInfoEntity;
-import io.edpn.backend.trade.infrastructure.persistence.entity.CommodityEntity;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import io.edpn.backend.trade.infrastructure.persistence.entity.StationEntity;
+import io.edpn.backend.trade.infrastructure.persistence.entity.ValidatedCommodityEntity;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
@@ -20,8 +20,8 @@ public interface CommodityMarketInfoEntityMapper {
             "FROM  commodity_market_info_view",
             "WHERE commodity_id = #{commodityId}"})
     @Results(id = "commodityMarketInfoResultMap", value = {
-            @Result(property = "commodity", column = "commodity_id", javaType = CommodityEntity.class,
-                    one = @One(select = "io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.CommodityEntityMapper.findById")),
+            @Result(property = "validatedCommodity", column = "commodity_id", javaType = ValidatedCommodityEntity.class,
+                    one = @One(select = "io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.ValidatedCommodityEntityMapper.findById")),
             @Result(column="max_buy_price", property="maxBuyPrice"),
             @Result(column="min_buy_price", property="minBuyPrice"),
             @Result(column="avg_buy_price", property="avgBuyPrice"),

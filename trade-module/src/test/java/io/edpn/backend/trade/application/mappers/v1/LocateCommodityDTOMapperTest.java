@@ -3,12 +3,14 @@ package io.edpn.backend.trade.application.mappers.v1;
 import io.edpn.backend.trade.application.dto.v1.LocateCommodityRequest;
 import io.edpn.backend.trade.application.dto.v1.LocateCommodityResponse;
 import io.edpn.backend.trade.domain.filter.v1.LocateCommodityFilter;
-import io.edpn.backend.trade.domain.model.Commodity;
+import io.edpn.backend.trade.domain.model.CommodityType;
 import io.edpn.backend.trade.domain.model.LandingPadSize;
 import io.edpn.backend.trade.domain.model.LocateCommodity;
 import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.model.System;
 import java.time.LocalDateTime;
+
+import io.edpn.backend.trade.domain.model.ValidatedCommodity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,8 +31,11 @@ public class LocateCommodityDTOMapperTest {
     @Test
     void shouldMapLocateCommodityToResponse() {
         // Given
-        Commodity commodity = Commodity.builder()
-                .name("Gold")
+        ValidatedCommodity validatedCommodity = ValidatedCommodity.builder()
+                .commodityName("somethingObscure")
+                .displayName("Tritium")
+                .type(CommodityType.METALS)
+                .isRare(true)
                 .build();
 
         Station station = Station.builder()
@@ -51,7 +56,7 @@ public class LocateCommodityDTOMapperTest {
 
         LocateCommodity locateCommodity = LocateCommodity.builder()
                 .pricesUpdatedAt(LocalDateTime.now())
-                .commodity(commodity)
+                .validatedCommodity(validatedCommodity)
                 .station(station)
                 .system(system)
                 .supply(1000L)
@@ -67,7 +72,7 @@ public class LocateCommodityDTOMapperTest {
         // Then
         assertThat(response, is(notNullValue()));
         assertThat(response.getPricesUpdatedAt(), is(equalTo(locateCommodity.getPricesUpdatedAt())));
-        assertThat(response.getCommodityName(), is(equalTo(commodity.getName())));
+        assertThat(response.getCommodityDisplayName(), is(equalTo(validatedCommodity.getDisplayName())));
         assertThat(response.getStation(), is(notNullValue()));
         assertThat(response.getStation().getName(), is(equalTo(station.getName())));
         assertThat(response.getStation().getArrivalDistance(), is(equalTo(station.getArrivalDistance())));
