@@ -1,26 +1,10 @@
 package io.edpn.backend.exploration.adapter.persistence.entity;
 
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter
-@Setter
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class SystemEntity {
-
-    private UUID id;
-    private String name;
-    private String starClass;
-    private Long eliteId;
-    private Double xCoordinate;
-    private Double yCoordinate;
-    private Double zCoordinate;
+public record SystemEntity(UUID id, String name,
+                           CoordinateEntity coordinates,
+                           Long eliteId,
+                           String starClass) implements io.edpn.backend.exploration.application.dto.SystemDto {
 }
+

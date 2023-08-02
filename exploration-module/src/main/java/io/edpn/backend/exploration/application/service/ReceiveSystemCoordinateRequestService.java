@@ -5,6 +5,7 @@ import io.edpn.backend.exploration.application.domain.KafkaMessage;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
 import io.edpn.backend.exploration.application.dto.KafkaMessageDto;
 import io.edpn.backend.exploration.application.dto.mapper.KafkaMessageMapper;
+import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinateRequestEntityMapper;
 import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.CreateSystemCoordinateRequestPort;
@@ -44,9 +45,14 @@ public class ReceiveSystemCoordinateRequestService implements ReceiveKafkaMessag
 
                     boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(kafkaMessageDto));
                     if (!sendSuccessful) {
-                        createSystemCoordinateRequestPort.create(new SystemCoordinateRequest(systemName, requestingModule));
+                        saveRequest(systemName, requestingModule);
                     }
                 },
-                () -> createSystemCoordinateRequestPort.create(new SystemCoordinateRequest(systemName, requestingModule)));
+                () -> saveRequest(systemName, requestingModule));
+    }
+
+    private void saveRequest(String systemName, String requestingModule) {
+        SystemCoordinateRequest systemCoordinateDataRequest = new SystemCoordinateRequest(systemName, requestingModule);
+        createSystemCoordinateRequestPort.create(systemCoordinateDataRequest);
     }
 }

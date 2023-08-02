@@ -2,8 +2,8 @@ package io.edpn.backend.exploration.adapter.persistence;
 
 
 import io.edpn.backend.exploration.adapter.persistence.entity.SystemEntity;
-import io.edpn.backend.exploration.adapter.persistence.entity.SystemEntityMapper;
 import io.edpn.backend.exploration.application.domain.System;
+import io.edpn.backend.exploration.application.dto.mapper.SystemEntityMapper;
 import io.edpn.backend.exploration.application.port.outgoing.CreateSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemsByNameContainingPort;
@@ -26,13 +26,9 @@ public class SystemRepository implements CreateSystemPort, LoadSystemPort, SaveS
 
     @Override
     public System create(String systemName) throws DatabaseEntityNotFoundException {
-        mybatisSystemRepository.insert(SystemEntity.builder()
-                .id(idGenerator.generateId())
-                .name(systemName)
-                .build());
+        mybatisSystemRepository.insert(new SystemEntity(idGenerator.generateId(), systemName, null, null, null));
         return load(systemName)
                 .orElseThrow(() -> new DatabaseEntityNotFoundException("System with name '" + systemName + "' could not be found after create"));
-
     }
 
     @Override

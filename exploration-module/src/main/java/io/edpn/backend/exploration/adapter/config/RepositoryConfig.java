@@ -4,7 +4,7 @@ import io.edpn.backend.exploration.adapter.persistence.MybatisSystemCoordinateRe
 import io.edpn.backend.exploration.adapter.persistence.MybatisSystemRepository;
 import io.edpn.backend.exploration.adapter.persistence.SystemCoordinateRequestRepository;
 import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
-import io.edpn.backend.exploration.adapter.persistence.entity.SystemCoordinateRequestEntityMapper;
+import io.edpn.backend.exploration.adapter.persistence.entity.mapper.SystemCoordinateRequestEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.SystemEntityMapper;
 import io.edpn.backend.util.IdGenerator;
 import org.springframework.beans.factory.annotation.Qualifier;
