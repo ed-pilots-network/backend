@@ -1,5 +1,7 @@
-package io.edpn.backend.exploration.adapter.persistence.entity;
+package io.edpn.backend.exploration.adapter.persistence.entity.mapper;
 
+import io.edpn.backend.exploration.adapter.persistence.entity.CoordinateEntity;
+import io.edpn.backend.exploration.adapter.persistence.entity.SystemEntity;
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.dto.CoordinateDto;
@@ -36,7 +38,7 @@ public class SystemEntityMapper implements io.edpn.backend.exploration.applicati
         if (Optional.ofNullable(coordinateEntity).map(CoordinateDto::x).isEmpty()) {
             return null;
         } else {
-            return new Coordinate(coordinateEntity.x(), coordinateEntity.y(), coordinateEntity.y());
+            return new Coordinate(coordinateEntity.x(), coordinateEntity.y(), coordinateEntity.z());
         }
     }
 
@@ -44,7 +46,7 @@ public class SystemEntityMapper implements io.edpn.backend.exploration.applicati
         if (Optional.ofNullable(coordinate).map(Coordinate::x).isEmpty()) {
             return null;
         } else {
-            return new CoordinateEntity(coordinate.x(), coordinate.y(), coordinate.y());
+            return new CoordinateEntity(coordinate.x(), coordinate.y(), coordinate.z());
         }
     }
 }
