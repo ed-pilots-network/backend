@@ -15,7 +15,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Jacksonized
 public class LocateCommodityResponse {
-    String commodityName;
+    String commodityDisplayName;
     Station station;
     String systemName;
     LocalDateTime pricesUpdatedAt;

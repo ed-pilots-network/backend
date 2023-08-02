@@ -1,11 +1,11 @@
 package io.edpn.backend.trade.infrastructure.persistence.mappers.entity;
 
-import io.edpn.backend.trade.domain.model.Commodity;
 import io.edpn.backend.trade.domain.model.CommodityMarketInfo;
 import io.edpn.backend.trade.domain.model.Station;
-import io.edpn.backend.trade.infrastructure.persistence.entity.CommodityEntity;
+import io.edpn.backend.trade.domain.model.ValidatedCommodity;
 import io.edpn.backend.trade.infrastructure.persistence.entity.CommodityMarketInfoEntity;
 import io.edpn.backend.trade.infrastructure.persistence.entity.StationEntity;
+import io.edpn.backend.trade.infrastructure.persistence.entity.ValidatedCommodityEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class CommodityMarketInfoMapperTest {
     @Mock
-    private CommodityMapper commodityMapper;
+    private ValidatedCommodityMapper validatedCommodityMapper;
 
     @Mock
     private StationMapper stationMapper;
@@ -31,19 +31,19 @@ public class CommodityMarketInfoMapperTest {
 
     @BeforeEach
     public void setup() {
-        underTest = new CommodityMarketInfoMapper(commodityMapper, stationMapper);
+        underTest = new CommodityMarketInfoMapper(validatedCommodityMapper, stationMapper);
     }
 
     @Test
     public void shouldMapCommodityMarketInfoEntityToCommodityMarketInfo() {
         // Setup mock Commodity and Station objects
-        Commodity mockCommodity = mock(Commodity.class);
+        ValidatedCommodity mockCommodity = mock(ValidatedCommodity.class);
         Station mockHighestSellingStation = mock(Station.class);
         Station mockLowestBuyingStation = mock(Station.class);
 
         // Setup the CommodityMarketInfoEntity with test data
         CommodityMarketInfoEntity entity = CommodityMarketInfoEntity.builder()
-                .commodity(mock(CommodityEntity.class))
+                .validatedCommodity(mock(ValidatedCommodityEntity.class))
                 .maxBuyPrice(100.0)
                 .minBuyPrice(50.0)
                 .avgBuyPrice(75.0)
@@ -64,7 +64,7 @@ public class CommodityMarketInfoMapperTest {
                 .lowestBuyingFromStation(mock(StationEntity.class))
                 .build();
 
-        when(commodityMapper.map(entity.getCommodity())).thenReturn(mockCommodity);
+        when(validatedCommodityMapper.map(entity.getValidatedCommodity())).thenReturn(mockCommodity);
         when(stationMapper.map(entity.getHighestSellingToStation())).thenReturn(mockHighestSellingStation);
         when(stationMapper.map(entity.getLowestBuyingFromStation())).thenReturn(mockLowestBuyingStation);
 
@@ -72,7 +72,7 @@ public class CommodityMarketInfoMapperTest {
         CommodityMarketInfo result = underTest.map(entity);
 
         // Verify that the result matches the expected values
-        assertThat(result.getCommodity(), is(mockCommodity));
+        assertThat(result.getValidatedCommodity(), is(mockCommodity));
         assertThat(result.getMaxBuyPrice(), is(100.0));
         assertThat(result.getMinBuyPrice(), is(50.0));
         assertThat(result.getAvgBuyPrice(), is(75.0));
@@ -92,7 +92,7 @@ public class CommodityMarketInfoMapperTest {
         assertThat(result.getHighestSellingToStation(), is(mockHighestSellingStation));
         assertThat(result.getLowestBuyingFromStation(), is(mockLowestBuyingStation));
 
-        verify(commodityMapper, times(1)).map(entity.getCommodity());
+        verify(validatedCommodityMapper, times(1)).map(entity.getValidatedCommodity());
         verify(stationMapper, times(1)).map(entity.getHighestSellingToStation());
         verify(stationMapper, times(1)).map(entity.getLowestBuyingFromStation());
     }
