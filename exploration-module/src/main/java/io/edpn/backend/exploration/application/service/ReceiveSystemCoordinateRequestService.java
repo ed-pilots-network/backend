@@ -3,6 +3,8 @@ package io.edpn.backend.exploration.application.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.KafkaMessage;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
+import io.edpn.backend.exploration.application.dto.KafkaMessageDto;
+import io.edpn.backend.exploration.application.dto.mapper.KafkaMessageMapper;
 import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.CreateSystemCoordinateRequestPort;
@@ -24,6 +26,7 @@ public class ReceiveSystemCoordinateRequestService implements ReceiveKafkaMessag
     private final LoadSystemPort loadSystemPort;
     private final SendKafkaMessagePort sendKafkaMessagePort;
     private final SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
+    private final KafkaMessageMapper kafkaMessageMapper;
     private final ObjectMapper objectMapper;
     private final RetryTemplate retryTemplate;
 
@@ -37,8 +40,9 @@ public class ReceiveSystemCoordinateRequestService implements ReceiveKafkaMessag
                     SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
                     String stringJson = objectMapper.valueToTree(systemCoordinatesResponse).toString();
                     KafkaMessage kafkaMessage = new KafkaMessage(requestingModule + TOPIC, stringJson);
+                    KafkaMessageDto kafkaMessageDto = kafkaMessageMapper.map(kafkaMessage);
 
-                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(kafkaMessage));
+                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(kafkaMessageDto));
                     if (!sendSuccessful) {
                         createSystemCoordinateRequestPort.create(new SystemCoordinateRequest(systemName, requestingModule));
                     }

@@ -1,9 +1,10 @@
 package io.edpn.backend.exploration.adapter.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.exploration.adapter.kafka.dto.SystemCoordinatesResponseMapper;
+import io.edpn.backend.exploration.adapter.kafka.dto.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
 import io.edpn.backend.exploration.adapter.web.dto.mapper.SystemDtoMapper;
+import io.edpn.backend.exploration.application.dto.mapper.KafkaMessageMapper;
 import io.edpn.backend.exploration.application.port.outgoing.CreateSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.CreateSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.DeleteSystemCoordinateRequestPort;
@@ -35,11 +36,12 @@ public class ServiceConfig {
             LoadSystemCoordinateRequestBySystemNamePort loadSystemCoordinateRequestBySystemNamePort,
             DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort,
             SystemCoordinatesResponseMapper systemCoordinatesResponseMapper,
+            KafkaMessageMapper kafkaMessageMapper,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("explorationThreadPoolTaskExecutor") Executor executor
     ) {
-        return new ReceiveNavRouteService(createSystemPort, loadSystemPort, saveSystemPort, sendKafkaMessagePort, loadSystemCoordinateRequestBySystemNamePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, objectMapper, retryTemplate, executor);
+        return new ReceiveNavRouteService(createSystemPort, loadSystemPort, saveSystemPort, sendKafkaMessagePort, loadSystemCoordinateRequestBySystemNamePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, kafkaMessageMapper, objectMapper, retryTemplate, executor);
     }
 
     @Bean(name = "explorationReceiveSystemCoordinateRequestService")
@@ -48,10 +50,11 @@ public class ServiceConfig {
             LoadSystemPort loadSystemPort,
             SendKafkaMessagePort sendKafkaMessagePort,
             SystemCoordinatesResponseMapper systemCoordinatesResponseMapper,
+            KafkaMessageMapper kafkaMessageMapper,
             ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate
     ) {
-        return new ReceiveSystemCoordinateRequestService(createSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, systemCoordinatesResponseMapper, objectMapper, retryTemplate);
+        return new ReceiveSystemCoordinateRequestService(createSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, systemCoordinatesResponseMapper, kafkaMessageMapper, objectMapper, retryTemplate);
     }
 
     @Bean(name = "explorationSystemControllerService")
@@ -68,10 +71,11 @@ public class ServiceConfig {
             SendKafkaMessagePort sendKafkaMessagePort,
             DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort,
             SystemCoordinatesResponseMapper systemCoordinatesResponseMapper,
+            KafkaMessageMapper kafkaMessageMapper,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("explorationThreadPoolTaskExecutor") Executor executor
     ) {
-        return new ProcessPendingSystemCoordinateRequestService(loadAllSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, objectMapper, retryTemplate, executor);
+        return new ProcessPendingSystemCoordinateRequestService(loadAllSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, kafkaMessageMapper, objectMapper, retryTemplate, executor);
     }
 }

@@ -1,4 +1,4 @@
-package io.edpn.backend.exploration.adapter.kafka.dto;
+package io.edpn.backend.exploration.adapter.kafka.dto.mapper;
 
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;

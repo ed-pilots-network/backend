@@ -1,7 +1,7 @@
 package io.edpn.backend.exploration.application.port.outgoing;
 
-import io.edpn.backend.exploration.application.domain.KafkaMessage;
+import io.edpn.backend.exploration.application.dto.KafkaMessageDto;
 
 public interface SendKafkaMessagePort {
-    Boolean send(KafkaMessage kafkaMessage);
+    Boolean send(KafkaMessageDto kafkaMessageDto);
 }

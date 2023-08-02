@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.KafkaMessage;
 import io.edpn.backend.exploration.application.domain.System;
+import io.edpn.backend.exploration.application.dto.KafkaMessageDto;
+import io.edpn.backend.exploration.application.dto.mapper.KafkaMessageMapper;
 import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.CreateSystemPort;
@@ -37,6 +39,7 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
     private final LoadSystemCoordinateRequestBySystemNamePort loadSystemCoordinateRequestBySystemNamePort;
     private final DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
     private final SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
+    private final KafkaMessageMapper kafkaMessageMapper;
     private final ObjectMapper objectMapper;
     private final RetryTemplate retryTemplate;
     private final Executor executor;
@@ -97,8 +100,9 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
                     SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
                     String stringJson = objectMapper.valueToTree(systemCoordinatesResponse).toString();
                     KafkaMessage message = new KafkaMessage(systemCoordinateRequest.requestingModule() + TOPIC, stringJson);
+                    KafkaMessageDto kafkaMessageDto = kafkaMessageMapper.map(message);
 
-                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(message));
+                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(kafkaMessageDto));
                     if (sendSuccessful) {
                         deleteSystemCoordinateRequestPort.delete(system.getName(), systemCoordinateRequest.requestingModule());
                     }
