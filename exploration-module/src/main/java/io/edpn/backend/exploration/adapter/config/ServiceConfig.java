@@ -21,6 +21,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.support.RetryTemplate;
 
+import java.util.concurrent.Executor;
+
 @Configuration("ExplorationServiceConfig")
 public class ServiceConfig {
 
@@ -35,7 +37,7 @@ public class ServiceConfig {
             SystemCoordinatesResponseMapper systemCoordinatesResponseMapper,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate
-            ) {
+    ) {
         return new ReceiveNavRouteService(createSystemPort, loadSystemPort, saveSystemPort, sendKafkaMessagePort, loadSystemCoordinateRequestBySystemNamePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, objectMapper, retryTemplate);
     }
 
@@ -66,8 +68,9 @@ public class ServiceConfig {
             DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort,
             SystemCoordinatesResponseMapper systemCoordinatesResponseMapper,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper,
-            @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate
+            @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
+            @Qualifier("explorationThreadPoolTaskExecutor") Executor executor
     ) {
-        return new ProcessPendingSystemCoordinateRequestService(loadAllSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, objectMapper, retryTemplate);
+        return new ProcessPendingSystemCoordinateRequestService(loadAllSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, objectMapper, retryTemplate, executor);
     }
 }

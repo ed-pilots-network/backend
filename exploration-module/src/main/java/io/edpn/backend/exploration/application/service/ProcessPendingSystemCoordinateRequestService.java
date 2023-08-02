@@ -16,12 +16,13 @@ import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 @AllArgsConstructor
 @Slf4j
 public class ProcessPendingSystemCoordinateRequestService implements ProcessPendingDataRequestUseCase<SystemCoordinateRequest> {
 
-    private final static String TOPIC = "_systemCoordinatesDataResponse"; //TODO set from config
+    public final static String TOPIC = "_systemCoordinatesDataResponse"; //TODO set from config
 
     private final LoadAllSystemCoordinateRequestPort loadAllSystemCoordinateRequestPort;
     private final LoadSystemPort loadSystemPort;
@@ -30,6 +31,7 @@ public class ProcessPendingSystemCoordinateRequestService implements ProcessPend
     private final SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
     private final ObjectMapper objectMapper;
     private final RetryTemplate retryTemplate;
+    private final Executor executor;
 
     @Override
     @Scheduled(cron = "0 0 */12 * * *")
@@ -43,9 +45,9 @@ public class ProcessPendingSystemCoordinateRequestService implements ProcessPend
 
                                     boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(kafkaMessage));
                                     if (sendSuccessful) {
-                                        deleteSystemCoordinateRequestPort.delete(system.getName(), systemCoordinateRequest.requestingModule());
+                                        deleteSystemCoordinateRequestPort.delete(systemCoordinateRequest.systemName(), systemCoordinateRequest.requestingModule());
                                     }
                                 }
-                        )));
+                        ), executor));
     }
 }
