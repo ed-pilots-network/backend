@@ -3,7 +3,7 @@ package io.edpn.backend.exploration.application.dto;
 public interface SystemDto {
     String name();
 
-    CoordinateDto coordinates();
+    CoordinateDto coordinate();
 
     Long eliteId();
 

@@ -14,23 +14,22 @@ public class SystemEntityMapper implements io.edpn.backend.exploration.applicati
 
     @Override
     public System map(SystemEntity systemEntity) {
-        return System.builder()
-                .eliteId(systemEntity.eliteId())
-                .id(systemEntity.id())
-                .name(systemEntity.name())
-                .starClass(systemEntity.starClass())
-                .coordinate(coordinateFromCoordinateEntity(systemEntity.coordinates()))
-                .build();
+        return new System(
+                systemEntity.id(),
+                systemEntity.eliteId(),
+                systemEntity.name(),
+                systemEntity.starClass(),
+                coordinateFromCoordinateEntity(systemEntity.coordinate()));
     }
 
     @Override
     public SystemEntity map(System system) {
         return new SystemEntity(
-                system.getId(),
-                system.getName(),
-                coordinateEntityFromCoordinate(system.getCoordinate()),
-                system.getEliteId(),
-                system.getStarClass());
+                system.id(),
+                system.name(),
+                coordinateEntityFromCoordinate(system.coordinate()),
+                system.eliteId(),
+                system.starClass());
     }
 
     private Coordinate coordinateFromCoordinateEntity(CoordinateEntity coordinateEntity) {

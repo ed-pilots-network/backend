@@ -10,10 +10,10 @@ public class SystemCoordinatesResponseMapper implements io.edpn.backend.explorat
     @Override
     public SystemCoordinatesResponse map(System system) {
         SystemCoordinatesResponse systemCoordinatesResponse = new SystemCoordinatesResponse();
-        systemCoordinatesResponse.setSystemName(system.getName());
-        systemCoordinatesResponse.setXCoordinate(system.getCoordinate().x());
-        systemCoordinatesResponse.setYCoordinate(system.getCoordinate().y());
-        systemCoordinatesResponse.setZCoordinate(system.getCoordinate().z());
+        systemCoordinatesResponse.setSystemName(system.name());
+        systemCoordinatesResponse.setXCoordinate(system.coordinate().x());
+        systemCoordinatesResponse.setYCoordinate(system.coordinate().y());
+        systemCoordinatesResponse.setZCoordinate(system.coordinate().z());
 
         return systemCoordinatesResponse;
     }

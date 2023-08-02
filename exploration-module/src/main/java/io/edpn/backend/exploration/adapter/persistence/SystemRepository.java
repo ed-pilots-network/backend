@@ -41,7 +41,7 @@ public class SystemRepository implements CreateSystemPort, LoadSystemPort, SaveS
     public System save(System system) {
         mybatisSystemRepository.update(systemEntityMapper.map(system));
 
-        return mybatisSystemRepository.findById(system.getId())
+        return mybatisSystemRepository.findById(system.id())
                 .map(systemEntityMapper::map)
                 .orElseThrow(() -> new DatabaseEntityNotFoundException("System '" + system + "' could not be found after update"));
     }

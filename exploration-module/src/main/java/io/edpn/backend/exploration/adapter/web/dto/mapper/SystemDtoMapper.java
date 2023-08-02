@@ -14,14 +14,14 @@ import java.util.Optional;
 public class SystemDtoMapper implements io.edpn.backend.exploration.application.dto.mapper.SystemDtoMapper {
 
     public io.edpn.backend.exploration.application.dto.SystemDto map(System system) {
-        return new SystemDto(system.getName(), coordinateFromSystem(system), system.getEliteId(), system.getStarClass());
+        return new SystemDto(system.name(), coordinateFromSystem(system), system.eliteId(), system.starClass());
     }
 
     private io.edpn.backend.exploration.application.dto.CoordinateDto coordinateFromSystem(System system) {
-        if (Optional.ofNullable(system.getCoordinate()).map(Coordinate::x).isEmpty()) {
+        if (Optional.ofNullable(system.coordinate()).map(Coordinate::x).isEmpty()) {
             return null;
         } else {
-            return new CoordinateDto(system.getCoordinate().x(), system.getCoordinate().y(), system.getCoordinate().y());
+            return new CoordinateDto(system.coordinate().x(), system.coordinate().y(), system.coordinate().z());
         }
     }
 }

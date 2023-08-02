@@ -75,19 +75,20 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
                 .orElseGet(() -> createSystemPort.create(systemName)), executor);
     }
 
-    private System updateSystemFromItem(System system, NavRouteMessage.V1.Item item) {
-        if (Objects.isNull(system.getEliteId())) {
-            system.setEliteId(item.getSystemAddress());
+    private System updateSystemFromItem(final System system, NavRouteMessage.V1.Item item) {
+        System returnSystem = system;
+        if (Objects.isNull(system.eliteId())) {
+            returnSystem = returnSystem.withEliteId(item.getSystemAddress());
         }
 
-        if (Objects.isNull(system.getStarClass())) {
-            system.setStarClass(item.getStarClass());
+        if (Objects.isNull(system.starClass())) {
+            returnSystem = returnSystem.withStarClass(item.getStarClass());
         }
 
-        if (Objects.isNull(system.getCoordinate()) || Objects.isNull(system.getCoordinate().x()) || Objects.isNull(system.getCoordinate().y()) || Objects.isNull(system.getCoordinate().z())) {
-            system.setCoordinate(new Coordinate(item.getStarPos()[0], item.getStarPos()[1], item.getStarPos()[2]));
+        if (Objects.isNull(system.coordinate()) || Objects.isNull(system.coordinate().x()) || Objects.isNull(system.coordinate().y()) || Objects.isNull(system.coordinate().z())) {
+            returnSystem = returnSystem.withCoordinate(new Coordinate(item.getStarPos()[0], item.getStarPos()[1], item.getStarPos()[2]));
         }
-        return system;
+        return returnSystem;
     }
 
     private CompletableFuture<System> saveSystem(System system) {
@@ -95,7 +96,7 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
     }
 
     private void sendResponse(System system) {
-        loadSystemCoordinateRequestBySystemNamePort.load(system.getName()).parallelStream()
+        loadSystemCoordinateRequestBySystemNamePort.load(system.name()).parallelStream()
                 .forEach(systemCoordinateRequest -> CompletableFuture.runAsync(() -> {
                     SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
                     String stringJson = objectMapper.valueToTree(systemCoordinatesResponse).toString();
@@ -104,7 +105,7 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
 
                     boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(kafkaMessageDto));
                     if (sendSuccessful) {
-                        deleteSystemCoordinateRequestPort.delete(system.getName(), systemCoordinateRequest.requestingModule());
+                        deleteSystemCoordinateRequestPort.delete(system.name(), systemCoordinateRequest.requestingModule());
                     }
                 }, executor));
 
