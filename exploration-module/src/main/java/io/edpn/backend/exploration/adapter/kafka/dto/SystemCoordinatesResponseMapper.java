@@ -5,8 +5,9 @@ import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoord
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class SystemCoordinatesResponseMapper {
+public class SystemCoordinatesResponseMapper implements io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper {
 
+    @Override
     public SystemCoordinatesResponse map(System system) {
         SystemCoordinatesResponse systemCoordinatesResponse = new SystemCoordinatesResponse();
         systemCoordinatesResponse.setSystemName(system.getName());
