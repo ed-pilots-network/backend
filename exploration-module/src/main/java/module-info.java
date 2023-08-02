@@ -21,11 +21,9 @@ module edpn.backend.exploration {
     requires jakarta.validation;
     requires io.swagger.v3.oas.annotations;
     requires liquibase.core;
+    requires spring.retry;
 
-
-    exports io.edpn.backend.exploration.domain.controller.v1;
-    exports io.edpn.backend.exploration.domain.dto.v1;
-    exports io.edpn.backend.exploration.domain.usecase;
-    exports io.edpn.backend.exploration.application.controller.v1;
-    exports io.edpn.backend.exploration.application.usecase;
+    exports io.edpn.backend.exploration.application.port.incomming;
+    exports io.edpn.backend.exploration.application.dto;
+    exports io.edpn.backend.exploration.adapter.web;
 }
