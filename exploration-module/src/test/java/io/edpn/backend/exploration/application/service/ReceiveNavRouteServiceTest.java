@@ -90,9 +90,6 @@ class ReceiveNavRouteServiceTest {
         when(message.getMessage()).thenReturn(payload);
         when(payload.getItems()).thenReturn(new NavRouteMessage.V1.Item[]{item});
         when(item.getStarSystem()).thenReturn(systemName);
-        /*when(item.getStarPos()).thenReturn(new Double[]{1.0, 2.0, 3.0});
-        when(item.getStarClass()).thenReturn("K");
-        when(item.getSystemAddress()).thenReturn(1L);*/
         when(loadSystemPort.load(systemName)).thenReturn(Optional.of(system));
         when(saveSystemPort.save(system)).thenReturn(system);
         SystemCoordinateRequest systemCoordinatesRequest = mock(SystemCoordinateRequest.class);
