@@ -3,7 +3,7 @@ package io.edpn.backend.exploration.adapter.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.adapter.kafka.dto.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
-import io.edpn.backend.exploration.adapter.web.dto.SystemDtoMapper;
+import io.edpn.backend.exploration.adapter.web.dto.mapper.SystemDtoMapper;
 import io.edpn.backend.exploration.application.port.outgoing.CreateSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.CreateSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.DeleteSystemCoordinateRequestPort;

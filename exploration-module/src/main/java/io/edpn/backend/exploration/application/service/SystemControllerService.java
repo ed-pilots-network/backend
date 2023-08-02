@@ -1,7 +1,7 @@
 package io.edpn.backend.exploration.application.service;
 
-import io.edpn.backend.exploration.adapter.web.dto.SystemDtoMapper;
 import io.edpn.backend.exploration.application.dto.SystemDto;
+import io.edpn.backend.exploration.application.dto.mapper.SystemDtoMapper;
 import io.edpn.backend.exploration.application.port.incomming.FindSystemsFromSearchbarUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemsByNameContainingPort;
 import lombok.RequiredArgsConstructor;

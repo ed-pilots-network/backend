@@ -1,5 +1,7 @@
-package io.edpn.backend.exploration.adapter.web.dto;
+package io.edpn.backend.exploration.adapter.web.dto.mapper;
 
+import io.edpn.backend.exploration.adapter.web.dto.CoordinateDto;
+import io.edpn.backend.exploration.adapter.web.dto.SystemDto;
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.System;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +11,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
-public class SystemDtoMapper {
+public class SystemDtoMapper implements io.edpn.backend.exploration.application.dto.mapper.SystemDtoMapper {
 
     public io.edpn.backend.exploration.application.dto.SystemDto map(System system) {
         return new SystemDto(system.getName(), coordinateFromSystem(system), system.getEliteId(), system.getStarClass());
