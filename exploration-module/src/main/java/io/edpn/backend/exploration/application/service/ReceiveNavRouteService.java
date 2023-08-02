@@ -21,6 +21,7 @@ import org.springframework.retry.support.RetryTemplate;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -38,6 +39,7 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
     private final SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
     private final ObjectMapper objectMapper;
     private final RetryTemplate retryTemplate;
+    private final Executor executor;
 
     @Override
     public void receive(NavRouteMessage.V1 message) {
@@ -67,7 +69,7 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
 
     private CompletableFuture<System> loadOrCreateSystem(String systemName) {
         return CompletableFuture.supplyAsync(() -> loadSystemPort.load(systemName)
-                .orElseGet(() -> createSystemPort.create(systemName)));
+                .orElseGet(() -> createSystemPort.create(systemName)), executor);
     }
 
     private System updateSystemFromItem(System system, NavRouteMessage.V1.Item item) {
@@ -79,14 +81,14 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
             system.setStarClass(item.getStarClass());
         }
 
-        if (Objects.isNull(system.getCoordinate().x()) || Objects.isNull(system.getCoordinate().y()) || Objects.isNull(system.getCoordinate().z())) {
+        if (Objects.isNull(system.getCoordinate()) || Objects.isNull(system.getCoordinate().x()) || Objects.isNull(system.getCoordinate().y()) || Objects.isNull(system.getCoordinate().z())) {
             system.setCoordinate(new Coordinate(item.getStarPos()[0], item.getStarPos()[1], item.getStarPos()[2]));
         }
         return system;
     }
 
     private CompletableFuture<System> saveSystem(System system) {
-        return CompletableFuture.supplyAsync(() -> saveSystemPort.save(system));
+        return CompletableFuture.supplyAsync(() -> saveSystemPort.save(system), executor);
     }
 
     private void sendResponse(System system) {
@@ -100,7 +102,7 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
                     if (sendSuccessful) {
                         deleteSystemCoordinateRequestPort.delete(system.getName(), systemCoordinateRequest.requestingModule());
                     }
-                }));
+                }, executor));
 
     }
 }

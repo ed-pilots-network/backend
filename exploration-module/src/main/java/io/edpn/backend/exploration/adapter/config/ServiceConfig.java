@@ -36,9 +36,10 @@ public class ServiceConfig {
             DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort,
             SystemCoordinatesResponseMapper systemCoordinatesResponseMapper,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper,
-            @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate
+            @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
+            @Qualifier("explorationThreadPoolTaskExecutor") Executor executor
     ) {
-        return new ReceiveNavRouteService(createSystemPort, loadSystemPort, saveSystemPort, sendKafkaMessagePort, loadSystemCoordinateRequestBySystemNamePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, objectMapper, retryTemplate);
+        return new ReceiveNavRouteService(createSystemPort, loadSystemPort, saveSystemPort, sendKafkaMessagePort, loadSystemCoordinateRequestBySystemNamePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, objectMapper, retryTemplate, executor);
     }
 
     @Bean(name = "explorationReceiveSystemCoordinateRequestService")

@@ -22,7 +22,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class ProcessPendingSystemCoordinateRequestService implements ProcessPendingDataRequestUseCase<SystemCoordinateRequest> {
 
-    public final static String TOPIC = "_systemCoordinatesDataResponse"; //TODO set from config
+    private final static String TOPIC = "_systemCoordinatesDataResponse"; //TODO set from config
 
     private final LoadAllSystemCoordinateRequestPort loadAllSystemCoordinateRequestPort;
     private final LoadSystemPort loadSystemPort;

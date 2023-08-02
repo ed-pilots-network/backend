@@ -6,6 +6,7 @@ import io.edpn.backend.exploration.adapter.kafka.dto.SystemCoordinatesResponseMa
 import io.edpn.backend.exploration.application.domain.KafkaMessage;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
+import io.edpn.backend.exploration.application.port.incomming.ProcessPendingDataRequestUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadAllSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
@@ -51,13 +52,11 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
     @Mock
     private RetryTemplate retryTemplate;
 
-    private Executor executor;
-
-    private ProcessPendingSystemCoordinateRequestService underTest;
+    private ProcessPendingDataRequestUseCase<SystemCoordinateRequest> underTest;
 
     @BeforeEach
     void setUp() {
-        executor = Runnable::run;
+        Executor executor = Runnable::run;
         underTest = new ProcessPendingSystemCoordinateRequestService(loadAllSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, objectMapper, retryTemplate, executor);
     }
 
