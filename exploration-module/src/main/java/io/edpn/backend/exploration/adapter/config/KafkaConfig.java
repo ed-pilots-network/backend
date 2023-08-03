@@ -2,6 +2,7 @@ package io.edpn.backend.exploration.adapter.config;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.edpn.backend.exploration.adapter.kafka.KafkaTopicHandler;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -19,8 +20,13 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.listener.CommonErrorHandler;
+import org.springframework.kafka.listener.ContainerProperties;
+import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import org.springframework.retry.backoff.ExponentialBackOffPolicy;
+import org.springframework.util.backoff.BackOff;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,13 +36,16 @@ public interface KafkaConfig {
 
     @EnableKafka
     @Configuration("ExplorationModuleEddnJsonKafkaConsumerConfig")
+    @Slf4j
     class EddnJsonKafkaConsumerConfig {
 
         @Value(value = "${exploration.spring.kafka.bootstrap-servers}")
         private String bootstrapServers;
 
-        public ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory(String groupId) {
+        public ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory(String groupId, CommonErrorHandler errorHandler) {
             ConcurrentKafkaListenerContainerFactory<String, JsonNode> factory = new ConcurrentKafkaListenerContainerFactory<>();
+            factory.setCommonErrorHandler(errorHandler);
+            factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.RECORD);
             factory.setConsumerFactory(consumerFactory(groupId));
             return factory;
         }
@@ -54,8 +63,24 @@ public interface KafkaConfig {
         }
 
         @Bean(name = "explorationModuleKafkaListenerContainerFactory")
-        public ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory(EddnJsonKafkaConsumerConfig kafkaConfig) {
-            return kafkaConfig.kafkaListenerContainerFactory("explorationModule");
+        public ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory(EddnJsonKafkaConsumerConfig kafkaConfig, CommonErrorHandler errorHandler) {
+            return kafkaConfig.kafkaListenerContainerFactory("explorationModule", errorHandler);
+        }
+
+        @Bean(name = "explorationKafkaErrorHandler")
+        public DefaultErrorHandler errorHandler(
+                @Value(value = "${exploration.kafka.backoff.interval:1000}") final int interval,
+                @Value(value = "${exploration.kafka.backoff.multiplier:2000}") final int multiplier,
+                @Value(value = "${exploration.kafka.backoff.max_interval:32000}") final int maxInterval
+        ) {
+            ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
+            backOffPolicy.setInitialInterval(interval);
+            backOffPolicy.setMultiplier(multiplier);
+            backOffPolicy.setMaxInterval(maxInterval);
+            return new DefaultErrorHandler((consumerRecord, exception) -> {
+                // TODO should there be extra logic to execute when all the retry attempts are exhausted?
+                log.error("A kafka message from topic '${}' could not be processed after multiple retries: '${}'", consumerRecord.topic(), consumerRecord.value(), exception);
+            }, (BackOff) backOffPolicy);
         }
     }
 

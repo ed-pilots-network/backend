@@ -22,6 +22,7 @@ module edpn.backend.exploration {
     requires io.swagger.v3.oas.annotations;
     requires liquibase.core;
     requires spring.retry;
+    requires spring.core;
 
     exports io.edpn.backend.exploration.application.port.incomming;
     exports io.edpn.backend.exploration.application.dto;
