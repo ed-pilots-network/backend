@@ -20,26 +20,26 @@ class SystemCoordinateRequestEntityMapperTest {
 
     @Test
     public void testMap_givenDto_shouldReturnDomainObject() {
-        // Given
+        
         SystemCoordinateRequestDto dto = new SystemCoordinateRequestEntity("systemName", "requestingModule");
 
-        // When
+
         SystemCoordinateRequest result = underTest.map(dto);
 
-        // Then
+
         assertThat(result.systemName(), equalTo(dto.systemName()));
         assertThat(result.requestingModule(), equalTo(dto.requestingModule()));
     }
 
     @Test
     public void testMap_givenDomainObject_shouldReturnEntity() {
-        // Given
+        
         SystemCoordinateRequest domainObject = new SystemCoordinateRequest("systemName", "requestingModule");
 
-        // When
+
         SystemCoordinateRequestDto result = underTest.map(domainObject);
 
-        // Then
+
         assertThat(result.systemName(), equalTo(domainObject.systemName()));
         assertThat(result.requestingModule(), equalTo(domainObject.requestingModule()));
     }

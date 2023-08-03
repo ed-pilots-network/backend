@@ -36,5 +36,5 @@ public interface RequestDataMessageEntityMapper {
 
     @Select("SELECT * FROM request_data_message WHERE send = false")
     @ResultMap("requestDataMessageEntityResultMap")
-    List<RequestDataMessageEntity> findNotSend();
+    List<RequestDataMessageEntity> findUnsend();
 }

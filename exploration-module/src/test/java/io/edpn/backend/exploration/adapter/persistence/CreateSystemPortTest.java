@@ -42,7 +42,7 @@ class CreateSystemPortTest {
 
     @Test
     void create_shouldInsertAndLoad() {
-        // Given
+
         String systemName = "system";
         UUID id = UUID.randomUUID();
         when(idGenerator.generateId()).thenReturn(id);
@@ -51,10 +51,10 @@ class CreateSystemPortTest {
         when(mybatisSystemRepository.findByName(systemName)).thenReturn(Optional.of(systemEntity));
         when(systemEntityMapper.map(systemEntity)).thenReturn(loaded);
 
-        // When
+
         System result = underTest.create(systemName);
 
-        // Then
+
         assertThat(result, is(loaded));
         verify(mybatisSystemRepository).insert(new SystemEntity(id, systemName, null, null, null));
         verify(mybatisSystemRepository).findByName(systemName);
@@ -62,16 +62,16 @@ class CreateSystemPortTest {
 
     @Test
     void create_shouldThrow_whenLoadFails() {
-        // Given
+
         String systemName = "system";
         UUID id = UUID.randomUUID();
         when(idGenerator.generateId()).thenReturn(id);
         when(mybatisSystemRepository.findByName(systemName)).thenReturn(Optional.empty());
 
-        // When
+
         DatabaseEntityNotFoundException exception = assertThrows(DatabaseEntityNotFoundException.class, () -> underTest.create(systemName));
 
-        // Then
+
         assertThat(exception.getMessage(), is("System with name '" + systemName + "' could not be found after create"));
     }
 }

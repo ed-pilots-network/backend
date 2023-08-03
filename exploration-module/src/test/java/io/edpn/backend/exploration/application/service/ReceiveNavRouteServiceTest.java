@@ -72,7 +72,7 @@ class ReceiveNavRouteServiceTest {
 
     @Test
     void testReceiveMessage_whenSystemExistsAndPropertiesAreSet_shouldSaveAndSendResponses() {
-        // Given
+        
         String systemName = "system";
         String module = "module";
         System system = mock(System.class);
@@ -107,10 +107,10 @@ class ReceiveNavRouteServiceTest {
         when(sendKafkaMessagePort.send(kafkaMessageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
-        // When
+
         underTest.receive(message);
 
-        // Then
+
         verify(loadSystemPort).load(systemName);
         verify(saveSystemPort).save(system);
         verify(sendKafkaMessagePort).send(kafkaMessageDto);
@@ -119,7 +119,7 @@ class ReceiveNavRouteServiceTest {
 
     @Test
     void testReceiveMessage_whenSystemDoesNotExist_shouldCreateSaveAndSendResponses() {
-        // Given
+        
         String systemName = "system";
         String module = "module";
         System system = mock(System.class);
@@ -157,10 +157,10 @@ class ReceiveNavRouteServiceTest {
         when(sendKafkaMessagePort.send(kafkaMessageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
-        // When
+
         underTest.receive(message);
 
-        // Then
+
         verify(loadSystemPort).load(systemName);
         verify(createSystemPort).create(systemName);
         verify(saveSystemPort).save(system);
@@ -170,7 +170,7 @@ class ReceiveNavRouteServiceTest {
 
     @Test
     void testReceiveMessage_whenSystemExistsAndPropertiesAreNotSet_shouldUpdateSaveAndSendResponses() {
-        // Given
+        
         String systemName = "system";
         String module = "module";
         System system = mock(System.class);
@@ -209,10 +209,10 @@ class ReceiveNavRouteServiceTest {
         when(sendKafkaMessagePort.send(kafkaMessageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
-        // When
+
         underTest.receive(message);
 
-        // Then
+
         verify(system).withEliteId(1L);
         verify(system).withStarClass("K");
         verify(system).withCoordinate(any(Coordinate.class));
@@ -224,7 +224,7 @@ class ReceiveNavRouteServiceTest {
 
     @Test
     void testReceiveMessage_whenSystemDoesNotExist_shouldCreateSaveAndSendResponses_noPendingRequests() {
-        // Given
+        
         String systemName = "system";
         System system = mock(System.class);
         when(system.name()).thenReturn(systemName);
@@ -250,10 +250,10 @@ class ReceiveNavRouteServiceTest {
         when(saveSystemPort.save(system)).thenReturn(system);
         when(loadSystemCoordinateRequestBySystemNamePort.load(systemName)).thenReturn(Collections.emptyList());
 
-        // When
+
         underTest.receive(message);
 
-        // Then
+
         verify(system).withEliteId(1L);
         verify(system).withStarClass("K");
         verify(system).withCoordinate(any(Coordinate.class));

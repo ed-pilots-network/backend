@@ -1,7 +1,5 @@
 package io.edpn.backend.exploration.adapter.persistence;
 
-import io.edpn.backend.exploration.adapter.persistence.MybatisSystemCoordinateRequestRepository;
-import io.edpn.backend.exploration.adapter.persistence.SystemCoordinateRequestRepository;
 import io.edpn.backend.exploration.adapter.persistence.entity.SystemCoordinateRequestEntity;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.SystemCoordinateRequestEntityMapper;
 import io.edpn.backend.exploration.application.port.outgoing.DeleteSystemCoordinateRequestPort;
@@ -31,14 +29,14 @@ class DeleteSystemCoordinateRequestPortTest {
 
     @Test
     void delete_shouldDeleteFromRepository() {
-        // Given
+
         String systemName = "system";
         String requestingModule = "module";
 
-        // When
+
         underTest.delete(systemName, requestingModule);
 
-        // Then
+
         verify(mybatisSystemCoordinateRequestRepository).delete(new SystemCoordinateRequestEntity(systemName, requestingModule));
     }
 }

@@ -5,7 +5,6 @@ import io.edpn.backend.exploration.application.domain.KafkaMessage;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
 import io.edpn.backend.exploration.application.dto.KafkaMessageDto;
 import io.edpn.backend.exploration.application.dto.mapper.KafkaMessageMapper;
-import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinateRequestEntityMapper;
 import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.CreateSystemCoordinateRequestPort;

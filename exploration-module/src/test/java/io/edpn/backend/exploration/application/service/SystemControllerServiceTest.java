@@ -37,7 +37,7 @@ class SystemControllerServiceTest {
 
     @Test
     void testFindSystemsFromSearchBar_shouldReturnListOfSystemDto() {
-        // Given
+        
         String subString = "sub";
         int amount = 10;
         System system1 = mock(System.class);
@@ -48,10 +48,10 @@ class SystemControllerServiceTest {
         when(systemDtoMapper.map(system1)).thenReturn(systemDto1);
         when(systemDtoMapper.map(system2)).thenReturn(systemDto2);
 
-        // When
+
         List<SystemDto> result = underTest.findSystemsFromSearchBar(subString, amount);
 
-        // Then
+
         verify(loadSystemsByNameContainingPort).load(subString, amount);
         verify(systemDtoMapper).map(system1);
         verify(systemDtoMapper).map(system2);

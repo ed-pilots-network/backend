@@ -39,7 +39,7 @@ class LoadSystemsByNameContainingPortTest {
 
     @Test
     void load_withNameAndAmount_shouldFindFromSearchbarAndMap() {
-        // Given
+
         String name = "system";
         int amount = 10;
         SystemEntity systemEntity = mock(SystemEntity.class);
@@ -48,10 +48,10 @@ class LoadSystemsByNameContainingPortTest {
         when(mybatisSystemRepository.findFromSearchbar(name, amount)).thenReturn(entities);
         when(systemEntityMapper.map(systemEntity)).thenReturn(mapped);
 
-        // When
+
         List<System> result = underTest.load(name, amount);
 
-        // Then
+
         assertThat(result, contains(mapped));
         verify(mybatisSystemRepository).findFromSearchbar(name, amount);
     }

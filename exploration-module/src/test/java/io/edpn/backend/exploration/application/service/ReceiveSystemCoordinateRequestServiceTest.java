@@ -58,7 +58,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
     @Test
     void testReceive_whenSystemExistsAndSendSuccessful_shouldNotSaveRequest() {
-        // Given
+        
         SystemDataRequest message = mock(SystemDataRequest.class);
         String systemName = "system";
         String requestingModule = "module";
@@ -78,10 +78,10 @@ public class ReceiveSystemCoordinateRequestServiceTest {
         when(sendKafkaMessagePort.send(kafkaMessageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
-        // When
+
         underTest.receive(message);
 
-        // Then
+
         verify(loadSystemPort).load(systemName);
         verify(sendKafkaMessagePort).send(kafkaMessageDto);
         verify(createSystemCoordinateRequestPort, never()).create(any());
@@ -89,7 +89,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
     @Test
     void testReceive_whenSystemExistsAndSendFails_shouldSaveRequest() {
-        // Given
+        
         SystemDataRequest message = mock(SystemDataRequest.class);
         String systemName = "system";
         String requestingModule = "module";
@@ -110,10 +110,10 @@ public class ReceiveSystemCoordinateRequestServiceTest {
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
         SystemCoordinateRequest systemCoordinateDataRequest = new SystemCoordinateRequest(systemName, requestingModule);
 
-        // When
+
         underTest.receive(message);
 
-        // Then
+
         verify(loadSystemPort).load(systemName);
         verify(sendKafkaMessagePort).send(kafkaMessageDto);
         verify(createSystemCoordinateRequestPort).create(systemCoordinateDataRequest);
@@ -121,7 +121,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
     @Test
     void testReceive_whenSystemDoesNotExist_shouldSaveRequest() {
-        // Given
+        
         SystemDataRequest message = mock(SystemDataRequest.class);
         String systemName = "system";
         String requestingModule = "module";
@@ -130,10 +130,10 @@ public class ReceiveSystemCoordinateRequestServiceTest {
         when(loadSystemPort.load(systemName)).thenReturn(Optional.empty());
         SystemCoordinateRequest systemCoordinateDataRequest = new SystemCoordinateRequest(systemName, requestingModule);
 
-        // When
+
         underTest.receive(message);
 
-        // Then
+
         verify(loadSystemPort).load(systemName);
         verify(sendKafkaMessagePort, never()).send(any());
         verify(createSystemCoordinateRequestPort).create(systemCoordinateDataRequest);

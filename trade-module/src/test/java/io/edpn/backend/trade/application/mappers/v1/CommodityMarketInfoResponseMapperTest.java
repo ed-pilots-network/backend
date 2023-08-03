@@ -26,7 +26,7 @@ class CommodityMarketInfoResponseMapperTest {
 
     @Test
     void shouldMapCommodityMarketInfoToResponse() {
-        // Given
+        
         ValidatedCommodity validatedCommodity = ValidatedCommodity.builder()
                 .commodityName("somethingObscure")
                 .displayName("Tritium")
@@ -83,10 +83,10 @@ class CommodityMarketInfoResponseMapperTest {
                 .lowestBuyingFromStation(station2)
                 .build();
 
-        // When
+
         CommodityMarketInfoResponse response = mapper.map(commodityMarketInfo);
 
-        // Then
+
         assertThat(response, is(notNullValue()));
         assertThat(response.getCommodityDisplayName(), is(equalTo(validatedCommodity.getDisplayName())));
         assertThat(response.getMaxBuyPrice(), is(equalTo(commodityMarketInfo.getMaxBuyPrice())));

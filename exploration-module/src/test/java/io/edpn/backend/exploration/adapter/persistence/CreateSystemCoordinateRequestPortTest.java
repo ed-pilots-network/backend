@@ -32,15 +32,15 @@ class CreateSystemCoordinateRequestPortTest {
 
     @Test
     void create_shouldMapAndInsert() {
-        // Given
+
         SystemCoordinateRequest request = mock(SystemCoordinateRequest.class);
         SystemCoordinateRequestEntity entity = mock(SystemCoordinateRequestEntity.class);
         when(systemCoordinateRequestEntityMapper.map(request)).thenReturn(entity);
 
-        // When
+
         underTest.create(request);
 
-        // Then
+
         verify(mybatisSystemCoordinateRequestRepository).insert(entity);
     }
 }

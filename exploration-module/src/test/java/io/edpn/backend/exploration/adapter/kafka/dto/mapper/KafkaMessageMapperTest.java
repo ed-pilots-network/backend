@@ -22,15 +22,15 @@ class KafkaMessageMapperTest {
 
     @Test
     void map_shouldReturnCorrectKafkaMessageDto() {
-        // Given
+
         String topic = "test-topic";
         String message = "test-message";
         KafkaMessage kafkaMessage = new KafkaMessage(topic, message);
 
-        // When
+
         KafkaMessageDto result = underTest.map(kafkaMessage);
 
-        // Then
+
         assertThat(result.topic(), is(topic));
         assertThat(result.message(), is(message));
     }

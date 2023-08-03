@@ -66,13 +66,13 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
 
     @Test
     void processPending_emptyRequestList() {
-        // Given
+        
         when(loadAllSystemCoordinateRequestPort.load()).thenReturn(Collections.emptyList());
 
-        // When
+
         underTest.processPending();
 
-        // Then
+
         verify(loadAllSystemCoordinateRequestPort, times(1)).load();
         verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort);
         verifyNoInteractions(loadSystemPort, sendKafkaMessagePort, deleteSystemCoordinateRequestPort);
@@ -80,17 +80,17 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
 
     @Test
     void processPending_nonEmptyRequestList_systemNotFound() {
-        // Given
+        
         SystemCoordinateRequest systemCoordinateRequest = mock(SystemCoordinateRequest.class);
         when(systemCoordinateRequest.systemName()).thenReturn("SystemName");
         List<SystemCoordinateRequest> systemCoordinateRequestList = List.of(systemCoordinateRequest);
         when(loadAllSystemCoordinateRequestPort.load()).thenReturn(systemCoordinateRequestList);
         when(loadSystemPort.load("SystemName")).thenReturn(Optional.empty());
 
-        // When
+
         underTest.processPending();
 
-        // Then
+
         verify(loadAllSystemCoordinateRequestPort, times(1)).load();
         verify(loadSystemPort, times(1)).load("SystemName");
         verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort, loadSystemPort);
@@ -99,7 +99,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
 
     @Test
     void processPending_nonEmptyRequestList_systemFound_sendFailed() {
-        // Given
+        
         SystemCoordinateRequest systemCoordinateRequest = mock(SystemCoordinateRequest.class);
         when(systemCoordinateRequest.systemName()).thenReturn("SystemName");
         when(systemCoordinateRequest.requestingModule()).thenReturn("trade");
@@ -118,10 +118,10 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
         when(sendKafkaMessagePort.send(kafkaMessageDto)).thenReturn(false);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
-        // When
+
         underTest.processPending();
 
-        // Then
+
         verify(loadAllSystemCoordinateRequestPort, times(1)).load();
         verify(loadSystemPort, times(1)).load("SystemName");
         verify(sendKafkaMessagePort, times(1)).send(kafkaMessageDto);
@@ -131,7 +131,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
 
     @Test
     void processPending_nonEmptyRequestList_systemFound_sendSucceeded() {
-        // Given
+        
         SystemCoordinateRequest systemCoordinateRequest = mock(SystemCoordinateRequest.class);
         when(systemCoordinateRequest.systemName()).thenReturn("SystemName");
         when(systemCoordinateRequest.requestingModule()).thenReturn("trade");
@@ -150,10 +150,10 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
         when(sendKafkaMessagePort.send(kafkaMessageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
-        // When
+
         underTest.processPending();
 
-        // Then
+
         verify(loadAllSystemCoordinateRequestPort, times(1)).load();
         verify(loadSystemPort, times(1)).load("SystemName");
         verify(sendKafkaMessagePort, times(1)).send(kafkaMessageDto);

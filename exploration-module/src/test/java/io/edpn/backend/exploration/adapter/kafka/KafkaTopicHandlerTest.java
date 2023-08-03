@@ -39,7 +39,7 @@ class KafkaTopicHandlerTest {
 
     @Test
     void createTopicIfNotExists_shouldCreateNewTopicWhenTopicNameDoesNotExist() {
-        // Given
+
         String topicName = "test-topic";
         ListTopicsResult listTopicsResult = mock(ListTopicsResult.class);
         CreateTopicsResult createTopicsResult = mock(CreateTopicsResult.class);
@@ -49,16 +49,16 @@ class KafkaTopicHandlerTest {
         when(kafkaAdminClient.createTopics(anyList())).thenReturn(createTopicsResult);
         when(createTopicsResult.all()).thenReturn(KafkaFuture.completedFuture(null));
 
-        // When
+
         underTest.createTopicIfNotExists(topicName);
 
-        // Then
+
         verify(kafkaAdminClient, times(1)).createTopics(Collections.singletonList(new NewTopic(topicName, 1, (short) 1)));
     }
 
     @Test
     void createTopicIfNotExists_shouldNotCreateNewTopicWhenTopicNameExists() {
-        // Given
+
         String topicName = "test-topic";
         Set<String> topicNames = new HashSet<>();
         topicNames.add(topicName);
@@ -67,10 +67,10 @@ class KafkaTopicHandlerTest {
         when(listTopicsResult.names()).thenReturn(completableFuture);
         when(kafkaAdminClient.listTopics()).thenReturn(listTopicsResult);
 
-        // When
+
         underTest.createTopicIfNotExists(topicName);
 
-        // Then
+
         verify(kafkaAdminClient, never()).createTopics(anyList());
     }
 }

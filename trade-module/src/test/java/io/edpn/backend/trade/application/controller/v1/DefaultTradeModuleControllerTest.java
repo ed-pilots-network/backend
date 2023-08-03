@@ -57,7 +57,6 @@ public class DefaultTradeModuleControllerTest {
 
     @Test
     public void getBestCommodityPriceTest() {
-        //given
         CommodityMarketInfo commodityMarketInfo = mock(CommodityMarketInfo.class);
         List<CommodityMarketInfo> commodityMarketInfoList = List.of(commodityMarketInfo);
         CommodityMarketInfoResponse commodityMarketInfoResponse = mock(CommodityMarketInfoResponse.class);
@@ -66,30 +65,29 @@ public class DefaultTradeModuleControllerTest {
         when(findCommodityMarketInfoUseCase.findAll()).thenReturn(commodityMarketInfoList);
         when(commodityMarketInfoResponseMapper.map(commodityMarketInfo)).thenReturn(commodityMarketInfoResponse);
 
-        //when
+
         List<CommodityMarketInfoResponse> result = underTest.getBestCommodityPrice();
 
-        //then
+
         assertThat(result, is(commodityMarketInfoResponseList));
     }
 
     @Test
     public void getBestCommodityPriceEmptyResultTest() {
-        //given
         List<CommodityMarketInfo> commodityMarketInfoList = Collections.emptyList();
 
         when(findCommodityMarketInfoUseCase.findAll()).thenReturn(commodityMarketInfoList);
 
-        //when
+
         List<CommodityMarketInfoResponse> result = underTest.getBestCommodityPrice();
 
-        //then
+
         assertThat(result, is(Matchers.empty()));
     }
 
     @Test
     public void locateCommodityWithFiltersTest() {
-        // given
+        
         LocateCommodityRequest request = mock(LocateCommodityRequest.class);
         LocateCommodityFilter filter = mock(LocateCommodityFilter.class);
         LocateCommodity locateCommodity = mock(LocateCommodity.class);
@@ -101,32 +99,32 @@ public class DefaultTradeModuleControllerTest {
         when(locateCommodityUseCase.locateCommoditiesOrderByDistance(filter)).thenReturn(locateCommodities);
         when(locateCommodityDTOMapper.map(locateCommodity)).thenReturn(response);
 
-        // when
+
         List<LocateCommodityResponse> result = underTest.locateCommodityWithFilters(request);
 
-        // then
+
         assertThat(result, is(responses));
     }
 
     @Test
     public void locateCommodityWithFiltersEmptyResultTest() {
-        // given
+        
         LocateCommodityRequest request = mock(LocateCommodityRequest.class);
         LocateCommodityFilter filter = mock(LocateCommodityFilter.class);
 
         when(locateCommodityDTOMapper.map(request)).thenReturn(filter);
         when(locateCommodityUseCase.locateCommoditiesOrderByDistance(filter)).thenReturn(Collections.emptyList());
 
-        // when
+
         List<LocateCommodityResponse> result = underTest.locateCommodityWithFilters(request);
 
-        // then
+
         assertThat(result, is(Matchers.empty()));
     }
 
     @Test
     public void findValidatedCommodityByNameTest() {
-        // given
+        
         String displayName = "gold";
         ValidatedCommodity commodity = mock(ValidatedCommodity.class);
         FindCommodityResponse response = mock(FindCommodityResponse.class);
@@ -134,30 +132,30 @@ public class DefaultTradeModuleControllerTest {
         when(findCommodityUseCase.findByName(displayName)).thenReturn(Optional.of(commodity));
         when(findCommodityDTOMapper.map(commodity)).thenReturn(response);
 
-        // when
+
         Optional<FindCommodityResponse> result = underTest.findValidatedCommodityByName(displayName);
 
-        // then
+
         assertThat(result, is(Optional.of(response)));
     }
 
     @Test
     public void findValidatedCommodityByNameEmptyResultTest() {
-        // given
+        
         String displayName = "gold";
 
         when(findCommodityUseCase.findByName(displayName)).thenReturn(Optional.empty());
 
-        // when
+
         Optional<FindCommodityResponse> result = underTest.findValidatedCommodityByName(displayName);
 
-        // then
+
         assertThat(result, is(Optional.empty()));
     }
 
     @Test
     public void findAllValidatedCommoditiesTest() {
-        // given
+        
         ValidatedCommodity commodity = mock(ValidatedCommodity.class);
         List<ValidatedCommodity> commodities = List.of(commodity);
         FindCommodityResponse response = mock(FindCommodityResponse.class);
@@ -166,28 +164,28 @@ public class DefaultTradeModuleControllerTest {
         when(findCommodityUseCase.findAll()).thenReturn(commodities);
         when(findCommodityDTOMapper.map(commodity)).thenReturn(response);
 
-        // when
+
         List<FindCommodityResponse> result = underTest.findAllValidatedCommodities();
 
-        // then
+
         assertThat(result, is(responses));
     }
 
     @Test
     public void findAllValidatedCommoditiesEmptyResultTest() {
-        // given
+        
         when(findCommodityUseCase.findAll()).thenReturn(Collections.emptyList());
 
-        // when
+
         List<FindCommodityResponse> result = underTest.findAllValidatedCommodities();
 
-        // then
+
         assertThat(result, is(Matchers.empty()));
     }
 
     @Test
     public void findValidatedCommodityByFilterTest() {
-        // given
+        
         FindCommodityRequest request = mock(FindCommodityRequest.class);
         FindCommodityFilter commodityFilter = mock(FindCommodityFilter.class);
         ValidatedCommodity commodity = mock(ValidatedCommodity.class);
@@ -199,24 +197,24 @@ public class DefaultTradeModuleControllerTest {
         when(findCommodityUseCase.findByFilter(commodityFilter)).thenReturn(commodities);
         when(findCommodityDTOMapper.map(commodity)).thenReturn(response);
 
-        // when
+
         List<FindCommodityResponse> result = underTest.findValidatedCommodityByFilter(request);
 
-        // then
+
         assertThat(result, is(responses));
     }
 
     @Test
     public void findValidatedCommodityByFilterEmptyResultTest() {
-        // given
+        
         FindCommodityRequest request = mock(FindCommodityRequest.class);
 
         when(findCommodityDTOMapper.map(request)).thenReturn(null);
 
-        // when
+
         List<FindCommodityResponse> result = underTest.findValidatedCommodityByFilter(request);
 
-        // then
+
         assertThat(result, is(Matchers.empty()));
     }
 }

@@ -10,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -37,7 +36,7 @@ public class DefaultLocateCommodityUseCaseTest {
     public void testFindAll() {
         LocateCommodityFilter mockLocateCommodityFilter = mock(LocateCommodityFilter.class);
         LocateCommodity locateCommodity = mock(LocateCommodity.class);
-        List<LocateCommodity> expectedLocateCommodityList = Collections.singletonList(locateCommodity);
+        List<LocateCommodity> expectedLocateCommodityList = List.of(locateCommodity);
 
         when(locateCommodityRepository.locateCommodityByFilter(mockLocateCommodityFilter)).thenReturn(expectedLocateCommodityList);
 

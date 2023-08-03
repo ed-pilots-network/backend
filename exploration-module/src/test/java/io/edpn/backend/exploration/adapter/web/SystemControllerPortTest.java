@@ -9,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -34,17 +33,17 @@ public class SystemControllerPortTest {
 
     @Test
     public void testFindSystemsFromSearchBar_shouldReturnSystems() {
-        // Given
+
         String subString = "test";
         int amount = 10;
         SystemDto systemDto = mock(SystemDto.class);
-        List<SystemDto> expectedSystems = Collections.singletonList(systemDto);
+        List<SystemDto> expectedSystems = List.of(systemDto);
         when(findSystemsFromSearchbarUseCase.findSystemsFromSearchBar(subString, amount)).thenReturn(expectedSystems);
 
-        // When
+
         List<SystemDto> actualSystems = underTest.findSystemsFromSearchBar(subString, amount);
 
-        // Then
+
         assertThat(actualSystems, is(expectedSystems));
         verify(findSystemsFromSearchbarUseCase).findSystemsFromSearchBar(subString, amount);
     }

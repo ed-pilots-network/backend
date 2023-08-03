@@ -25,7 +25,7 @@ class SystemCoordinatesResponseMapperTest {
 
     @Test
     void map_shouldReturnCorrectSystemCoordinatesResponse() {
-        // Given
+
         String systemName = "test-system";
         Double x = 1.0;
         Double y = 2.0;
@@ -33,10 +33,10 @@ class SystemCoordinatesResponseMapperTest {
         Coordinate coordinate = new Coordinate(x, y, z);
         System system = new System(UUID.randomUUID(), null, systemName, null, coordinate);
 
-        // When
+
         SystemCoordinatesResponse result = underTest.map(system);
 
-        // Then
+
         assertThat(result.getSystemName(), is(systemName));
         assertThat(result.getXCoordinate(), is(x));
         assertThat(result.getYCoordinate(), is(y));

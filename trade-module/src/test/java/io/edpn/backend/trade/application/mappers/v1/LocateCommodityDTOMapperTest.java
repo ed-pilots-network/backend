@@ -30,7 +30,7 @@ public class LocateCommodityDTOMapperTest {
 
     @Test
     void shouldMapLocateCommodityToResponse() {
-        // Given
+        
         ValidatedCommodity validatedCommodity = ValidatedCommodity.builder()
                 .commodityName("somethingObscure")
                 .displayName("Tritium")
@@ -66,10 +66,10 @@ public class LocateCommodityDTOMapperTest {
                 .distance(80.0)
                 .build();
 
-        // When
+
         LocateCommodityResponse response = mapper.map(locateCommodity);
 
-        // Then
+
         assertThat(response, is(notNullValue()));
         assertThat(response.getPricesUpdatedAt(), is(equalTo(locateCommodity.getPricesUpdatedAt())));
         assertThat(response.getCommodityDisplayName(), is(equalTo(validatedCommodity.getDisplayName())));
@@ -90,7 +90,7 @@ public class LocateCommodityDTOMapperTest {
 
     @Test
     void shouldMapLocateCommodityRequestToFilter() {
-        // Given
+        
         String displayName = "Commodity Name";
         LocateCommodityRequest request = LocateCommodityRequest.builder()
                 .commodityDisplayName(displayName)
@@ -105,10 +105,10 @@ public class LocateCommodityDTOMapperTest {
                 .minDemand(2000L)
                 .build();
 
-        // When
+
         LocateCommodityFilter filter = mapper.map(request);
 
-        // Then
+
         assertThat(filter, is(notNullValue()));
         assertThat(filter.getCommodityDisplayName(), is(equalTo(request.getCommodityDisplayName())));
         assertThat(filter.getXCoordinate(), is(equalTo(request.getX())));

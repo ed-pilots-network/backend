@@ -27,8 +27,8 @@ public class MybatisRequestDataMessageRepository implements RequestDataMessageRe
     }
 
     @Override
-    public List<RequestDataMessage> findNotSend() {
-        return requestDataMessageEntityMapper.findNotSend().stream()
+    public List<RequestDataMessage> findUnsend() {
+        return requestDataMessageEntityMapper.findUnsend().stream()
                 .map(requestDataMessageMapper::map)
                 .toList();
     }

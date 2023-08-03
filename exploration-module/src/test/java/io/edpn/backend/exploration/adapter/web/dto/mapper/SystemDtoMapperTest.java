@@ -24,7 +24,7 @@ class SystemDtoMapperTest {
 
     @Test
     void testMap_systemWithCoordinate_shouldReturnMappedSystemDto() {
-        // Given
+        
         UUID id = UUID.fromString("b85e6a0c-bc0f-447e-812e-9adf3b63cda9");
         String name = "system";
         Long eliteId = 123L;
@@ -35,10 +35,10 @@ class SystemDtoMapperTest {
         Coordinate coordinate = new Coordinate(x, y, z);
         System system = new System(id, eliteId, name, starClass, coordinate);
 
-        // When
+
         SystemDto result = underTest.map(system);
 
-        // Then
+
         assertThat(result.name(), equalTo(name));
         assertThat(result.eliteId(), equalTo(eliteId));
         assertThat(result.starClass(), equalTo(starClass));
@@ -50,17 +50,17 @@ class SystemDtoMapperTest {
 
     @Test
     void testMap_systemWithoutCoordinate_shouldReturnMappedSystemDtoWithNullCoordinate() {
-        // Given
+        
         UUID id = UUID.fromString("b85e6a0c-bc0f-447e-812e-9adf3b63cda9");
         String name = "system";
         Long eliteId = 123L;
         String starClass = "class";
         System system = new System(id, eliteId, name, starClass, null);
 
-        // When
+
         SystemDto result = underTest.map(system);
 
-        // Then
+
         assertThat(result.name(), equalTo(name));
         assertThat(result.eliteId(), equalTo(eliteId));
         assertThat(result.starClass(), equalTo(starClass));

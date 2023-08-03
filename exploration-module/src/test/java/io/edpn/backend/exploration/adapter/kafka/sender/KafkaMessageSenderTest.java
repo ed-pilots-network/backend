@@ -45,17 +45,17 @@ class KafkaMessageSenderTest {
 
     @Test
     void send_shouldInvokeCreateTopicPortAndSendKafkaMessage() throws JsonProcessingException {
-        // Given
+
         KafkaMessageDto kafkaMessageDto = new io.edpn.backend.exploration.adapter.kafka.dto.KafkaMessageDto("test-topic", "test-message");
         JsonNode jsonNode = Mockito.mock(JsonNode.class);
 
         when(createTopicPort.createTopicIfNotExists(any(String.class))).thenReturn(CompletableFuture.completedFuture(null));
         when(objectMapper.readTree(any(String.class))).thenReturn(jsonNode);
 
-        // When
+
         Boolean result = underTest.send(kafkaMessageDto);
 
-        // Then
+
         verify(createTopicPort, times(1)).createTopicIfNotExists(any(String.class));
         verify(jsonNodekafkaTemplate, times(1)).send(any(String.class), any(JsonNode.class));
         assertThat(result, equalTo(true));
@@ -63,30 +63,30 @@ class KafkaMessageSenderTest {
 
     @Test
     void send_shouldReturnFalse_whenJsonProcessingExceptionOccurs() throws JsonProcessingException {
-        // Given
+
         KafkaMessageDto kafkaMessageDto = new io.edpn.backend.exploration.adapter.kafka.dto.KafkaMessageDto("test-topic", "test-message");
 
         when(createTopicPort.createTopicIfNotExists(any(String.class))).thenReturn(CompletableFuture.completedFuture(null));
         when(objectMapper.readTree(any(String.class))).thenThrow(JsonProcessingException.class);
 
-        // When
+
         Boolean result = underTest.send(kafkaMessageDto);
 
-        // Then
+
         assertThat(result, equalTo(false));
     }
 
     @Test
     void send_shouldReturnFalse_whenExceptionOccursWhileCreatingTopic() {
-        // Given
+
         KafkaMessageDto kafkaMessageDto = new io.edpn.backend.exploration.adapter.kafka.dto.KafkaMessageDto("test-topic", "test-message");
 
         when(createTopicPort.createTopicIfNotExists(any(String.class))).thenReturn(CompletableFuture.failedFuture(new ExecutionException("Exception occurred", new Throwable())));
 
-        // When
+
         Boolean result = underTest.send(kafkaMessageDto);
 
-        // Then
+
         assertThat(result, equalTo(false));
     }
 }

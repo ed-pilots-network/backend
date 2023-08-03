@@ -3,7 +3,6 @@ package io.edpn.backend.exploration.adapter.persistence;
 import io.edpn.backend.exploration.adapter.persistence.entity.SystemEntity;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.dto.mapper.SystemEntityMapper;
-import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.SaveSystemPort;
 import io.edpn.backend.util.IdGenerator;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +40,7 @@ class SaveSystemPortTest {
 
     @Test
     void save_shouldUpdateAndLoad() {
-        // Given
+
         System system = mock(System.class);
         SystemEntity entity = mock(SystemEntity.class);
         System loaded = mock(System.class);
@@ -49,10 +48,10 @@ class SaveSystemPortTest {
         when(mybatisSystemRepository.findById(any())).thenReturn(Optional.of(entity));
         when(systemEntityMapper.map(entity)).thenReturn(loaded);
 
-        // When
+
         System result = underTest.save(system);
 
-        // Then
+
         assertThat(result, is(loaded));
         verify(mybatisSystemRepository).update(entity);
         verify(mybatisSystemRepository).findById(system.id());

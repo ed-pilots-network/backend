@@ -10,7 +10,7 @@ public interface RequestDataMessageRepository {
 
     void create(RequestDataMessage requestDataMessage);
 
-    List<RequestDataMessage> findNotSend();
+    List<RequestDataMessage> findUnsend();
 
     void setSend(RequestDataMessage requestDataMessage);
 }

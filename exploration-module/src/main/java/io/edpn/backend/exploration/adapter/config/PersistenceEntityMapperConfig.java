@@ -1,7 +1,7 @@
 package io.edpn.backend.exploration.adapter.config;
 
-import io.edpn.backend.exploration.adapter.persistence.entity.mapper.SystemEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.SystemCoordinateRequestEntityMapper;
+import io.edpn.backend.exploration.adapter.persistence.entity.mapper.SystemEntityMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

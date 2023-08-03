@@ -25,14 +25,14 @@ class SystemEntityMapperTest {
 
     @Test
     public void testMap_givenSystemEntity_shouldReturnSystem() {
-        // Given
+        
         CoordinateEntity coordinateEntity = new CoordinateEntity(1.0, 2.0, 3.0);
         SystemEntity systemEntity = new SystemEntity(UUID.randomUUID(), "systemName", coordinateEntity, 123L, "starClass");
 
-        // When
+
         System result = underTest.map(systemEntity);
 
-        // Then
+
         assertThat(result.id(), equalTo(systemEntity.id()));
         assertThat(result.eliteId(), equalTo(systemEntity.eliteId()));
         assertThat(result.name(), equalTo(systemEntity.name()));
@@ -45,14 +45,14 @@ class SystemEntityMapperTest {
 
     @Test
     public void testMap_givenSystem_shouldReturnSystemEntity() {
-        // Given
+        
         Coordinate coordinate = new Coordinate(1.0, 2.0, 3.0);
         System system = new System(UUID.randomUUID(), 123L, "systemName", "starClass", coordinate);
 
-        // When
+
         SystemEntity result = underTest.map(system);
 
-        // Then
+
         assertThat(result.id(), equalTo(system.id()));
         assertThat(result.eliteId(), equalTo(system.eliteId()));
         assertThat(result.name(), equalTo(system.name()));
@@ -65,25 +65,25 @@ class SystemEntityMapperTest {
 
     @Test
     public void testMap_givenSystemEntityWithNullCoordinate_shouldReturnSystemWithNullCoordinate() {
-        // Given
+        
         SystemEntity systemEntity = new SystemEntity(UUID.randomUUID(), "systemName", null, 123L, "starClass");
 
-        // When
+
         System result = underTest.map(systemEntity);
 
-        // Then
+
         assertThat(result.coordinate(), nullValue());
     }
 
     @Test
     public void testMap_givenSystemWithNullCoordinate_shouldReturnSystemEntityWithNullCoordinate() {
-        // Given
+        
         System system = new System(UUID.randomUUID(), 123L, "systemName", "starClass", null);
 
-        // When
+
         SystemEntity result = underTest.map(system);
 
-        // Then
+
         assertThat(result.coordinate(), nullValue());
     }
 }

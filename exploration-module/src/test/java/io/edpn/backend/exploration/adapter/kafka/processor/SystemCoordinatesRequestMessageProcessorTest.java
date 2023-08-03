@@ -35,16 +35,16 @@ class SystemCoordinatesRequestMessageProcessorTest {
 
     @Test
     void listen_shouldInvokeUseCaseWithCorrectSystemDataRequest() throws JsonProcessingException {
-        // Given
+
         JsonNode jsonNode = Mockito.mock(JsonNode.class);
         SystemDataRequest systemDataRequest = new SystemDataRequest();
 
         Mockito.when(objectMapper.treeToValue(jsonNode, SystemDataRequest.class)).thenReturn(systemDataRequest);
 
-        // When
+
         underTest.listen(jsonNode);
 
-        // Then
+
         verify(receiveSystemDataRequestUseCase, times(1)).receive(any(SystemDataRequest.class));
     }
 }

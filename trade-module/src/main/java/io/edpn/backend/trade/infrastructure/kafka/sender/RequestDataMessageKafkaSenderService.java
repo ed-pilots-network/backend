@@ -36,7 +36,7 @@ public class RequestDataMessageKafkaSenderService implements KafkaSenderService<
     }
 
     private synchronized void sendPendingMessages() {
-        requestDataMessageRepository.findNotSend()
+        requestDataMessageRepository.findUnsend()
                 .forEach(requestDataMessage ->
                         kafkaTopicHandler.createTopicIfNotExists(requestDataMessage.getTopic())
                                 .whenComplete((tName, kafkaTopicCreateException) -> {
