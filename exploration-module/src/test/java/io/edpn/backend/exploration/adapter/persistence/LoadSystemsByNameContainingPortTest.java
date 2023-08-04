@@ -49,7 +49,7 @@ class LoadSystemsByNameContainingPortTest {
         when(systemEntityMapper.map(systemEntity)).thenReturn(mapped);
 
 
-        List<System> result = underTest.load(name, amount);
+        List<System> result = underTest.loadByNameContaining(name, amount);
 
 
         assertThat(result, contains(mapped));

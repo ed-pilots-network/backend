@@ -44,7 +44,7 @@ class SystemControllerServiceTest {
         System system2 = mock(System.class);
         SystemDto systemDto1 = mock(SystemDto.class);
         SystemDto systemDto2 = mock(SystemDto.class);
-        when(loadSystemsByNameContainingPort.load(subString, amount)).thenReturn(List.of(system1, system2));
+        when(loadSystemsByNameContainingPort.loadByNameContaining(subString, amount)).thenReturn(List.of(system1, system2));
         when(systemDtoMapper.map(system1)).thenReturn(systemDto1);
         when(systemDtoMapper.map(system2)).thenReturn(systemDto2);
 
@@ -52,7 +52,7 @@ class SystemControllerServiceTest {
         List<SystemDto> result = underTest.findSystemsFromSearchBar(subString, amount);
 
 
-        verify(loadSystemsByNameContainingPort).load(subString, amount);
+        verify(loadSystemsByNameContainingPort).loadByNameContaining(subString, amount);
         verify(systemDtoMapper).map(system1);
         verify(systemDtoMapper).map(system2);
         assertThat(result, hasSize(2));

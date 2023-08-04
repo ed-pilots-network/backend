@@ -47,7 +47,7 @@ public class SystemRepository implements CreateSystemPort, LoadSystemPort, SaveS
     }
 
     @Override
-    public List<System> load(String name, int amount) {
+    public List<System> loadByNameContaining(String name, int amount) {
         return mybatisSystemRepository.findFromSearchbar(name, amount).stream()
                 .map(systemEntityMapper::map)
                 .toList();

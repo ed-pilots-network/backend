@@ -18,7 +18,7 @@ public class SystemControllerService implements FindSystemsFromSearchbarUseCase 
 
     @Override
     public List<SystemDto> findSystemsFromSearchBar(String subString, int amount) {
-        return loadSystemsByNameContainingPort.load(subString, amount)
+        return loadSystemsByNameContainingPort.loadByNameContaining(subString, amount)
                 .stream()
                 .map(systemDtoMapper::map)
                 .toList();

@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface LoadSystemsByNameContainingPort {
 
-    List<System> load(String name, int amount);
+    List<System> loadByNameContaining(String name, int amount);
 
 }
