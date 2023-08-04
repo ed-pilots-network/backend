@@ -1,7 +1,7 @@
 package io.edpn.backend.exploration.adapter.persistence;
 
 
-import io.edpn.backend.exploration.application.dto.SystemEntity;
+import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.mybatisutil.UuidTypeHandler;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -28,19 +28,19 @@ public interface MybatisSystemRepository {
             @Result(property = "yCoordinate", column = "y_coordinate", javaType = Double.class),
             @Result(property = "zCoordinate", column = "z_coordinate", javaType = Double.class)
     })
-    Optional<SystemEntity> findById(UUID id);
+    Optional<MybatisSystemEntity> findById(UUID id);
 
     @Select("SELECT * FROM system WHERE name = #{name}")
     @ResultMap("systemResultMap")
-    Optional<SystemEntity> findByName(@Param("name") String name);
+    Optional<MybatisSystemEntity> findByName(@Param("name") String name);
 
     @Insert({"INSERT INTO system (id, name, star_class, elite_id, x_coordinate, y_coordinate, z_coordinate)",
             "VALUES (#{id}, #{name}, #{starClass}, #{eliteId}, #{xCoordinate}, #{yCoordinate}, #{zCoordinate})"})
-    void insert(SystemEntity system);
+    void insert(MybatisSystemEntity system);
 
     @Update({"UPDATE system SET name = #{name}, star_class = #{starClass}, elite_id = #{eliteId}, x_coordinate = #{xCoordinate}, ",
             "y_coordinate = #{yCoordinate}, z_coordinate = #{zCoordinate} WHERE id = #{id}"})
-    void update(SystemEntity system);
+    void update(MybatisSystemEntity system);
 
     @Delete("DELETE FROM system WHERE id = #{id}")
     void delete(@Param("id") UUID id);
@@ -51,5 +51,5 @@ public interface MybatisSystemRepository {
             "ORDER BY CASE WHEN name ILIKE CONCAT(#{name}, '%') THEN 0 ELSE 1 END, name",
             "LIMIT #{amount}"})
     @ResultMap("systemResultMap")
-    List<SystemEntity> findFromSearchbar(@Param("name") String name, @Param("amount") int amount);
+    List<MybatisSystemEntity> findFromSearchbar(@Param("name") String name, @Param("amount") int amount);
 }

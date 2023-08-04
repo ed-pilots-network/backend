@@ -1,6 +1,6 @@
 package io.edpn.backend.exploration.adapter.persistence;
 
-import io.edpn.backend.exploration.adapter.persistence.entity.SystemEntity;
+import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.dto.mapper.SystemEntityMapper;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
@@ -24,7 +24,7 @@ class LoadSystemPortTest {
     private MybatisSystemRepository mybatisSystemRepository;
 
     @Mock
-    private SystemEntityMapper systemEntityMapper;
+    private SystemEntityMapper<MybatisSystemEntity> systemEntityMapper;
 
     @Mock
     private IdGenerator idGenerator;
@@ -40,7 +40,7 @@ class LoadSystemPortTest {
     void load_shouldFindByNameAndMap() {
 
         String name = "system";
-        SystemEntity entity = mock(SystemEntity.class);
+        MybatisSystemEntity entity = mock(MybatisSystemEntity.class);
         System mapped = mock(System.class);
         when(mybatisSystemRepository.findByName(name)).thenReturn(Optional.of(entity));
         when(systemEntityMapper.map(entity)).thenReturn(mapped);

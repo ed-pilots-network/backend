@@ -1,6 +1,6 @@
 package io.edpn.backend.exploration.application.dto;
 
-public interface KafkaMessageDto {
+public interface MessageDto {
     String topic();
 
     String message();

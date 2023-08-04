@@ -1,7 +1,7 @@
 package io.edpn.backend.exploration.adapter.config;
 
 import io.edpn.backend.exploration.adapter.kafka.dto.mapper.KafkaMessageMapper;
-import io.edpn.backend.exploration.adapter.kafka.dto.mapper.SystemCoordinatesResponseMapper;
+import io.edpn.backend.exploration.adapter.kafka.dto.mapper.KafkaSystemCoordinatesResponseMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,8 +10,8 @@ public class KafkaMapperConfig {
 
 
     @Bean(name = "explorationSystemCoordinatesResponseMapper")
-    public SystemCoordinatesResponseMapper systemCoordinatesResponseMapper() {
-        return new SystemCoordinatesResponseMapper();
+    public KafkaSystemCoordinatesResponseMapper systemCoordinatesResponseMapper() {
+        return new KafkaSystemCoordinatesResponseMapper();
     }
 
     @Bean(name = "explorationKafkaMessageMapper")

@@ -1,8 +1,10 @@
 package io.edpn.backend.exploration.adapter.persistence.entity.mapper;
 
+import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.dto.SystemEntity;
+import io.edpn.backend.exploration.application.dto.mapper.SystemEntityMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,7 +12,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
-public class SystemEntityMapper implements io.edpn.backend.exploration.application.dto.mapper.SystemEntityMapper {
+public class MybatisSystemEntityMapper implements SystemEntityMapper<MybatisSystemEntity> {
 
     @Override
     public System map(SystemEntity systemEntity) {
@@ -23,8 +25,8 @@ public class SystemEntityMapper implements io.edpn.backend.exploration.applicati
     }
 
     @Override
-    public SystemEntity map(System system) {
-        return new io.edpn.backend.exploration.adapter.persistence.entity.SystemEntity(
+    public MybatisSystemEntity map(System system) {
+        return new MybatisSystemEntity(
                 system.id(),
                 system.name(),
                 system.eliteId(),

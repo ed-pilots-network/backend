@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.KafkaMessage;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.dto.KafkaMessageDto;
+import io.edpn.backend.exploration.application.dto.MessageDto;
 import io.edpn.backend.exploration.application.dto.mapper.KafkaMessageMapper;
 import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
@@ -101,9 +101,9 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
                     SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
                     String stringJson = objectMapper.valueToTree(systemCoordinatesResponse).toString();
                     KafkaMessage message = new KafkaMessage(systemCoordinateRequest.requestingModule() + TOPIC, stringJson);
-                    KafkaMessageDto kafkaMessageDto = kafkaMessageMapper.map(message);
+                    MessageDto messageDto = kafkaMessageMapper.map(message);
 
-                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(kafkaMessageDto));
+                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(messageDto));
                     if (sendSuccessful) {
                         deleteSystemCoordinateRequestPort.delete(system.name(), systemCoordinateRequest.requestingModule());
                     }

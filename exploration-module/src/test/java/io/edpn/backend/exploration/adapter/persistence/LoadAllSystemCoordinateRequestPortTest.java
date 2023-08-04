@@ -1,7 +1,7 @@
 package io.edpn.backend.exploration.adapter.persistence;
 
-import io.edpn.backend.exploration.adapter.persistence.entity.SystemCoordinateRequestEntity;
-import io.edpn.backend.exploration.adapter.persistence.entity.mapper.SystemCoordinateRequestEntityMapper;
+import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemCoordinateRequestEntity;
+import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemCoordinateRequestEntityMapper;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
 import io.edpn.backend.exploration.application.port.outgoing.LoadAllSystemCoordinateRequestPort;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,23 +25,23 @@ class LoadAllSystemCoordinateRequestPortTest {
     private MybatisSystemCoordinateRequestRepository mybatisSystemCoordinateRequestRepository;
 
     @Mock
-    private SystemCoordinateRequestEntityMapper systemCoordinateRequestEntityMapper;
+    private MybatisSystemCoordinateRequestEntityMapper mybatisSystemCoordinateRequestEntityMapper;
 
     private LoadAllSystemCoordinateRequestPort underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new SystemCoordinateRequestRepository(mybatisSystemCoordinateRequestRepository, systemCoordinateRequestEntityMapper);
+        underTest = new SystemCoordinateRequestRepository(mybatisSystemCoordinateRequestRepository, mybatisSystemCoordinateRequestEntityMapper);
     }
 
     @Test
     void load_shouldFindAllAndMap() {
 
-        SystemCoordinateRequestEntity systemCoordinateRequestEntity = mock(SystemCoordinateRequestEntity.class);
-        List<SystemCoordinateRequestEntity> entities = List.of(systemCoordinateRequestEntity);
+        MybatisSystemCoordinateRequestEntity mybatisSystemCoordinateRequestEntity = mock(MybatisSystemCoordinateRequestEntity.class);
+        List<MybatisSystemCoordinateRequestEntity> entities = List.of(mybatisSystemCoordinateRequestEntity);
         SystemCoordinateRequest mapped = mock(SystemCoordinateRequest.class);
         when(mybatisSystemCoordinateRequestRepository.findAll()).thenReturn(entities);
-        when(systemCoordinateRequestEntityMapper.map(systemCoordinateRequestEntity)).thenReturn(mapped);
+        when(mybatisSystemCoordinateRequestEntityMapper.map(mybatisSystemCoordinateRequestEntity)).thenReturn(mapped);
 
 
         List<SystemCoordinateRequest> result = underTest.load();

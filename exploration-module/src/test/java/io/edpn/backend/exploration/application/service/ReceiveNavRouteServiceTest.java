@@ -6,7 +6,7 @@ import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.KafkaMessage;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
-import io.edpn.backend.exploration.application.dto.KafkaMessageDto;
+import io.edpn.backend.exploration.application.dto.MessageDto;
 import io.edpn.backend.exploration.application.dto.mapper.KafkaMessageMapper;
 import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
@@ -102,9 +102,9 @@ class ReceiveNavRouteServiceTest {
         when(jsonNode.toString()).thenReturn("JSON_STRING");
         when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
         KafkaMessage kafkaMessage = new KafkaMessage("module_systemCoordinatesDataResponse", "JSON_STRING");
-        KafkaMessageDto kafkaMessageDto = mock(KafkaMessageDto.class);
-        when(kafkaMessageMapper.map(kafkaMessage)).thenReturn(kafkaMessageDto);
-        when(sendKafkaMessagePort.send(kafkaMessageDto)).thenReturn(true);
+        MessageDto messageDto = mock(MessageDto.class);
+        when(kafkaMessageMapper.map(kafkaMessage)).thenReturn(messageDto);
+        when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
 
@@ -113,7 +113,7 @@ class ReceiveNavRouteServiceTest {
 
         verify(loadSystemPort).load(systemName);
         verify(saveSystemPort).save(system);
-        verify(sendKafkaMessagePort).send(kafkaMessageDto);
+        verify(sendKafkaMessagePort).send(messageDto);
         verify(deleteSystemCoordinateRequestPort).delete(systemName, module);
     }
 
@@ -152,9 +152,9 @@ class ReceiveNavRouteServiceTest {
         when(jsonNode.toString()).thenReturn("JSON_STRING");
         when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
         KafkaMessage kafkaMessage = new KafkaMessage("module_systemCoordinatesDataResponse", "JSON_STRING");
-        KafkaMessageDto kafkaMessageDto = mock(KafkaMessageDto.class);
-        when(kafkaMessageMapper.map(kafkaMessage)).thenReturn(kafkaMessageDto);
-        when(sendKafkaMessagePort.send(kafkaMessageDto)).thenReturn(true);
+        MessageDto messageDto = mock(MessageDto.class);
+        when(kafkaMessageMapper.map(kafkaMessage)).thenReturn(messageDto);
+        when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
 
@@ -164,7 +164,7 @@ class ReceiveNavRouteServiceTest {
         verify(loadSystemPort).load(systemName);
         verify(createSystemPort).create(systemName);
         verify(saveSystemPort).save(system);
-        verify(sendKafkaMessagePort).send(kafkaMessageDto);
+        verify(sendKafkaMessagePort).send(messageDto);
         verify(deleteSystemCoordinateRequestPort).delete(systemName, module);
     }
 
@@ -204,9 +204,9 @@ class ReceiveNavRouteServiceTest {
         when(jsonNode.toString()).thenReturn("JSON_STRING");
         when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
         KafkaMessage kafkaMessage = new KafkaMessage("module_systemCoordinatesDataResponse", "JSON_STRING");
-        KafkaMessageDto kafkaMessageDto = mock(KafkaMessageDto.class);
-        when(kafkaMessageMapper.map(kafkaMessage)).thenReturn(kafkaMessageDto);
-        when(sendKafkaMessagePort.send(kafkaMessageDto)).thenReturn(true);
+        MessageDto messageDto = mock(MessageDto.class);
+        when(kafkaMessageMapper.map(kafkaMessage)).thenReturn(messageDto);
+        when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
 
@@ -218,7 +218,7 @@ class ReceiveNavRouteServiceTest {
         verify(system).withCoordinate(any(Coordinate.class));
         verify(loadSystemPort).load(systemName);
         verify(saveSystemPort).save(system);
-        verify(sendKafkaMessagePort).send(kafkaMessageDto);
+        verify(sendKafkaMessagePort).send(messageDto);
         verify(deleteSystemCoordinateRequestPort).delete(systemName, module);
     }
 

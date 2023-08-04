@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.KafkaMessage;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
-import io.edpn.backend.exploration.application.dto.KafkaMessageDto;
+import io.edpn.backend.exploration.application.dto.MessageDto;
 import io.edpn.backend.exploration.application.dto.mapper.KafkaMessageMapper;
 import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ProcessPendingDataRequestUseCase;
@@ -111,11 +111,11 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
         when(jsonNode.toString()).thenReturn("JSON_STRING");
         when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
         KafkaMessage kafkaMessage = new KafkaMessage("trade_systemCoordinatesDataResponse", "JSON_STRING");
-        KafkaMessageDto kafkaMessageDto = mock(KafkaMessageDto.class);
-        when(kafkaMessageMapper.map(kafkaMessage)).thenReturn(kafkaMessageDto);
+        MessageDto messageDto = mock(MessageDto.class);
+        when(kafkaMessageMapper.map(kafkaMessage)).thenReturn(messageDto);
         when(loadAllSystemCoordinateRequestPort.load()).thenReturn(systemCoordinateRequestList);
         when(loadSystemPort.load("SystemName")).thenReturn(Optional.of(system));
-        when(sendKafkaMessagePort.send(kafkaMessageDto)).thenReturn(false);
+        when(sendKafkaMessagePort.send(messageDto)).thenReturn(false);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
 
@@ -124,7 +124,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
 
         verify(loadAllSystemCoordinateRequestPort, times(1)).load();
         verify(loadSystemPort, times(1)).load("SystemName");
-        verify(sendKafkaMessagePort, times(1)).send(kafkaMessageDto);
+        verify(sendKafkaMessagePort, times(1)).send(messageDto);
         verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort);
         verifyNoInteractions(deleteSystemCoordinateRequestPort);
     }
@@ -143,11 +143,11 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
         when(jsonNode.toString()).thenReturn("JSON_STRING");
         when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
         KafkaMessage kafkaMessage = new KafkaMessage("trade_systemCoordinatesDataResponse", "JSON_STRING");
-        KafkaMessageDto kafkaMessageDto = mock(KafkaMessageDto.class);
-        when(kafkaMessageMapper.map(kafkaMessage)).thenReturn(kafkaMessageDto);
+        MessageDto messageDto = mock(MessageDto.class);
+        when(kafkaMessageMapper.map(kafkaMessage)).thenReturn(messageDto);
         when(loadAllSystemCoordinateRequestPort.load()).thenReturn(systemCoordinateRequestList);
         when(loadSystemPort.load("SystemName")).thenReturn(Optional.of(system));
-        when(sendKafkaMessagePort.send(kafkaMessageDto)).thenReturn(true);
+        when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
 
@@ -156,7 +156,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
 
         verify(loadAllSystemCoordinateRequestPort, times(1)).load();
         verify(loadSystemPort, times(1)).load("SystemName");
-        verify(sendKafkaMessagePort, times(1)).send(kafkaMessageDto);
+        verify(sendKafkaMessagePort, times(1)).send(messageDto);
         verify(deleteSystemCoordinateRequestPort, times(1)).delete("SystemName", "trade");
         verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, deleteSystemCoordinateRequestPort);
     }

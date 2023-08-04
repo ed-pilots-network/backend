@@ -1,11 +1,12 @@
 package io.edpn.backend.exploration.adapter.kafka.dto.mapper;
 
 import io.edpn.backend.exploration.application.domain.System;
+import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class SystemCoordinatesResponseMapper implements io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper {
+public class KafkaSystemCoordinatesResponseMapper implements SystemCoordinatesResponseMapper {
 
     @Override
     public SystemCoordinatesResponse map(System system) {

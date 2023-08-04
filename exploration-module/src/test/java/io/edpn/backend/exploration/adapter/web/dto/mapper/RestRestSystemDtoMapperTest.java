@@ -13,13 +13,13 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
-class SystemDtoMapperTest {
+class RestRestSystemDtoMapperTest {
 
     private io.edpn.backend.exploration.application.dto.mapper.SystemDtoMapper underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new SystemDtoMapper();
+        underTest = new RestSystemDtoMapper();
     }
 
     @Test

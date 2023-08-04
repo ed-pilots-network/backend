@@ -1,8 +1,10 @@
 package io.edpn.backend.exploration.adapter.persistence.entity.mapper;
 
+import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.dto.SystemEntity;
+import io.edpn.backend.exploration.application.dto.mapper.SystemEntityMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,18 +15,18 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
-class SystemEntityMapperTest {
+class MybatisMybatisSystemEntityMapperTest {
 
-    private io.edpn.backend.exploration.application.dto.mapper.SystemEntityMapper underTest;
+    private SystemEntityMapper<MybatisSystemEntity> underTest;
 
     @BeforeEach
     public void setUp() {
-        underTest = new SystemEntityMapper();
+        underTest = new MybatisSystemEntityMapper();
     }
 
     @Test
     public void testMap_givenSystemEntity_shouldReturnSystem() {
-        SystemEntity systemEntity = new io.edpn.backend.exploration.adapter.persistence.entity.SystemEntity(UUID.randomUUID(), "systemName", 123L, "starClass", 1.0, 2.0, 3.0);
+        SystemEntity systemEntity = new MybatisSystemEntity(UUID.randomUUID(), "systemName", 123L, "starClass", 1.0, 2.0, 3.0);
 
         System result = underTest.map(systemEntity);
 
@@ -60,7 +62,7 @@ class SystemEntityMapperTest {
     @Test
     public void testMap_givenSystemEntityWithNullCoordinate_shouldReturnSystemWithNullCoordinate() {
 
-        SystemEntity systemEntity = new io.edpn.backend.exploration.adapter.persistence.entity.SystemEntity(UUID.randomUUID(), "systemName", 123L, "starClass", null, null, null);
+        SystemEntity systemEntity = new MybatisSystemEntity(UUID.randomUUID(), "systemName", 123L, "starClass", null, null, null);
 
 
         System result = underTest.map(systemEntity);

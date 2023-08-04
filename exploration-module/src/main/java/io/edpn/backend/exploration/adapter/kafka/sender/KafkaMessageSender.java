@@ -3,7 +3,7 @@ package io.edpn.backend.exploration.adapter.kafka.sender;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.exploration.application.dto.KafkaMessageDto;
+import io.edpn.backend.exploration.application.dto.MessageDto;
 import io.edpn.backend.exploration.application.port.outgoing.CreateTopicPort;
 import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +22,12 @@ public class KafkaMessageSender implements SendKafkaMessagePort {
 
 
     @Override
-    public Boolean send(KafkaMessageDto kafkaMessageDto) {
-        return createTopicPort.createTopicIfNotExists(kafkaMessageDto.topic())
+    public Boolean send(MessageDto messageDto) {
+        return createTopicPort.createTopicIfNotExists(messageDto.topic())
                 .thenCompose(v -> {
                     try {
-                        JsonNode jsonNodeMessage = objectMapper.readTree(kafkaMessageDto.message());
-                        jsonNodekafkaTemplate.send(kafkaMessageDto.topic(), jsonNodeMessage);
+                        JsonNode jsonNodeMessage = objectMapper.readTree(messageDto.message());
+                        jsonNodekafkaTemplate.send(messageDto.topic(), jsonNodeMessage);
                         return CompletableFuture.completedFuture(true);
                     } catch (JsonProcessingException e) {
                         log.error("Unable to send message to Kafka", e);

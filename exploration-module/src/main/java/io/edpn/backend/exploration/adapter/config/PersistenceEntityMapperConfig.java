@@ -1,7 +1,7 @@
 package io.edpn.backend.exploration.adapter.config;
 
-import io.edpn.backend.exploration.adapter.persistence.entity.mapper.SystemCoordinateRequestEntityMapper;
-import io.edpn.backend.exploration.adapter.persistence.entity.mapper.SystemEntityMapper;
+import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemCoordinateRequestEntityMapper;
+import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemEntityMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,13 +9,13 @@ import org.springframework.context.annotation.Configuration;
 public class PersistenceEntityMapperConfig {
 
     @Bean(name = "explorationSystemEntityMapper")
-    public SystemEntityMapper systemEntityMapper() {
-        return new SystemEntityMapper();
+    public MybatisSystemEntityMapper systemEntityMapper() {
+        return new MybatisSystemEntityMapper();
     }
 
 
     @Bean(name = "explorationSystemCoordinateRequestEntityMapper")
-    public SystemCoordinateRequestEntityMapper systemCoordinateRequestEntityMapper() {
-        return new SystemCoordinateRequestEntityMapper();
+    public MybatisSystemCoordinateRequestEntityMapper systemCoordinateRequestEntityMapper() {
+        return new MybatisSystemCoordinateRequestEntityMapper();
     }
 }

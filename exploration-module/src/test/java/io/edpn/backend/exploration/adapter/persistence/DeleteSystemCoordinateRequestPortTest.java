@@ -1,7 +1,7 @@
 package io.edpn.backend.exploration.adapter.persistence;
 
-import io.edpn.backend.exploration.adapter.persistence.entity.SystemCoordinateRequestEntity;
-import io.edpn.backend.exploration.adapter.persistence.entity.mapper.SystemCoordinateRequestEntityMapper;
+import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemCoordinateRequestEntity;
+import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemCoordinateRequestEntityMapper;
 import io.edpn.backend.exploration.application.port.outgoing.DeleteSystemCoordinateRequestPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,13 +19,13 @@ class DeleteSystemCoordinateRequestPortTest {
     private MybatisSystemCoordinateRequestRepository mybatisSystemCoordinateRequestRepository;
 
     @Mock
-    private SystemCoordinateRequestEntityMapper systemCoordinateRequestEntityMapper;
+    private MybatisSystemCoordinateRequestEntityMapper mybatisSystemCoordinateRequestEntityMapper;
 
     private DeleteSystemCoordinateRequestPort underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new SystemCoordinateRequestRepository(mybatisSystemCoordinateRequestRepository, systemCoordinateRequestEntityMapper);
+        underTest = new SystemCoordinateRequestRepository(mybatisSystemCoordinateRequestRepository, mybatisSystemCoordinateRequestEntityMapper);
     }
 
     @Test
@@ -38,6 +38,6 @@ class DeleteSystemCoordinateRequestPortTest {
         underTest.delete(systemName, requestingModule);
 
 
-        verify(mybatisSystemCoordinateRequestRepository).delete(eq(new SystemCoordinateRequestEntity(systemName, requestingModule)));
+        verify(mybatisSystemCoordinateRequestRepository).delete(eq(new MybatisSystemCoordinateRequestEntity(systemName, requestingModule)));
     }
 }

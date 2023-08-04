@@ -3,7 +3,7 @@ package io.edpn.backend.exploration.application.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.KafkaMessage;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
-import io.edpn.backend.exploration.application.dto.KafkaMessageDto;
+import io.edpn.backend.exploration.application.dto.MessageDto;
 import io.edpn.backend.exploration.application.dto.mapper.KafkaMessageMapper;
 import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ProcessPendingDataRequestUseCase;
@@ -45,9 +45,9 @@ public class ProcessPendingSystemCoordinateRequestService implements ProcessPend
                                     SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
                                     String stringJson = objectMapper.valueToTree(systemCoordinatesResponse).toString();
                                     KafkaMessage kafkaMessage = new KafkaMessage(systemCoordinateRequest.requestingModule() + TOPIC, stringJson);
-                                    KafkaMessageDto kafkaMessageDto = kafkaMessageMapper.map(kafkaMessage);
+                                    MessageDto messageDto = kafkaMessageMapper.map(kafkaMessage);
 
-                                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(kafkaMessageDto));
+                                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(messageDto));
                                     if (sendSuccessful) {
                                         deleteSystemCoordinateRequestPort.delete(systemCoordinateRequest.systemName(), systemCoordinateRequest.requestingModule());
                                     }

@@ -1,8 +1,8 @@
 package io.edpn.backend.exploration.application.dto.mapper;
 
 import io.edpn.backend.exploration.application.domain.KafkaMessage;
-import io.edpn.backend.exploration.application.dto.KafkaMessageDto;
+import io.edpn.backend.exploration.application.dto.MessageDto;
 
 public interface KafkaMessageMapper {
-    KafkaMessageDto map(KafkaMessage kafkaMessage);
+    MessageDto map(KafkaMessage kafkaMessage);
 }

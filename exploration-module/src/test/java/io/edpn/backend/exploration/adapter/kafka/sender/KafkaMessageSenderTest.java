@@ -3,7 +3,8 @@ package io.edpn.backend.exploration.adapter.kafka.sender;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.exploration.application.dto.KafkaMessageDto;
+import io.edpn.backend.exploration.adapter.kafka.dto.KafkaMessageDto;
+import io.edpn.backend.exploration.application.dto.MessageDto;
 import io.edpn.backend.exploration.application.port.outgoing.CreateTopicPort;
 import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,14 +47,14 @@ class KafkaMessageSenderTest {
     @Test
     void send_shouldInvokeCreateTopicPortAndSendKafkaMessage() throws JsonProcessingException {
 
-        KafkaMessageDto kafkaMessageDto = new io.edpn.backend.exploration.adapter.kafka.dto.KafkaMessageDto("test-topic", "test-message");
+        MessageDto messageDto = new KafkaMessageDto("test-topic", "test-message");
         JsonNode jsonNode = Mockito.mock(JsonNode.class);
 
         when(createTopicPort.createTopicIfNotExists(any(String.class))).thenReturn(CompletableFuture.completedFuture(null));
         when(objectMapper.readTree(any(String.class))).thenReturn(jsonNode);
 
 
-        Boolean result = underTest.send(kafkaMessageDto);
+        Boolean result = underTest.send(messageDto);
 
 
         verify(createTopicPort, times(1)).createTopicIfNotExists(any(String.class));
@@ -64,13 +65,13 @@ class KafkaMessageSenderTest {
     @Test
     void send_shouldReturnFalse_whenJsonProcessingExceptionOccurs() throws JsonProcessingException {
 
-        KafkaMessageDto kafkaMessageDto = new io.edpn.backend.exploration.adapter.kafka.dto.KafkaMessageDto("test-topic", "test-message");
+        MessageDto messageDto = new KafkaMessageDto("test-topic", "test-message");
 
         when(createTopicPort.createTopicIfNotExists(any(String.class))).thenReturn(CompletableFuture.completedFuture(null));
         when(objectMapper.readTree(any(String.class))).thenThrow(JsonProcessingException.class);
 
 
-        Boolean result = underTest.send(kafkaMessageDto);
+        Boolean result = underTest.send(messageDto);
 
 
         assertThat(result, equalTo(false));
@@ -79,12 +80,12 @@ class KafkaMessageSenderTest {
     @Test
     void send_shouldReturnFalse_whenExceptionOccursWhileCreatingTopic() {
 
-        KafkaMessageDto kafkaMessageDto = new io.edpn.backend.exploration.adapter.kafka.dto.KafkaMessageDto("test-topic", "test-message");
+        MessageDto messageDto = new KafkaMessageDto("test-topic", "test-message");
 
         when(createTopicPort.createTopicIfNotExists(any(String.class))).thenReturn(CompletableFuture.failedFuture(new ExecutionException("Exception occurred", new Throwable())));
 
 
-        Boolean result = underTest.send(kafkaMessageDto);
+        Boolean result = underTest.send(messageDto);
 
 
         assertThat(result, equalTo(false));

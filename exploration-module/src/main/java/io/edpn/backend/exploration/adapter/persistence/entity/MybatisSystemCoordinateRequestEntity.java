@@ -1,7 +1,7 @@
 package io.edpn.backend.exploration.adapter.persistence.entity;
 
+import io.edpn.backend.exploration.application.dto.SystemCoordinateRequestEntity;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class SystemCoordinateRequestEntity implements io.edpn.backend.exploration.application.dto.SystemCoordinateRequestEntity {
+public class MybatisSystemCoordinateRequestEntity implements SystemCoordinateRequestEntity {
     private String systemName;
     private String requestingModule;
 }

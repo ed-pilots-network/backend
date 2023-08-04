@@ -1,7 +1,7 @@
 package io.edpn.backend.exploration.adapter.persistence;
 
-import io.edpn.backend.exploration.adapter.persistence.entity.SystemCoordinateRequestEntity;
-import io.edpn.backend.exploration.adapter.persistence.entity.mapper.SystemCoordinateRequestEntityMapper;
+import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemCoordinateRequestEntity;
+import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemCoordinateRequestEntityMapper;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
 import io.edpn.backend.exploration.application.port.outgoing.CreateSystemCoordinateRequestPort;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,21 +21,21 @@ class CreateSystemCoordinateRequestPortTest {
     private MybatisSystemCoordinateRequestRepository mybatisSystemCoordinateRequestRepository;
 
     @Mock
-    private SystemCoordinateRequestEntityMapper systemCoordinateRequestEntityMapper;
+    private MybatisSystemCoordinateRequestEntityMapper mybatisSystemCoordinateRequestEntityMapper;
 
     private CreateSystemCoordinateRequestPort underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new SystemCoordinateRequestRepository(mybatisSystemCoordinateRequestRepository, systemCoordinateRequestEntityMapper);
+        underTest = new SystemCoordinateRequestRepository(mybatisSystemCoordinateRequestRepository, mybatisSystemCoordinateRequestEntityMapper);
     }
 
     @Test
     void create_shouldMapAndInsert() {
 
         SystemCoordinateRequest request = mock(SystemCoordinateRequest.class);
-        SystemCoordinateRequestEntity entity = mock(SystemCoordinateRequestEntity.class);
-        when(systemCoordinateRequestEntityMapper.map(request)).thenReturn(entity);
+        MybatisSystemCoordinateRequestEntity entity = mock(MybatisSystemCoordinateRequestEntity.class);
+        when(mybatisSystemCoordinateRequestEntityMapper.map(request)).thenReturn(entity);
 
 
         underTest.create(request);

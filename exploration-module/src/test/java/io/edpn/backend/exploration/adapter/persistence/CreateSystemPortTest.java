@@ -1,6 +1,6 @@
 package io.edpn.backend.exploration.adapter.persistence;
 
-import io.edpn.backend.exploration.adapter.persistence.entity.SystemEntity;
+import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.dto.mapper.SystemEntityMapper;
 import io.edpn.backend.exploration.application.port.outgoing.CreateSystemPort;
@@ -28,7 +28,7 @@ class CreateSystemPortTest {
     private MybatisSystemRepository mybatisSystemRepository;
 
     @Mock
-    private SystemEntityMapper systemEntityMapper;
+    private SystemEntityMapper<MybatisSystemEntity> systemEntityMapper;
 
     @Mock
     private IdGenerator idGenerator;
@@ -47,16 +47,16 @@ class CreateSystemPortTest {
         UUID id = UUID.randomUUID();
         when(idGenerator.generateId()).thenReturn(id);
         System loaded = mock(System.class);
-        SystemEntity systemEntity = mock(SystemEntity.class);
-        when(mybatisSystemRepository.findByName(systemName)).thenReturn(Optional.of(systemEntity));
-        when(systemEntityMapper.map(systemEntity)).thenReturn(loaded);
+        MybatisSystemEntity mybatisSystemEntity = mock(MybatisSystemEntity.class);
+        when(mybatisSystemRepository.findByName(systemName)).thenReturn(Optional.of(mybatisSystemEntity));
+        when(systemEntityMapper.map(mybatisSystemEntity)).thenReturn(loaded);
 
 
         System result = underTest.create(systemName);
 
 
         assertThat(result, is(loaded));
-        verify(mybatisSystemRepository).insert(new SystemEntity(id, systemName, null, null, null, null , null));
+        verify(mybatisSystemRepository).insert(new MybatisSystemEntity(id, systemName, null, null, null, null, null));
         verify(mybatisSystemRepository).findByName(systemName);
     }
 

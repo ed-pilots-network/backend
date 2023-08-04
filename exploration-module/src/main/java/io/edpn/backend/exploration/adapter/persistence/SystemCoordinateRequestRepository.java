@@ -1,7 +1,7 @@
 package io.edpn.backend.exploration.adapter.persistence;
 
-import io.edpn.backend.exploration.adapter.persistence.entity.SystemCoordinateRequestEntity;
-import io.edpn.backend.exploration.adapter.persistence.entity.mapper.SystemCoordinateRequestEntityMapper;
+import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemCoordinateRequestEntity;
+import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemCoordinateRequestEntityMapper;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
 import io.edpn.backend.exploration.application.port.outgoing.CreateSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.DeleteSystemCoordinateRequestPort;
@@ -17,29 +17,29 @@ import java.util.List;
 public class SystemCoordinateRequestRepository implements CreateSystemCoordinateRequestPort, LoadSystemCoordinateRequestBySystemNamePort, LoadAllSystemCoordinateRequestPort, DeleteSystemCoordinateRequestPort {
 
     private final MybatisSystemCoordinateRequestRepository mybatisSystemCoordinateRequestRepository;
-    private final SystemCoordinateRequestEntityMapper systemCoordinateRequestEntityMapper;
+    private final MybatisSystemCoordinateRequestEntityMapper mybatisSystemCoordinateRequestEntityMapper;
 
     @Override
     public void create(SystemCoordinateRequest systemCoordinateRequest) {
-        mybatisSystemCoordinateRequestRepository.insert(systemCoordinateRequestEntityMapper.map(systemCoordinateRequest));
+        mybatisSystemCoordinateRequestRepository.insert(mybatisSystemCoordinateRequestEntityMapper.map(systemCoordinateRequest));
     }
 
     @Override
     public void delete(String systemName, String requestingModule) {
-        mybatisSystemCoordinateRequestRepository.delete(new SystemCoordinateRequestEntity(systemName, requestingModule));
+        mybatisSystemCoordinateRequestRepository.delete(new MybatisSystemCoordinateRequestEntity(systemName, requestingModule));
     }
 
     @Override
     public List<SystemCoordinateRequest> load(String systemName) {
         return mybatisSystemCoordinateRequestRepository.findBySystemName(systemName).stream()
-                .map(systemCoordinateRequestEntityMapper::map)
+                .map(mybatisSystemCoordinateRequestEntityMapper::map)
                 .toList();
     }
 
     @Override
     public List<SystemCoordinateRequest> load() {
         return mybatisSystemCoordinateRequestRepository.findAll().stream()
-                .map(systemCoordinateRequestEntityMapper::map)
+                .map(mybatisSystemCoordinateRequestEntityMapper::map)
                 .toList();
     }
 }

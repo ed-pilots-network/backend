@@ -25,8 +25,7 @@ import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
-import org.springframework.retry.backoff.ExponentialBackOffPolicy;
-import org.springframework.util.backoff.BackOff;
+import org.springframework.util.backoff.ExponentialBackOff;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -73,14 +72,14 @@ public interface KafkaConfig {
                 @Value(value = "${exploration.kafka.backoff.multiplier:2000}") final int multiplier,
                 @Value(value = "${exploration.kafka.backoff.max_interval:32000}") final int maxInterval
         ) {
-            ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
-            backOffPolicy.setInitialInterval(interval);
-            backOffPolicy.setMultiplier(multiplier);
-            backOffPolicy.setMaxInterval(maxInterval);
+            ExponentialBackOff backOff = new ExponentialBackOff();
+            backOff.setInitialInterval(interval);
+            backOff.setMultiplier(multiplier);
+            backOff.setMaxInterval(maxInterval);
             return new DefaultErrorHandler((consumerRecord, exception) -> {
-                // TODO should there be extra logic to execute when all the retry attempts are exhausted?
+                // TODO should there be extra logic to execute when all the retry attempts are exhausted, or do we just drop the message?
                 log.error("A kafka message from topic '${}' could not be processed after multiple retries: '${}'", consumerRecord.topic(), consumerRecord.value(), exception);
-            }, (BackOff) backOffPolicy);
+            }, backOff);
         }
     }
 

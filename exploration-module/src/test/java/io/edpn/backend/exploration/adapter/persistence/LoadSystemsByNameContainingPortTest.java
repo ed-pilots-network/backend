@@ -1,7 +1,7 @@
 package io.edpn.backend.exploration.adapter.persistence;
 
+import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.dto.SystemEntity;
 import io.edpn.backend.exploration.application.dto.mapper.SystemEntityMapper;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemsByNameContainingPort;
 import io.edpn.backend.util.IdGenerator;
@@ -25,7 +25,7 @@ class LoadSystemsByNameContainingPortTest {
     private MybatisSystemRepository mybatisSystemRepository;
 
     @Mock
-    private SystemEntityMapper systemEntityMapper;
+    private SystemEntityMapper<MybatisSystemEntity> systemEntityMapper;
 
     @Mock
     private IdGenerator idGenerator;
@@ -42,11 +42,11 @@ class LoadSystemsByNameContainingPortTest {
 
         String name = "system";
         int amount = 10;
-        SystemEntity systemEntity = mock(SystemEntity.class);
-        List<SystemEntity> entities = List.of(systemEntity);
+        MybatisSystemEntity mybatisSystemEntity = mock(MybatisSystemEntity.class);
+        List<MybatisSystemEntity> entities = List.of(mybatisSystemEntity);
         System mapped = mock(System.class);
         when(mybatisSystemRepository.findFromSearchbar(name, amount)).thenReturn(entities);
-        when(systemEntityMapper.map(systemEntity)).thenReturn(mapped);
+        when(systemEntityMapper.map(mybatisSystemEntity)).thenReturn(mapped);
 
 
         List<System> result = underTest.loadByNameContaining(name, amount);

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.KafkaMessage;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
-import io.edpn.backend.exploration.application.dto.KafkaMessageDto;
+import io.edpn.backend.exploration.application.dto.MessageDto;
 import io.edpn.backend.exploration.application.dto.mapper.KafkaMessageMapper;
 import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
@@ -73,9 +73,9 @@ public class ReceiveSystemCoordinateRequestServiceTest {
         when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
         when(jsonNode.toString()).thenReturn(jsonString);
         KafkaMessage kafkaMessage = new KafkaMessage("module_systemCoordinatesDataResponse", jsonString);
-        KafkaMessageDto kafkaMessageDto = mock(KafkaMessageDto.class);
-        when(kafkaMessageMapper.map(kafkaMessage)).thenReturn(kafkaMessageDto);
-        when(sendKafkaMessagePort.send(kafkaMessageDto)).thenReturn(true);
+        MessageDto messageDto = mock(MessageDto.class);
+        when(kafkaMessageMapper.map(kafkaMessage)).thenReturn(messageDto);
+        when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
 
@@ -83,7 +83,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
 
         verify(loadSystemPort).load(systemName);
-        verify(sendKafkaMessagePort).send(kafkaMessageDto);
+        verify(sendKafkaMessagePort).send(messageDto);
         verify(createSystemCoordinateRequestPort, never()).create(any());
     }
 
@@ -104,9 +104,9 @@ public class ReceiveSystemCoordinateRequestServiceTest {
         when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
         when(jsonNode.toString()).thenReturn(jsonString);
         KafkaMessage kafkaMessage = new KafkaMessage("module_systemCoordinatesDataResponse", jsonString);
-        KafkaMessageDto kafkaMessageDto = mock(KafkaMessageDto.class);
-        when(kafkaMessageMapper.map(kafkaMessage)).thenReturn(kafkaMessageDto);
-        when(sendKafkaMessagePort.send(kafkaMessageDto)).thenReturn(false);
+        MessageDto messageDto = mock(MessageDto.class);
+        when(kafkaMessageMapper.map(kafkaMessage)).thenReturn(messageDto);
+        when(sendKafkaMessagePort.send(messageDto)).thenReturn(false);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
         SystemCoordinateRequest systemCoordinateDataRequest = new SystemCoordinateRequest(systemName, requestingModule);
 
@@ -115,7 +115,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
 
         verify(loadSystemPort).load(systemName);
-        verify(sendKafkaMessagePort).send(kafkaMessageDto);
+        verify(sendKafkaMessagePort).send(messageDto);
         verify(createSystemCoordinateRequestPort).create(systemCoordinateDataRequest);
     }
 

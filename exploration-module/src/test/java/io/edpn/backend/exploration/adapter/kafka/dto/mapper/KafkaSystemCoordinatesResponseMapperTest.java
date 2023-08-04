@@ -14,13 +14,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 @ExtendWith(MockitoExtension.class)
-class SystemCoordinatesResponseMapperTest {
+class KafkaSystemCoordinatesResponseMapperTest {
 
     private io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new SystemCoordinatesResponseMapper();
+        underTest = new KafkaSystemCoordinatesResponseMapper();
     }
 
     @Test
