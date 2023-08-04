@@ -1,10 +1,8 @@
 package io.edpn.backend.exploration.adapter.persistence.entity.mapper;
 
-import io.edpn.backend.exploration.adapter.persistence.entity.CoordinateEntity;
-import io.edpn.backend.exploration.adapter.persistence.entity.SystemEntity;
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.dto.CoordinateDto;
+import io.edpn.backend.exploration.application.dto.SystemEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,36 +15,26 @@ public class SystemEntityMapper implements io.edpn.backend.exploration.applicati
     @Override
     public System map(SystemEntity systemEntity) {
         return new System(
-                systemEntity.id(),
-                systemEntity.eliteId(),
-                systemEntity.name(),
-                systemEntity.starClass(),
-                coordinateFromCoordinateEntity(systemEntity.coordinate()));
+                systemEntity.getId(),
+                systemEntity.getEliteId(),
+                systemEntity.getName(),
+                systemEntity.getStarClass(),
+                coordinateFromCoordinateEntity(systemEntity));
     }
 
     @Override
     public SystemEntity map(System system) {
-        return new SystemEntity(
+        return new io.edpn.backend.exploration.adapter.persistence.entity.SystemEntity(
                 system.id(),
                 system.name(),
-                coordinateEntityFromCoordinate(system.coordinate()),
                 system.eliteId(),
-                system.starClass());
+                system.starClass(),
+                Optional.ofNullable(system.coordinate()).map(Coordinate::x).orElse(null),
+                Optional.ofNullable(system.coordinate()).map(Coordinate::y).orElse(null),
+                Optional.ofNullable(system.coordinate()).map(Coordinate::z).orElse(null));
     }
 
-    private Coordinate coordinateFromCoordinateEntity(CoordinateEntity coordinateEntity) {
-        if (Optional.ofNullable(coordinateEntity).map(CoordinateDto::x).isEmpty()) {
-            return null;
-        } else {
-            return new Coordinate(coordinateEntity.x(), coordinateEntity.y(), coordinateEntity.z());
-        }
-    }
-
-    private CoordinateEntity coordinateEntityFromCoordinate(Coordinate coordinate) {
-        if (Optional.ofNullable(coordinate).map(Coordinate::x).isEmpty()) {
-            return null;
-        } else {
-            return new CoordinateEntity(coordinate.x(), coordinate.y(), coordinate.z());
-        }
+    private Coordinate coordinateFromCoordinateEntity(SystemEntity systemEntity) {
+        return new Coordinate(systemEntity.getXCoordinate(), systemEntity.getYCoordinate(), systemEntity.getZCoordinate());
     }
 }

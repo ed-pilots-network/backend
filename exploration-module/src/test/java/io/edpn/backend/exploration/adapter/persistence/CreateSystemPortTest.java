@@ -56,7 +56,7 @@ class CreateSystemPortTest {
 
 
         assertThat(result, is(loaded));
-        verify(mybatisSystemRepository).insert(new SystemEntity(id, systemName, null, null, null));
+        verify(mybatisSystemRepository).insert(new SystemEntity(id, systemName, null, null, null, null , null));
         verify(mybatisSystemRepository).findByName(systemName);
     }
 

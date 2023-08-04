@@ -1,10 +1,10 @@
 package io.edpn.backend.exploration.application.dto.mapper;
 
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
-import io.edpn.backend.exploration.application.dto.SystemCoordinateRequestDto;
+import io.edpn.backend.exploration.application.dto.SystemCoordinateRequestEntity;
 
 public interface SystemCoordinateRequestEntityMapper {
-    SystemCoordinateRequest map(SystemCoordinateRequestDto systemCoordinateDataRequestEntity);
+    SystemCoordinateRequest map(SystemCoordinateRequestEntity systemCoordinateDataRequestEntity);
 
-    SystemCoordinateRequestDto map(SystemCoordinateRequest systemCoordinateDataRequest);
+    SystemCoordinateRequestEntity map(SystemCoordinateRequest systemCoordinateDataRequest);
 }

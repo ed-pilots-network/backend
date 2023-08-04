@@ -1,7 +1,7 @@
 package io.edpn.backend.exploration.adapter.persistence;
 
-import io.edpn.backend.exploration.adapter.persistence.entity.SystemEntity;
 import io.edpn.backend.exploration.application.domain.System;
+import io.edpn.backend.exploration.application.dto.SystemEntity;
 import io.edpn.backend.exploration.application.dto.mapper.SystemEntityMapper;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemsByNameContainingPort;
 import io.edpn.backend.util.IdGenerator;

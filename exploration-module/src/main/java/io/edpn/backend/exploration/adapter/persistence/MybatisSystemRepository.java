@@ -1,7 +1,7 @@
 package io.edpn.backend.exploration.adapter.persistence;
 
 
-import io.edpn.backend.exploration.adapter.persistence.entity.SystemEntity;
+import io.edpn.backend.exploration.application.dto.SystemEntity;
 import io.edpn.backend.mybatisutil.UuidTypeHandler;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;

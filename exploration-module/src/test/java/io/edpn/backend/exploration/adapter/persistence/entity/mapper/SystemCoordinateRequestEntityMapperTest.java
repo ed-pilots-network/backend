@@ -1,8 +1,7 @@
 package io.edpn.backend.exploration.adapter.persistence.entity.mapper;
 
-import io.edpn.backend.exploration.adapter.persistence.entity.SystemCoordinateRequestEntity;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
-import io.edpn.backend.exploration.application.dto.SystemCoordinateRequestDto;
+import io.edpn.backend.exploration.application.dto.SystemCoordinateRequestEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,14 +20,14 @@ class SystemCoordinateRequestEntityMapperTest {
     @Test
     public void testMap_givenDto_shouldReturnDomainObject() {
         
-        SystemCoordinateRequestDto dto = new SystemCoordinateRequestEntity("systemName", "requestingModule");
+        SystemCoordinateRequestEntity dto = new io.edpn.backend.exploration.adapter.persistence.entity.SystemCoordinateRequestEntity("systemName", "requestingModule");
 
 
         SystemCoordinateRequest result = underTest.map(dto);
 
 
-        assertThat(result.systemName(), equalTo(dto.systemName()));
-        assertThat(result.requestingModule(), equalTo(dto.requestingModule()));
+        assertThat(result.systemName(), equalTo(dto.getSystemName()));
+        assertThat(result.requestingModule(), equalTo(dto.getRequestingModule()));
     }
 
     @Test
@@ -37,10 +36,10 @@ class SystemCoordinateRequestEntityMapperTest {
         SystemCoordinateRequest domainObject = new SystemCoordinateRequest("systemName", "requestingModule");
 
 
-        SystemCoordinateRequestDto result = underTest.map(domainObject);
+        SystemCoordinateRequestEntity result = underTest.map(domainObject);
 
 
-        assertThat(result.systemName(), equalTo(domainObject.systemName()));
-        assertThat(result.requestingModule(), equalTo(domainObject.requestingModule()));
+        assertThat(result.getSystemName(), equalTo(domainObject.systemName()));
+        assertThat(result.getRequestingModule(), equalTo(domainObject.requestingModule()));
     }
 }

@@ -1,9 +1,8 @@
 package io.edpn.backend.exploration.adapter.persistence.entity.mapper;
 
-import io.edpn.backend.exploration.adapter.persistence.entity.CoordinateEntity;
-import io.edpn.backend.exploration.adapter.persistence.entity.SystemEntity;
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.System;
+import io.edpn.backend.exploration.application.dto.SystemEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,27 +24,23 @@ class SystemEntityMapperTest {
 
     @Test
     public void testMap_givenSystemEntity_shouldReturnSystem() {
-        
-        CoordinateEntity coordinateEntity = new CoordinateEntity(1.0, 2.0, 3.0);
-        SystemEntity systemEntity = new SystemEntity(UUID.randomUUID(), "systemName", coordinateEntity, 123L, "starClass");
-
+        SystemEntity systemEntity = new io.edpn.backend.exploration.adapter.persistence.entity.SystemEntity(UUID.randomUUID(), "systemName", 123L, "starClass", 1.0, 2.0, 3.0);
 
         System result = underTest.map(systemEntity);
 
-
-        assertThat(result.id(), equalTo(systemEntity.id()));
-        assertThat(result.eliteId(), equalTo(systemEntity.eliteId()));
-        assertThat(result.name(), equalTo(systemEntity.name()));
-        assertThat(result.starClass(), equalTo(systemEntity.starClass()));
+        assertThat(result.id(), equalTo(systemEntity.getId()));
+        assertThat(result.eliteId(), equalTo(systemEntity.getEliteId()));
+        assertThat(result.name(), equalTo(systemEntity.getName()));
+        assertThat(result.starClass(), equalTo(systemEntity.getStarClass()));
         assertThat(result.coordinate(), notNullValue());
-        assertThat(result.coordinate().x(), equalTo(coordinateEntity.x()));
-        assertThat(result.coordinate().y(), equalTo(coordinateEntity.y()));
-        assertThat(result.coordinate().z(), equalTo(coordinateEntity.z()));
+        assertThat(result.coordinate().x(), equalTo(systemEntity.getXCoordinate()));
+        assertThat(result.coordinate().y(), equalTo(systemEntity.getYCoordinate()));
+        assertThat(result.coordinate().z(), equalTo(systemEntity.getZCoordinate()));
     }
 
     @Test
     public void testMap_givenSystem_shouldReturnSystemEntity() {
-        
+
         Coordinate coordinate = new Coordinate(1.0, 2.0, 3.0);
         System system = new System(UUID.randomUUID(), 123L, "systemName", "starClass", coordinate);
 
@@ -53,37 +48,41 @@ class SystemEntityMapperTest {
         SystemEntity result = underTest.map(system);
 
 
-        assertThat(result.id(), equalTo(system.id()));
-        assertThat(result.eliteId(), equalTo(system.eliteId()));
-        assertThat(result.name(), equalTo(system.name()));
-        assertThat(result.starClass(), equalTo(system.starClass()));
-        assertThat(result.coordinate(), notNullValue());
-        assertThat(result.coordinate().x(), equalTo(coordinate.x()));
-        assertThat(result.coordinate().y(), equalTo(coordinate.y()));
-        assertThat(result.coordinate().z(), equalTo(coordinate.z()));
+        assertThat(result.getId(), equalTo(system.id()));
+        assertThat(result.getEliteId(), equalTo(system.eliteId()));
+        assertThat(result.getName(), equalTo(system.name()));
+        assertThat(result.getStarClass(), equalTo(system.starClass()));
+        assertThat(result.getXCoordinate(), equalTo(coordinate.x()));
+        assertThat(result.getYCoordinate(), equalTo(coordinate.y()));
+        assertThat(result.getZCoordinate(), equalTo(coordinate.z()));
     }
 
     @Test
     public void testMap_givenSystemEntityWithNullCoordinate_shouldReturnSystemWithNullCoordinate() {
-        
-        SystemEntity systemEntity = new SystemEntity(UUID.randomUUID(), "systemName", null, 123L, "starClass");
+
+        SystemEntity systemEntity = new io.edpn.backend.exploration.adapter.persistence.entity.SystemEntity(UUID.randomUUID(), "systemName", 123L, "starClass", null, null, null);
 
 
         System result = underTest.map(systemEntity);
 
 
-        assertThat(result.coordinate(), nullValue());
+        assertThat(result.coordinate(), notNullValue());
+        assertThat(result.coordinate().x(), nullValue());
+        assertThat(result.coordinate().y(), nullValue());
+        assertThat(result.coordinate().z(), nullValue());
     }
 
     @Test
     public void testMap_givenSystemWithNullCoordinate_shouldReturnSystemEntityWithNullCoordinate() {
-        
+
         System system = new System(UUID.randomUUID(), 123L, "systemName", "starClass", null);
 
 
         SystemEntity result = underTest.map(system);
 
 
-        assertThat(result.coordinate(), nullValue());
+        assertThat(result.getXCoordinate(), nullValue());
+        assertThat(result.getYCoordinate(), nullValue());
+        assertThat(result.getZCoordinate(), nullValue());
     }
 }
