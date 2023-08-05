@@ -95,7 +95,7 @@ class ReceiveNavRouteServiceTest {
         SystemCoordinateRequest systemCoordinatesRequest = mock(SystemCoordinateRequest.class);
         when(systemCoordinatesRequest.requestingModule()).thenReturn(module);
         List<SystemCoordinateRequest> systemCoordinatesRequestlist = List.of(systemCoordinatesRequest);
-        when(loadSystemCoordinateRequestBySystemNamePort.load(systemName)).thenReturn(systemCoordinatesRequestlist);
+        when(loadSystemCoordinateRequestBySystemNamePort.loadByName(systemName)).thenReturn(systemCoordinatesRequestlist);
         SystemCoordinatesResponse systemCoordinatesResponse = mock(SystemCoordinatesResponse.class);
         when(systemCoordinatesResponseMapper.map(system)).thenReturn(systemCoordinatesResponse);
         JsonNode jsonNode = mock(JsonNode.class);
@@ -145,7 +145,7 @@ class ReceiveNavRouteServiceTest {
         SystemCoordinateRequest systemCoordinatesRequest = mock(SystemCoordinateRequest.class);
         when(systemCoordinatesRequest.requestingModule()).thenReturn(module);
         List<SystemCoordinateRequest> systemCoordinatesRequestlist = List.of(systemCoordinatesRequest);
-        when(loadSystemCoordinateRequestBySystemNamePort.load(systemName)).thenReturn(systemCoordinatesRequestlist);
+        when(loadSystemCoordinateRequestBySystemNamePort.loadByName(systemName)).thenReturn(systemCoordinatesRequestlist);
         SystemCoordinatesResponse systemCoordinatesResponse = mock(SystemCoordinatesResponse.class);
         when(systemCoordinatesResponseMapper.map(system)).thenReturn(systemCoordinatesResponse);
         JsonNode jsonNode = mock(JsonNode.class);
@@ -197,7 +197,7 @@ class ReceiveNavRouteServiceTest {
         SystemCoordinateRequest systemCoordinatesRequest = mock(SystemCoordinateRequest.class);
         when(systemCoordinatesRequest.requestingModule()).thenReturn(module);
         List<SystemCoordinateRequest> systemCoordinatesRequestlist = List.of(systemCoordinatesRequest);
-        when(loadSystemCoordinateRequestBySystemNamePort.load(systemName)).thenReturn(systemCoordinatesRequestlist);
+        when(loadSystemCoordinateRequestBySystemNamePort.loadByName(systemName)).thenReturn(systemCoordinatesRequestlist);
         SystemCoordinatesResponse systemCoordinatesResponse = mock(SystemCoordinatesResponse.class);
         when(systemCoordinatesResponseMapper.map(system)).thenReturn(systemCoordinatesResponse);
         JsonNode jsonNode = mock(JsonNode.class);
@@ -248,7 +248,7 @@ class ReceiveNavRouteServiceTest {
         when(loadSystemPort.load(systemName)).thenReturn(Optional.empty());
         when(createSystemPort.create(systemName)).thenReturn(system);
         when(saveSystemPort.save(system)).thenReturn(system);
-        when(loadSystemCoordinateRequestBySystemNamePort.load(systemName)).thenReturn(Collections.emptyList());
+        when(loadSystemCoordinateRequestBySystemNamePort.loadByName(systemName)).thenReturn(Collections.emptyList());
 
 
         underTest.receive(message);

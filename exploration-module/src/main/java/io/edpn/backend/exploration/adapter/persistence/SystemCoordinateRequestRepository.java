@@ -30,14 +30,14 @@ public class SystemCoordinateRequestRepository implements CreateSystemCoordinate
     }
 
     @Override
-    public List<SystemCoordinateRequest> load(String systemName) {
+    public List<SystemCoordinateRequest> loadByName(String systemName) {
         return mybatisSystemCoordinateRequestRepository.findBySystemName(systemName).stream()
                 .map(mybatisSystemCoordinateRequestEntityMapper::map)
                 .toList();
     }
 
     @Override
-    public List<SystemCoordinateRequest> load() {
+    public List<SystemCoordinateRequest> loadAll() {
         return mybatisSystemCoordinateRequestRepository.findAll().stream()
                 .map(mybatisSystemCoordinateRequestEntityMapper::map)
                 .toList();

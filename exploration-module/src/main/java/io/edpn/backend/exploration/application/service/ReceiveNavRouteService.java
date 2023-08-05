@@ -96,7 +96,7 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
     }
 
     private void sendResponse(System system) {
-        loadSystemCoordinateRequestBySystemNamePort.load(system.name()).parallelStream()
+        loadSystemCoordinateRequestBySystemNamePort.loadByName(system.name()).parallelStream()
                 .forEach(systemCoordinateRequest -> CompletableFuture.runAsync(() -> {
                     SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
                     String stringJson = objectMapper.valueToTree(systemCoordinatesResponse).toString();

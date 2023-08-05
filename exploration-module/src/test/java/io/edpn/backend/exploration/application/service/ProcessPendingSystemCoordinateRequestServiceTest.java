@@ -67,13 +67,13 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
     @Test
     void processPending_emptyRequestList() {
         
-        when(loadAllSystemCoordinateRequestPort.load()).thenReturn(Collections.emptyList());
+        when(loadAllSystemCoordinateRequestPort.loadAll()).thenReturn(Collections.emptyList());
 
 
         underTest.processPending();
 
 
-        verify(loadAllSystemCoordinateRequestPort, times(1)).load();
+        verify(loadAllSystemCoordinateRequestPort, times(1)).loadAll();
         verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort);
         verifyNoInteractions(loadSystemPort, sendKafkaMessagePort, deleteSystemCoordinateRequestPort);
     }
@@ -84,14 +84,14 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
         SystemCoordinateRequest systemCoordinateRequest = mock(SystemCoordinateRequest.class);
         when(systemCoordinateRequest.systemName()).thenReturn("SystemName");
         List<SystemCoordinateRequest> systemCoordinateRequestList = List.of(systemCoordinateRequest);
-        when(loadAllSystemCoordinateRequestPort.load()).thenReturn(systemCoordinateRequestList);
+        when(loadAllSystemCoordinateRequestPort.loadAll()).thenReturn(systemCoordinateRequestList);
         when(loadSystemPort.load("SystemName")).thenReturn(Optional.empty());
 
 
         underTest.processPending();
 
 
-        verify(loadAllSystemCoordinateRequestPort, times(1)).load();
+        verify(loadAllSystemCoordinateRequestPort, times(1)).loadAll();
         verify(loadSystemPort, times(1)).load("SystemName");
         verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort, loadSystemPort);
         verifyNoInteractions(sendKafkaMessagePort, deleteSystemCoordinateRequestPort);
@@ -113,7 +113,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
         Message message = new Message("trade_systemCoordinatesDataResponse", "JSON_STRING");
         MessageDto messageDto = mock(MessageDto.class);
         when(messageMapper.map(message)).thenReturn(messageDto);
-        when(loadAllSystemCoordinateRequestPort.load()).thenReturn(systemCoordinateRequestList);
+        when(loadAllSystemCoordinateRequestPort.loadAll()).thenReturn(systemCoordinateRequestList);
         when(loadSystemPort.load("SystemName")).thenReturn(Optional.of(system));
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(false);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
@@ -122,7 +122,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
         underTest.processPending();
 
 
-        verify(loadAllSystemCoordinateRequestPort, times(1)).load();
+        verify(loadAllSystemCoordinateRequestPort, times(1)).loadAll();
         verify(loadSystemPort, times(1)).load("SystemName");
         verify(sendKafkaMessagePort, times(1)).send(messageDto);
         verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort);
@@ -145,7 +145,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
         Message message = new Message("trade_systemCoordinatesDataResponse", "JSON_STRING");
         MessageDto messageDto = mock(MessageDto.class);
         when(messageMapper.map(message)).thenReturn(messageDto);
-        when(loadAllSystemCoordinateRequestPort.load()).thenReturn(systemCoordinateRequestList);
+        when(loadAllSystemCoordinateRequestPort.loadAll()).thenReturn(systemCoordinateRequestList);
         when(loadSystemPort.load("SystemName")).thenReturn(Optional.of(system));
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
@@ -154,7 +154,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
         underTest.processPending();
 
 
-        verify(loadAllSystemCoordinateRequestPort, times(1)).load();
+        verify(loadAllSystemCoordinateRequestPort, times(1)).loadAll();
         verify(loadSystemPort, times(1)).load("SystemName");
         verify(sendKafkaMessagePort, times(1)).send(messageDto);
         verify(deleteSystemCoordinateRequestPort, times(1)).delete("SystemName", "trade");

@@ -45,7 +45,7 @@ class LoadSystemCoordinateRequestBySystemNamePortTest {
         when(mybatisSystemCoordinateRequestEntityMapper.map(mybatisSystemCoordinateRequestEntity)).thenReturn(mapped);
 
 
-        List<SystemCoordinateRequest> result = underTest.load(systemName);
+        List<SystemCoordinateRequest> result = underTest.loadByName(systemName);
 
 
         assertThat(result, contains(mapped));

@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface LoadAllSystemCoordinateRequestPort {
 
-    List<SystemCoordinateRequest> load();
+    List<SystemCoordinateRequest> loadAll();
 }

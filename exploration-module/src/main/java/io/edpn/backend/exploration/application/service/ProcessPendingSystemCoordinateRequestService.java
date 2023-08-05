@@ -39,7 +39,7 @@ public class ProcessPendingSystemCoordinateRequestService implements ProcessPend
     @Override
     @Scheduled(cron = "0 0 */12 * * *")
     public void processPending() {
-        loadAllSystemCoordinateRequestPort.load().parallelStream()
+        loadAllSystemCoordinateRequestPort.loadAll().parallelStream()
                 .forEach(systemCoordinateRequest -> CompletableFuture.runAsync(() -> loadSystemPort.load(systemCoordinateRequest.systemName())
                         .ifPresent(system -> {
                                     SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
