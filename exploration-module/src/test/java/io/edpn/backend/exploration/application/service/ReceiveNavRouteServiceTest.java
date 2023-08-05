@@ -3,11 +3,11 @@ package io.edpn.backend.exploration.application.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Coordinate;
-import io.edpn.backend.exploration.application.domain.KafkaMessage;
+import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
 import io.edpn.backend.exploration.application.dto.MessageDto;
-import io.edpn.backend.exploration.application.dto.mapper.KafkaMessageMapper;
+import io.edpn.backend.exploration.application.dto.mapper.MessageMapper;
 import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.CreateSystemPort;
@@ -56,7 +56,7 @@ class ReceiveNavRouteServiceTest {
     @Mock
     private SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
     @Mock
-    private KafkaMessageMapper kafkaMessageMapper;
+    private MessageMapper messageMapper;
     @Mock
     private ObjectMapper objectMapper;
     @Mock
@@ -67,7 +67,7 @@ class ReceiveNavRouteServiceTest {
     @BeforeEach
     void setUp() {
         Executor executor = Runnable::run;
-        underTest = new ReceiveNavRouteService(createSystemPort, loadSystemPort, saveSystemPort, sendKafkaMessagePort, loadSystemCoordinateRequestBySystemNamePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, kafkaMessageMapper, objectMapper, retryTemplate, executor);
+        underTest = new ReceiveNavRouteService(createSystemPort, loadSystemPort, saveSystemPort, sendKafkaMessagePort, loadSystemCoordinateRequestBySystemNamePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate, executor);
     }
 
     @Test
@@ -101,9 +101,9 @@ class ReceiveNavRouteServiceTest {
         JsonNode jsonNode = mock(JsonNode.class);
         when(jsonNode.toString()).thenReturn("JSON_STRING");
         when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
-        KafkaMessage kafkaMessage = new KafkaMessage("module_systemCoordinatesDataResponse", "JSON_STRING");
+        Message kafkaMessage = new Message("module_systemCoordinatesDataResponse", "JSON_STRING");
         MessageDto messageDto = mock(MessageDto.class);
-        when(kafkaMessageMapper.map(kafkaMessage)).thenReturn(messageDto);
+        when(messageMapper.map(kafkaMessage)).thenReturn(messageDto);
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
@@ -151,9 +151,9 @@ class ReceiveNavRouteServiceTest {
         JsonNode jsonNode = mock(JsonNode.class);
         when(jsonNode.toString()).thenReturn("JSON_STRING");
         when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
-        KafkaMessage kafkaMessage = new KafkaMessage("module_systemCoordinatesDataResponse", "JSON_STRING");
+        Message kafkaMessage = new Message("module_systemCoordinatesDataResponse", "JSON_STRING");
         MessageDto messageDto = mock(MessageDto.class);
-        when(kafkaMessageMapper.map(kafkaMessage)).thenReturn(messageDto);
+        when(messageMapper.map(kafkaMessage)).thenReturn(messageDto);
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
@@ -203,9 +203,9 @@ class ReceiveNavRouteServiceTest {
         JsonNode jsonNode = mock(JsonNode.class);
         when(jsonNode.toString()).thenReturn("JSON_STRING");
         when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
-        KafkaMessage kafkaMessage = new KafkaMessage("module_systemCoordinatesDataResponse", "JSON_STRING");
+        Message kafkaMessage = new Message("module_systemCoordinatesDataResponse", "JSON_STRING");
         MessageDto messageDto = mock(MessageDto.class);
-        when(kafkaMessageMapper.map(kafkaMessage)).thenReturn(messageDto);
+        when(messageMapper.map(kafkaMessage)).thenReturn(messageDto);
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 

@@ -1,7 +1,8 @@
 package io.edpn.backend.exploration.adapter.kafka.dto.mapper;
 
-import io.edpn.backend.exploration.application.domain.KafkaMessage;
+import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.dto.MessageDto;
+import io.edpn.backend.exploration.application.dto.mapper.MessageMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,7 +14,7 @@ import static org.hamcrest.Matchers.is;
 @ExtendWith(MockitoExtension.class)
 class KafkaMessageMapperTest {
 
-    private io.edpn.backend.exploration.application.dto.mapper.KafkaMessageMapper underTest;
+    private MessageMapper underTest;
 
     @BeforeEach
     void setUp() {
@@ -25,7 +26,7 @@ class KafkaMessageMapperTest {
 
         String topic = "test-topic";
         String message = "test-message";
-        KafkaMessage kafkaMessage = new KafkaMessage(topic, message);
+        Message kafkaMessage = new Message(topic, message);
 
 
         MessageDto result = underTest.map(kafkaMessage);

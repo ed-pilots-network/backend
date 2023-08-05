@@ -2,10 +2,10 @@ package io.edpn.backend.exploration.application.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Coordinate;
-import io.edpn.backend.exploration.application.domain.KafkaMessage;
+import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.dto.MessageDto;
-import io.edpn.backend.exploration.application.dto.mapper.KafkaMessageMapper;
+import io.edpn.backend.exploration.application.dto.mapper.MessageMapper;
 import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.CreateSystemPort;
@@ -39,7 +39,7 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
     private final LoadSystemCoordinateRequestBySystemNamePort loadSystemCoordinateRequestBySystemNamePort;
     private final DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
     private final SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
-    private final KafkaMessageMapper kafkaMessageMapper;
+    private final MessageMapper messageMapper;
     private final ObjectMapper objectMapper;
     private final RetryTemplate retryTemplate;
     private final Executor executor;
@@ -100,8 +100,8 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
                 .forEach(systemCoordinateRequest -> CompletableFuture.runAsync(() -> {
                     SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
                     String stringJson = objectMapper.valueToTree(systemCoordinatesResponse).toString();
-                    KafkaMessage message = new KafkaMessage(systemCoordinateRequest.requestingModule() + TOPIC, stringJson);
-                    MessageDto messageDto = kafkaMessageMapper.map(message);
+                    Message message = new Message(systemCoordinateRequest.requestingModule() + TOPIC, stringJson);
+                    MessageDto messageDto = messageMapper.map(message);
 
                     boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(messageDto));
                     if (sendSuccessful) {
