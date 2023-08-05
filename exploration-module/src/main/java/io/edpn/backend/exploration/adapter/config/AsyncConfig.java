@@ -21,9 +21,9 @@ public class AsyncConfig {
     @Bean(name = "explorationThreadPoolTaskExecutor")
     public ThreadPoolTaskExecutor taskExecutor() {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-        taskExecutor.setCorePoolSize(5);// todo Set from config
-        taskExecutor.setMaxPoolSize(10);// todo Set from config
-        taskExecutor.setQueueCapacity(50);// todo Set from config
+        taskExecutor.setCorePoolSize(10);// todo Set from config
+        taskExecutor.setMaxPoolSize(50);// todo Set from config
+        taskExecutor.setQueueCapacity(500);// todo Set from config
         taskExecutor.initialize();
         return taskExecutor;
     }

@@ -8,6 +8,7 @@
     <include file="/db/explorationmodule/changelog/create_system_table.xml"/>
     <include file="/db/explorationmodule/changelog/create_system_coordinate_data_request_table.xml"/>
     <include file="/db/explorationmodule/changelog/create_request_data_message_table.xml"/>
+    <include file="/db/explorationmodule/changelog/add_unique_system_indexes.xml"/>
 
     <!-- views always last as they might depend on new columns -->
 
