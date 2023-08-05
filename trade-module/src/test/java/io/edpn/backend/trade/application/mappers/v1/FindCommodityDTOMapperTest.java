@@ -25,7 +25,7 @@ public class FindCommodityDTOMapperTest {
     @Test
     void shouldMapValidatedCommodityToResponse() {
         
-
+        // Given
         ValidatedCommodity validatedCommodity = ValidatedCommodity.builder()
                 .commodityName("commodityname")
                 .displayName("Commodity Name")
@@ -33,10 +33,10 @@ public class FindCommodityDTOMapperTest {
                 .isRare(true)
                 .build();
         
-
+        // When
         FindCommodityResponse response = mapper.map(validatedCommodity);
         
-
+        // Then
         assertThat(response, is(notNullValue()));
         assertThat(response.getDisplayName(), is(equalTo(validatedCommodity.getDisplayName())));
         assertThat(response.getCommodityName(), is(equalTo(validatedCommodity.getCommodityName())));
@@ -48,16 +48,16 @@ public class FindCommodityDTOMapperTest {
     
     @Test
     void shouldMapFindCommodityRequestToFilter() {
-
+        // Given
         FindCommodityRequest request = FindCommodityRequest.builder()
                 .type("CONSUMER_ITEMS")
                 .isRare(false)
                 .build();
         
-
+        // When
         FindCommodityFilter filter = mapper.map(request);
         
-
+        // Then
         assertThat(filter, is(notNullValue()));
         assertThat(filter.getType(), is(equalTo(CommodityType.valueOf(request.getType()))));
         assertThat(filter.getIsRare(), is(equalTo(request.getIsRare())));

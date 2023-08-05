@@ -12,3 +12,5 @@ trade:
 
     kafka:
       bootstrap-servers: ${KAFKA_URL}
+      consumer:
+        value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer

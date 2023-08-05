@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -34,7 +35,7 @@ public class DefaultFindCommodityMarketInfoUseCaseTest {
     @Test
     public void testFindAll() {
         CommodityMarketInfo mockMarketInfo = mock(CommodityMarketInfo.class);
-        List<CommodityMarketInfo> expectedMarketInfoList = List.of(mockMarketInfo);
+        List<CommodityMarketInfo> expectedMarketInfoList = Collections.singletonList(mockMarketInfo);
 
         when(commodityMarketInfoRepository.findAllCommodityMarketInfo()).thenReturn(expectedMarketInfoList);
 

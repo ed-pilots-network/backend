@@ -1,9 +1,12 @@
 package io.edpn.backend.trade.application.service;
 
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.edpn.backend.trade.domain.model.RequestDataMessage;
 import io.edpn.backend.trade.domain.model.System;
+import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
 import io.edpn.backend.trade.domain.service.RequestDataService;
-import io.edpn.backend.trade.domain.service.SendDataRequestService;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,9 +16,8 @@ import java.util.Objects;
 @Slf4j
 public class RequestSystemCoordinatesService implements RequestDataService<System> {
 
-    public static final String TOPIC = "systemCoordinatesDataRequest";
-    public static final String REQUESTING_MODULE = "trade";
-    private final SendDataRequestService<SystemDataRequest> systemDataRequestSendDataRequestService;
+    private final RequestDataMessageRepository requestDataMessageRepository;
+    private final ObjectMapper objectMapper;
 
     @Override
     public boolean isApplicable(System system) {
@@ -24,10 +26,16 @@ public class RequestSystemCoordinatesService implements RequestDataService<Syste
 
     @Override
     public void request(System system) {
-        SystemDataRequest systemDataRequest = new SystemDataRequest();
-        systemDataRequest.setSystemName(system.getName());
-        systemDataRequest.setRequestingModule(REQUESTING_MODULE);
+        SystemDataRequest stationDataRequest = new SystemDataRequest();
+        stationDataRequest.setSystemName(system.getName());
 
-        systemDataRequestSendDataRequestService.send(systemDataRequest, TOPIC);
+        JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
+
+        RequestDataMessage requestDataMessage = RequestDataMessage.builder()
+                .topic("tradeModuleSystemCoordinatesDataRequest")
+                .message(jsonNode)
+                .build();
+
+        requestDataMessageRepository.sendToKafka(requestDataMessage);
     }
 }

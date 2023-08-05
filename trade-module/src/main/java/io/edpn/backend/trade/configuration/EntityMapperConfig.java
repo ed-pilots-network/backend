@@ -30,7 +30,7 @@ public class EntityMapperConfig {
         return new LocateCommodityMapper(validatedCommodityMapper, systemMapper, stationMapper);
     }
 
-    @Bean
+    @Bean(name = "tradeValidatedCommodityMapper")
     public ValidatedCommodityMapper validatedCommodityMapper() {
         return new ValidatedCommodityMapper();
     }
@@ -45,12 +45,12 @@ public class EntityMapperConfig {
         return new StationMapper(systemMapper, marketDatumMapper);
     }
 
-    @Bean(name = "tradeBestCommodityPriceMapper")
+    @Bean(name = "tradeCommodityMarketInfoMapper")
     public CommodityMarketInfoMapper bestCommodityPriceMapper(ValidatedCommodityMapper validatedCommodityMapper, StationMapper stationMapper) {
         return new CommodityMarketInfoMapper(validatedCommodityMapper, stationMapper);
     }
 
-    @Bean(name = "tradeRequestDataMessageMapper")
+    @Bean
     public RequestDataMessageMapper requestDataMessageMapper() {
         return new RequestDataMessageMapper();
     }

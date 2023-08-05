@@ -1,11 +1,14 @@
 package io.edpn.backend.trade.application.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
 import io.edpn.backend.trade.domain.model.LandingPadSize;
+import io.edpn.backend.trade.domain.model.RequestDataMessage;
 import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.model.System;
+import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
 import io.edpn.backend.trade.domain.service.RequestDataService;
-import io.edpn.backend.trade.domain.service.SendDataRequestService;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,11 +19,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.stream.Stream;
-
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -29,8 +30,9 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class RequestStationLandingPadSizeServiceTest {
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
     @Mock
-    private SendDataRequestService<StationDataRequest> stationDataRequestSendDataRequestService;
+    private RequestDataMessageRepository requestDataMessageRepository;
     private RequestDataService<Station> underTest;
 
     public static Stream<Arguments> providePadSizesForCheckApplicability() {
@@ -45,7 +47,7 @@ public class RequestStationLandingPadSizeServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new RequestStationLandingPadSizeService(stationDataRequestSendDataRequestService);
+        underTest = new RequestStationLandingPadSizeService(requestDataMessageRepository, objectMapper);
     }
 
     @ParameterizedTest
@@ -58,7 +60,7 @@ public class RequestStationLandingPadSizeServiceTest {
     }
 
     @Test
-    void shouldSendRequest() {
+    void shouldSendRequest() throws Exception {
         System system = System.builder()
                 .name("Test System")
                 .build();
@@ -69,15 +71,16 @@ public class RequestStationLandingPadSizeServiceTest {
 
         underTest.request(station);
 
-        ArgumentCaptor<StationDataRequest> stationDataRequestArgumentCaptor = ArgumentCaptor.forClass(StationDataRequest.class);
-        ArgumentCaptor<String> topicArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(stationDataRequestSendDataRequestService, times(1)).send(stationDataRequestArgumentCaptor.capture(), topicArgumentCaptor.capture());
+        ArgumentCaptor<RequestDataMessage> argumentCaptor = ArgumentCaptor.forClass(RequestDataMessage.class);
+        verify(requestDataMessageRepository, times(1)).sendToKafka(argumentCaptor.capture());
 
-        StationDataRequest actualSystemDataRequest = stationDataRequestArgumentCaptor.getValue();
-        String actualTopic = topicArgumentCaptor.getValue();
-        assertThat(actualSystemDataRequest.getSystemName(), is(system.getName()));
-        assertThat(actualSystemDataRequest.getStationName(), is(station.getName()));
-        assertThat(actualSystemDataRequest.getRequestingModule(), is("trade"));
-        assertThat(actualTopic, equalTo("stationMaxLandingPadSizeDataRequest"));
+        RequestDataMessage message = argumentCaptor.getValue();
+        assertThat(message, is(notNullValue()));
+        assertThat(message.getTopic(), is("tradeModuleStationMaxLandingPadSizeDataRequest"));
+        assertThat(message.getMessage(), is(notNullValue()));
+
+        StationDataRequest actualStationDataRequest = objectMapper.treeToValue(message.getMessage(), StationDataRequest.class);
+        assertThat(actualStationDataRequest.getStationName(), is(station.getName()));
+        assertThat(actualStationDataRequest.getSystemName(), is(system.getName()));
     }
 }

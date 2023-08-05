@@ -1,5 +1,6 @@
 package io.edpn.backend.trade.domain.model;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +15,6 @@ import lombok.ToString;
 public class RequestDataMessage {
 
     private String topic;
-    private String message;
+    private JsonNode message;
 
 }

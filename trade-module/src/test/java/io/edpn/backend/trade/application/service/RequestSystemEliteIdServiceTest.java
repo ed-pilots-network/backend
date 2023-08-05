@@ -1,9 +1,12 @@
 package io.edpn.backend.trade.application.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.trade.domain.model.RequestDataMessage;
 import io.edpn.backend.trade.domain.model.System;
+import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
 import io.edpn.backend.trade.domain.service.RequestDataService;
-import io.edpn.backend.trade.domain.service.SendDataRequestService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,16 +20,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class RequestSystemEliteIdServiceTest {
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
     @Mock
-    private SendDataRequestService<SystemDataRequest> systemDataRequestSendDataRequestService;
+    private RequestDataMessageRepository requestDataMessageRepository;
     private RequestDataService<System> underTest;
 
     public static Stream<Arguments> provideLongForCheckApplicability() {
@@ -39,7 +43,7 @@ public class RequestSystemEliteIdServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new RequestSystemEliteIdService(systemDataRequestSendDataRequestService);
+        underTest = new RequestSystemEliteIdService(requestDataMessageRepository, objectMapper);
     }
 
     @ParameterizedTest
@@ -53,21 +57,22 @@ public class RequestSystemEliteIdServiceTest {
     }
 
     @Test
-    void shouldSendRequest() {
+    void shouldSendRequest() throws Exception {
         System system = System.builder()
                 .name("Test System")
                 .build();
 
         underTest.request(system);
 
-        ArgumentCaptor<SystemDataRequest> systemDataRequestArgumentCaptor = ArgumentCaptor.forClass(SystemDataRequest.class);
-        ArgumentCaptor<String> topicArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(systemDataRequestSendDataRequestService, times(1)).send(systemDataRequestArgumentCaptor.capture(), topicArgumentCaptor.capture());
+        ArgumentCaptor<RequestDataMessage> argumentCaptor = ArgumentCaptor.forClass(RequestDataMessage.class);
+        verify(requestDataMessageRepository, times(1)).sendToKafka(argumentCaptor.capture());
 
-        SystemDataRequest actualSystemDataRequest = systemDataRequestArgumentCaptor.getValue();
-        String actualTopic = topicArgumentCaptor.getValue();
+        RequestDataMessage message = argumentCaptor.getValue();
+        assertThat(message, is(notNullValue()));
+        assertThat(message.getTopic(), is("tradeModuleSystemEliteIdDataRequest"));
+        assertThat(message.getMessage(), is(notNullValue()));
+
+        SystemDataRequest actualSystemDataRequest = objectMapper.treeToValue(message.getMessage(), SystemDataRequest.class);
         assertThat(actualSystemDataRequest.getSystemName(), is(system.getName()));
-        assertThat(actualSystemDataRequest.getRequestingModule(), is("trade"));
-        assertThat(actualTopic, equalTo("systemEliteIdDataRequest"));
     }
 }

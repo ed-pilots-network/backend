@@ -1,10 +1,13 @@
 package io.edpn.backend.trade.application.service;
 
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.trade.domain.model.LandingPadSize;
+import io.edpn.backend.trade.domain.model.RequestDataMessage;
 import io.edpn.backend.trade.domain.model.Station;
+import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
 import io.edpn.backend.trade.domain.service.RequestDataService;
-import io.edpn.backend.trade.domain.service.SendDataRequestService;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,9 +17,8 @@ import java.util.Objects;
 @Slf4j
 public class RequestStationLandingPadSizeService implements RequestDataService<Station> {
 
-    public static final String TOPIC = "stationMaxLandingPadSizeDataRequest";
-    public static final String REQUESTING_MODULE = "trade";
-    private final SendDataRequestService<StationDataRequest> stationDataRequestSendDataRequestService;
+    private final RequestDataMessageRepository requestDataMessageRepository;
+    private final ObjectMapper objectMapper;
 
     @Override
     public boolean isApplicable(Station station) {
@@ -28,8 +30,14 @@ public class RequestStationLandingPadSizeService implements RequestDataService<S
         StationDataRequest stationDataRequest = new StationDataRequest();
         stationDataRequest.setStationName(station.getName());
         stationDataRequest.setSystemName(station.getSystem().getName());
-        stationDataRequest.setRequestingModule(REQUESTING_MODULE);
 
-        stationDataRequestSendDataRequestService.send(stationDataRequest, TOPIC);
+        JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
+
+        RequestDataMessage requestDataMessage = RequestDataMessage.builder()
+                .topic("tradeModuleStationMaxLandingPadSizeDataRequest")
+                .message(jsonNode)
+                .build();
+
+        requestDataMessageRepository.sendToKafka(requestDataMessage);
     }
 }

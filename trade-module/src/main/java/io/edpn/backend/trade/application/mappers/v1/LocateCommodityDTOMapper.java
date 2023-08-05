@@ -3,12 +3,10 @@ package io.edpn.backend.trade.application.mappers.v1;
 import io.edpn.backend.trade.application.dto.v1.LocateCommodityRequest;
 import io.edpn.backend.trade.application.dto.v1.LocateCommodityResponse;
 import io.edpn.backend.trade.domain.filter.v1.LocateCommodityFilter;
-import io.edpn.backend.trade.domain.model.LandingPadSize;
 import io.edpn.backend.trade.domain.model.LocateCommodity;
+import io.edpn.backend.trade.domain.model.LandingPadSize;
 import io.edpn.backend.trade.domain.model.Station;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 public class LocateCommodityDTOMapper {
@@ -36,7 +34,7 @@ public class LocateCommodityDTOMapper {
                 .includePlanetary(locateCommodityRequest.getIncludePlanetary())
                 .includeOdyssey(locateCommodityRequest.getIncludePlanetary())
                 .includeFleetCarriers(locateCommodityRequest.getIncludeFleetCarriers())
-                .maxLandingPadSize(Optional.ofNullable(locateCommodityRequest.getMaxLandingPadSize()).map(LandingPadSize::valueOf).orElse(LandingPadSize.UNKNOWN))
+                .maxLandingPadSize(LandingPadSize.valueOf(locateCommodityRequest.getMaxLandingPadSize()))
                 .minSupply(locateCommodityRequest.getMinSupply())
                 .minDemand(locateCommodityRequest.getMinDemand())
                 .build();
