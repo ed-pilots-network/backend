@@ -5,6 +5,7 @@ import java.util.UUID;
 public interface SystemEntity {
 
     UUID getId();
+
     String getName();
 
     Long getEliteId();
