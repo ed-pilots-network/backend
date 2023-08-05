@@ -17,7 +17,9 @@ import io.edpn.backend.exploration.application.service.ProcessPendingSystemCoord
 import io.edpn.backend.exploration.application.service.ReceiveNavRouteService;
 import io.edpn.backend.exploration.application.service.ReceiveSystemCoordinateRequestService;
 import io.edpn.backend.exploration.application.service.SystemControllerService;
+import io.edpn.backend.exploration.application.validation.LoadByNameContainingValidator;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.support.RetryTemplate;
@@ -57,11 +59,22 @@ public class ServiceConfig {
         return new ReceiveSystemCoordinateRequestService(createSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, kafkaSystemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate);
     }
 
+    @Bean(name = "explorationLoadByNameContainingValidator")
+    public LoadByNameContainingValidator loadByNameContainingValidator(
+            @Value(value = "${exploration.loadbynamecontainingvalidator.min_length:3}") final int minLength,
+            @Value(value = "${exploration.loadbynamecontainingvalidator.min_size:0}") final int minSize,
+            @Value(value = "${exploration.loadbynamecontainingvalidator.max_size:100}") final int maxSize
+    ) {
+        return new LoadByNameContainingValidator(minLength, minSize, maxSize);
+    }
+
+
     @Bean(name = "explorationSystemControllerService")
     public SystemControllerService systemControllerService(
             SystemRepository systemRepository,
+            LoadByNameContainingValidator loadByNameContainingValidator,
             RestSystemDtoMapper restSystemDtoMapper) {
-        return new SystemControllerService(systemRepository, restSystemDtoMapper);
+        return new SystemControllerService(systemRepository, loadByNameContainingValidator, restSystemDtoMapper);
     }
 
     @Bean(name = "explorationProcessPendingSystemCoordinateRequestService")
