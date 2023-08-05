@@ -1,7 +1,7 @@
 package io.edpn.backend.exploration.adapter.web;
 
 import io.edpn.backend.exploration.application.dto.SystemDto;
-import io.edpn.backend.exploration.application.port.incomming.FindSystemsFromSearchbarUseCase;
+import io.edpn.backend.exploration.application.port.incomming.FindSystemsByNameContainingUseCase;
 import io.edpn.backend.exploration.application.port.incomming.SystemControllerPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +13,8 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -21,13 +23,41 @@ import static org.mockito.Mockito.when;
 public class SystemControllerPortTest {
 
     @Mock
-    private FindSystemsFromSearchbarUseCase findSystemsFromSearchbarUseCase;
+    private FindSystemsByNameContainingUseCase findSystemsByNameContainingUseCase;
+    @Mock
+    private FindSystemsByNameContainingInputValidator findSystemsByNameContainingInputValidator;
 
     private SystemControllerPort underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new SystemController(findSystemsFromSearchbarUseCase);
+        underTest = new SystemController(findSystemsByNameContainingUseCase, findSystemsByNameContainingInputValidator);
+    }
+
+    @Test
+    public void testFindSystemsFromSearchBar_shouldThrowOnInvalidSubString() {
+        String subString = null;
+        int amount = 10;
+        doThrow(new IllegalArgumentException("subString must not be null or empty"))
+                .when(findSystemsByNameContainingInputValidator)
+                .validateSubString(subString);
+
+        assertThrows(IllegalArgumentException.class, () -> underTest.findByNameContaining(subString, amount));
+
+        verify(findSystemsByNameContainingInputValidator).validateSubString(subString);
+    }
+
+    @Test
+    public void testFindSystemsFromSearchBar_shouldThrowOnInvalidAmount() {
+        String subString = "test";
+        int amount = 1;
+        doThrow(new IllegalArgumentException("Amount must not be strict positive"))
+                .when(findSystemsByNameContainingInputValidator)
+                .validateAmount(amount);
+
+        assertThrows(IllegalArgumentException.class, () -> underTest.findByNameContaining(subString, amount));
+
+        verify(findSystemsByNameContainingInputValidator).validateAmount(amount);
     }
 
 
@@ -38,13 +68,12 @@ public class SystemControllerPortTest {
         int amount = 10;
         SystemDto systemDto = mock(SystemDto.class);
         List<SystemDto> expectedSystems = List.of(systemDto);
-        when(findSystemsFromSearchbarUseCase.findSystemsFromSearchBar(subString, amount)).thenReturn(expectedSystems);
+        when(findSystemsByNameContainingUseCase.findSystemsByNameContaining(subString, amount)).thenReturn(expectedSystems);
 
-
-        List<SystemDto> actualSystems = underTest.findSystemsFromSearchBar(subString, amount);
+        List<SystemDto> actualSystems = underTest.findByNameContaining(subString, amount);
 
 
         assertThat(actualSystems, is(expectedSystems));
-        verify(findSystemsFromSearchbarUseCase).findSystemsFromSearchBar(subString, amount);
+        verify(findSystemsByNameContainingUseCase).findSystemsByNameContaining(subString, amount);
     }
 }

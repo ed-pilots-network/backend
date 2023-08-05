@@ -4,7 +4,7 @@ import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.domain.exception.ValidationException;
 import io.edpn.backend.exploration.application.dto.SystemDto;
 import io.edpn.backend.exploration.application.dto.mapper.SystemDtoMapper;
-import io.edpn.backend.exploration.application.port.incomming.FindSystemsFromSearchbarUseCase;
+import io.edpn.backend.exploration.application.port.incomming.FindSystemsByNameContainingUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemsByNameContainingPort;
 import io.edpn.backend.exploration.application.validation.LoadByNameContainingValidator;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +35,7 @@ class SystemControllerServiceTest {
     @Mock
     private SystemDtoMapper systemDtoMapper;
 
-    private FindSystemsFromSearchbarUseCase underTest;
+    private FindSystemsByNameContainingUseCase underTest;
 
     @BeforeEach
     void setUp() {
@@ -49,7 +49,7 @@ class SystemControllerServiceTest {
         ValidationException validationException = new ValidationException(List.of("Test Error"));
         when(loadByNameContainingValidator.validate(subString, amount)).thenReturn(Optional.of(validationException));
 
-        assertThrows(ValidationException.class, () -> underTest.findSystemsFromSearchBar(subString, amount));
+        assertThrows(ValidationException.class, () -> underTest.findSystemsByNameContaining(subString, amount));
 
         verify(loadByNameContainingValidator).validate(subString, amount);
         verifyNoInteractions(loadSystemsByNameContainingPort, systemDtoMapper);
@@ -70,7 +70,7 @@ class SystemControllerServiceTest {
         when(systemDtoMapper.map(system2)).thenReturn(systemDto2);
 
 
-        List<SystemDto> result = underTest.findSystemsFromSearchBar(subString, amount);
+        List<SystemDto> result = underTest.findSystemsByNameContaining(subString, amount);
 
 
         verify(loadSystemsByNameContainingPort).loadByNameContaining(subString, amount);

@@ -62,7 +62,7 @@ public class ServiceConfig {
     @Bean(name = "explorationLoadByNameContainingValidator")
     public LoadByNameContainingValidator loadByNameContainingValidator(
             @Value(value = "${exploration.loadbynamecontainingvalidator.min_length:3}") final int minLength,
-            @Value(value = "${exploration.loadbynamecontainingvalidator.min_size:0}") final int minSize,
+            @Value(value = "${exploration.loadbynamecontainingvalidator.min_size:1}") final int minSize,
             @Value(value = "${exploration.loadbynamecontainingvalidator.max_size:100}") final int maxSize
     ) {
         return new LoadByNameContainingValidator(minLength, minSize, maxSize);

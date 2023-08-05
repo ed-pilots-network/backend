@@ -1,7 +1,7 @@
 package io.edpn.backend.exploration.adapter.web;
 
 import io.edpn.backend.exploration.application.dto.SystemDto;
-import io.edpn.backend.exploration.application.port.incomming.FindSystemsFromSearchbarUseCase;
+import io.edpn.backend.exploration.application.port.incomming.FindSystemsByNameContainingUseCase;
 import io.edpn.backend.exploration.application.port.incomming.SystemControllerPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +16,14 @@ import java.util.List;
 @RequestMapping("/api/v1/exploration/system")
 public class SystemController implements SystemControllerPort {
 
-    final FindSystemsFromSearchbarUseCase findSystemsFromSearchbarUseCase;
+    final FindSystemsByNameContainingUseCase findSystemsByNameContainingUseCase;
+    final FindSystemsByNameContainingInputValidator findSystemsByNameContainingInputValidator;
 
     @Override
-    @GetMapping("/search-bar")
-    public List<SystemDto> findSystemsFromSearchBar(@RequestParam(name = "subString") String subString, @RequestParam(name = "amount", required = false, defaultValue = "10") Integer amount) {
-        return findSystemsFromSearchbarUseCase.findSystemsFromSearchBar(subString, amount);
+    @GetMapping("/by-name-containing")
+    public List<SystemDto> findByNameContaining(@RequestParam(name = "subString") String subString, @RequestParam(name = "amount", required = false, defaultValue = "10") Integer amount) {
+        findSystemsByNameContainingInputValidator.validateSubString(subString);
+        findSystemsByNameContainingInputValidator.validateAmount(amount);
+        return findSystemsByNameContainingUseCase.findSystemsByNameContaining(subString, amount);
     }
 }

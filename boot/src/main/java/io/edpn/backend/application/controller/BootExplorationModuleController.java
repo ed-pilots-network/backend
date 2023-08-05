@@ -1,14 +1,15 @@
 package io.edpn.backend.application.controller;
 
 import io.edpn.backend.exploration.adapter.web.SystemController;
-import io.edpn.backend.exploration.application.port.incomming.FindSystemsFromSearchbarUseCase;
+import io.edpn.backend.exploration.adapter.web.FindSystemsByNameContainingInputValidator;
+import io.edpn.backend.exploration.application.port.incomming.FindSystemsByNameContainingUseCase;
 import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
 public class BootExplorationModuleController extends SystemController {
 
-    public BootExplorationModuleController(FindSystemsFromSearchbarUseCase findSystemsFromSearchbarUseCase) {
-        super(findSystemsFromSearchbarUseCase);
+    public BootExplorationModuleController(FindSystemsByNameContainingUseCase findSystemsByNameContainingUseCase, FindSystemsByNameContainingInputValidator findSystemsByNameContainingInputValidator) {
+        super(findSystemsByNameContainingUseCase, findSystemsByNameContainingInputValidator);
     }
 }

@@ -10,6 +10,7 @@ import io.edpn.backend.exploration.application.dto.mapper.SystemDtoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -21,10 +22,14 @@ public class RestSystemDtoMapper implements SystemDtoMapper {
     }
 
     private CoordinateDto coordinateFromSystem(System system) {
-        if (Optional.ofNullable(system.coordinate()).map(Coordinate::x).isEmpty()) {
-            return null;
-        } else {
+        boolean isFilled = Optional.ofNullable(system.coordinate())
+                .map(Coordinate::x)
+                .isPresent();
+
+        if (isFilled) {
             return new RestCoordinateDto(system.coordinate().x(), system.coordinate().y(), system.coordinate().z());
+        } else {
+            return null;
         }
     }
 }

@@ -4,7 +4,7 @@ import io.edpn.backend.exploration.application.dto.SystemDto;
 
 import java.util.List;
 
-public interface FindSystemsFromSearchbarUseCase {
+public interface FindSystemsByNameContainingUseCase {
 
-    List<SystemDto> findSystemsFromSearchBar(String subString, int amount);
+    List<SystemDto> findSystemsByNameContaining(String subString, int amount);
 }

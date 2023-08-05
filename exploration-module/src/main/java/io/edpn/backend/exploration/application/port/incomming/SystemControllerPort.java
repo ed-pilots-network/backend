@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface SystemControllerPort {
 
-    List<SystemDto> findSystemsFromSearchBar(String subString, Integer amount);
+    List<SystemDto> findByNameContaining(String subString, Integer amount);
 }

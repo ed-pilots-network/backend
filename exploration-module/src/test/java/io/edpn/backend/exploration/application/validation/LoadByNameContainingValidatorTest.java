@@ -40,7 +40,7 @@ public class LoadByNameContainingValidatorTest {
         Optional<ValidationException> result = validator.validate(subString, amount);
 
         assertThat(result.isPresent(), is(true));
-        assertThat(result.get().getErrors().get(0), is("subString must not be at least 3 characters long"));
+        assertThat(result.get().getErrors().get(0), is("subString must be at least 3 characters long"));
     }
 
     @Test

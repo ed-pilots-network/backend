@@ -21,7 +21,7 @@ public class LoadByNameContainingValidator {
         List<String> errors = new ArrayList<>();
 
         if (subString.length() < MIN_NAME_LENGTH) {
-            errors.add("subString must not be at least " + MIN_NAME_LENGTH + " characters long");
+            errors.add("subString must be at least " + MIN_NAME_LENGTH + " characters long");
         }
         if (amount > MAX_AMOUNT) {
             errors.add("Amount must not be bigger than " + MAX_AMOUNT);
