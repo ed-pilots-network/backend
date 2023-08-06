@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class BootTradeModuleController extends DefaultTradeModuleController {
-
     public BootTradeModuleController(FindCommodityMarketInfoService findCommodityMarketInfoService, LocateCommodityService locateCommodityService, FindCommodityService findCommodityService) {
         super(findCommodityMarketInfoService, locateCommodityService, findCommodityService);
     }

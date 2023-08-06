@@ -38,19 +38,36 @@ services:
       zookeeper:
         condition: service_healthy
 
-  trademodule_postgres:
-    image: "postgres:15-alpine"
+  trademodule_postgis:
+    image: "postgis/postgis:15-3.3-alpine"
     restart: on-failure
     environment:
       - POSTGRES_USER=edpn_trademodule
       - POSTGRES_PASSWORD=MSDVq372rNk3AwRq
       - POSTGRES_DB=trademodule
     volumes:
-      - "trademodule_postgres:/var/lib/postgresql/data"
+      - "trademodule_postgis:/var/lib/postgresql/data"
     ports:
       - "54321:5432"
     healthcheck:
-      test: pg_isready
+      test: ["CMD-SHELL", "pg_isready -d trademodule -U edpn_trademodule"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  explorationmodule_postgis:
+    image: "postgis/postgis:15-3.3-alpine"
+    restart: on-failure
+    environment:
+      - POSTGRES_USER=edpn_explorationmodule
+      - POSTGRES_PASSWORD=TvhRZP7b6Hrw64Ct
+      - POSTGRES_DB=explorationmodule
+    volumes:
+      - "explorationmodule_postgis:/var/lib/postgresql/data"
+    ports:
+      - "54322:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d explorationmodule -U edpn_explorationmodule"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -60,5 +77,7 @@ volumes:
     driver: local
   kafka:
     driver: local
-  trademodule_postgres:
+  trademodule_postgis:
+    driver: local
+  explorationmodule_postgis:
     driver: local
