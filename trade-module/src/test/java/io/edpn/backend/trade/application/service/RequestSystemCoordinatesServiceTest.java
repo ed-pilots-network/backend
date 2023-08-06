@@ -78,6 +78,6 @@ public class RequestSystemCoordinatesServiceTest {
         assertThat(message.getMessage(), is(notNullValue()));
 
         SystemDataRequest actualSystemDataRequest = objectMapper.treeToValue(message.getMessage(), SystemDataRequest.class);
-        assertThat(actualSystemDataRequest.getSystemName(), is(system.getName()));
+        assertThat(actualSystemDataRequest.systemName(), is(system.getName()));
     }
 }

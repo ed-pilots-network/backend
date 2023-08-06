@@ -80,7 +80,7 @@ public class RequestStationLandingPadSizeServiceTest {
         assertThat(message.getMessage(), is(notNullValue()));
 
         StationDataRequest actualStationDataRequest = objectMapper.treeToValue(message.getMessage(), StationDataRequest.class);
-        assertThat(actualStationDataRequest.getStationName(), is(station.getName()));
-        assertThat(actualStationDataRequest.getSystemName(), is(system.getName()));
+        assertThat(actualStationDataRequest.stationName(), is(station.getName()));
+        assertThat(actualStationDataRequest.systemName(), is(system.getName()));
     }
 }

@@ -27,10 +27,9 @@ public class RequestStationLandingPadSizeService implements RequestDataService<S
 
     @Override
     public void request(Station station) {
-        StationDataRequest stationDataRequest = new StationDataRequest();
-        stationDataRequest.setStationName(station.getName());
-        stationDataRequest.setSystemName(station.getSystem().getName());
-
+        StationDataRequest stationDataRequest = new StationDataRequest(
+                null, station.getName(), station.getSystem().getName()
+        );
         JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
 
         RequestDataMessage requestDataMessage = RequestDataMessage.builder()

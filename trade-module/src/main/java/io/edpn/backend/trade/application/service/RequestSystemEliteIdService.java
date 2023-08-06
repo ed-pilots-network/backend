@@ -26,9 +26,9 @@ public class RequestSystemEliteIdService implements RequestDataService<System> {
 
     @Override
     public void request(System system) {
-        SystemDataRequest systemDataRequest = new SystemDataRequest();
-        systemDataRequest.setSystemName(system.getName());
-
+        SystemDataRequest systemDataRequest = new SystemDataRequest(
+                null, system.getName()
+        );
         JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
 
         RequestDataMessage requestDataMessage = RequestDataMessage.builder()

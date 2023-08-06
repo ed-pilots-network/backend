@@ -20,7 +20,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.in;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.mock;
@@ -79,7 +78,7 @@ public class RequestStationPlanetaryServiceTest {
         assertThat(message.getMessage(), is(notNullValue()));
 
         StationDataRequest actualStationDataRequest = objectMapper.treeToValue(message.getMessage(), StationDataRequest.class);
-        assertThat(actualStationDataRequest.getStationName(), is(station.getName()));
-        assertThat(actualStationDataRequest.getSystemName(), is(system.getName()));
+        assertThat(actualStationDataRequest.stationName(), is(station.getName()));
+        assertThat(actualStationDataRequest.systemName(), is(system.getName()));
     }
 }

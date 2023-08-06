@@ -26,9 +26,9 @@ public class RequestSystemCoordinatesService implements RequestDataService<Syste
 
     @Override
     public void request(System system) {
-        SystemDataRequest stationDataRequest = new SystemDataRequest();
-        stationDataRequest.setSystemName(system.getName());
-
+        SystemDataRequest stationDataRequest = new SystemDataRequest(
+                null, system.getName()
+        );
         JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
 
         RequestDataMessage requestDataMessage = RequestDataMessage.builder()
