@@ -63,8 +63,8 @@ public class ReceiveSystemCoordinateRequestServiceTest {
         String systemName = "system";
         String requestingModule = "module";
         System system = mock(System.class);
-        when(message.getSystemName()).thenReturn(systemName);
-        when(message.getRequestingModule()).thenReturn(requestingModule);
+        when(message.systemName()).thenReturn(systemName);
+        when(message.requestingModule()).thenReturn(requestingModule);
         when(loadSystemPort.load(systemName)).thenReturn(Optional.of(system));
         SystemCoordinatesResponse systemCoordinatesResponse = mock(SystemCoordinatesResponse.class);
         when(systemCoordinatesResponseMapper.map(system)).thenReturn(systemCoordinatesResponse);
@@ -94,8 +94,8 @@ public class ReceiveSystemCoordinateRequestServiceTest {
         String systemName = "system";
         String requestingModule = "module";
         System system = mock(System.class);
-        when(message.getSystemName()).thenReturn(systemName);
-        when(message.getRequestingModule()).thenReturn(requestingModule);
+        when(message.systemName()).thenReturn(systemName);
+        when(message.requestingModule()).thenReturn(requestingModule);
         when(loadSystemPort.load(systemName)).thenReturn(Optional.of(system));
         SystemCoordinatesResponse systemCoordinatesResponse = mock(SystemCoordinatesResponse.class);
         when(systemCoordinatesResponseMapper.map(system)).thenReturn(systemCoordinatesResponse);
@@ -125,8 +125,8 @@ public class ReceiveSystemCoordinateRequestServiceTest {
         SystemDataRequest message = mock(SystemDataRequest.class);
         String systemName = "system";
         String requestingModule = "module";
-        when(message.getSystemName()).thenReturn(systemName);
-        when(message.getRequestingModule()).thenReturn(requestingModule);
+        when(message.systemName()).thenReturn(systemName);
+        when(message.requestingModule()).thenReturn(requestingModule);
         when(loadSystemPort.load(systemName)).thenReturn(Optional.empty());
         SystemCoordinateRequest systemCoordinateDataRequest = new SystemCoordinateRequest(systemName, requestingModule);
 

@@ -38,7 +38,7 @@ class NavRouteV1MessageProcessorTest {
     void listen_shouldInvokeUseCaseWithCorrectNavRouteMessage() throws JsonProcessingException {
 
         JsonNode jsonNode = mock(JsonNode.class);
-        NavRouteMessage.V1 navRouteMessage = new NavRouteMessage.V1();
+        NavRouteMessage.V1 navRouteMessage = mock(NavRouteMessage.V1.class);
 
         Mockito.when(objectMapper.treeToValue(jsonNode, NavRouteMessage.V1.class)).thenReturn(navRouteMessage);
 

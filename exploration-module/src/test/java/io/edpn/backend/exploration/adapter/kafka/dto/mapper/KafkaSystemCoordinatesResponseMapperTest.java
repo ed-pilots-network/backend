@@ -37,9 +37,9 @@ class KafkaSystemCoordinatesResponseMapperTest {
         SystemCoordinatesResponse result = underTest.map(system);
 
 
-        assertThat(result.getSystemName(), is(systemName));
-        assertThat(result.getXCoordinate(), is(x));
-        assertThat(result.getYCoordinate(), is(y));
-        assertThat(result.getZCoordinate(), is(z));
+        assertThat(result.systemName(), is(systemName));
+        assertThat(result.xCoordinate(), is(x));
+        assertThat(result.yCoordinate(), is(y));
+        assertThat(result.zCoordinate(), is(z));
     }
 }
