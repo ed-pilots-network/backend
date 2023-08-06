@@ -32,8 +32,8 @@ public class ReceiveSystemCoordinateRequestService implements ReceiveKafkaMessag
 
     @Override
     public void receive(SystemDataRequest message) {
-        String systemName = message.getSystemName();
-        String requestingModule = message.getRequestingModule();
+        String systemName = message.systemName();
+        String requestingModule = message.requestingModule();
 
         loadSystemPort.load(systemName).ifPresentOrElse(
                 system -> {

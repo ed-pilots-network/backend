@@ -50,8 +50,8 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
         log.debug("DefaultReceiveNavRouteMessageUseCase.receive -> CommodityMessage: {}", message);
 
         //LocalDateTime updateTimestamp = message.getMessageTimeStamp();
-        NavRouteMessage.V1.Message payload = message.getMessage();
-        NavRouteMessage.V1.Item[] routeItems = payload.getItems();
+        NavRouteMessage.V1.Payload payload = message.message();
+        NavRouteMessage.V1.Item[] routeItems = payload.items();
 
 
         CompletableFuture.allOf(List.of(routeItems).parallelStream()
@@ -64,7 +64,7 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
     }
 
     private CompletableFuture<Void> process(NavRouteMessage.V1.Item item) {
-        return loadOrCreateSystem(item.getStarSystem())
+        return loadOrCreateSystem(item.starSystem())
                 .thenApply(system -> updateSystemFromItem(system, item))
                 .thenComposeAsync(this::saveSystem)
                 .thenAcceptAsync(this::sendResponse);
@@ -78,15 +78,15 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
     private System updateSystemFromItem(final System system, NavRouteMessage.V1.Item item) {
         System returnSystem = system;
         if (Objects.isNull(system.eliteId())) {
-            returnSystem = returnSystem.withEliteId(item.getSystemAddress());
+            returnSystem = returnSystem.withEliteId(item.systemAddress());
         }
 
         if (Objects.isNull(system.starClass())) {
-            returnSystem = returnSystem.withStarClass(item.getStarClass());
+            returnSystem = returnSystem.withStarClass(item.starClass());
         }
 
         if (Objects.isNull(system.coordinate()) || Objects.isNull(system.coordinate().x()) || Objects.isNull(system.coordinate().y()) || Objects.isNull(system.coordinate().z())) {
-            returnSystem = returnSystem.withCoordinate(new Coordinate(item.getStarPos()[0], item.getStarPos()[1], item.getStarPos()[2]));
+            returnSystem = returnSystem.withCoordinate(new Coordinate(item.starPos()[0], item.starPos()[1], item.starPos()[2]));
         }
         return returnSystem;
     }
