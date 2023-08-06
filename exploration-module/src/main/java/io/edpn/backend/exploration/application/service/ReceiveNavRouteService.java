@@ -16,6 +16,7 @@ import io.edpn.backend.exploration.application.port.outgoing.SaveSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
+import io.edpn.backend.util.Topic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.support.RetryTemplate;
@@ -28,8 +29,6 @@ import java.util.concurrent.Executor;
 @RequiredArgsConstructor
 @Slf4j
 public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRouteMessage.V1> {
-
-    private final static String TOPIC = "_systemCoordinatesDataResponse";
 
 
     private final CreateSystemPort createSystemPort;
@@ -100,7 +99,8 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
                 .forEach(systemCoordinateRequest -> CompletableFuture.runAsync(() -> {
                     SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
                     String stringJson = objectMapper.valueToTree(systemCoordinatesResponse).toString();
-                    Message message = new Message(systemCoordinateRequest.requestingModule() + TOPIC, stringJson);
+                    String topic = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(systemCoordinateRequest.requestingModule());
+                    Message message = new Message(topic, stringJson);
                     MessageDto messageDto = messageMapper.map(message);
 
                     boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(messageDto));

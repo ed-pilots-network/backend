@@ -7,6 +7,7 @@ import io.edpn.backend.exploration.application.port.outgoing.CreateSystemCoordin
 import io.edpn.backend.exploration.application.port.outgoing.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadAllSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemCoordinateRequestBySystemNamePort;
+import io.edpn.backend.util.Module;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,7 +26,7 @@ public class SystemCoordinateRequestRepository implements CreateSystemCoordinate
     }
 
     @Override
-    public void delete(String systemName, String requestingModule) {
+    public void delete(String systemName, Module requestingModule) {
         mybatisSystemCoordinateRequestRepository.delete(new MybatisSystemCoordinateRequestEntity(systemName, requestingModule));
     }
 

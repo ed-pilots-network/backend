@@ -14,6 +14,7 @@ import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.util.Module;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -61,8 +62,9 @@ public class ReceiveSystemCoordinateRequestServiceTest {
         
         SystemDataRequest message = mock(SystemDataRequest.class);
         String systemName = "system";
-        String requestingModule = "module";
         System system = mock(System.class);
+        Module requestingModule = mock(Module.class);
+        when(requestingModule.getName()).thenReturn("module");
         when(message.systemName()).thenReturn(systemName);
         when(message.requestingModule()).thenReturn(requestingModule);
         when(loadSystemPort.load(systemName)).thenReturn(Optional.of(system));
@@ -72,7 +74,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
         JsonNode jsonNode = mock(JsonNode.class);
         when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
         when(jsonNode.toString()).thenReturn(jsonString);
-        Message kafkaMessage = new Message("module_systemCoordinatesDataResponse", jsonString);
+        Message kafkaMessage = new Message("module_systemCoordinatesResponse", jsonString);
         MessageDto messageDto = mock(MessageDto.class);
         when(messageMapper.map(kafkaMessage)).thenReturn(messageDto);
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
@@ -92,7 +94,8 @@ public class ReceiveSystemCoordinateRequestServiceTest {
         
         SystemDataRequest message = mock(SystemDataRequest.class);
         String systemName = "system";
-        String requestingModule = "module";
+        Module requestingModule = mock(Module.class);
+        when(requestingModule.getName()).thenReturn("module");
         System system = mock(System.class);
         when(message.systemName()).thenReturn(systemName);
         when(message.requestingModule()).thenReturn(requestingModule);
@@ -103,7 +106,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
         JsonNode jsonNode = mock(JsonNode.class);
         when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
         when(jsonNode.toString()).thenReturn(jsonString);
-        Message kafkaMessage = new Message("module_systemCoordinatesDataResponse", jsonString);
+        Message kafkaMessage = new Message("module_systemCoordinatesResponse", jsonString);
         MessageDto messageDto = mock(MessageDto.class);
         when(messageMapper.map(kafkaMessage)).thenReturn(messageDto);
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(false);
@@ -124,7 +127,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
         
         SystemDataRequest message = mock(SystemDataRequest.class);
         String systemName = "system";
-        String requestingModule = "module";
+        Module requestingModule = mock(Module.class);
         when(message.systemName()).thenReturn(systemName);
         when(message.requestingModule()).thenReturn(requestingModule);
         when(loadSystemPort.load(systemName)).thenReturn(Optional.empty());

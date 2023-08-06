@@ -18,6 +18,7 @@ import io.edpn.backend.exploration.application.port.outgoing.SaveSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
+import io.edpn.backend.util.Module;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -74,7 +75,8 @@ class ReceiveNavRouteServiceTest {
     void testReceiveMessage_whenSystemExistsAndPropertiesAreSet_shouldSaveAndSendResponses() {
         
         String systemName = "system";
-        String module = "module";
+        Module module = mock(Module.class);
+        when(module.getName()).thenReturn("module");
         System system = mock(System.class);
         when(system.name()).thenReturn(systemName);
         when(system.eliteId()).thenReturn(1L);
@@ -101,7 +103,7 @@ class ReceiveNavRouteServiceTest {
         JsonNode jsonNode = mock(JsonNode.class);
         when(jsonNode.toString()).thenReturn("JSON_STRING");
         when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
-        Message kafkaMessage = new Message("module_systemCoordinatesDataResponse", "JSON_STRING");
+        Message kafkaMessage = new Message("module_systemCoordinatesResponse", "JSON_STRING");
         MessageDto messageDto = mock(MessageDto.class);
         when(messageMapper.map(kafkaMessage)).thenReturn(messageDto);
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
@@ -121,7 +123,8 @@ class ReceiveNavRouteServiceTest {
     void testReceiveMessage_whenSystemDoesNotExist_shouldCreateSaveAndSendResponses() {
         
         String systemName = "system";
-        String module = "module";
+        Module module = mock(Module.class);
+        when(module.getName()).thenReturn("module");
         System system = mock(System.class);
         when(system.name()).thenReturn(systemName);
         when(system.eliteId()).thenReturn(null);
@@ -151,7 +154,7 @@ class ReceiveNavRouteServiceTest {
         JsonNode jsonNode = mock(JsonNode.class);
         when(jsonNode.toString()).thenReturn("JSON_STRING");
         when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
-        Message kafkaMessage = new Message("module_systemCoordinatesDataResponse", "JSON_STRING");
+        Message kafkaMessage = new Message("module_systemCoordinatesResponse", "JSON_STRING");
         MessageDto messageDto = mock(MessageDto.class);
         when(messageMapper.map(kafkaMessage)).thenReturn(messageDto);
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
@@ -172,7 +175,8 @@ class ReceiveNavRouteServiceTest {
     void testReceiveMessage_whenSystemExistsAndPropertiesAreNotSet_shouldUpdateSaveAndSendResponses() {
         
         String systemName = "system";
-        String module = "module";
+        Module module = mock(Module.class);
+        when(module.getName()).thenReturn("module");
         System system = mock(System.class);
         when(system.name()).thenReturn(systemName);
         when(system.eliteId()).thenReturn(null);
@@ -203,7 +207,7 @@ class ReceiveNavRouteServiceTest {
         JsonNode jsonNode = mock(JsonNode.class);
         when(jsonNode.toString()).thenReturn("JSON_STRING");
         when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
-        Message kafkaMessage = new Message("module_systemCoordinatesDataResponse", "JSON_STRING");
+        Message kafkaMessage = new Message("module_systemCoordinatesResponse", "JSON_STRING");
         MessageDto messageDto = mock(MessageDto.class);
         when(messageMapper.map(kafkaMessage)).thenReturn(messageDto);
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);

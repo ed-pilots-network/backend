@@ -73,7 +73,7 @@ public class RequestStationRequireOdysseyServiceTest {
 
         RequestDataMessage message = argumentCaptor.getValue();
         assertThat(message, is(notNullValue()));
-        assertThat(message.getTopic(), is("tradeModuleStationRequireOdeysseyDataRequest"));
+        assertThat(message.getTopic(), is("stationRequireOdysseyRequest"));
         assertThat(message.getMessage(), is(notNullValue()));
 
         StationDataRequest actualStationDataRequest = objectMapper.treeToValue(message.getMessage(), StationDataRequest.class);

@@ -12,6 +12,7 @@ import io.edpn.backend.exploration.application.port.outgoing.LoadAllSystemCoordi
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
+import io.edpn.backend.util.Topic;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.support.RetryTemplate;
@@ -23,8 +24,6 @@ import java.util.concurrent.Executor;
 @AllArgsConstructor
 @Slf4j
 public class ProcessPendingSystemCoordinateRequestService implements ProcessPendingDataRequestUseCase<SystemCoordinateRequest> {
-
-    private final static String TOPIC = "_systemCoordinatesDataResponse"; //TODO set from config
 
     private final LoadAllSystemCoordinateRequestPort loadAllSystemCoordinateRequestPort;
     private final LoadSystemPort loadSystemPort;
@@ -44,7 +43,8 @@ public class ProcessPendingSystemCoordinateRequestService implements ProcessPend
                         .ifPresent(system -> {
                                     SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
                                     String stringJson = objectMapper.valueToTree(systemCoordinatesResponse).toString();
-                                    Message message = new Message(systemCoordinateRequest.requestingModule() + TOPIC, stringJson);
+                                    String topic = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(systemCoordinateRequest.requestingModule());
+                                    Message message = new Message(topic, stringJson);
                                     MessageDto messageDto = messageMapper.map(message);
 
                                     boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(messageDto));

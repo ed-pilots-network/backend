@@ -7,6 +7,8 @@ import io.edpn.backend.trade.domain.model.System;
 import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
 import io.edpn.backend.trade.domain.service.RequestDataService;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.util.Module;
+import io.edpn.backend.util.Topic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,12 +29,12 @@ public class RequestSystemCoordinatesService implements RequestDataService<Syste
     @Override
     public void request(System system) {
         SystemDataRequest stationDataRequest = new SystemDataRequest(
-                null, system.getName()
+                Module.TRADE, system.getName()
         );
         JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
 
         RequestDataMessage requestDataMessage = RequestDataMessage.builder()
-                .topic("tradeModuleSystemCoordinatesDataRequest")
+                .topic(Topic.Request.SYSTEM_COORDINATES.getTopicName())
                 .message(jsonNode)
                 .build();
 

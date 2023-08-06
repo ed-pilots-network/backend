@@ -1,6 +1,5 @@
 package io.edpn.backend.trade.application.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.trade.domain.model.RequestDataMessage;
@@ -74,7 +73,7 @@ public class RequestSystemCoordinatesServiceTest {
 
         RequestDataMessage message = argumentCaptor.getValue();
         assertThat(message, is(notNullValue()));
-        assertThat(message.getTopic(), is("tradeModuleSystemCoordinatesDataRequest"));
+        assertThat(message.getTopic(), is("systemCoordinatesRequest"));
         assertThat(message.getMessage(), is(notNullValue()));
 
         SystemDataRequest actualSystemDataRequest = objectMapper.treeToValue(message.getMessage(), SystemDataRequest.class);
