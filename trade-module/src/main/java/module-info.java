@@ -20,6 +20,7 @@ module edpn.backend.trade {
     requires org.mybatis;
     requires jakarta.validation;
     requires io.swagger.v3.oas.annotations;
+    requires liquibase.core;
 
     exports io.edpn.backend.trade.domain.service.v1;
     exports io.edpn.backend.trade.domain.controller.v1;

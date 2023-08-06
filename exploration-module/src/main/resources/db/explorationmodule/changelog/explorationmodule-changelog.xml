@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <include file="/db/explorationmodule/changelog/create_system_table.xml"/>
+    <include file="/db/explorationmodule/changelog/create_system_coordinate_data_request_table.xml"/>
+    <include file="/db/explorationmodule/changelog/create_request_data_message_table.xml"/>
+    <include file="/db/explorationmodule/changelog/add_unique_system_indexes.xml"/>
+
+    <!-- views always last as they might depend on new columns -->
+
+</databaseChangeLog>
