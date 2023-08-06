@@ -9,17 +9,17 @@ import org.springframework.context.annotation.Configuration;
 @Configuration("TradeModuleRestMapperConfig")
 public class RestMapperConfig {
 
-    @Bean
+    @Bean(name = "tradeCommodityMarketInfoResponseMapper")
     public CommodityMarketInfoResponseMapper bestCommodityPriceResponseMapper() {
         return new CommodityMarketInfoResponseMapper();
     }
 
-    @Bean
+    @Bean(name = "tradeLocateCommodityDTOMapper")
     public LocateCommodityDTOMapper locateCommodityDTOMapper() {
         return new LocateCommodityDTOMapper();
     }
-    
-    @Bean
+
+    @Bean(name = "tradeFindCommodityDTOMapper")
     public FindCommodityDTOMapper findCommodityDTOMapper() {
         return new FindCommodityDTOMapper();
     }

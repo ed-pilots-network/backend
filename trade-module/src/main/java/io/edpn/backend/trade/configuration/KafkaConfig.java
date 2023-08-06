@@ -11,6 +11,7 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,12 +25,13 @@ import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
+@Configuration("TradeModuleKafkaConfig")
 public interface KafkaConfig {
 
     @EnableKafka
     @Configuration("TradeModuleEddnJsonKafkaConsumerConfig")
     class EddnJsonKafkaConsumerConfig {
-        @Value(value = "${spring.kafka.bootstrap-servers}")
+        @Value(value = "${trade.spring.kafka.bootstrap-servers}")
         private String bootstrapServers;
 
         public ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory(String groupId) {
@@ -58,10 +60,10 @@ public interface KafkaConfig {
 
     @Configuration("TradeModuleJsonNodeKafkaProducerConfig")
     class JsonNodeKafkaProducerConfig {
-        @Value(value = "${spring.kafka.bootstrap-servers}")
+        @Value(value = "${trade.spring.kafka.bootstrap-servers}")
         private String bootstrapServers;
 
-        @Bean
+        @Bean(name = "tradeJsonNodeProducerFactory")
         public ProducerFactory<String, JsonNode> jsonNodeProducerFactory() {
             Map<String, Object> configProps = new HashMap<>();
             configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -70,28 +72,28 @@ public interface KafkaConfig {
             return new DefaultKafkaProducerFactory<>(configProps);
         }
 
-        @Bean
-        public KafkaTemplate<String, JsonNode> jsonNodekafkaTemplate(ProducerFactory<String, JsonNode> jsonNodeProducerFactory) {
+        @Bean(name = "tradeJsonNodekafkaTemplate")
+        public KafkaTemplate<String, JsonNode> jsonNodekafkaTemplate(@Qualifier("tradeJsonNodeProducerFactory") ProducerFactory<String, JsonNode> jsonNodeProducerFactory) {
             return new KafkaTemplate<>(jsonNodeProducerFactory);
         }
     }
 
     @Configuration("TradeModuleKafkaAdminConfig")
     class KafkaAdminConfig {
-        @Value(value = "${spring.kafka.bootstrap-servers}")
+        @Value(value = "${trade.spring.kafka.bootstrap-servers}")
         private String bootstrapServers;
 
-        @Bean
+        @Bean(name = "tradeKafkaAdminClient")
         public AdminClient kafkaAdminClient() {
             Map<String, Object> configs = new HashMap<>();
             configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
             return AdminClient.create(configs);
         }
 
-        @Bean
-        public KafkaTopicHandler kafkaTopicCreator(AdminClient adminClient,
-                                                   @Value(value = "${spring.kafka.topic.partitions:1}") final int topicPartitions,
-                                                   @Value(value = "${spring.kafka.topic.replicationfactor:1}") final short topicReplicationFactor) {
+        @Bean(name = "tradeKafkaTopicCreator")
+        public KafkaTopicHandler kafkaTopicCreator(@Qualifier("tradeKafkaAdminClient") AdminClient adminClient,
+                                                   @Value(value = "${trade.spring.kafka.topic.partitions:1}") final int topicPartitions,
+                                                   @Value(value = "${trade.spring.kafka.topic.replicationfactor:1}") final short topicReplicationFactor) {
             return new KafkaTopicHandler(adminClient, topicPartitions, topicReplicationFactor);
         }
     }

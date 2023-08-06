@@ -1,0 +1,47 @@
+Roles
+    Trader(Black Market)
+        entities:
+            commodity
+        eddn:
+            commodity
+            fcmaterials
+
+    Builder
+        entities:
+            shipyard/outfitting
+            (engineering)
+        eddn:
+            shipyard
+            outfitting
+
+    BGSer
+        entities:
+            factions/powerplay/superpowers/thargoidwar
+            stations/settlement(services)
+        eddn:
+            docked
+            approachsettlement
+            location
+            fsdjump
+            carrierjump (like fsd, but with carrier station data)
+
+    Explorer
+        Navigation
+        entities:
+            System/bodies(composition)
+            station/settlement(lat/long/dist)
+            POI
+        eddn:
+            approachsettlement
+            fsdjump
+            carrierjump (like fsd, but with carrier station data)
+            location (at startup, or when being resurrected at a station)
+            codexentry
+            fssallbodiesfound (after having identified all bodies in the system)
+            fssbodysignals (when completing a “Full Spectrum Scan” of a starsystem)
+            fsssignaldiscovered (when zooming in on a signal using the FSS scanner)
+            navbeaconscan (number of bodies in the system)
+            navroute (plotted route [system name,address,pos,starclass])
+            saasignalfound (after using the “Surface Area Analysis” scanner)
+            scanbarycentre (When scanning one body of a binary pair, you will now get an event detailing the orbital parameters of their BaryCentre)
+            scan (basic or detailed discovery scan of a star, planet or moon)

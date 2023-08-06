@@ -8,12 +8,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration("TradeModuleFilterMapperConfig")
 public class FilterMapperConfig {
 
-    @Bean
+    @Bean(name = "tradeLocateCommodityFilterMapper")
     public LocateCommodityFilterMapper locateCommodityFilterMapper() {
         return new LocateCommodityFilterMapper();
     }
-    
-    @Bean
+
+    @Bean(name = "tradeFindCommodityFilterMapper")
     public FindCommodityFilterMapper findCommodityFilterMapper() {
         return new FindCommodityFilterMapper();
     }

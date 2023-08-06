@@ -8,3 +8,4 @@ spring:
   config:
     import:
       - trademodule.yaml
+      - explorationmodule.yaml

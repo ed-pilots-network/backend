@@ -15,37 +15,37 @@ import org.springframework.context.annotation.Configuration;
 @Configuration("TradeModuleEntityMapperConfig")
 public class EntityMapperConfig {
 
-    @Bean
+    @Bean(name = "tradeSystemMapper")
     public SystemMapper systemMapper() {
         return new SystemMapper();
     }
 
-    @Bean
+    @Bean(name = "tradeCommodityMapper")
     public CommodityMapper commodityMapper() {
         return new CommodityMapper();
     }
 
-    @Bean
+    @Bean(name = "tradeLocateCommodityMapper")
     public LocateCommodityMapper locateCommodityMapper(ValidatedCommodityMapper validatedCommodityMapper, SystemMapper systemMapper, StationMapper stationMapper) {
         return new LocateCommodityMapper(validatedCommodityMapper, systemMapper, stationMapper);
     }
-    
-    @Bean
+
+    @Bean(name = "tradeValidatedCommodityMapper")
     public ValidatedCommodityMapper validatedCommodityMapper() {
         return new ValidatedCommodityMapper();
     }
 
-    @Bean
+    @Bean(name = "tradeMarketDatumMapper")
     public MarketDatumMapper marketDatumMapper(CommodityMapper commodityMapper) {
         return new MarketDatumMapper(commodityMapper);
     }
 
-    @Bean
+    @Bean(name = "tradeStationMapper")
     public StationMapper stationMapper(SystemMapper systemMapper, MarketDatumMapper marketDatumMapper) {
         return new StationMapper(systemMapper, marketDatumMapper);
     }
 
-    @Bean
+    @Bean(name = "tradeCommodityMarketInfoMapper")
     public CommodityMarketInfoMapper bestCommodityPriceMapper(ValidatedCommodityMapper validatedCommodityMapper, StationMapper stationMapper) {
         return new CommodityMarketInfoMapper(validatedCommodityMapper, stationMapper);
     }
