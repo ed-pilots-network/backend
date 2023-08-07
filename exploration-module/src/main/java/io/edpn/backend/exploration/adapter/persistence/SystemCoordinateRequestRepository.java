@@ -7,15 +7,17 @@ import io.edpn.backend.exploration.application.port.outgoing.CreateSystemCoordin
 import io.edpn.backend.exploration.application.port.outgoing.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadAllSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemCoordinateRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.port.outgoing.LoadSystemCoordinateRequestPort;
 import io.edpn.backend.util.Module;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
-public class SystemCoordinateRequestRepository implements CreateSystemCoordinateRequestPort, LoadSystemCoordinateRequestBySystemNamePort, LoadAllSystemCoordinateRequestPort, DeleteSystemCoordinateRequestPort {
+public class SystemCoordinateRequestRepository implements CreateSystemCoordinateRequestPort, LoadSystemCoordinateRequestPort, LoadSystemCoordinateRequestBySystemNamePort, LoadAllSystemCoordinateRequestPort, DeleteSystemCoordinateRequestPort {
 
     private final MybatisSystemCoordinateRequestRepository mybatisSystemCoordinateRequestRepository;
     private final MybatisSystemCoordinateRequestEntityMapper mybatisSystemCoordinateRequestEntityMapper;
@@ -42,5 +44,11 @@ public class SystemCoordinateRequestRepository implements CreateSystemCoordinate
         return mybatisSystemCoordinateRequestRepository.findAll().stream()
                 .map(mybatisSystemCoordinateRequestEntityMapper::map)
                 .toList();
+    }
+
+    @Override
+    public Optional<SystemCoordinateRequest> load(SystemCoordinateRequest systemCoordinateRequest) {
+        return mybatisSystemCoordinateRequestRepository.find(systemCoordinateRequest.requestingModule(), systemCoordinateRequest.systemName())
+                .map(mybatisSystemCoordinateRequestEntityMapper::map);
     }
 }

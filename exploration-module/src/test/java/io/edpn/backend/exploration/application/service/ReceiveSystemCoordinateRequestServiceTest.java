@@ -10,6 +10,7 @@ import io.edpn.backend.exploration.application.dto.mapper.MessageMapper;
 import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.CreateSystemCoordinateRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.LoadSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
@@ -38,6 +39,8 @@ public class ReceiveSystemCoordinateRequestServiceTest {
     @Mock
     private CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
     @Mock
+    private LoadSystemCoordinateRequestPort loadSystemCoordinateRequestPort;
+    @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
     private SendKafkaMessagePort sendKafkaMessagePort;
@@ -54,12 +57,12 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
     @BeforeEach
     public void setup() {
-        underTest = new ReceiveSystemCoordinateRequestService(createSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, systemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate);
+        underTest = new ReceiveSystemCoordinateRequestService(createSystemCoordinateRequestPort, loadSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, systemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate);
     }
 
     @Test
     void testReceive_whenSystemExistsAndSendSuccessful_shouldNotSaveRequest() {
-        
+
         SystemDataRequest message = mock(SystemDataRequest.class);
         String systemName = "system";
         System system = mock(System.class);
@@ -91,7 +94,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
     @Test
     void testReceive_whenSystemExistsAndSendFails_shouldSaveRequest() {
-        
+
         SystemDataRequest message = mock(SystemDataRequest.class);
         String systemName = "system";
         Module requestingModule = mock(Module.class);
@@ -124,7 +127,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
     @Test
     void testReceive_whenSystemDoesNotExist_shouldSaveRequest() {
-        
+
         SystemDataRequest message = mock(SystemDataRequest.class);
         String systemName = "system";
         Module requestingModule = mock(Module.class);
