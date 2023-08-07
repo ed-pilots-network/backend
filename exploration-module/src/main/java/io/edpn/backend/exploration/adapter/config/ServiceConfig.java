@@ -10,6 +10,7 @@ import io.edpn.backend.exploration.application.port.outgoing.CreateSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadAllSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemCoordinateRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.port.outgoing.LoadSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.SaveSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
@@ -49,6 +50,7 @@ public class ServiceConfig {
     @Bean(name = "explorationReceiveSystemCoordinateRequestService")
     public ReceiveSystemCoordinateRequestService receiveSystemCoordinateRequestService(
             CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort,
+            LoadSystemCoordinateRequestPort loadSystemCoordinateRequestPort,
             LoadSystemPort loadSystemPort,
             SendKafkaMessagePort sendKafkaMessagePort,
             KafkaSystemCoordinatesResponseMapper kafkaSystemCoordinatesResponseMapper,
@@ -56,7 +58,7 @@ public class ServiceConfig {
             ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate
     ) {
-        return new ReceiveSystemCoordinateRequestService(createSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, kafkaSystemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate);
+        return new ReceiveSystemCoordinateRequestService(createSystemCoordinateRequestPort, loadSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, kafkaSystemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate);
     }
 
     @Bean(name = "explorationLoadByNameContainingValidator")
