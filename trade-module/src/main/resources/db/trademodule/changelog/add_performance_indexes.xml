@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="add_unique_indexes" author="pveeckhout">
+        <createIndex indexName="idx_market_datum_station_commodity" tableName="market_datum">
+            <column name="station_id"/>
+            <column name="commodity_id"/>
+        </createIndex>
+        <createIndex indexName="idx_market_datum_station_timestamp" tableName="market_datum">
+            <column name="station_id"/>
+            <column name="timestamp" descending="true"/>
+        </createIndex>
+        <createIndex indexName="idx_station_id" tableName="station">
+            <column name="id"/>
+        </createIndex>
+        <createIndex indexName="idx_commodity_name" tableName="commodity">
+            <column name="name"/>
+        </createIndex>
+        <createIndex indexName="idx_commodity_whitelist_technical_name" tableName="commodity_whitelist">
+            <column name="technical_name"/>
+        </createIndex>
+        <createIndex indexName="idx_commodity_whitelist_type" tableName="commodity_whitelist">
+            <column name="type"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

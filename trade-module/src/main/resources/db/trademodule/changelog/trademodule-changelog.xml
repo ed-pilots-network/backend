@@ -15,6 +15,7 @@
     <include file="/db/trademodule/changelog/create_request_data_message_table.xml"/>
     <include file="/db/trademodule/changelog/add_timestamp_market_datum_table.xml"/>
     <include file="/db/trademodule/changelog/create_commodity_whitelist_table.xml"/>
+    <include file="/db/trademodule/changelog/add_performance_indexes.xml"/>
 
     <!-- views always last as they might depend on new columns -->
     <include file="/db/trademodule/changelog/create_validated_commodity_view.xml"/>
