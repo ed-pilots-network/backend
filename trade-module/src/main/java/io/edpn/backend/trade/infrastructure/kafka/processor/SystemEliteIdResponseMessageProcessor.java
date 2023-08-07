@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
-import io.edpn.backend.trade.domain.usecase.ReceiveDataRequestResponseUseCase;
 import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.MessageProcessor;
+import io.edpn.backend.trade.domain.usecase.ReceiveDataRequestResponseUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 
@@ -16,7 +16,7 @@ public class SystemEliteIdResponseMessageProcessor implements MessageProcessor<S
     private final ObjectMapper objectMapper;
 
     @Override
-    @KafkaListener(topics = "tradeModuleSystemEliteIdResponse", groupId = "tradeModule", containerFactory = "tradeModuleKafkaListenerContainerFactory")
+    @KafkaListener(topics = "trade_systemEliteIdResponse", groupId = "tradeModule", containerFactory = "tradeModuleKafkaListenerContainerFactory")
     public void listen(JsonNode json) throws JsonProcessingException {
         handle(processJson(json));
     }

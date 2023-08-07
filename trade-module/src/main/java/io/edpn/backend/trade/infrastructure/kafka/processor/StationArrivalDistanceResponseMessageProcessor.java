@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationArrivalDistanceResponse;
 import io.edpn.backend.trade.domain.usecase.ReceiveDataRequestResponseUseCase;
 import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.MessageProcessor;
+import io.edpn.backend.util.Topic;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 
@@ -16,7 +17,7 @@ public class StationArrivalDistanceResponseMessageProcessor implements MessagePr
     private final ObjectMapper objectMapper;
 
     @Override
-    @KafkaListener(topics = "tradeModuleStationArrivalDistanceDataResponse", groupId = "tradeModule", containerFactory = "tradeModuleKafkaListenerContainerFactory")
+    @KafkaListener(topics = "trade_stationArrivalDistanceResponse", groupId = "tradeModule", containerFactory = "tradeModuleKafkaListenerContainerFactory")
     public void listen(JsonNode json) throws JsonProcessingException {
         handle(processJson(json));
     }
