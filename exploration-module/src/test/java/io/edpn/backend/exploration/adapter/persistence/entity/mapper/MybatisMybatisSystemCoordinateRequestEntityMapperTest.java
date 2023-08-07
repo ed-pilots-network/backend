@@ -4,11 +4,13 @@ import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemCoord
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
 import io.edpn.backend.exploration.application.dto.SystemCoordinateRequestEntity;
 import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinateRequestEntityMapper;
+import io.edpn.backend.util.Module;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Mockito.mock;
 
 class MybatisMybatisSystemCoordinateRequestEntityMapperTest {
 
@@ -22,7 +24,7 @@ class MybatisMybatisSystemCoordinateRequestEntityMapperTest {
     @Test
     public void testMap_givenDto_shouldReturnDomainObject() {
 
-        SystemCoordinateRequestEntity dto = new MybatisSystemCoordinateRequestEntity("systemName", "requestingModule");
+        SystemCoordinateRequestEntity dto = new MybatisSystemCoordinateRequestEntity("systemName", mock(Module.class));
 
 
         SystemCoordinateRequest result = underTest.map(dto);
@@ -35,7 +37,7 @@ class MybatisMybatisSystemCoordinateRequestEntityMapperTest {
     @Test
     public void testMap_givenDomainObject_shouldReturnEntity() {
 
-        SystemCoordinateRequest domainObject = new SystemCoordinateRequest("systemName", "requestingModule");
+        SystemCoordinateRequest domainObject = new SystemCoordinateRequest("systemName", mock(Module.class));
 
 
         SystemCoordinateRequestEntity result = underTest.map(domainObject);

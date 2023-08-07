@@ -14,8 +14,10 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class SystemCoordinatesRequestMessageProcessorTest {
@@ -36,10 +38,10 @@ class SystemCoordinatesRequestMessageProcessorTest {
     @Test
     void listen_shouldInvokeUseCaseWithCorrectSystemDataRequest() throws JsonProcessingException {
 
-        JsonNode jsonNode = Mockito.mock(JsonNode.class);
-        SystemDataRequest systemDataRequest = new SystemDataRequest();
+        JsonNode jsonNode = mock(JsonNode.class);
+        SystemDataRequest systemDataRequest = mock(SystemDataRequest.class);
 
-        Mockito.when(objectMapper.treeToValue(jsonNode, SystemDataRequest.class)).thenReturn(systemDataRequest);
+        when(objectMapper.treeToValue(jsonNode, SystemDataRequest.class)).thenReturn(systemDataRequest);
 
 
         underTest.listen(jsonNode);

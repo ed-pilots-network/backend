@@ -20,9 +20,9 @@ public class ReceiveStationArrivalDistanceResponseUseCase implements ReceiveData
 
     @Override
     public void receive(StationArrivalDistanceResponse message) {
-        String systemName = message.getSystemName();
-        String stationName = message.getStationName();
-        double arrivalDistance = message.getArrivalDistance();
+        String systemName = message.systemName();
+        String stationName = message.stationName();
+        double arrivalDistance = message.arrivalDistance();
 
         CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> systemRepository.findOrCreateByName(systemName));
 

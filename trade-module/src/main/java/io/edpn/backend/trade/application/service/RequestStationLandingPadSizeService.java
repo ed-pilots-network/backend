@@ -8,6 +8,8 @@ import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
 import io.edpn.backend.trade.domain.service.RequestDataService;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
+import io.edpn.backend.util.Module;
+import io.edpn.backend.util.Topic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,14 +29,13 @@ public class RequestStationLandingPadSizeService implements RequestDataService<S
 
     @Override
     public void request(Station station) {
-        StationDataRequest stationDataRequest = new StationDataRequest();
-        stationDataRequest.setStationName(station.getName());
-        stationDataRequest.setSystemName(station.getSystem().getName());
-
+        StationDataRequest stationDataRequest = new StationDataRequest(
+                Module.TRADE, station.getName(), station.getSystem().getName()
+        );
         JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
 
         RequestDataMessage requestDataMessage = RequestDataMessage.builder()
-                .topic("tradeModuleStationMaxLandingPadSizeDataRequest")
+                .topic(Topic.Request.STATION_MAX_LANDING_PAD_SIZE.getTopicName())
                 .message(jsonNode)
                 .build();
 

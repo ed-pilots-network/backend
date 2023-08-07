@@ -16,10 +16,10 @@ public class ReceiveSystemCoordinatesResponseUseCase implements ReceiveDataReque
 
     @Override
     public void receive(SystemCoordinatesResponse message) {
-        String systemName = message.getSystemName();
-        double xCoordinate = message.getXCoordinate();
-        double yCoordinate = message.getYCoordinate();
-        double zCoordinate = message.getZCoordinate();
+        String systemName = message.systemName();
+        double xCoordinate = message.xCoordinate();
+        double yCoordinate = message.yCoordinate();
+        double zCoordinate = message.zCoordinate();
 
         CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> systemRepository.findOrCreateByName(systemName))
                 .whenComplete((system, throwable) -> {

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -33,10 +34,9 @@ public class ReceiveStationRequireOdysseyResponseUseCaseTest {
 
     @Test
     public void shouldReceiveStationRequireOdysseyResponse() {
-        StationRequireOdysseyResponse message = new StationRequireOdysseyResponse();
-        message.setSystemName("system");
-        message.setStationName("station");
-        message.setRequireOdyssey(true);
+        StationRequireOdysseyResponse message = new StationRequireOdysseyResponse(
+                "station", "system", true
+        );
 
         System system = mock(System.class);
         when(systemRepository.findOrCreateByName("system")).thenReturn(system);
@@ -52,6 +52,6 @@ public class ReceiveStationRequireOdysseyResponseUseCaseTest {
         verify(stationRepository, times(1)).findOrCreateBySystemAndStationName(any(), anyString());
         verify(stationRepository, times(1)).update(any());
 
-        assert(station.getRequireOdyssey());
+        assertTrue(station.getRequireOdyssey());
     }
 }

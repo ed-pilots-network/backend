@@ -20,9 +20,9 @@ public class ReceiveStationMaxLandingPadSizeResponseUseCase implements ReceiveDa
 
     @Override
     public void receive(StationMaxLandingPadSizeResponse message) {
-        String systemName = message.getSystemName();
-        String stationName = message.getStationName();
-        LandingPadSize landingPadSize = LandingPadSize.valueOf(message.getMaxLandingPadSize());
+        String systemName = message.systemName();
+        String stationName = message.stationName();
+        LandingPadSize landingPadSize = LandingPadSize.valueOf(message.maxLandingPadSize());
 
         CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> systemRepository.findOrCreateByName(systemName));
 

@@ -18,6 +18,7 @@ import io.edpn.backend.exploration.application.port.outgoing.SaveSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
+import io.edpn.backend.util.Module;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -74,7 +75,8 @@ class ReceiveNavRouteServiceTest {
     void testReceiveMessage_whenSystemExistsAndPropertiesAreSet_shouldSaveAndSendResponses() {
         
         String systemName = "system";
-        String module = "module";
+        Module module = mock(Module.class);
+        when(module.getName()).thenReturn("module");
         System system = mock(System.class);
         when(system.name()).thenReturn(systemName);
         when(system.eliteId()).thenReturn(1L);
@@ -86,10 +88,10 @@ class ReceiveNavRouteServiceTest {
         when(coordinate.z()).thenReturn(3.0);
         NavRouteMessage.V1.Item item = mock(NavRouteMessage.V1.Item.class);
         NavRouteMessage.V1 message = mock(NavRouteMessage.V1.class);
-        NavRouteMessage.V1.Message payload = mock(NavRouteMessage.V1.Message.class);
-        when(message.getMessage()).thenReturn(payload);
-        when(payload.getItems()).thenReturn(new NavRouteMessage.V1.Item[]{item});
-        when(item.getStarSystem()).thenReturn(systemName);
+        NavRouteMessage.V1.Payload payload = mock(NavRouteMessage.V1.Payload.class);
+        when(message.message()).thenReturn(payload);
+        when(payload.items()).thenReturn(new NavRouteMessage.V1.Item[]{item});
+        when(item.starSystem()).thenReturn(systemName);
         when(loadSystemPort.load(systemName)).thenReturn(Optional.of(system));
         when(saveSystemPort.save(system)).thenReturn(system);
         SystemCoordinateRequest systemCoordinatesRequest = mock(SystemCoordinateRequest.class);
@@ -101,7 +103,7 @@ class ReceiveNavRouteServiceTest {
         JsonNode jsonNode = mock(JsonNode.class);
         when(jsonNode.toString()).thenReturn("JSON_STRING");
         when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
-        Message kafkaMessage = new Message("module_systemCoordinatesDataResponse", "JSON_STRING");
+        Message kafkaMessage = new Message("module_systemCoordinatesResponse", "JSON_STRING");
         MessageDto messageDto = mock(MessageDto.class);
         when(messageMapper.map(kafkaMessage)).thenReturn(messageDto);
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
@@ -121,7 +123,8 @@ class ReceiveNavRouteServiceTest {
     void testReceiveMessage_whenSystemDoesNotExist_shouldCreateSaveAndSendResponses() {
         
         String systemName = "system";
-        String module = "module";
+        Module module = mock(Module.class);
+        when(module.getName()).thenReturn("module");
         System system = mock(System.class);
         when(system.name()).thenReturn(systemName);
         when(system.eliteId()).thenReturn(null);
@@ -132,13 +135,13 @@ class ReceiveNavRouteServiceTest {
         when(system.withCoordinate(any(Coordinate.class))).thenReturn(system);
         NavRouteMessage.V1.Item item = mock(NavRouteMessage.V1.Item.class);
         NavRouteMessage.V1 message = mock(NavRouteMessage.V1.class);
-        NavRouteMessage.V1.Message payload = mock(NavRouteMessage.V1.Message.class);
-        when(message.getMessage()).thenReturn(payload);
-        when(payload.getItems()).thenReturn(new NavRouteMessage.V1.Item[]{item});
-        when(item.getStarSystem()).thenReturn(systemName);
-        when(item.getStarPos()).thenReturn(new Double[]{1.0, 2.0, 3.0});
-        when(item.getStarClass()).thenReturn("K");
-        when(item.getSystemAddress()).thenReturn(1L);
+        NavRouteMessage.V1.Payload payload = mock(NavRouteMessage.V1.Payload.class);
+        when(message.message()).thenReturn(payload);
+        when(payload.items()).thenReturn(new NavRouteMessage.V1.Item[]{item});
+        when(item.starSystem()).thenReturn(systemName);
+        when(item.starPos()).thenReturn(new Double[]{1.0, 2.0, 3.0});
+        when(item.starClass()).thenReturn("K");
+        when(item.systemAddress()).thenReturn(1L);
         when(loadSystemPort.load(systemName)).thenReturn(Optional.empty());
         when(createSystemPort.create(systemName)).thenReturn(system);
         when(saveSystemPort.save(system)).thenReturn(system);
@@ -151,7 +154,7 @@ class ReceiveNavRouteServiceTest {
         JsonNode jsonNode = mock(JsonNode.class);
         when(jsonNode.toString()).thenReturn("JSON_STRING");
         when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
-        Message kafkaMessage = new Message("module_systemCoordinatesDataResponse", "JSON_STRING");
+        Message kafkaMessage = new Message("module_systemCoordinatesResponse", "JSON_STRING");
         MessageDto messageDto = mock(MessageDto.class);
         when(messageMapper.map(kafkaMessage)).thenReturn(messageDto);
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
@@ -172,7 +175,8 @@ class ReceiveNavRouteServiceTest {
     void testReceiveMessage_whenSystemExistsAndPropertiesAreNotSet_shouldUpdateSaveAndSendResponses() {
         
         String systemName = "system";
-        String module = "module";
+        Module module = mock(Module.class);
+        when(module.getName()).thenReturn("module");
         System system = mock(System.class);
         when(system.name()).thenReturn(systemName);
         when(system.eliteId()).thenReturn(null);
@@ -185,13 +189,13 @@ class ReceiveNavRouteServiceTest {
         when(coordinate.x()).thenReturn(null);
         NavRouteMessage.V1.Item item = mock(NavRouteMessage.V1.Item.class);
         NavRouteMessage.V1 message = mock(NavRouteMessage.V1.class);
-        NavRouteMessage.V1.Message payload = mock(NavRouteMessage.V1.Message.class);
-        when(message.getMessage()).thenReturn(payload);
-        when(payload.getItems()).thenReturn(new NavRouteMessage.V1.Item[]{item});
-        when(item.getStarSystem()).thenReturn(systemName);
-        when(item.getStarPos()).thenReturn(new Double[]{1.0, 2.0, 3.0});
-        when(item.getStarClass()).thenReturn("K");
-        when(item.getSystemAddress()).thenReturn(1L);
+        NavRouteMessage.V1.Payload payload = mock(NavRouteMessage.V1.Payload.class);
+        when(message.message()).thenReturn(payload);
+        when(payload.items()).thenReturn(new NavRouteMessage.V1.Item[]{item});
+        when(item.starSystem()).thenReturn(systemName);
+        when(item.starPos()).thenReturn(new Double[]{1.0, 2.0, 3.0});
+        when(item.starClass()).thenReturn("K");
+        when(item.systemAddress()).thenReturn(1L);
         when(loadSystemPort.load(systemName)).thenReturn(Optional.of(system));
         when(saveSystemPort.save(system)).thenReturn(system);
         SystemCoordinateRequest systemCoordinatesRequest = mock(SystemCoordinateRequest.class);
@@ -203,7 +207,7 @@ class ReceiveNavRouteServiceTest {
         JsonNode jsonNode = mock(JsonNode.class);
         when(jsonNode.toString()).thenReturn("JSON_STRING");
         when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
-        Message kafkaMessage = new Message("module_systemCoordinatesDataResponse", "JSON_STRING");
+        Message kafkaMessage = new Message("module_systemCoordinatesResponse", "JSON_STRING");
         MessageDto messageDto = mock(MessageDto.class);
         when(messageMapper.map(kafkaMessage)).thenReturn(messageDto);
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
@@ -238,13 +242,13 @@ class ReceiveNavRouteServiceTest {
         when(coordinate.x()).thenReturn(null);
         NavRouteMessage.V1.Item item = mock(NavRouteMessage.V1.Item.class);
         NavRouteMessage.V1 message = mock(NavRouteMessage.V1.class);
-        NavRouteMessage.V1.Message payload = mock(NavRouteMessage.V1.Message.class);
-        when(message.getMessage()).thenReturn(payload);
-        when(payload.getItems()).thenReturn(new NavRouteMessage.V1.Item[]{item});
-        when(item.getStarSystem()).thenReturn(systemName);
-        when(item.getStarPos()).thenReturn(new Double[]{1.0, 2.0, 3.0});
-        when(item.getStarClass()).thenReturn("K");
-        when(item.getSystemAddress()).thenReturn(1L);
+        NavRouteMessage.V1.Payload payload = mock(NavRouteMessage.V1.Payload.class);
+        when(message.message()).thenReturn(payload);
+        when(payload.items()).thenReturn(new NavRouteMessage.V1.Item[]{item});
+        when(item.starSystem()).thenReturn(systemName);
+        when(item.starPos()).thenReturn(new Double[]{1.0, 2.0, 3.0});
+        when(item.starClass()).thenReturn("K");
+        when(item.systemAddress()).thenReturn(1L);
         when(loadSystemPort.load(systemName)).thenReturn(Optional.empty());
         when(createSystemPort.create(systemName)).thenReturn(system);
         when(saveSystemPort.save(system)).thenReturn(system);

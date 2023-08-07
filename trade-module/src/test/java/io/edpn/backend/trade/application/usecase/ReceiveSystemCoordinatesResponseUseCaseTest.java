@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -28,11 +29,9 @@ public class ReceiveSystemCoordinatesResponseUseCaseTest {
 
     @Test
     public void shouldReceiveSystemCoordinatesResponse() {
-        SystemCoordinatesResponse message = new SystemCoordinatesResponse();
-        message.setSystemName("system");
-        message.setXCoordinate(1.0);
-        message.setYCoordinate(2.0);
-        message.setZCoordinate(3.0);
+        SystemCoordinatesResponse message = new SystemCoordinatesResponse(
+                "system", 1.0d, 2.0d, 3.0d
+        );
 
         System system = System.builder()
                 .name("system")
@@ -44,8 +43,8 @@ public class ReceiveSystemCoordinatesResponseUseCaseTest {
         verify(systemRepository, times(1)).findOrCreateByName(anyString());
         verify(systemRepository, times(1)).update(any());
 
-        assert(system.getXCoordinate() == 1.0);
-        assert(system.getYCoordinate() == 2.0);
-        assert(system.getZCoordinate() == 3.0);
+        assertEquals(1.0d, system.getXCoordinate());
+        assertEquals(2.0d, system.getYCoordinate());
+        assertEquals(3.0d, system.getZCoordinate());
     }
 }

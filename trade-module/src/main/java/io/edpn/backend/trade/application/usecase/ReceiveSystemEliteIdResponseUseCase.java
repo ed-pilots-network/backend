@@ -16,8 +16,8 @@ public class ReceiveSystemEliteIdResponseUseCase implements ReceiveDataRequestRe
 
     @Override
     public void receive(SystemEliteIdResponse message) {
-        String systemName = message.getSystemName();
-        long eliteId = message.getEliteId();
+        String systemName = message.systemName();
+        long eliteId = message.eliteId();
 
         CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> systemRepository.findOrCreateByName(systemName))
                 .whenComplete((station, throwable) -> {
