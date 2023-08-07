@@ -76,11 +76,11 @@ public class RequestStationLandingPadSizeServiceTest {
 
         RequestDataMessage message = argumentCaptor.getValue();
         assertThat(message, is(notNullValue()));
-        assertThat(message.getTopic(), is("tradeModuleStationMaxLandingPadSizeDataRequest"));
+        assertThat(message.getTopic(), is("stationMaxLandingPadSizeRequest"));
         assertThat(message.getMessage(), is(notNullValue()));
 
         StationDataRequest actualStationDataRequest = objectMapper.treeToValue(message.getMessage(), StationDataRequest.class);
-        assertThat(actualStationDataRequest.getStationName(), is(station.getName()));
-        assertThat(actualStationDataRequest.getSystemName(), is(system.getName()));
+        assertThat(actualStationDataRequest.stationName(), is(station.getName()));
+        assertThat(actualStationDataRequest.systemName(), is(system.getName()));
     }
 }

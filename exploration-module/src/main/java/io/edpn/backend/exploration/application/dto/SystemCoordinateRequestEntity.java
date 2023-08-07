@@ -1,9 +1,11 @@
 package io.edpn.backend.exploration.application.dto;
 
+import io.edpn.backend.util.Module;
+
 public interface SystemCoordinateRequestEntity {
 
     String getSystemName();
 
-    String getRequestingModule();
+    Module getRequestingModule();
 
 }

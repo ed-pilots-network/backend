@@ -12,6 +12,8 @@ import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.util.Module;
+import io.edpn.backend.util.Topic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.support.RetryTemplate;
@@ -20,7 +22,6 @@ import org.springframework.retry.support.RetryTemplate;
 @Slf4j
 public class ReceiveSystemCoordinateRequestService implements ReceiveKafkaMessageUseCase<SystemDataRequest> {
 
-    private final static String TOPIC = "_systemCoordinatesDataResponse";
 
     private final CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
     private final LoadSystemPort loadSystemPort;
@@ -32,14 +33,15 @@ public class ReceiveSystemCoordinateRequestService implements ReceiveKafkaMessag
 
     @Override
     public void receive(SystemDataRequest message) {
-        String systemName = message.getSystemName();
-        String requestingModule = message.getRequestingModule();
+        String systemName = message.systemName();
+        Module requestingModule = message.requestingModule();
 
         loadSystemPort.load(systemName).ifPresentOrElse(
                 system -> {
                     SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
                     String stringJson = objectMapper.valueToTree(systemCoordinatesResponse).toString();
-                    Message kafkaMessage = new Message(requestingModule + TOPIC, stringJson);
+                    String topic = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(requestingModule);
+                    Message kafkaMessage = new Message(topic, stringJson);
                     MessageDto messageDto = messageMapper.map(kafkaMessage);
 
                     boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(messageDto));
@@ -50,7 +52,7 @@ public class ReceiveSystemCoordinateRequestService implements ReceiveKafkaMessag
                 () -> saveRequest(systemName, requestingModule));
     }
 
-    private void saveRequest(String systemName, String requestingModule) {
+    private void saveRequest(String systemName, Module requestingModule) {
         SystemCoordinateRequest systemCoordinateDataRequest = new SystemCoordinateRequest(systemName, requestingModule);
         createSystemCoordinateRequestPort.create(systemCoordinateDataRequest);
     }

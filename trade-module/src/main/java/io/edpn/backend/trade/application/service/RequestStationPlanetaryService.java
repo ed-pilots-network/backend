@@ -7,6 +7,8 @@ import io.edpn.backend.trade.domain.model.RequestDataMessage;
 import io.edpn.backend.trade.domain.model.Station;
 import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
 import io.edpn.backend.trade.domain.service.RequestDataService;
+import io.edpn.backend.util.Module;
+import io.edpn.backend.util.Topic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,14 +28,13 @@ public class RequestStationPlanetaryService implements RequestDataService<Statio
 
     @Override
     public void request(Station station) {
-        StationDataRequest stationDataRequest = new StationDataRequest();
-        stationDataRequest.setStationName(station.getName());
-        stationDataRequest.setSystemName(station.getSystem().getName());
-
+        StationDataRequest stationDataRequest = new StationDataRequest(
+                Module.TRADE, station.getName(), station.getSystem().getName()
+        );
         JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
 
         RequestDataMessage requestDataMessage = RequestDataMessage.builder()
-                .topic("tradeModuleStationPlanetaryDataRequest")
+                .topic(Topic.Request.STATION_IS_PLANETARY.getTopicName())
                 .message(jsonNode)
                 .build();
 

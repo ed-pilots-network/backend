@@ -10,12 +10,11 @@ public class KafkaSystemCoordinatesResponseMapper implements SystemCoordinatesRe
 
     @Override
     public SystemCoordinatesResponse map(System system) {
-        SystemCoordinatesResponse systemCoordinatesResponse = new SystemCoordinatesResponse();
-        systemCoordinatesResponse.setSystemName(system.name());
-        systemCoordinatesResponse.setXCoordinate(system.coordinate().x());
-        systemCoordinatesResponse.setYCoordinate(system.coordinate().y());
-        systemCoordinatesResponse.setZCoordinate(system.coordinate().z());
 
-        return systemCoordinatesResponse;
+        return new SystemCoordinatesResponse(
+                system.name(),
+                system.coordinate().x(),
+                system.coordinate().y(),
+                system.coordinate().z());
     }
 }
