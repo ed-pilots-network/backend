@@ -35,7 +35,7 @@ public class RequestDataMessageMapperTest {
         RequestDataMessageEntity requestDataMessageEntity = underTest.map(requestDataMessage);
 
         assertThat(requestDataMessageEntity.getTopic(), is(topic));
-        assertThat(requestDataMessageEntity.getMessage(), is(message.asText()));
+        assertThat(requestDataMessageEntity.getMessage(), is(message.toString()));
     }
 
     @Test
@@ -51,6 +51,6 @@ public class RequestDataMessageMapperTest {
         RequestDataMessageEntity requestDataMessageEntity = underTest.map(requestDataMessage);
 
         assertThat(requestDataMessageEntity.getTopic(), is("Test_Topic_Name"));
-        assertThat(requestDataMessageEntity.getMessage(), is(message.asText()));
+        assertThat(requestDataMessageEntity.getMessage(), is(message.toString()));
     }
 }
