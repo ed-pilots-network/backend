@@ -6,7 +6,7 @@ import io.edpn.backend.exploration.adapter.kafka.processor.NavRouteV1MessageProc
 import io.edpn.backend.exploration.adapter.kafka.processor.SystemCoordinatesRequestMessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.sender.KafkaMessageSender;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
-import io.edpn.backend.exploration.application.port.outgoing.CreateTopicPort;
+import io.edpn.backend.exploration.application.port.outgoing.topic.CreateTopicPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -3,7 +3,7 @@ package io.edpn.backend.exploration.adapter.persistence;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.dto.mapper.SystemEntityMapper;
-import io.edpn.backend.exploration.application.port.outgoing.CreateSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.system.CreateSystemPort;
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.exception.DatabaseEntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;

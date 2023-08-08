@@ -1,4 +1,4 @@
-package io.edpn.backend.exploration.application.port.outgoing;
+package io.edpn.backend.exploration.application.port.outgoing.topic;
 
 import java.util.concurrent.CompletableFuture;
 
