@@ -23,7 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class SystemCoordinatesRequestMessageProcessorTest {
+class SystemEliteIdRequestMessageProcessorTest {
 
     @Mock
     private ReceiveKafkaMessageUseCase<SystemDataRequest> receiveSystemDataRequestUseCase;
@@ -35,7 +35,7 @@ class SystemCoordinatesRequestMessageProcessorTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new SystemCoordinatesRequestMessageProcessor(receiveSystemDataRequestUseCase, objectMapper);
+        underTest = new SystemEliteIdRequestMessageProcessor(receiveSystemDataRequestUseCase, objectMapper);
     }
 
     @Test

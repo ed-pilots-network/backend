@@ -1,5 +1,7 @@
-package io.edpn.backend.exploration.adapter.persistence;
+package io.edpn.backend.exploration.adapter.persistence.system;
 
+import io.edpn.backend.exploration.adapter.persistence.MybatisSystemRepository;
+import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.dto.mapper.SystemEntityMapper;

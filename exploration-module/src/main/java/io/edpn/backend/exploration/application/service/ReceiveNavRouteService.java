@@ -7,6 +7,7 @@ import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.dto.MessageDto;
 import io.edpn.backend.exploration.application.dto.mapper.MessageMapper;
 import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
+import io.edpn.backend.exploration.application.dto.mapper.SystemEliteIdResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.CreateSystemPort;
@@ -14,8 +15,11 @@ import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPo
 import io.edpn.backend.exploration.application.port.outgoing.system.SaveSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestBySystemNamePort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
 import io.edpn.backend.util.Topic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +42,9 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
     private final LoadSystemCoordinateRequestBySystemNamePort loadSystemCoordinateRequestBySystemNamePort;
     private final DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
     private final SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
+    private final LoadSystemEliteIdRequestBySystemNamePort loadSystemEliteIdRequestBySystemNamePort;
+    private final DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort;
+    private final SystemEliteIdResponseMapper systemEliteIdResponseMapper;
     private final MessageMapper messageMapper;
     private final ObjectMapper objectMapper;
     private final RetryTemplate retryTemplate;
@@ -65,8 +72,12 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
     private CompletableFuture<Void> process(NavRouteMessage.V1.Item item) {
         return loadOrCreateSystem(item.starSystem())
                 .thenApply(system -> updateSystemFromItem(system, item))
-                .thenComposeAsync(this::saveSystem)
-                .thenAcceptAsync(this::sendResponse);
+                .thenComposeAsync(this::saveSystem).thenCompose(system -> {
+                    CompletableFuture<Void> sendCoordinateResponseFuture = CompletableFuture.runAsync(() -> sendCoordinateResponse(system), executor);
+                    CompletableFuture<Void> sendEliteIdResponseFuture = CompletableFuture.runAsync(() -> sendEliteIdResponse(system), executor);
+
+                    return CompletableFuture.allOf(sendCoordinateResponseFuture, sendEliteIdResponseFuture);
+                });
     }
 
     private CompletableFuture<System> loadOrCreateSystem(String systemName) {
@@ -94,7 +105,7 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
         return CompletableFuture.supplyAsync(() -> saveSystemPort.save(system), executor);
     }
 
-    private void sendResponse(System system) {
+    private void sendCoordinateResponse(System system) {
         loadSystemCoordinateRequestBySystemNamePort.loadByName(system.name()).parallelStream()
                 .forEach(systemCoordinateRequest -> CompletableFuture.runAsync(() -> {
                     SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
@@ -106,6 +117,23 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
                     boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
                     if (sendSuccessful) {
                         deleteSystemCoordinateRequestPort.delete(system.name(), systemCoordinateRequest.requestingModule());
+                    }
+                }, executor));
+
+    }
+
+    private void sendEliteIdResponse(System system) {
+        loadSystemEliteIdRequestBySystemNamePort.loadByName(system.name()).parallelStream()
+                .forEach(systemEliteIdRequest -> CompletableFuture.runAsync(() -> {
+                    SystemEliteIdResponse systemEliteIdsResponse = systemEliteIdResponseMapper.map(system);
+                    String stringJson = objectMapper.valueToTree(systemEliteIdsResponse).toString();
+                    String topic = Topic.Response.SYSTEM_ELITE_ID.getFormattedTopicName(systemEliteIdRequest.requestingModule());
+                    Message message = new Message(topic, stringJson);
+                    MessageDto messageDto = messageMapper.map(message);
+
+                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
+                    if (sendSuccessful) {
+                        deleteSystemEliteIdRequestPort.delete(system.name(), systemEliteIdRequest.requestingModule());
                     }
                 }, executor));
 

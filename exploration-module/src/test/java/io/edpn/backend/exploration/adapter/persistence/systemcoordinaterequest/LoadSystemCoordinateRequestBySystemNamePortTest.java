@@ -1,5 +1,7 @@
-package io.edpn.backend.exploration.adapter.persistence;
+package io.edpn.backend.exploration.adapter.persistence.systemcoordinaterequest;
 
+import io.edpn.backend.exploration.adapter.persistence.MybatisSystemCoordinateRequestRepository;
+import io.edpn.backend.exploration.adapter.persistence.SystemCoordinateRequestRepository;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemCoordinateRequestEntity;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemCoordinateRequestEntityMapper;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
