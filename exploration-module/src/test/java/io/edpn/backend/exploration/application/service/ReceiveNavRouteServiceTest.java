@@ -10,12 +10,12 @@ import io.edpn.backend.exploration.application.dto.MessageDto;
 import io.edpn.backend.exploration.application.dto.mapper.MessageMapper;
 import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
+import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.CreateSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestBySystemNamePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.system.SaveSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.system.SendMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestBySystemNamePort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.util.Module;
@@ -73,7 +73,7 @@ class ReceiveNavRouteServiceTest {
 
     @Test
     void testReceiveMessage_whenSystemExistsAndPropertiesAreSet_shouldSaveAndSendResponses() {
-        
+
         String systemName = "system";
         Module module = mock(Module.class);
         when(module.getName()).thenReturn("module");
@@ -121,7 +121,7 @@ class ReceiveNavRouteServiceTest {
 
     @Test
     void testReceiveMessage_whenSystemDoesNotExist_shouldCreateSaveAndSendResponses() {
-        
+
         String systemName = "system";
         Module module = mock(Module.class);
         when(module.getName()).thenReturn("module");
@@ -173,7 +173,7 @@ class ReceiveNavRouteServiceTest {
 
     @Test
     void testReceiveMessage_whenSystemExistsAndPropertiesAreNotSet_shouldUpdateSaveAndSendResponses() {
-        
+
         String systemName = "system";
         Module module = mock(Module.class);
         when(module.getName()).thenReturn("module");
@@ -228,7 +228,7 @@ class ReceiveNavRouteServiceTest {
 
     @Test
     void testReceiveMessage_whenSystemDoesNotExist_shouldCreateSaveAndSendResponses_noPendingRequests() {
-        
+
         String systemName = "system";
         System system = mock(System.class);
         when(system.name()).thenReturn(systemName);

@@ -1,4 +1,4 @@
-package io.edpn.backend.exploration.application.port.outgoing.system;
+package io.edpn.backend.exploration.application.port.outgoing.message;
 
 import io.edpn.backend.exploration.application.dto.MessageDto;
 
