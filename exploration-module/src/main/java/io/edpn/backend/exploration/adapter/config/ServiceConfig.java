@@ -13,7 +13,7 @@ import io.edpn.backend.exploration.application.port.outgoing.LoadSystemCoordinat
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.SaveSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.SendMessagePort;
 import io.edpn.backend.exploration.application.service.ProcessPendingSystemCoordinateRequestService;
 import io.edpn.backend.exploration.application.service.ReceiveNavRouteService;
 import io.edpn.backend.exploration.application.service.ReceiveSystemCoordinateRequestService;
@@ -35,7 +35,7 @@ public class ServiceConfig {
             CreateSystemPort createSystemPort,
             LoadSystemPort loadSystemPort,
             SaveSystemPort saveSystemPort,
-            SendKafkaMessagePort sendKafkaMessagePort,
+            SendMessagePort sendMessagePort,
             LoadSystemCoordinateRequestBySystemNamePort loadSystemCoordinateRequestBySystemNamePort,
             DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort,
             KafkaSystemCoordinatesResponseMapper kafkaSystemCoordinatesResponseMapper,
@@ -44,7 +44,7 @@ public class ServiceConfig {
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("explorationThreadPoolTaskExecutor") Executor executor
     ) {
-        return new ReceiveNavRouteService(createSystemPort, loadSystemPort, saveSystemPort, sendKafkaMessagePort, loadSystemCoordinateRequestBySystemNamePort, deleteSystemCoordinateRequestPort, kafkaSystemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate, executor);
+        return new ReceiveNavRouteService(createSystemPort, loadSystemPort, saveSystemPort, sendMessagePort, loadSystemCoordinateRequestBySystemNamePort, deleteSystemCoordinateRequestPort, kafkaSystemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate, executor);
     }
 
     @Bean(name = "explorationReceiveSystemCoordinateRequestService")
@@ -52,13 +52,13 @@ public class ServiceConfig {
             CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort,
             LoadSystemCoordinateRequestPort loadSystemCoordinateRequestPort,
             LoadSystemPort loadSystemPort,
-            SendKafkaMessagePort sendKafkaMessagePort,
+            SendMessagePort sendMessagePort,
             KafkaSystemCoordinatesResponseMapper kafkaSystemCoordinatesResponseMapper,
             MessageMapper messageMapper,
             ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate
     ) {
-        return new ReceiveSystemCoordinateRequestService(createSystemCoordinateRequestPort, loadSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, kafkaSystemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate);
+        return new ReceiveSystemCoordinateRequestService(createSystemCoordinateRequestPort, loadSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, kafkaSystemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate);
     }
 
     @Bean(name = "explorationLoadByNameContainingValidator")
@@ -83,7 +83,7 @@ public class ServiceConfig {
     public ProcessPendingSystemCoordinateRequestService processPendingSystemCoordinateRequestService(
             LoadAllSystemCoordinateRequestPort loadAllSystemCoordinateRequestPort,
             LoadSystemPort loadSystemPort,
-            SendKafkaMessagePort sendKafkaMessagePort,
+            SendMessagePort sendMessagePort,
             DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort,
             KafkaSystemCoordinatesResponseMapper kafkaSystemCoordinatesResponseMapper,
             MessageMapper messageMapper,
@@ -91,6 +91,6 @@ public class ServiceConfig {
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("explorationThreadPoolTaskExecutor") Executor executor
     ) {
-        return new ProcessPendingSystemCoordinateRequestService(loadAllSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, deleteSystemCoordinateRequestPort, kafkaSystemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate, executor);
+        return new ProcessPendingSystemCoordinateRequestService(loadAllSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, deleteSystemCoordinateRequestPort, kafkaSystemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate, executor);
     }
 }

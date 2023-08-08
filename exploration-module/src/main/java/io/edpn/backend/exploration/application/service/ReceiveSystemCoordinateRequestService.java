@@ -10,7 +10,7 @@ import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessag
 import io.edpn.backend.exploration.application.port.outgoing.CreateSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.SendMessagePort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.util.Module;
@@ -27,7 +27,7 @@ public class ReceiveSystemCoordinateRequestService implements ReceiveKafkaMessag
     private final CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
     private final LoadSystemCoordinateRequestPort loadSystemCoordinateRequestPort;
     private final LoadSystemPort loadSystemPort;
-    private final SendKafkaMessagePort sendKafkaMessagePort;
+    private final SendMessagePort sendMessagePort;
     private final SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
     private final MessageMapper messageMapper;
     private final ObjectMapper objectMapper;
@@ -46,7 +46,7 @@ public class ReceiveSystemCoordinateRequestService implements ReceiveKafkaMessag
                     Message kafkaMessage = new Message(topic, stringJson);
                     MessageDto messageDto = messageMapper.map(kafkaMessage);
 
-                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(messageDto));
+                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
                     if (!sendSuccessful) {
                         saveRequest(systemName, requestingModule);
                     }

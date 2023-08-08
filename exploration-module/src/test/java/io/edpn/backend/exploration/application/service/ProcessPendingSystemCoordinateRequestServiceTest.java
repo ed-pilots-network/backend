@@ -12,7 +12,7 @@ import io.edpn.backend.exploration.application.port.incomming.ProcessPendingData
 import io.edpn.backend.exploration.application.port.outgoing.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadAllSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.SendMessagePort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.util.Module;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +45,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
     @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
-    private SendKafkaMessagePort sendKafkaMessagePort;
+    private SendMessagePort sendMessagePort;
     @Mock
     private DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
     @Mock
@@ -62,7 +62,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
     @BeforeEach
     void setUp() {
         Executor executor = Runnable::run;
-        underTest = new ProcessPendingSystemCoordinateRequestService(loadAllSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate, executor);
+        underTest = new ProcessPendingSystemCoordinateRequestService(loadAllSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate, executor);
     }
 
     @Test
@@ -76,7 +76,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
 
         verify(loadAllSystemCoordinateRequestPort, times(1)).loadAll();
         verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort);
-        verifyNoInteractions(loadSystemPort, sendKafkaMessagePort, deleteSystemCoordinateRequestPort);
+        verifyNoInteractions(loadSystemPort, sendMessagePort, deleteSystemCoordinateRequestPort);
     }
 
     @Test
@@ -95,7 +95,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
         verify(loadAllSystemCoordinateRequestPort, times(1)).loadAll();
         verify(loadSystemPort, times(1)).load("SystemName");
         verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort, loadSystemPort);
-        verifyNoInteractions(sendKafkaMessagePort, deleteSystemCoordinateRequestPort);
+        verifyNoInteractions(sendMessagePort, deleteSystemCoordinateRequestPort);
     }
 
     @Test
@@ -118,7 +118,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
         when(messageMapper.map(message)).thenReturn(messageDto);
         when(loadAllSystemCoordinateRequestPort.loadAll()).thenReturn(systemCoordinateRequestList);
         when(loadSystemPort.load("SystemName")).thenReturn(Optional.of(system));
-        when(sendKafkaMessagePort.send(messageDto)).thenReturn(false);
+        when(sendMessagePort.send(messageDto)).thenReturn(false);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
 
@@ -127,8 +127,8 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
 
         verify(loadAllSystemCoordinateRequestPort, times(1)).loadAll();
         verify(loadSystemPort, times(1)).load("SystemName");
-        verify(sendKafkaMessagePort, times(1)).send(messageDto);
-        verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort);
+        verify(sendMessagePort, times(1)).send(messageDto);
+        verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort, loadSystemPort, sendMessagePort);
         verifyNoInteractions(deleteSystemCoordinateRequestPort);
     }
 
@@ -152,7 +152,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
         when(messageMapper.map(message)).thenReturn(messageDto);
         when(loadAllSystemCoordinateRequestPort.loadAll()).thenReturn(systemCoordinateRequestList);
         when(loadSystemPort.load("SystemName")).thenReturn(Optional.of(system));
-        when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
+        when(sendMessagePort.send(messageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
 
@@ -161,8 +161,8 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
 
         verify(loadAllSystemCoordinateRequestPort, times(1)).loadAll();
         verify(loadSystemPort, times(1)).load("SystemName");
-        verify(sendKafkaMessagePort, times(1)).send(messageDto);
+        verify(sendMessagePort, times(1)).send(messageDto);
         verify(deleteSystemCoordinateRequestPort, times(1)).delete("SystemName", module);
-        verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, deleteSystemCoordinateRequestPort);
+        verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, deleteSystemCoordinateRequestPort);
     }
 }

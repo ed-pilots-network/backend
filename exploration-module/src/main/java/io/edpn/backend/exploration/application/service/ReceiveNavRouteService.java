@@ -13,7 +13,7 @@ import io.edpn.backend.exploration.application.port.outgoing.DeleteSystemCoordin
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemCoordinateRequestBySystemNamePort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.SaveSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.SendMessagePort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.util.Topic;
@@ -34,7 +34,7 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
     private final CreateSystemPort createSystemPort;
     private final LoadSystemPort loadSystemPort;
     private final SaveSystemPort saveSystemPort;
-    private final SendKafkaMessagePort sendKafkaMessagePort;
+    private final SendMessagePort sendMessagePort;
     private final LoadSystemCoordinateRequestBySystemNamePort loadSystemCoordinateRequestBySystemNamePort;
     private final DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
     private final SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
@@ -103,7 +103,7 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
                     Message message = new Message(topic, stringJson);
                     MessageDto messageDto = messageMapper.map(message);
 
-                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(messageDto));
+                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
                     if (sendSuccessful) {
                         deleteSystemCoordinateRequestPort.delete(system.name(), systemCoordinateRequest.requestingModule());
                     }

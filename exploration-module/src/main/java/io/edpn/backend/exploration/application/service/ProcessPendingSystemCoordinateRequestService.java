@@ -10,7 +10,7 @@ import io.edpn.backend.exploration.application.port.incomming.ProcessPendingData
 import io.edpn.backend.exploration.application.port.outgoing.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadAllSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.SendMessagePort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.util.Topic;
 import lombok.AllArgsConstructor;
@@ -27,7 +27,7 @@ public class ProcessPendingSystemCoordinateRequestService implements ProcessPend
 
     private final LoadAllSystemCoordinateRequestPort loadAllSystemCoordinateRequestPort;
     private final LoadSystemPort loadSystemPort;
-    private final SendKafkaMessagePort sendKafkaMessagePort;
+    private final SendMessagePort sendMessagePort;
     private final DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
     private final SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
     private final MessageMapper messageMapper;
@@ -47,7 +47,7 @@ public class ProcessPendingSystemCoordinateRequestService implements ProcessPend
                                     Message message = new Message(topic, stringJson);
                                     MessageDto messageDto = messageMapper.map(message);
 
-                                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(messageDto));
+                                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
                                     if (sendSuccessful) {
                                         deleteSystemCoordinateRequestPort.delete(systemCoordinateRequest.systemName(), systemCoordinateRequest.requestingModule());
                                     }

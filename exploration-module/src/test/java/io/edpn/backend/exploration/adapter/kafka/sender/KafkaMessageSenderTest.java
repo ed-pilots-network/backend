@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.adapter.kafka.dto.KafkaMessageDto;
 import io.edpn.backend.exploration.application.dto.MessageDto;
 import io.edpn.backend.exploration.application.port.outgoing.CreateTopicPort;
-import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.SendMessagePort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class MessageSenderTest {
+class KafkaMessageSenderTest {
 
     @Mock
     private CreateTopicPort createTopicPort;
@@ -37,7 +37,7 @@ class MessageSenderTest {
     @Mock
     private KafkaTemplate<String, JsonNode> jsonNodekafkaTemplate;
 
-    private SendKafkaMessagePort underTest;
+    private SendMessagePort underTest;
 
     @BeforeEach
     void setUp() {

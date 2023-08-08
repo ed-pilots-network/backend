@@ -12,7 +12,7 @@ import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessag
 import io.edpn.backend.exploration.application.port.outgoing.CreateSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.SendMessagePort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.util.Module;
@@ -43,7 +43,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
     @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
-    private SendKafkaMessagePort sendKafkaMessagePort;
+    private SendMessagePort sendMessagePort;
     @Mock
     private SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
     @Mock
@@ -57,7 +57,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
     @BeforeEach
     public void setup() {
-        underTest = new ReceiveSystemCoordinateRequestService(createSystemCoordinateRequestPort, loadSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, systemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate);
+        underTest = new ReceiveSystemCoordinateRequestService(createSystemCoordinateRequestPort, loadSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, systemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate);
     }
 
     @Test
@@ -80,7 +80,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
         Message kafkaMessage = new Message("module_systemCoordinatesResponse", jsonString);
         MessageDto messageDto = mock(MessageDto.class);
         when(messageMapper.map(kafkaMessage)).thenReturn(messageDto);
-        when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
+        when(sendMessagePort.send(messageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
 
@@ -88,7 +88,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
 
         verify(loadSystemPort).load(systemName);
-        verify(sendKafkaMessagePort).send(messageDto);
+        verify(sendMessagePort).send(messageDto);
         verify(createSystemCoordinateRequestPort, never()).create(any());
     }
 
@@ -112,7 +112,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
         Message kafkaMessage = new Message("module_systemCoordinatesResponse", jsonString);
         MessageDto messageDto = mock(MessageDto.class);
         when(messageMapper.map(kafkaMessage)).thenReturn(messageDto);
-        when(sendKafkaMessagePort.send(messageDto)).thenReturn(false);
+        when(sendMessagePort.send(messageDto)).thenReturn(false);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
         SystemCoordinateRequest systemCoordinateDataRequest = new SystemCoordinateRequest(systemName, requestingModule);
 
@@ -121,7 +121,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
 
         verify(loadSystemPort).load(systemName);
-        verify(sendKafkaMessagePort).send(messageDto);
+        verify(sendMessagePort).send(messageDto);
         verify(createSystemCoordinateRequestPort).create(systemCoordinateDataRequest);
     }
 
@@ -141,7 +141,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
 
         verify(loadSystemPort).load(systemName);
-        verify(sendKafkaMessagePort, never()).send(any());
+        verify(sendMessagePort, never()).send(any());
         verify(createSystemCoordinateRequestPort).create(systemCoordinateDataRequest);
     }
 
