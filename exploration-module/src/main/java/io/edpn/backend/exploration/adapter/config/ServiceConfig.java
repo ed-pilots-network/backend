@@ -53,7 +53,7 @@ public class ServiceConfig {
             SendKafkaMessagePort sendKafkaMessagePort,
             KafkaSystemCoordinatesResponseMapper kafkaSystemCoordinatesResponseMapper,
             MessageMapper messageMapper,
-            ObjectMapper objectMapper,
+            @Qualifier("explorationObjectMapper") ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate
     ) {
         return new ReceiveSystemCoordinateRequestService(createSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, kafkaSystemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate);
