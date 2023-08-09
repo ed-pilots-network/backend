@@ -1,9 +1,9 @@
 package io.edpn.backend.trade.adapter.persistence;
 
-import io.edpn.backend.trade.adapter.persistence.entity.MybatisFindCommodityFilter;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisPersistenceFindCommodityFilterFilter;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisValidatedCommodityEntityMapper;
 import io.edpn.backend.trade.application.domain.ValidatedCommodity;
-import io.edpn.backend.trade.application.dto.FindCommodityEntity;
+import io.edpn.backend.trade.application.dto.PersistenceFindCommodityFilter;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadAllValidatedCommodityPort;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadValidatedCommodityByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadValidatedCommodityByNamePort;
@@ -30,9 +30,9 @@ public class ValidatedCommodityRepository implements LoadAllValidatedCommodityPo
     }
     
     @Override
-    public List<ValidatedCommodity> loadByFilter(FindCommodityEntity findCommodityEntity) {
+    public List<ValidatedCommodity> loadByFilter(PersistenceFindCommodityFilter persistenceFindCommodityFilter) {
         return mybatisValidatedCommodityRepository
-                .findByFilter((MybatisFindCommodityFilter) findCommodityEntity)
+                .findByFilter((MybatisPersistenceFindCommodityFilterFilter) persistenceFindCommodityFilter)
                 .stream()
                 .map(mybatisValidatedCommodityEntityMapper::map)
                 .toList();

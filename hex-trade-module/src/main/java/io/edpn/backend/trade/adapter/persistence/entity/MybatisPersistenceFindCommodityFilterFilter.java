@@ -1,6 +1,6 @@
 package io.edpn.backend.trade.adapter.persistence.entity;
 
-import io.edpn.backend.trade.application.dto.FindCommodityEntity;
+import io.edpn.backend.trade.application.dto.PersistenceFindCommodityFilter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -16,7 +16,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class MybatisFindCommodityFilter implements FindCommodityEntity {
+public class MybatisPersistenceFindCommodityFilterFilter implements PersistenceFindCommodityFilter {
     
     private String type;
     private Boolean isRare;

@@ -1,6 +1,6 @@
 package io.edpn.backend.trade.adapter.web.dto;
 
-import io.edpn.backend.trade.application.dto.FindCommodityDTO;
+import io.edpn.backend.trade.application.dto.ValidatedCommodityDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +14,10 @@ import lombok.extern.jackson.Jacksonized;
 @AllArgsConstructor
 @NoArgsConstructor
 @Jacksonized
-public class RestFindCommodityDTO implements FindCommodityDTO {
+public class RestValidatedCommodityDto implements ValidatedCommodityDto {
+    
+    private String commodityName;
+    private String displayName;
     private String type;
     private Boolean isRare;
 }

@@ -1,11 +1,11 @@
 package io.edpn.backend.trade.application.port.outgoing.validatedcommodity;
 
 import io.edpn.backend.trade.application.domain.ValidatedCommodity;
-import io.edpn.backend.trade.application.dto.FindCommodityEntity;
+import io.edpn.backend.trade.application.dto.PersistenceFindCommodityFilter;
 
 import java.util.List;
 
 public interface LoadValidatedCommodityByFilterPort {
     
-    List<ValidatedCommodity> loadByFilter(FindCommodityEntity findCommodityEntity);
+    List<ValidatedCommodity> loadByFilter(PersistenceFindCommodityFilter persistenceFindCommodityFilter);
 }

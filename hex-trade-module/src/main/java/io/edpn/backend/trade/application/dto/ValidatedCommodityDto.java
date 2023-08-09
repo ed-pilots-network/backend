@@ -1,6 +1,6 @@
 package io.edpn.backend.trade.application.dto;
 
-public interface ValidatedCommodityDTO {
+public interface ValidatedCommodityDto {
     
     String getCommodityName();
     

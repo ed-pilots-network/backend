@@ -1,6 +1,6 @@
 package io.edpn.backend.trade.application.dto;
 
-public interface FindCommodityEntity {
+public interface PersistenceFindCommodityFilter {
     
     String getType();
     

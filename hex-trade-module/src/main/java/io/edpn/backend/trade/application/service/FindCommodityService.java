@@ -1,12 +1,13 @@
 package io.edpn.backend.trade.application.service;
 
-import io.edpn.backend.trade.application.dto.FindCommodityDTO;
-import io.edpn.backend.trade.application.dto.ValidatedCommodityDTO;
-import io.edpn.backend.trade.application.dto.mapper.FindCommodityEntityMapper;
-import io.edpn.backend.trade.application.dto.mapper.ValidatedCommodityDTOMapper;
-import io.edpn.backend.trade.application.usecase.validatedcommodity.FindAllValidatedCommodityUseCase;
-import io.edpn.backend.trade.application.usecase.validatedcommodity.FindValidatedCommodityByNameUseCase;
-import io.edpn.backend.trade.application.usecase.validatedcommodity.FindValidatedCommodityByFilterUseCase;
+import io.edpn.backend.trade.application.dto.FindCommodityFilterDto;
+import io.edpn.backend.trade.application.dto.ValidatedCommodityDto;
+import io.edpn.backend.trade.application.dto.mapper.FindCommodityFilterDtoMapper;
+import io.edpn.backend.trade.application.dto.mapper.PersistenceFindCommodityMapper;
+import io.edpn.backend.trade.application.dto.mapper.ValidatedCommodityDtoMapper;
+import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindAllValidatedCommodityUseCase;
+import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindValidatedCommodityByFilterUseCase;
+import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindValidatedCommodityByNameUseCase;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadAllValidatedCommodityPort;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadValidatedCommodityByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadValidatedCommodityByNamePort;
@@ -17,34 +18,35 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public class FindCommodityService implements FindAllValidatedCommodityUseCase, FindValidatedCommodityByNameUseCase, FindValidatedCommodityByFilterUseCase {
-    
+
     private final LoadAllValidatedCommodityPort loadAllValidatedCommodityPort;
     private final LoadValidatedCommodityByNamePort loadValidatedCommodityByNamePort;
     private final LoadValidatedCommodityByFilterPort loadValidatedCommodityByFilterPort;
-    private final ValidatedCommodityDTOMapper validatedCommodityDTOMapper;
-    private final FindCommodityEntityMapper findCommodityEntityMapper;
-    
-    
+    private final ValidatedCommodityDtoMapper validatedCommodityDTOMapper;
+    private final FindCommodityFilterDtoMapper findCommodityFilterDtoMapper;
+    private final PersistenceFindCommodityMapper persistenceFindCommodityMapper;
+
+
     @Override
-    public List<ValidatedCommodityDTO> findAll() {
+    public List<ValidatedCommodityDto> findAll() {
         return loadAllValidatedCommodityPort
                 .loadAll()
                 .stream()
                 .map(validatedCommodityDTOMapper::map)
                 .toList();
     }
-    
+
     @Override
-    public Optional<ValidatedCommodityDTO> findByName(String displayName) {
+    public Optional<ValidatedCommodityDto> findByName(String displayName) {
         return loadValidatedCommodityByNamePort
                 .loadByName(displayName)
                 .map(validatedCommodityDTOMapper::map);
     }
-    
+
     @Override
-    public List<ValidatedCommodityDTO> findByFilter(FindCommodityDTO findCommodityRequest) {
+    public List<ValidatedCommodityDto> findByFilter(FindCommodityFilterDto findCommodityRequest) {
         return loadValidatedCommodityByFilterPort
-                .loadByFilter(findCommodityEntityMapper.map(findCommodityRequest))
+                .loadByFilter(persistenceFindCommodityMapper.map(findCommodityFilterDtoMapper.map(findCommodityRequest)))
                 .stream()
                 .map(validatedCommodityDTOMapper::map)
                 .toList();
