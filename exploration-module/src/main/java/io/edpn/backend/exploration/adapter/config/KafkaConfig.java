@@ -40,7 +40,7 @@ public interface KafkaConfig {
 
         @Value(value = "${exploration.spring.kafka.bootstrap-servers}")
         private String bootstrapServers;
-
+        
         public ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory(String groupId, CommonErrorHandler errorHandler) {
             ConcurrentKafkaListenerContainerFactory<String, JsonNode> factory = new ConcurrentKafkaListenerContainerFactory<>();
             factory.setCommonErrorHandler(errorHandler);
@@ -62,7 +62,7 @@ public interface KafkaConfig {
         }
 
         @Bean(name = "explorationModuleKafkaListenerContainerFactory")
-        public ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory(EddnJsonKafkaConsumerConfig kafkaConfig, CommonErrorHandler errorHandler) {
+        public ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory(EddnJsonKafkaConsumerConfig kafkaConfig, @Qualifier("explorationKafkaErrorHandler") CommonErrorHandler errorHandler) {
             return kafkaConfig.kafkaListenerContainerFactory("explorationModule", errorHandler);
         }
 
