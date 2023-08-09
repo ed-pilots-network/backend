@@ -1,6 +1,5 @@
 package io.edpn.backend.trade.infrastructure.persistence.mappers.entity;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import io.edpn.backend.trade.domain.model.RequestDataMessage;
 import io.edpn.backend.trade.infrastructure.persistence.entity.RequestDataMessageEntity;
@@ -25,7 +24,7 @@ public class RequestDataMessageMapperTest {
     @Test
     public void shouldMapRequestDataMessageToRequestDataMessageEntity() {
         String topic = "Test.Topic.Name";
-        JsonNode message = new TextNode("Test Message");
+        String message = new TextNode("Test Message").toString();
 
         RequestDataMessage requestDataMessage = RequestDataMessage.builder()
                 .topic(topic)
@@ -35,13 +34,13 @@ public class RequestDataMessageMapperTest {
         RequestDataMessageEntity requestDataMessageEntity = underTest.map(requestDataMessage);
 
         assertThat(requestDataMessageEntity.getTopic(), is(topic));
-        assertThat(requestDataMessageEntity.getMessage(), is(message.asText()));
+        assertThat(requestDataMessageEntity.getMessage(), is("\"Test Message\""));
     }
 
     @Test
     public void shouldSanitizeTopicName() {
         String topic = "Test?Topic:Name";
-        JsonNode message = new TextNode("Test Message");
+        String message = new TextNode("Test Message").toString();
 
         RequestDataMessage requestDataMessage = RequestDataMessage.builder()
                 .topic(topic)
@@ -51,6 +50,6 @@ public class RequestDataMessageMapperTest {
         RequestDataMessageEntity requestDataMessageEntity = underTest.map(requestDataMessage);
 
         assertThat(requestDataMessageEntity.getTopic(), is("Test_Topic_Name"));
-        assertThat(requestDataMessageEntity.getMessage(), is(message.asText()));
+        assertThat(requestDataMessageEntity.getMessage(), is("\"Test Message\""));
     }
 }

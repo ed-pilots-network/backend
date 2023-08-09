@@ -58,7 +58,7 @@ public class StationMapperTest {
         Boolean fleetCarrier = true;
         String maxLandingPadSize = "LARGE";
         LocalDateTime marketUpdatedAt = LocalDateTime.now();
-        List<MarketDatumEntity> marketDataEntity = Collections.singletonList(mockMarketDatumEntity);
+        List<MarketDatumEntity> marketDataEntity = List.of(mockMarketDatumEntity);
         StationEntity stationEntity = StationEntity.builder()
                 .id(id)
                 .marketId(marketId)
@@ -109,7 +109,7 @@ public class StationMapperTest {
         Boolean fleetCarrier = true;
         LandingPadSize maxLandingPadSize = LandingPadSize.LARGE;
         LocalDateTime marketUpdatedAt = LocalDateTime.now();
-        List<MarketDatum> marketData = Collections.singletonList(mockMarketDatum);
+        List<MarketDatum> marketData = List.of(mockMarketDatum);
 
         Station station = Station.builder()
                 .id(id)
