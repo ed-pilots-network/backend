@@ -1,8 +1,0 @@
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:54321/trademodule
-    username: edpn_trademodule
-    password: MSDVq372rNk3AwRq
-
-  kafka:
-    bootstrap-servers: localhost:9092
