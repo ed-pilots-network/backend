@@ -62,7 +62,7 @@ public interface KafkaConfig {
         }
 
         @Bean(name = "tradeModuleKafkaListenerContainerFactory")
-        public ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory(EddnJsonKafkaConsumerConfig kafkaConfig, CommonErrorHandler errorHandler) {
+        public ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory(EddnJsonKafkaConsumerConfig kafkaConfig, @Qualifier("tradeKafkaErrorHandler")CommonErrorHandler errorHandler) {
             return kafkaConfig.kafkaListenerContainerFactory("tradeModule", errorHandler);
         }
 

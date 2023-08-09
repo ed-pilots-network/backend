@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration("TradeKafkaMapperConfig")
 public class KafkaMapperConfig {
-
+    
     @Bean(name = "tradeMessageMapper")
     public MessageMapper messageMapper() {
         return new KafkaMessageMapper();
