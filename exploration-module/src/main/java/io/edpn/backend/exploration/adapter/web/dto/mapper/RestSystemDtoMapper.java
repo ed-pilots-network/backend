@@ -10,7 +10,6 @@ import io.edpn.backend.exploration.application.dto.mapper.SystemDtoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Objects;
 import java.util.Optional;
 
 @RequiredArgsConstructor
