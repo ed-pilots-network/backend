@@ -1,7 +1,7 @@
 package io.edpn.backend.trade.application.port.outgoing.validatedcommodity;
 
 import io.edpn.backend.trade.application.domain.ValidatedCommodity;
-import io.edpn.backend.trade.application.dto.PersistenceFindCommodityFilter;
+import io.edpn.backend.trade.application.dto.persistence.filter.PersistenceFindCommodityFilter;
 
 import java.util.List;
 
