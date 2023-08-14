@@ -1,7 +1,10 @@
 package io.edpn.backend.trade.adapter.web;
 
 import io.edpn.backend.trade.application.dto.web.filter.FindCommodityFilterDto;
+import io.edpn.backend.trade.application.dto.web.filter.LocateCommodityFilterDto;
+import io.edpn.backend.trade.application.dto.web.object.LocateCommodityDto;
 import io.edpn.backend.trade.application.dto.web.object.ValidatedCommodityDto;
+import io.edpn.backend.trade.application.port.incomming.locatecommodity.LocateCommodityUseCase;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindAllValidatedCommodityUseCase;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindValidatedCommodityByFilterUseCase;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindValidatedCommodityByNameUseCase;
@@ -20,6 +23,7 @@ public class TradeModuleController {
     private final FindAllValidatedCommodityUseCase findAllValidatedCommodityUseCase;
     private final FindValidatedCommodityByNameUseCase findValidatedCommodityByNameUseCase;
     private final FindValidatedCommodityByFilterUseCase findValidatedCommodityByFilterUseCase;
+    private final LocateCommodityUseCase locateCommodityUseCase;
 
 
     @GetMapping("/commodity")
@@ -35,5 +39,10 @@ public class TradeModuleController {
     @GetMapping("/commodity/{displayName}")
     public Optional<ValidatedCommodityDto> findByName(@PathVariable String displayName) {
         return findValidatedCommodityByNameUseCase.findByName(displayName);
+    }
+    
+    @GetMapping()
+    public List<LocateCommodityDto> locateCommodityWithFilters(LocateCommodityFilterDto locateCommodityFilterDto){
+        return locateCommodityUseCase.locateCommodityOrderByDistance(locateCommodityFilterDto);
     }
 }

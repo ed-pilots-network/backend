@@ -1,26 +1,24 @@
 package io.edpn.backend.trade.application.dto.web.object;
 
-import io.edpn.backend.trade.application.domain.Station;
-
 import java.time.LocalDateTime;
 
 public interface LocateCommodityDto {
     
-    String getValidatedCommodityDisplayName();
+    String validatedCommodityDisplayName();
     
-    Station getStation();
+    StationDto station();
     
-    String getSystemName();
+    String systemName();
     
-    LocalDateTime getPricesUpdatedAt();
+    LocalDateTime pricesUpdatedAt();
     
-    Long getSupply();
+    Long supply();
     
-    Long getDemand();
+    Long demand();
     
-    Long getBuyPrice();
+    Long buyPrice();
     
-    Long getSellPrice();
+    Long sellPrice();
     
-    Double getDistance();
+    Double distance();
 }
