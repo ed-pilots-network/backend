@@ -1,4 +1,4 @@
-package io.edpn.backend.trade.adapter.web.dto.mapper;
+package io.edpn.backend.trade.adapter.web.dto.filter.mapper;
 
 import io.edpn.backend.trade.application.domain.filter.FindCommodityFilter;
 import io.edpn.backend.trade.application.dto.web.filter.FindCommodityFilterDto;

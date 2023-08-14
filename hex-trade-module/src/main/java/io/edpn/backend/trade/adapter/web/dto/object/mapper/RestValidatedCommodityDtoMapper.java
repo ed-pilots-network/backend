@@ -1,6 +1,6 @@
-package io.edpn.backend.trade.adapter.web.dto.mapper;
+package io.edpn.backend.trade.adapter.web.dto.object.mapper;
 
-import io.edpn.backend.trade.adapter.web.dto.RestValidatedCommodityDto;
+import io.edpn.backend.trade.adapter.web.dto.object.RestValidatedCommodityDto;
 import io.edpn.backend.trade.application.domain.ValidatedCommodity;
 import io.edpn.backend.trade.application.dto.web.object.ValidatedCommodityDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.ValidatedCommodityDtoMapper;

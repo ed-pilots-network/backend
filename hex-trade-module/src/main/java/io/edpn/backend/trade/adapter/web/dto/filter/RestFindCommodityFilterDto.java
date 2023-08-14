@@ -1,4 +1,4 @@
-package io.edpn.backend.trade.adapter.web.dto;
+package io.edpn.backend.trade.adapter.web.dto.filter;
 
 import io.edpn.backend.trade.application.dto.web.filter.FindCommodityFilterDto;
 import lombok.AllArgsConstructor;

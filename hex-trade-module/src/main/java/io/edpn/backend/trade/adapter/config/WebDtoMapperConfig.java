@@ -1,7 +1,7 @@
 package io.edpn.backend.trade.adapter.config;
 
-import io.edpn.backend.trade.adapter.web.dto.mapper.RestFindCommodityFilterDtoMapper;
-import io.edpn.backend.trade.adapter.web.dto.mapper.RestValidatedCommodityDtoMapper;
+import io.edpn.backend.trade.adapter.web.dto.filter.mapper.RestFindCommodityFilterDtoMapper;
+import io.edpn.backend.trade.adapter.web.dto.object.mapper.RestValidatedCommodityDtoMapper;
 import io.edpn.backend.trade.application.dto.web.filter.mapper.FindCommodityFilterDtoMapper;
 import io.edpn.backend.trade.application.dto.web.object.mapper.ValidatedCommodityDtoMapper;
 import org.springframework.context.annotation.Bean;
