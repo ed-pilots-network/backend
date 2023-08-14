@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 import java.util.Optional;
 
+//TODO: KAFKA Messaging
 public interface MybatisRequestDataMessageRepository {
 
     @Insert("INSERT INTO request_data_message (topic, message) VALUES (#{topic}, #{message})")
