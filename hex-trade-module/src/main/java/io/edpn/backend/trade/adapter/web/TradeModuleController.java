@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @RequestMapping("/v1/api")
-public class ValidatedCommodityController {
+public class TradeModuleController {
 
     private final FindAllValidatedCommodityUseCase findAllValidatedCommodityUseCase;
     private final FindValidatedCommodityByNameUseCase findValidatedCommodityByNameUseCase;
