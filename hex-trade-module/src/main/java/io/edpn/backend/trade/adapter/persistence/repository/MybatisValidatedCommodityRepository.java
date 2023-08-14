@@ -1,6 +1,6 @@
-package io.edpn.backend.trade.adapter.persistence;
+package io.edpn.backend.trade.adapter.persistence.repository;
 
-import io.edpn.backend.trade.adapter.persistence.entity.MybatisPersistenceFindCommodityFilterFilter;
+import io.edpn.backend.trade.adapter.persistence.filter.MybatisFindCommodityFilter;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisValidatedCommodityEntity;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
@@ -40,6 +40,6 @@ public interface MybatisValidatedCommodityRepository {
             </script>
             """)
     @ResultMap("validatedCommodityResultMap")
-    List<MybatisValidatedCommodityEntity> findByFilter(MybatisPersistenceFindCommodityFilterFilter findCommodityFilter);
+    List<MybatisValidatedCommodityEntity> findByFilter(MybatisFindCommodityFilter findCommodityFilter);
     
 }

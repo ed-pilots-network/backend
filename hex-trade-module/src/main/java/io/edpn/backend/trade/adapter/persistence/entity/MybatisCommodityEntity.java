@@ -1,9 +1,8 @@
 package io.edpn.backend.trade.adapter.persistence.entity;
 
-import io.edpn.backend.trade.application.dto.persistence.entity.ValidatedCommodityEntity;
+import io.edpn.backend.trade.application.dto.persistence.entity.CommodityEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,12 +16,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode
-public class MybatisValidatedCommodityEntity implements ValidatedCommodityEntity {
+public class MybatisCommodityEntity implements CommodityEntity {
     
     private UUID id;
-    private String commodityName;
-    private String displayName;
-    private String type;
-    private Boolean isRare;
+    private String name;
 }

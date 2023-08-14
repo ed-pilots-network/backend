@@ -3,7 +3,7 @@ package io.edpn.backend.trade.adapter.config;
 import io.edpn.backend.mybatisutil.StringListToArrayTypeHandler;
 import io.edpn.backend.mybatisutil.StringTrimmingTypeHandler;
 import io.edpn.backend.mybatisutil.UuidTypeHandler;
-import io.edpn.backend.trade.adapter.persistence.MybatisValidatedCommodityRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisValidatedCommodityRepository;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperFactoryBean;
