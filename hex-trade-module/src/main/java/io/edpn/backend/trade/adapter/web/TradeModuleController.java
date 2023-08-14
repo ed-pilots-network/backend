@@ -41,7 +41,7 @@ public class TradeModuleController {
         return findValidatedCommodityByNameUseCase.findByName(displayName);
     }
     
-    @GetMapping()
+    @GetMapping("/commodity/filter")
     public List<LocateCommodityDto> locateCommodityWithFilters(LocateCommodityFilterDto locateCommodityFilterDto){
         return locateCommodityUseCase.locateCommodityOrderByDistance(locateCommodityFilterDto);
     }
