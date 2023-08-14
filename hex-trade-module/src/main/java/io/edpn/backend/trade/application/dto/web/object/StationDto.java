@@ -2,6 +2,7 @@ package io.edpn.backend.trade.application.dto.web.object;
 
 import java.time.LocalDateTime;
 
+//TODO: Add implementation
 public interface StationDto {
     
     Long getMarketId();
@@ -10,6 +11,7 @@ public interface StationDto {
     
     Double getArrivalDistance();
     
+    //TODO: SystemDto or name?
     String getSystemName();
     
     Boolean getPlanetary();

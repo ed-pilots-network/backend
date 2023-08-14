@@ -5,6 +5,7 @@ import io.edpn.backend.trade.application.port.incomming.commoditymarketinfo.GetF
 
 import java.util.List;
 
+//TODO: create mappings for Web
 public class FindCommodityMarketInfoService implements GetFullCommodityMarketInfoUseCase {
     @Override
     public List<CommodityMarketInfo> findAll() {
