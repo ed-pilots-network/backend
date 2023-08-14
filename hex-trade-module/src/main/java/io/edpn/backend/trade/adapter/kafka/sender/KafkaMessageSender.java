@@ -3,7 +3,7 @@ package io.edpn.backend.trade.adapter.kafka.sender;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.trade.application.dto.MessageDto;
+import io.edpn.backend.trade.application.dto.web.object.MessageDto;
 import io.edpn.backend.trade.application.port.outgoing.CreateTopicPort;
 import io.edpn.backend.trade.application.port.outgoing.SendKafkaMessagePort;
 import lombok.RequiredArgsConstructor;
