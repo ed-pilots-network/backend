@@ -13,7 +13,7 @@ public record Station(
         Boolean planetary,
         Boolean requireOdyssey,
         Boolean fleetCarrier,
-        LandingPadSize maxLandingPadSiz,
+        LandingPadSize maxLandingPadSize,
         LocalDateTime marketUpdatedAt,
         List<MarketDatum> marketData
 ) {
