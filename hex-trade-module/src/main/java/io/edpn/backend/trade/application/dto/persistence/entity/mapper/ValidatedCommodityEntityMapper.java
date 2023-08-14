@@ -1,7 +1,7 @@
-package io.edpn.backend.trade.application.dto.mapper;
+package io.edpn.backend.trade.application.dto.persistence.entity.mapper;
 
 import io.edpn.backend.trade.application.domain.ValidatedCommodity;
-import io.edpn.backend.trade.application.dto.ValidatedCommodityEntity;
+import io.edpn.backend.trade.application.dto.persistence.entity.ValidatedCommodityEntity;
 
 public interface ValidatedCommodityEntityMapper<T extends ValidatedCommodityEntity> {
     
