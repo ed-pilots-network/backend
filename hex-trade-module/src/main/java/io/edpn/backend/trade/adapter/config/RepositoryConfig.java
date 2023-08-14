@@ -1,6 +1,6 @@
 package io.edpn.backend.trade.adapter.config;
 
-import io.edpn.backend.trade.adapter.persistence.MybatisValidatedCommodityRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisValidatedCommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.ValidatedCommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisValidatedCommodityEntityMapper;
 import org.springframework.context.annotation.Bean;
