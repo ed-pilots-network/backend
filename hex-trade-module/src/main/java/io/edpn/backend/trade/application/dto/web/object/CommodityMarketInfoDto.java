@@ -1,7 +1,5 @@
 package io.edpn.backend.trade.application.dto.web.object;
 
-import io.edpn.backend.trade.application.domain.Station;
-
 public interface CommodityMarketInfoDto {
     
     String getCommodityDisplayName();
@@ -38,7 +36,7 @@ public interface CommodityMarketInfoDto {
     
     Integer getStationsWithSellPriceHigherThanAverage();
     
-    Station getHighestSellingToStation();
+    StationDto getHighestSellingToStation();
     
-    Station getLowestBuyingFromStation();
+    StationDto getLowestBuyingFromStation();
 }
