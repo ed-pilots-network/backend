@@ -1,7 +1,5 @@
 package io.edpn.backend.trade.application.dto.persistence.filter;
 
-import io.edpn.backend.trade.application.domain.LandingPadSize;
-
 public interface PersistenceLocateCommodityFilter {
     
     String getCommodityDisplayName();
