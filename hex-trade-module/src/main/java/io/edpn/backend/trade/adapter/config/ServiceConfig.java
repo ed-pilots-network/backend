@@ -1,8 +1,8 @@
 package io.edpn.backend.trade.adapter.config;
 
-import io.edpn.backend.trade.application.dto.mapper.FindCommodityFilterDtoMapper;
-import io.edpn.backend.trade.application.dto.mapper.PersistenceFindCommodityMapper;
-import io.edpn.backend.trade.application.dto.mapper.ValidatedCommodityDtoMapper;
+import io.edpn.backend.trade.application.dto.web.filter.mapper.FindCommodityFilterDtoMapper;
+import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindCommodityFilterMapper;
+import io.edpn.backend.trade.application.dto.web.object.mapper.ValidatedCommodityDtoMapper;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadAllValidatedCommodityPort;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadValidatedCommodityByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadValidatedCommodityByNamePort;
@@ -20,7 +20,7 @@ public class ServiceConfig {
             LoadValidatedCommodityByFilterPort loadValidatedCommodityByFilterPort,
             ValidatedCommodityDtoMapper validatedCommodityDTOMapper,
             FindCommodityFilterDtoMapper findCommodityFilterDtoMapper,
-            PersistenceFindCommodityMapper persistenceFindCommodityMapper) {
-        return new FindCommodityService(loadAllValidatedCommodityPort, loadValidatedCommodityByNamePort, loadValidatedCommodityByFilterPort, validatedCommodityDTOMapper, findCommodityFilterDtoMapper, persistenceFindCommodityMapper);
+            PersistenceFindCommodityFilterMapper persistenceFindCommodityFilterMapper) {
+        return new FindCommodityService(loadAllValidatedCommodityPort, loadValidatedCommodityByNamePort, loadValidatedCommodityByFilterPort, validatedCommodityDTOMapper, findCommodityFilterDtoMapper, persistenceFindCommodityFilterMapper);
     }
 }

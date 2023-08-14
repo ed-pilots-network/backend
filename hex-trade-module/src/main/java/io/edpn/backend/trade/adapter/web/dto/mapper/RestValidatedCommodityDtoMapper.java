@@ -2,8 +2,8 @@ package io.edpn.backend.trade.adapter.web.dto.mapper;
 
 import io.edpn.backend.trade.adapter.web.dto.RestValidatedCommodityDto;
 import io.edpn.backend.trade.application.domain.ValidatedCommodity;
-import io.edpn.backend.trade.application.dto.ValidatedCommodityDto;
-import io.edpn.backend.trade.application.dto.mapper.ValidatedCommodityDtoMapper;
+import io.edpn.backend.trade.application.dto.web.object.ValidatedCommodityDto;
+import io.edpn.backend.trade.application.dto.web.object.mapper.ValidatedCommodityDtoMapper;
 
 public class RestValidatedCommodityDtoMapper implements ValidatedCommodityDtoMapper {
     @Override

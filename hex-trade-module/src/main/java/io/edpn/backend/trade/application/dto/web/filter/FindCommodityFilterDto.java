@@ -1,4 +1,4 @@
-package io.edpn.backend.trade.application.dto;
+package io.edpn.backend.trade.application.dto.web.filter;
 
 public interface FindCommodityFilterDto {
     

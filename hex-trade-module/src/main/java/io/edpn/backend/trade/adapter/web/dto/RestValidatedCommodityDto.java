@@ -1,6 +1,6 @@
 package io.edpn.backend.trade.adapter.web.dto;
 
-import io.edpn.backend.trade.application.dto.ValidatedCommodityDto;
+import io.edpn.backend.trade.application.dto.web.object.ValidatedCommodityDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

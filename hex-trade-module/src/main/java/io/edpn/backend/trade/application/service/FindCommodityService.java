@@ -1,10 +1,10 @@
 package io.edpn.backend.trade.application.service;
 
-import io.edpn.backend.trade.application.dto.FindCommodityFilterDto;
-import io.edpn.backend.trade.application.dto.ValidatedCommodityDto;
-import io.edpn.backend.trade.application.dto.mapper.FindCommodityFilterDtoMapper;
-import io.edpn.backend.trade.application.dto.mapper.PersistenceFindCommodityMapper;
-import io.edpn.backend.trade.application.dto.mapper.ValidatedCommodityDtoMapper;
+import io.edpn.backend.trade.application.dto.web.filter.FindCommodityFilterDto;
+import io.edpn.backend.trade.application.dto.web.object.ValidatedCommodityDto;
+import io.edpn.backend.trade.application.dto.web.filter.mapper.FindCommodityFilterDtoMapper;
+import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindCommodityFilterMapper;
+import io.edpn.backend.trade.application.dto.web.object.mapper.ValidatedCommodityDtoMapper;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindAllValidatedCommodityUseCase;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindValidatedCommodityByFilterUseCase;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindValidatedCommodityByNameUseCase;
@@ -24,7 +24,7 @@ public class FindCommodityService implements FindAllValidatedCommodityUseCase, F
     private final LoadValidatedCommodityByFilterPort loadValidatedCommodityByFilterPort;
     private final ValidatedCommodityDtoMapper validatedCommodityDTOMapper;
     private final FindCommodityFilterDtoMapper findCommodityFilterDtoMapper;
-    private final PersistenceFindCommodityMapper persistenceFindCommodityMapper;
+    private final PersistenceFindCommodityFilterMapper persistenceFindCommodityFilterMapper;
 
 
     @Override
@@ -46,7 +46,7 @@ public class FindCommodityService implements FindAllValidatedCommodityUseCase, F
     @Override
     public List<ValidatedCommodityDto> findByFilter(FindCommodityFilterDto findCommodityRequest) {
         return loadValidatedCommodityByFilterPort
-                .loadByFilter(persistenceFindCommodityMapper.map(findCommodityFilterDtoMapper.map(findCommodityRequest)))
+                .loadByFilter(persistenceFindCommodityFilterMapper.map(findCommodityFilterDtoMapper.map(findCommodityRequest)))
                 .stream()
                 .map(validatedCommodityDTOMapper::map)
                 .toList();

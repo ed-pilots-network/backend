@@ -1,7 +1,7 @@
 package io.edpn.backend.trade.adapter.web;
 
-import io.edpn.backend.trade.application.dto.FindCommodityFilterDto;
-import io.edpn.backend.trade.application.dto.ValidatedCommodityDto;
+import io.edpn.backend.trade.application.dto.web.filter.FindCommodityFilterDto;
+import io.edpn.backend.trade.application.dto.web.object.ValidatedCommodityDto;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindAllValidatedCommodityUseCase;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindValidatedCommodityByFilterUseCase;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindValidatedCommodityByNameUseCase;
