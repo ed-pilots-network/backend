@@ -1,5 +1,6 @@
 package io.edpn.backend.exploration.application.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
@@ -7,10 +8,10 @@ import io.edpn.backend.exploration.application.dto.MessageDto;
 import io.edpn.backend.exploration.application.dto.mapper.MessageMapper;
 import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ProcessPendingDataRequestUseCase;
-import io.edpn.backend.exploration.application.port.outgoing.DeleteSystemCoordinateRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.LoadAllSystemCoordinateRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.SendMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.util.Topic;
 import lombok.AllArgsConstructor;
@@ -41,17 +42,21 @@ public class ProcessPendingSystemCoordinateRequestService implements ProcessPend
         loadAllSystemCoordinateRequestPort.loadAll().parallelStream()
                 .forEach(systemCoordinateRequest -> CompletableFuture.runAsync(() -> loadSystemPort.load(systemCoordinateRequest.systemName())
                         .ifPresent(system -> {
-                                    SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
-                                    String stringJson = objectMapper.valueToTree(systemCoordinatesResponse).toString();
-                                    String topic = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(systemCoordinateRequest.requestingModule());
-                                    Message message = new Message(topic, stringJson);
-                                    MessageDto messageDto = messageMapper.map(message);
+                            try {
+                                SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
+                                String stringJson = objectMapper.writeValueAsString(systemCoordinatesResponse);
+                                String topic = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(systemCoordinateRequest.requestingModule());
+                                Message message = new Message(topic, stringJson);
+                                MessageDto messageDto = messageMapper.map(message);
 
-                                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
-                                    if (sendSuccessful) {
-                                        deleteSystemCoordinateRequestPort.delete(systemCoordinateRequest.systemName(), systemCoordinateRequest.requestingModule());
-                                    }
+                                boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
+                                if (sendSuccessful) {
+                                    deleteSystemCoordinateRequestPort.delete(systemCoordinateRequest.systemName(), systemCoordinateRequest.requestingModule());
                                 }
-                        ), executor));
+                            } catch (JsonProcessingException jpe) {
+                                log.error("Error processing JSON", jpe);
+                                throw new RuntimeException(jpe);
+                            }
+                        }), executor));
     }
 }

@@ -1,6 +1,7 @@
 package io.edpn.backend.exploration.adapter.config;
 
 import io.edpn.backend.exploration.adapter.persistence.MybatisSystemCoordinateRequestRepository;
+import io.edpn.backend.exploration.adapter.persistence.MybatisSystemEliteIdRequestRepository;
 import io.edpn.backend.exploration.adapter.persistence.MybatisSystemRepository;
 import io.edpn.backend.mybatisutil.StringListToArrayTypeHandler;
 import io.edpn.backend.mybatisutil.StringTrimmingTypeHandler;
@@ -36,6 +37,13 @@ public class MyBatisConfiguration {
     @Bean(name = "explorationMybatisSystemCoordinateRequestRepository")
     public MapperFactoryBean<MybatisSystemCoordinateRequestRepository> mybatisSystemCoordinateRequestRepository(@Qualifier("explorationSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<MybatisSystemCoordinateRequestRepository> factoryBean = new MapperFactoryBean<>(MybatisSystemCoordinateRequestRepository.class);
+        factoryBean.setSqlSessionFactory(sqlSessionFactory);
+        return factoryBean;
+    }
+
+    @Bean(name = "explorationMybatisSystemEliteIdRequestRepository")
+    public MapperFactoryBean<MybatisSystemEliteIdRequestRepository> mybatisSystemEliteIdRequestRepository(@Qualifier("explorationSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+        MapperFactoryBean<MybatisSystemEliteIdRequestRepository> factoryBean = new MapperFactoryBean<>(MybatisSystemEliteIdRequestRepository.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }

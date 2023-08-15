@@ -1,5 +1,6 @@
 package io.edpn.backend.exploration.application.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
@@ -7,10 +8,10 @@ import io.edpn.backend.exploration.application.dto.MessageDto;
 import io.edpn.backend.exploration.application.dto.mapper.MessageMapper;
 import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
-import io.edpn.backend.exploration.application.port.outgoing.CreateSystemCoordinateRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.LoadSystemCoordinateRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.SendMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.util.Module;
@@ -40,15 +41,19 @@ public class ReceiveSystemCoordinateRequestService implements ReceiveKafkaMessag
 
         loadSystemPort.load(systemName).ifPresentOrElse(
                 system -> {
-                    SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
-                    String stringJson = objectMapper.valueToTree(systemCoordinatesResponse).toString();
-                    String topic = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(requestingModule);
-                    Message kafkaMessage = new Message(topic, stringJson);
-                    MessageDto messageDto = messageMapper.map(kafkaMessage);
+                    try {
+                        SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
+                        String stringJson = objectMapper.writeValueAsString(systemCoordinatesResponse);
+                        String topic = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(requestingModule);
+                        Message kafkaMessage = new Message(topic, stringJson);
+                        MessageDto messageDto = messageMapper.map(kafkaMessage);
 
-                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
-                    if (!sendSuccessful) {
-                        saveRequest(systemName, requestingModule);
+                        boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
+                        if (!sendSuccessful) {
+                            saveRequest(systemName, requestingModule);
+                        }
+                    } catch (JsonProcessingException jpe) {
+                        throw new RuntimeException(jpe);
                     }
                 },
                 () -> saveRequest(systemName, requestingModule));
