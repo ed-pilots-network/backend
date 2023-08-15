@@ -1,5 +1,6 @@
 package io.edpn.backend.exploration.application.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.domain.SystemEliteIdRequest;
@@ -41,17 +42,20 @@ public class ProcessPendingSystemEliteIdRequestService implements ProcessPending
         loadAllSystemEliteIdRequestPort.loadAll().parallelStream()
                 .forEach(systemEliteIdRequest -> CompletableFuture.runAsync(() -> loadSystemPort.load(systemEliteIdRequest.systemName())
                         .ifPresent(system -> {
-                                    SystemEliteIdResponse systemEliteIdsResponse = systemEliteIdsResponseMapper.map(system);
-                                    String stringJson = objectMapper.valueToTree(systemEliteIdsResponse).toString();
-                                    String topic = Topic.Response.SYSTEM_ELITE_ID.getFormattedTopicName(systemEliteIdRequest.requestingModule());
-                                    Message message = new Message(topic, stringJson);
-                                    MessageDto messageDto = messageMapper.map(message);
+                            try {
+                                SystemEliteIdResponse systemEliteIdsResponse = systemEliteIdsResponseMapper.map(system);
+                                String stringJson = objectMapper.writeValueAsString(systemEliteIdsResponse);
+                                String topic = Topic.Response.SYSTEM_ELITE_ID.getFormattedTopicName(systemEliteIdRequest.requestingModule());
+                                Message message = new Message(topic, stringJson);
+                                MessageDto messageDto = messageMapper.map(message);
 
-                                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
-                                    if (sendSuccessful) {
-                                        deleteSystemEliteIdRequestPort.delete(systemEliteIdRequest.systemName(), systemEliteIdRequest.requestingModule());
-                                    }
+                                boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
+                                if (sendSuccessful) {
+                                    deleteSystemEliteIdRequestPort.delete(systemEliteIdRequest.systemName(), systemEliteIdRequest.requestingModule());
                                 }
-                        ), executor));
+                            } catch (JsonProcessingException jpe) {
+                                throw new RuntimeException(jpe);
+                            }
+                        }), executor));
     }
 }

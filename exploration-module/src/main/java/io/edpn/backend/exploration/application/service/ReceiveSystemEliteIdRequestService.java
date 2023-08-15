@@ -1,5 +1,6 @@
 package io.edpn.backend.exploration.application.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.domain.SystemEliteIdRequest;
@@ -40,15 +41,19 @@ public class ReceiveSystemEliteIdRequestService implements ReceiveKafkaMessageUs
 
         loadSystemPort.load(systemName).ifPresentOrElse(
                 system -> {
-                    SystemEliteIdResponse systemEliteIdResponse = systemEliteIdResponseMapper.map(system);
-                    String stringJson = objectMapper.valueToTree(systemEliteIdResponse).toString();
-                    String topic = Topic.Response.SYSTEM_ELITE_ID.getFormattedTopicName(requestingModule);
-                    Message kafkaMessage = new Message(topic, stringJson);
-                    MessageDto messageDto = messageMapper.map(kafkaMessage);
+                    try {
+                        SystemEliteIdResponse systemEliteIdResponse = systemEliteIdResponseMapper.map(system);
+                        String stringJson = objectMapper.writeValueAsString(systemEliteIdResponse);
+                        String topic = Topic.Response.SYSTEM_ELITE_ID.getFormattedTopicName(requestingModule);
+                        Message kafkaMessage = new Message(topic, stringJson);
+                        MessageDto messageDto = messageMapper.map(kafkaMessage);
 
-                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
-                    if (!sendSuccessful) {
-                        saveRequest(systemName, requestingModule);
+                        boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
+                        if (!sendSuccessful) {
+                            saveRequest(systemName, requestingModule);
+                        }
+                    } catch (JsonProcessingException jpe) {
+                        throw new RuntimeException(jpe);
                     }
                 },
                 () -> saveRequest(systemName, requestingModule));

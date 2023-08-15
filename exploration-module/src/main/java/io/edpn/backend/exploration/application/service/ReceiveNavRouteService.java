@@ -1,5 +1,6 @@
 package io.edpn.backend.exploration.application.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.Message;
@@ -108,32 +109,39 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
     private void sendCoordinateResponse(System system) {
         loadSystemCoordinateRequestBySystemNamePort.loadByName(system.name()).parallelStream()
                 .forEach(systemCoordinateRequest -> CompletableFuture.runAsync(() -> {
-                    SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
-                    String stringJson = objectMapper.valueToTree(systemCoordinatesResponse).toString();
-                    String topic = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(systemCoordinateRequest.requestingModule());
-                    Message message = new Message(topic, stringJson);
-                    MessageDto messageDto = messageMapper.map(message);
+                    try {
+                        SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
+                        String stringJson = objectMapper.writeValueAsString(systemCoordinatesResponse);
+                        String topic = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(systemCoordinateRequest.requestingModule());
+                        Message message = new Message(topic, stringJson);
+                        MessageDto messageDto = messageMapper.map(message);
 
-                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
-                    if (sendSuccessful) {
-                        deleteSystemCoordinateRequestPort.delete(system.name(), systemCoordinateRequest.requestingModule());
+                        boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
+                        if (sendSuccessful) {
+                            deleteSystemCoordinateRequestPort.delete(system.name(), systemCoordinateRequest.requestingModule());
+                        }
+                    } catch (JsonProcessingException jpe) {
+                        throw new RuntimeException(jpe);
                     }
                 }, executor));
-
     }
 
     private void sendEliteIdResponse(System system) {
         loadSystemEliteIdRequestBySystemNamePort.loadByName(system.name()).parallelStream()
                 .forEach(systemEliteIdRequest -> CompletableFuture.runAsync(() -> {
-                    SystemEliteIdResponse systemEliteIdsResponse = systemEliteIdResponseMapper.map(system);
-                    String stringJson = objectMapper.valueToTree(systemEliteIdsResponse).toString();
-                    String topic = Topic.Response.SYSTEM_ELITE_ID.getFormattedTopicName(systemEliteIdRequest.requestingModule());
-                    Message message = new Message(topic, stringJson);
-                    MessageDto messageDto = messageMapper.map(message);
+                    try {
+                        SystemEliteIdResponse systemEliteIdsResponse = systemEliteIdResponseMapper.map(system);
+                        String stringJson = objectMapper.writeValueAsString(systemEliteIdsResponse);
+                        String topic = Topic.Response.SYSTEM_ELITE_ID.getFormattedTopicName(systemEliteIdRequest.requestingModule());
+                        Message message = new Message(topic, stringJson);
+                        MessageDto messageDto = messageMapper.map(message);
 
-                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
-                    if (sendSuccessful) {
-                        deleteSystemEliteIdRequestPort.delete(system.name(), systemEliteIdRequest.requestingModule());
+                        boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
+                        if (sendSuccessful) {
+                            deleteSystemEliteIdRequestPort.delete(system.name(), systemEliteIdRequest.requestingModule());
+                        }
+                    } catch (JsonProcessingException jpe) {
+                        throw new RuntimeException(jpe);
                     }
                 }, executor));
 

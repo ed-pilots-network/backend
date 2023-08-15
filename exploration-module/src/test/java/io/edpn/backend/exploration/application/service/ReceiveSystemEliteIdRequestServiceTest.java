@@ -1,6 +1,6 @@
 package io.edpn.backend.exploration.application.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.domain.System;
@@ -16,6 +16,7 @@ import io.edpn.backend.exploration.application.port.outgoing.systemeliteidreques
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
 import io.edpn.backend.util.Module;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,11 +27,13 @@ import org.springframework.retry.support.RetryTemplate;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -60,6 +63,7 @@ public class ReceiveSystemEliteIdRequestServiceTest {
         underTest = new ReceiveSystemEliteIdRequestService(createSystemEliteIdRequestPort, loadSystemEliteIdRequestPort, loadSystemPort, sendMessagePort, systemEliteIdResponseMapper, messageMapper, objectMapper, retryTemplate);
     }
 
+    @SneakyThrows
     @Test
     void testReceive_whenSystemExistsAndSendSuccessful_shouldNotSaveRequest() {
 
@@ -74,9 +78,7 @@ public class ReceiveSystemEliteIdRequestServiceTest {
         SystemEliteIdResponse systemEliteIdResponse = mock(SystemEliteIdResponse.class);
         when(systemEliteIdResponseMapper.map(system)).thenReturn(systemEliteIdResponse);
         String jsonString = "{\"json\":\"response\"}";
-        JsonNode jsonNode = mock(JsonNode.class);
-        when(objectMapper.valueToTree(systemEliteIdResponse)).thenReturn(jsonNode);
-        when(jsonNode.toString()).thenReturn(jsonString);
+        when(objectMapper.writeValueAsString(systemEliteIdResponse)).thenReturn(jsonString);
         Message kafkaMessage = new Message("module_systemEliteIdResponse", jsonString);
         MessageDto messageDto = mock(MessageDto.class);
         when(messageMapper.map(kafkaMessage)).thenReturn(messageDto);
@@ -92,6 +94,7 @@ public class ReceiveSystemEliteIdRequestServiceTest {
         verify(createSystemEliteIdRequestPort, never()).create(any());
     }
 
+    @SneakyThrows
     @Test
     void testReceive_whenSystemExistsAndSendFails_shouldSaveRequest() {
 
@@ -106,9 +109,7 @@ public class ReceiveSystemEliteIdRequestServiceTest {
         SystemEliteIdResponse systemEliteIdResponse = mock(SystemEliteIdResponse.class);
         when(systemEliteIdResponseMapper.map(system)).thenReturn(systemEliteIdResponse);
         String jsonString = "{\"json\":\"response\"}";
-        JsonNode jsonNode = mock(JsonNode.class);
-        when(objectMapper.valueToTree(systemEliteIdResponse)).thenReturn(jsonNode);
-        when(jsonNode.toString()).thenReturn(jsonString);
+        when(objectMapper.writeValueAsString(systemEliteIdResponse)).thenReturn(jsonString);
         Message kafkaMessage = new Message("module_systemEliteIdResponse", jsonString);
         MessageDto messageDto = mock(MessageDto.class);
         when(messageMapper.map(kafkaMessage)).thenReturn(messageDto);
@@ -146,4 +147,24 @@ public class ReceiveSystemEliteIdRequestServiceTest {
     }
 
 
+    @SneakyThrows
+    @Test
+    void testReceive_writeValueAsStringThrowsJsonProcessingException() {
+        SystemDataRequest message = mock(SystemDataRequest.class);
+        String systemName = "system";
+        System system = mock(System.class);
+        Module requestingModule = mock(Module.class);
+        when(message.systemName()).thenReturn(systemName);
+        when(message.requestingModule()).thenReturn(requestingModule);
+        when(loadSystemPort.load(systemName)).thenReturn(Optional.of(system));
+        SystemEliteIdResponse systemEliteIdResponse = mock(SystemEliteIdResponse.class);
+        when(systemEliteIdResponseMapper.map(system)).thenReturn(systemEliteIdResponse);
+        when(objectMapper.writeValueAsString(systemEliteIdResponse)).thenThrow(new JsonProcessingException("Test exception") {
+        });
+
+        assertThrows(RuntimeException.class, () -> underTest.receive(message));
+
+        verify(loadSystemPort).load(systemName);
+        verifyNoInteractions(sendMessagePort, createSystemEliteIdRequestPort);
+    }
 }

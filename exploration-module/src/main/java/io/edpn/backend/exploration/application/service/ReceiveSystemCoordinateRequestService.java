@@ -1,5 +1,6 @@
 package io.edpn.backend.exploration.application.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
@@ -40,15 +41,19 @@ public class ReceiveSystemCoordinateRequestService implements ReceiveKafkaMessag
 
         loadSystemPort.load(systemName).ifPresentOrElse(
                 system -> {
-                    SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
-                    String stringJson = objectMapper.valueToTree(systemCoordinatesResponse).toString();
-                    String topic = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(requestingModule);
-                    Message kafkaMessage = new Message(topic, stringJson);
-                    MessageDto messageDto = messageMapper.map(kafkaMessage);
+                    try {
+                        SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
+                        String stringJson = objectMapper.writeValueAsString(systemCoordinatesResponse);
+                        String topic = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(requestingModule);
+                        Message kafkaMessage = new Message(topic, stringJson);
+                        MessageDto messageDto = messageMapper.map(kafkaMessage);
 
-                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
-                    if (!sendSuccessful) {
-                        saveRequest(systemName, requestingModule);
+                        boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
+                        if (!sendSuccessful) {
+                            saveRequest(systemName, requestingModule);
+                        }
+                    } catch (JsonProcessingException jpe) {
+                        throw new RuntimeException(jpe);
                     }
                 },
                 () -> saveRequest(systemName, requestingModule));

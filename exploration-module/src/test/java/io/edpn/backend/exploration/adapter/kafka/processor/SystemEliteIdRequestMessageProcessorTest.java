@@ -72,8 +72,5 @@ class SystemEliteIdRequestMessageProcessorTest {
         // Assert results
         assertThat(systemDataRequest, is(result));
         assertThat(requestingModuleUpperCase, is(jsonNode.get("requestingModule").asText()));
-
-        // Verify interactions
-        verify(objectMapper).treeToValue(jsonNode, SystemDataRequest.class);
     }
 }

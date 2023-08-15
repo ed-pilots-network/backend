@@ -52,7 +52,21 @@ public class ServiceConfig {
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("explorationThreadPoolTaskExecutor") Executor executor
     ) {
-        return new ReceiveNavRouteService(createSystemPort, loadSystemPort, saveSystemPort, sendMessagePort, loadSystemCoordinateRequestBySystemNamePort, deleteSystemCoordinateRequestPort, kafkaSystemCoordinatesResponseMapper, loadSystemEliteIdRequestBySystemNamePort, deleteSystemEliteIdRequestPort, kafkaSystemEliteIdResponseMapper, messageMapper, objectMapper, retryTemplate, executor);
+        return new ReceiveNavRouteService(
+                createSystemPort,
+                loadSystemPort,
+                saveSystemPort,
+                sendMessagePort,
+                loadSystemCoordinateRequestBySystemNamePort,
+                deleteSystemCoordinateRequestPort,
+                kafkaSystemCoordinatesResponseMapper,
+                loadSystemEliteIdRequestBySystemNamePort,
+                deleteSystemEliteIdRequestPort,
+                kafkaSystemEliteIdResponseMapper,
+                messageMapper,
+                objectMapper,
+                retryTemplate,
+                executor);
     }
 
     @Bean(name = "explorationReceiveSystemCoordinateRequestService")
@@ -66,7 +80,15 @@ public class ServiceConfig {
             ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate
     ) {
-        return new ReceiveSystemCoordinateRequestService(createSystemCoordinateRequestPort, loadSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, kafkaSystemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate);
+        return new ReceiveSystemCoordinateRequestService(
+                createSystemCoordinateRequestPort,
+                loadSystemCoordinateRequestPort,
+                loadSystemPort,
+                sendMessagePort,
+                kafkaSystemCoordinatesResponseMapper,
+                messageMapper,
+                objectMapper,
+                retryTemplate);
     }
 
     @Bean(name = "explorationLoadByNameContainingValidator")
@@ -75,7 +97,10 @@ public class ServiceConfig {
             @Value(value = "${exploration.loadbynamecontainingvalidator.min_size:1}") final int minSize,
             @Value(value = "${exploration.loadbynamecontainingvalidator.max_size:100}") final int maxSize
     ) {
-        return new LoadByNameContainingValidator(minLength, minSize, maxSize);
+        return new LoadByNameContainingValidator(
+                minLength,
+                minSize,
+                maxSize);
     }
 
 
@@ -84,7 +109,10 @@ public class ServiceConfig {
             SystemRepository systemRepository,
             LoadByNameContainingValidator loadByNameContainingValidator,
             RestSystemDtoMapper restSystemDtoMapper) {
-        return new SystemControllerService(systemRepository, loadByNameContainingValidator, restSystemDtoMapper);
+        return new SystemControllerService(
+                systemRepository,
+                loadByNameContainingValidator,
+                restSystemDtoMapper);
     }
 
     @Bean(name = "explorationProcessPendingSystemCoordinateRequestService")
@@ -99,7 +127,16 @@ public class ServiceConfig {
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("explorationThreadPoolTaskExecutor") Executor executor
     ) {
-        return new ProcessPendingSystemCoordinateRequestService(loadAllSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, deleteSystemCoordinateRequestPort, kafkaSystemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate, executor);
+        return new ProcessPendingSystemCoordinateRequestService(
+                loadAllSystemCoordinateRequestPort,
+                loadSystemPort,
+                sendMessagePort,
+                deleteSystemCoordinateRequestPort,
+                kafkaSystemCoordinatesResponseMapper,
+                messageMapper,
+                objectMapper,
+                retryTemplate,
+                executor);
     }
 
     @Bean(name = "explorationProcessPendingSystemEliteIdRequestService")
@@ -114,6 +151,15 @@ public class ServiceConfig {
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("explorationThreadPoolTaskExecutor") Executor executor
     ) {
-        return new ProcessPendingSystemEliteIdRequestService(loadAllSystemEliteIdRequestPort, loadSystemPort, sendMessagePort, deleteSystemEliteIdRequestPort, kafkaSystemEliteIdsResponseMapper, messageMapper, objectMapper, retryTemplate, executor);
+        return new ProcessPendingSystemEliteIdRequestService(
+                loadAllSystemEliteIdRequestPort,
+                loadSystemPort,
+                sendMessagePort,
+                deleteSystemEliteIdRequestPort,
+                kafkaSystemEliteIdsResponseMapper,
+                messageMapper,
+                objectMapper,
+                retryTemplate,
+                executor);
     }
 }

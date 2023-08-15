@@ -1,6 +1,6 @@
 package io.edpn.backend.exploration.application.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.Message;
@@ -24,6 +24,7 @@ import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
 import io.edpn.backend.util.Module;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,6 +43,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -82,6 +84,7 @@ class ReceiveNavRouteServiceTest {
         underTest = new ReceiveNavRouteService(createSystemPort, loadSystemPort, saveSystemPort, sendMessagePort, loadSystemCoordinateRequestBySystemNamePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, loadSystemEliteIdRequestBySystemNamePort, deleteSystemEliteIdRequestPort, systemEliteIdResponseMapper, messageMapper, objectMapper, retryTemplate, executor);
     }
 
+    @SneakyThrows
     @Test
     void testReceiveMessage_whenSystemExistsAndPropertiesAreSet_shouldSaveAndSendResponses() {
 
@@ -117,12 +120,8 @@ class ReceiveNavRouteServiceTest {
         when(systemCoordinatesResponseMapper.map(system)).thenReturn(systemCoordinatesResponse);
         SystemEliteIdResponse systemEliteIdResponse = mock(SystemEliteIdResponse.class);
         when(systemEliteIdResponseMapper.map(system)).thenReturn(systemEliteIdResponse);
-        JsonNode coordinateJsonNode = mock(JsonNode.class);
-        when(coordinateJsonNode.toString()).thenReturn("JSON_STRING");
-        when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(coordinateJsonNode);
-        JsonNode eliteIdJsonNode = mock(JsonNode.class);
-        when(eliteIdJsonNode.toString()).thenReturn("JSON_STRING");
-        when(objectMapper.valueToTree(systemEliteIdResponse)).thenReturn(eliteIdJsonNode);
+        when(objectMapper.writeValueAsString(systemCoordinatesResponse)).thenReturn("JSON_STRING");
+        when(objectMapper.writeValueAsString(systemEliteIdResponse)).thenReturn("JSON_STRING");
         Message coordinateKafkaMessage = new Message("module_systemCoordinatesResponse", "JSON_STRING");
         Message eliteIdKafkaMessage = new Message("module_systemEliteIdResponse", "JSON_STRING");
         MessageDto coordinateMessageDto = mock(MessageDto.class);
@@ -145,6 +144,7 @@ class ReceiveNavRouteServiceTest {
         verify(deleteSystemEliteIdRequestPort).delete(systemName, module);
     }
 
+    @SneakyThrows
     @Test
     void testReceiveMessage_whenSystemDoesNotExist_shouldCreateSaveAndSendResponses() {
 
@@ -183,12 +183,8 @@ class ReceiveNavRouteServiceTest {
         when(loadSystemEliteIdRequestBySystemNamePort.loadByName(systemName)).thenReturn(systemEliteIdRequestlist);
         SystemEliteIdResponse systemEliteIdResponse = mock(SystemEliteIdResponse.class);
         when(systemEliteIdResponseMapper.map(system)).thenReturn(systemEliteIdResponse);
-        JsonNode coordinateJsonNode = mock(JsonNode.class);
-        when(coordinateJsonNode.toString()).thenReturn("JSON_STRING");
-        when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(coordinateJsonNode);
-        JsonNode eliteIdJsonNode = mock(JsonNode.class);
-        when(eliteIdJsonNode.toString()).thenReturn("JSON_STRING");
-        when(objectMapper.valueToTree(systemEliteIdResponse)).thenReturn(eliteIdJsonNode);
+        when(objectMapper.writeValueAsString(systemCoordinatesResponse)).thenReturn("JSON_STRING");
+        when(objectMapper.writeValueAsString(systemEliteIdResponse)).thenReturn("JSON_STRING");
         Message coordinateKafkaMessage = new Message("module_systemCoordinatesResponse", "JSON_STRING");
         Message eliteIdKafkaMessage = new Message("module_systemEliteIdResponse", "JSON_STRING");
         MessageDto coordinateMessageDto = mock(MessageDto.class);
@@ -212,6 +208,7 @@ class ReceiveNavRouteServiceTest {
         verify(deleteSystemEliteIdRequestPort).delete(systemName, module);
     }
 
+    @SneakyThrows
     @Test
     void testReceiveMessage_whenSystemExistsAndPropertiesAreNotSet_shouldUpdateSaveAndSendResponses() {
 
@@ -251,12 +248,8 @@ class ReceiveNavRouteServiceTest {
         when(loadSystemEliteIdRequestBySystemNamePort.loadByName(systemName)).thenReturn(systemEliteIdRequestlist);
         SystemEliteIdResponse systemEliteIdResponse = mock(SystemEliteIdResponse.class);
         when(systemEliteIdResponseMapper.map(system)).thenReturn(systemEliteIdResponse);
-        JsonNode coordinateJsonNode = mock(JsonNode.class);
-        JsonNode eliteIdJsonNode = mock(JsonNode.class);
-        when(coordinateJsonNode.toString()).thenReturn("JSON_STRING");
-        when(eliteIdJsonNode.toString()).thenReturn("JSON_STRING");
-        when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(coordinateJsonNode);
-        when(objectMapper.valueToTree(systemEliteIdResponse)).thenReturn(eliteIdJsonNode);
+        when(objectMapper.writeValueAsString(systemCoordinatesResponse)).thenReturn("JSON_STRING");
+        when(objectMapper.writeValueAsString(systemEliteIdResponse)).thenReturn("JSON_STRING");
         Message coordinateKafkaMessage = new Message("module_systemCoordinatesResponse", "JSON_STRING");
         Message eliteIdKafkaMessage = new Message("module_systemEliteIdResponse", "JSON_STRING");
         MessageDto coordinateMessageDto = mock(MessageDto.class);
@@ -280,6 +273,57 @@ class ReceiveNavRouteServiceTest {
         verify(sendMessagePort).send(eliteIdMessageDto);
         verify(deleteSystemCoordinateRequestPort).delete(systemName, module);
         verify(deleteSystemEliteIdRequestPort).delete(systemName, module);
+    }
+
+    @SneakyThrows
+    @Test
+    void testReceiveMessage_whenSystemExistsAndPropertiesAreNotSet_writeValueAsStringThrowsJsonProcessingException() {
+        String systemName = "system";
+        System system = mock(System.class);
+        when(system.name()).thenReturn(systemName);
+        when(system.eliteId()).thenReturn(null);
+        when(system.starClass()).thenReturn(null);
+        when(system.withEliteId(1L)).thenReturn(system);
+        when(system.withStarClass("K")).thenReturn(system);
+        when(system.withCoordinate(any(Coordinate.class))).thenReturn(system);
+        Coordinate coordinate = mock(Coordinate.class);
+        when(system.coordinate()).thenReturn(coordinate);
+        when(coordinate.x()).thenReturn(null);
+        NavRouteMessage.V1.Item item = mock(NavRouteMessage.V1.Item.class);
+        NavRouteMessage.V1 message = mock(NavRouteMessage.V1.class);
+        NavRouteMessage.V1.Payload payload = mock(NavRouteMessage.V1.Payload.class);
+        when(message.message()).thenReturn(payload);
+        when(payload.items()).thenReturn(new NavRouteMessage.V1.Item[]{item});
+        when(item.starSystem()).thenReturn(systemName);
+        when(item.starPos()).thenReturn(new Double[]{1.0, 2.0, 3.0});
+        when(item.starClass()).thenReturn("K");
+        when(item.systemAddress()).thenReturn(1L);
+        when(loadSystemPort.load(systemName)).thenReturn(Optional.of(system));
+        when(saveSystemPort.save(system)).thenReturn(system);
+        SystemCoordinateRequest systemCoordinatesRequest = mock(SystemCoordinateRequest.class);
+        List<SystemCoordinateRequest> systemCoordinatesRequestlist = List.of(systemCoordinatesRequest);
+        when(loadSystemCoordinateRequestBySystemNamePort.loadByName(systemName)).thenReturn(systemCoordinatesRequestlist);
+        SystemCoordinatesResponse systemCoordinatesResponse = mock(SystemCoordinatesResponse.class);
+        when(systemCoordinatesResponseMapper.map(system)).thenReturn(systemCoordinatesResponse);
+        SystemEliteIdRequest systemEliteIdRequest = mock(SystemEliteIdRequest.class);
+        List<SystemEliteIdRequest> systemEliteIdRequestlist = List.of(systemEliteIdRequest);
+        when(loadSystemEliteIdRequestBySystemNamePort.loadByName(systemName)).thenReturn(systemEliteIdRequestlist);
+        SystemEliteIdResponse systemEliteIdResponse = mock(SystemEliteIdResponse.class);
+        when(systemEliteIdResponseMapper.map(system)).thenReturn(systemEliteIdResponse);
+        when(objectMapper.writeValueAsString(systemCoordinatesResponse)).thenThrow(new JsonProcessingException("Test exception") {
+        });
+        when(objectMapper.writeValueAsString(systemEliteIdResponse)).thenThrow(new JsonProcessingException("Test exception") {
+        });
+
+        // No exception as it is a NOOP in async
+        underTest.receive(message);
+
+        verify(system).withEliteId(1L);
+        verify(system).withStarClass("K");
+        verify(system).withCoordinate(any(Coordinate.class));
+        verify(loadSystemPort).load(systemName);
+        verify(saveSystemPort).save(system);
+        verifyNoMoreInteractions(sendMessagePort, deleteSystemCoordinateRequestPort, deleteSystemEliteIdRequestPort);
     }
 
     @Test
