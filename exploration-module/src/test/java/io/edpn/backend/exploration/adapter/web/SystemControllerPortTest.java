@@ -2,7 +2,6 @@ package io.edpn.backend.exploration.adapter.web;
 
 import io.edpn.backend.exploration.application.dto.SystemDto;
 import io.edpn.backend.exploration.application.port.incomming.FindSystemsByNameContainingUseCase;
-import io.edpn.backend.exploration.application.port.incomming.SystemControllerPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +26,7 @@ public class SystemControllerPortTest {
     @Mock
     private FindSystemsByNameContainingInputValidator findSystemsByNameContainingInputValidator;
 
-    private SystemControllerPort underTest;
+    private SystemController underTest;
 
     @BeforeEach
     void setUp() {
