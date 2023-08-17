@@ -17,7 +17,7 @@ public class CommodityMarketInfoMapper {
     public List<CommodityMarketInfo> map(List<CommodityMarketInfoEntity> entities) {
         return entities.stream()
                 .map(this::map)
-                .collect(Collectors.toCollection(LinkedList::new));
+                .toList();
     }
 
     public CommodityMarketInfo map(CommodityMarketInfoEntity entity) {

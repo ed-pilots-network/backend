@@ -33,9 +33,7 @@ public interface StationEntityMapper {
             @Result(property = "requireOdyssey", column = "require_odyssey", javaType = boolean.class),
             @Result(property = "fleetCarrier", column = "fleet_carrier", javaType = boolean.class),
             @Result(property = "maxLandingPadSize", column = "max_landing_pad_size", javaType = String.class),
-            @Result(property = "marketUpdatedAt", column = "market_updated_at", javaType = LocalDateTime.class),
-            @Result(property = "marketData", column = "id", javaType = List.class,
-                    many = @Many(select = "io.edpn.backend.trade.infrastructure.persistence.mappers.mybatis.MarketDatumEntityMapper.findByStationId"))
+            @Result(property = "marketUpdatedAt", column = "market_updated_at", javaType = LocalDateTime.class)
     })
     Optional<StationEntity> findById(@Param("id") UUID id);
 

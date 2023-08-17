@@ -107,12 +107,12 @@ public class DefaultReceiveCommodityMessageUseCase implements ReceiveCommodityMe
                         return md;
                     });
                 })
-                .collect(Collectors.toCollection(LinkedList::new));
+                .toList();
 
         CompletableFuture<List<MarketDatum>> combinedFuture = CompletableFuture.allOf(completableFutureList.toArray(new CompletableFuture[0]))
                 .thenApply(v -> completableFutureList.stream()
                         .map(CompletableFuture::join)
-                        .collect(Collectors.toCollection(LinkedList::new)));
+                        .toList());
 
 
         // put market data map in station
