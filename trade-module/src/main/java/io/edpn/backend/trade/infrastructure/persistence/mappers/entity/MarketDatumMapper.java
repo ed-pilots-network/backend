@@ -16,7 +16,7 @@ public class MarketDatumMapper {
     public List<MarketDatum> map(List<MarketDatumEntity> marketDatumEntityList) {
         return marketDatumEntityList.stream()
                 .map(this::map)
-                .collect(Collectors.toCollection(LinkedList::new));
+                .toList();
     }
 
     public MarketDatum map(MarketDatumEntity marketDatumEntity) {
@@ -38,7 +38,7 @@ public class MarketDatumMapper {
     public List<MarketDatumEntity> mapToEntity(List<MarketDatum> marketDatumList) {
         return marketDatumList.stream()
                 .map(this::mapToEntity)
-                .collect(Collectors.toCollection(LinkedList::new));
+                .toList();
     }
 
     public MarketDatumEntity mapToEntity(MarketDatum marketDatum) {
