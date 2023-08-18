@@ -2,41 +2,41 @@ package io.edpn.backend.trade.application.dto.web.object;
 
 public interface CommodityMarketInfoDto {
     
-    String getCommodityDisplayName();
+    ValidatedCommodityDto commodity();
     
-    Double getMaxBuyPrice();
+    Double maxBuyPrice();
     
-    Double getMinBuyPrice();
+    Double minBuyPrice();
     
-    Double getAvgBuyPrice();
+    Double avgBuyPrice();
     
-    Double getMaxSellPrice();
+    Double maxSellPrice();
     
-    Double getMinSellPrice();
+    Double minSellPrice();
     
-    Double getAvgSellPrice();
+    Double avgSellPrice();
     
-    Double getMinMeanPrice();
+    Double minMeanPrice();
     
-    Double getMaxMeanPrice();
+    Double maxMeanPrice();
     
-    Double getAverageMeanPrice();
+    Double averageMeanPrice();
     
-    Long getTotalStock();
+    Long totalStock();
     
-    Long getTotalDemand();
+    Long totalDemand();
     
-    Integer getTotalStations();
+    Integer totalStations();
     
-    Integer getStationsWithBuyPrice();
+    Integer stationsWithBuyPrice();
     
-    Integer getStationsWithSellPrice();
+    Integer stationsWithSellPrice();
     
-    Integer getStationsWithBuyPriceLowerThanAverage();
+    Integer stationsWithBuyPriceLowerThanAverage();
     
-    Integer getStationsWithSellPriceHigherThanAverage();
+    Integer stationsWithSellPriceHigherThanAverage();
     
-    StationDto getHighestSellingToStation();
+    StationDto highestSellingToStation();
     
-    StationDto getLowestBuyingFromStation();
+    StationDto lowestBuyingFromStation();
 }

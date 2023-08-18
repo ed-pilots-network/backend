@@ -2,8 +2,10 @@ package io.edpn.backend.trade.adapter.web;
 
 import io.edpn.backend.trade.application.dto.web.filter.FindCommodityFilterDto;
 import io.edpn.backend.trade.application.dto.web.filter.LocateCommodityFilterDto;
+import io.edpn.backend.trade.application.dto.web.object.CommodityMarketInfoDto;
 import io.edpn.backend.trade.application.dto.web.object.LocateCommodityDto;
 import io.edpn.backend.trade.application.dto.web.object.ValidatedCommodityDto;
+import io.edpn.backend.trade.application.port.incomming.commoditymarketinfo.GetFullCommodityMarketInfoUseCase;
 import io.edpn.backend.trade.application.port.incomming.locatecommodity.LocateCommodityUseCase;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindAllValidatedCommodityUseCase;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindValidatedCommodityByFilterUseCase;
@@ -17,13 +19,14 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-@RequestMapping("/v1/api")
+@RequestMapping("/v1/api/trade")
 public class TradeModuleController {
 
     private final FindAllValidatedCommodityUseCase findAllValidatedCommodityUseCase;
     private final FindValidatedCommodityByNameUseCase findValidatedCommodityByNameUseCase;
     private final FindValidatedCommodityByFilterUseCase findValidatedCommodityByFilterUseCase;
     private final LocateCommodityUseCase locateCommodityUseCase;
+    private final GetFullCommodityMarketInfoUseCase getFullCommodityMarketInfoUseCase;
 
 
     @GetMapping("/commodity")
@@ -41,8 +44,13 @@ public class TradeModuleController {
         return findValidatedCommodityByNameUseCase.findByName(displayName);
     }
     
-    @GetMapping("/commodity/filter")
+    @GetMapping("/locate-commodity/filter")
     public List<LocateCommodityDto> locateCommodityWithFilters(LocateCommodityFilterDto locateCommodityFilterDto){
         return locateCommodityUseCase.locateCommodityOrderByDistance(locateCommodityFilterDto);
+    }
+    
+    @GetMapping("/best-price")
+    List<CommodityMarketInfoDto> fullMarketInfo() {
+        return getFullCommodityMarketInfoUseCase.findAll();
     }
 }
