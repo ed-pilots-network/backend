@@ -35,7 +35,7 @@ services:
       zookeeper:
         condition: service_healthy
 
-  trademodule-postgis:
+  trademodule_postgis:
     ## TODO: Tag this image locally
     image: "postgis/postgis:15-3.3-alpine"
     restart: on-failure
