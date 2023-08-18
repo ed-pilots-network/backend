@@ -26,5 +26,5 @@ public interface StationEntity {
     
     LocalDateTime getMarketUpdatedAt();
     
-    List<MarketDatumEntity> getMarketData();
+    List<? extends MarketDatumEntity> getMarketData();
 }

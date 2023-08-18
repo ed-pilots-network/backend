@@ -1,10 +1,16 @@
 package io.edpn.backend.trade.adapter.config;
 
 import io.edpn.backend.trade.adapter.web.dto.filter.mapper.RestFindCommodityFilterDtoMapper;
+import io.edpn.backend.trade.adapter.web.dto.filter.mapper.RestLocateCommodityFilterDtoMapper;
+import io.edpn.backend.trade.adapter.web.dto.object.mapper.RestCommodityMarketInfoDtoMapper;
+import io.edpn.backend.trade.adapter.web.dto.object.mapper.RestLocateCommodityDtoMapper;
 import io.edpn.backend.trade.adapter.web.dto.object.mapper.RestStationDtoMapper;
 import io.edpn.backend.trade.adapter.web.dto.object.mapper.RestSystemDtoMapper;
 import io.edpn.backend.trade.adapter.web.dto.object.mapper.RestValidatedCommodityDtoMapper;
 import io.edpn.backend.trade.application.dto.web.filter.mapper.FindCommodityFilterDtoMapper;
+import io.edpn.backend.trade.application.dto.web.filter.mapper.LocateCommodityFilterDtoMapper;
+import io.edpn.backend.trade.application.dto.web.object.mapper.CommodityMarketInfoDtoMapper;
+import io.edpn.backend.trade.application.dto.web.object.mapper.LocateCommodityDtoMapper;
 import io.edpn.backend.trade.application.dto.web.object.mapper.StationDtoMapper;
 import io.edpn.backend.trade.application.dto.web.object.mapper.SystemDtoMapper;
 import io.edpn.backend.trade.application.dto.web.object.mapper.ValidatedCommodityDtoMapper;
@@ -33,5 +39,24 @@ public class WebDtoMapperConfig {
     public StationDtoMapper stationDtoMapper(
             SystemDtoMapper systemDtoMapper){
         return new RestStationDtoMapper(systemDtoMapper);
+    }
+    
+    @Bean(name = "tradeLocateCommodityDtoMapper")
+    public LocateCommodityDtoMapper locateCommodityDtoMapper(
+            StationDtoMapper stationDtoMapper,
+            ValidatedCommodityDtoMapper validatedCommodityDtoMapper) {
+        return new RestLocateCommodityDtoMapper(stationDtoMapper, validatedCommodityDtoMapper);
+    }
+    
+    @Bean(name = "tradeCommodityMarketInfoDtoMapper")
+    public CommodityMarketInfoDtoMapper commodityMarketInfoDtoMapper(
+            ValidatedCommodityDtoMapper validatedCommodityDtoMapper,
+            StationDtoMapper stationDtoMapper) {
+        return new RestCommodityMarketInfoDtoMapper(validatedCommodityDtoMapper, stationDtoMapper);
+    }
+    
+    @Bean(name = "tradeLocateCommodityFilterDtoMapper")
+    public LocateCommodityFilterDtoMapper locateCommodityFilterDtoMapper() {
+        return new RestLocateCommodityFilterDtoMapper();
     }
 }
