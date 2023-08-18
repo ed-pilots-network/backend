@@ -3,6 +3,8 @@ package io.edpn.backend.trade.adapter.config;
 import io.edpn.backend.mybatisutil.StringListToArrayTypeHandler;
 import io.edpn.backend.mybatisutil.StringTrimmingTypeHandler;
 import io.edpn.backend.mybatisutil.UuidTypeHandler;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityMarketInfoRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisLocateCommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisValidatedCommodityRepository;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -15,13 +17,13 @@ import javax.sql.DataSource;
 
 @Configuration("TradeModuleMyBatisConfiguration")
 public class MyBatisConfiguration {
-
+    
     @Bean(name = "tradeSqlSessionFactory")
     public SqlSessionFactory sqlSessionFactory(@Qualifier("tradeDataSource") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
         sessionFactoryBean.setDataSource(dataSource);
         sessionFactoryBean.setTypeHandlers(new UuidTypeHandler(), new StringTrimmingTypeHandler(), new StringListToArrayTypeHandler());
-
+        
         return sessionFactoryBean.getObject();
     }
     
@@ -31,5 +33,19 @@ public class MyBatisConfiguration {
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }
-
+    
+    @Bean(name = "tradeMybatisLocateCommodityRepository")
+    public MapperFactoryBean<MybatisLocateCommodityRepository> mybatisLocateCommodityRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+        MapperFactoryBean<MybatisLocateCommodityRepository> factoryBean = new MapperFactoryBean<>(MybatisLocateCommodityRepository.class);
+        factoryBean.setSqlSessionFactory(sqlSessionFactory);
+        return factoryBean;
+    }
+    
+    @Bean(name = "tradeMybatisCommodityMarketInfoRepository")
+    public MapperFactoryBean<MybatisCommodityMarketInfoRepository> mybatisCommodityMarketInfoRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+        MapperFactoryBean<MybatisCommodityMarketInfoRepository> factoryBean = new MapperFactoryBean<>(MybatisCommodityMarketInfoRepository.class);
+        factoryBean.setSqlSessionFactory(sqlSessionFactory);
+        return factoryBean;
+    }
+    
 }

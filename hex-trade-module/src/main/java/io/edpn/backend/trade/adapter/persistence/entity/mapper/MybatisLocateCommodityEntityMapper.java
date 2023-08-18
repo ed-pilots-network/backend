@@ -16,8 +16,9 @@ import lombok.RequiredArgsConstructor;
 public class MybatisLocateCommodityEntityMapper implements LocateCommodityEntityMapper<MybatisLocateCommodityEntity> {
     
     private final ValidatedCommodityEntityMapper<MybatisValidatedCommodityEntity> validatedCommodityEntityMapper;
-    private final StationEntityMapper<MybatisStationEntity> stationEntityMapper;
     private final SystemEntityMapper<MybatisSystemEntity> systemEntityMapper;
+    private final StationEntityMapper<MybatisStationEntity> stationEntityMapper;
+
     
     @Override
     public LocateCommodity map(LocateCommodityEntity locateCommodityEntity) {
@@ -37,7 +38,7 @@ public class MybatisLocateCommodityEntityMapper implements LocateCommodityEntity
     @Override
     public MybatisLocateCommodityEntity map(LocateCommodity locateCommodity) {
         return MybatisLocateCommodityEntity.builder()
-                .pricesUpdatedAt(locateCommodity.pricesUpdatedAt())
+                .pricesUpdatedAt(locateCommodity.priceUpdatedAt())
                 .validatedCommodity(validatedCommodityEntityMapper.map(locateCommodity.validatedCommodity()))
                 .station(stationEntityMapper.map(locateCommodity.station()))
                 .system(systemEntityMapper.map(locateCommodity.system()))

@@ -11,7 +11,7 @@ import io.edpn.backend.trade.application.dto.persistence.entity.mapper.Validated
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class MybatisCommodityMarketInfoEntityEntityMapper implements CommodityMarketInfoEntityMapper<MybatisCommodityMarketInfoEntity> {
+public class MybatisCommodityMarketInfoEntityMapper implements CommodityMarketInfoEntityMapper<MybatisCommodityMarketInfoEntity> {
     
     private final ValidatedCommodityEntityMapper<MybatisValidatedCommodityEntity> validatedCommodityEntityMapper;
     private final StationEntityMapper<MybatisStationEntity> stationEntityMapper;
