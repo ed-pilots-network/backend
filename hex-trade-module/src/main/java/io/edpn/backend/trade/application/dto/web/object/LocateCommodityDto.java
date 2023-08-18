@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public interface LocateCommodityDto {
     
-    String validatedCommodityDisplayName();
+    String commodityDisplayName();
     
     StationDto station();
     

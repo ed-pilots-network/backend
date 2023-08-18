@@ -2,25 +2,23 @@ package io.edpn.backend.trade.application.dto.web.object;
 
 import java.time.LocalDateTime;
 
-//TODO: Add implementation
 public interface StationDto {
     
-    Long getMarketId();
+    Long marketId();
     
-    String getName();
+    String name();
     
-    Double getArrivalDistance();
+    Double arrivalDistance();
     
-    //TODO: SystemDto or name?
-    String getSystemName();
+    SystemDto system();
     
-    Boolean getPlanetary();
+    Boolean planetary();
     
-    Boolean getRequireOdyssey();
+    Boolean requireOdyssey();
     
-    Boolean getFleetCarrier();
+    Boolean fleetCarrier();
     
-    String getMaxLandingPadSize();
+    String maxLandingPadSize();
     
-    LocalDateTime getMarketUpdatedAt();
+    LocalDateTime marketUpdatedAt();
 }
