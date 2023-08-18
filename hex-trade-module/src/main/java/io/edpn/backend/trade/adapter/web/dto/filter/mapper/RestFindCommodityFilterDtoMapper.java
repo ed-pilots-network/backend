@@ -8,7 +8,7 @@ public class RestFindCommodityFilterDtoMapper implements FindCommodityFilterDtoM
     @Override
     public FindCommodityFilter map(FindCommodityFilterDto persistenceFindCommodity) {
         return new FindCommodityFilter(
-                persistenceFindCommodity.getType(),
-                persistenceFindCommodity.getIsRare());
+                persistenceFindCommodity.type(),
+                persistenceFindCommodity.isRare());
     }
 }
