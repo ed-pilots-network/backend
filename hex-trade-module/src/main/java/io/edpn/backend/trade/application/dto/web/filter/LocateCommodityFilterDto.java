@@ -2,23 +2,23 @@ package io.edpn.backend.trade.application.dto.web.filter;
 
 public interface LocateCommodityFilterDto {
     
-    String getCommodityDisplayName();
+    String commodityDisplayName();
     
-    Double getXCoordinate();
+    Double xCoordinate();
     
-    Double getYCoordinate();
+    Double yCoordinate();
     
-    Double getZCoordinate();
+    Double zCoordinate();
     
-    Boolean getIncludePlanetary();
+    Boolean includePlanetary();
     
-    Boolean getIncludeOdyssey();
+    Boolean includeOdyssey();
     
-    Boolean getIncludeFleetCarriers();
+    Boolean includeFleetCarriers();
     
-    String getMaxLandingPadSize();
+    String maxLandingPadSize();
     
-    Long getMinSupply();
+    Long minSupply();
     
-    Long getMinDemand();
+    Long minDemand();
 }

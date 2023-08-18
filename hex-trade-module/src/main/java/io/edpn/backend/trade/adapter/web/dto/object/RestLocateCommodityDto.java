@@ -2,14 +2,14 @@ package io.edpn.backend.trade.adapter.web.dto.object;
 
 import io.edpn.backend.trade.application.dto.web.object.LocateCommodityDto;
 import io.edpn.backend.trade.application.dto.web.object.StationDto;
+import io.edpn.backend.trade.application.dto.web.object.ValidatedCommodityDto;
 
 import java.time.LocalDateTime;
 
 public record RestLocateCommodityDto(
-        String commodityDisplayName,
+        ValidatedCommodityDto commodity,
         StationDto station,
-        String systemName,
-        LocalDateTime pricesUpdatedAt,
+        LocalDateTime priceUpdatedAt,
         Long supply,
         Long demand,
         Long buyPrice,

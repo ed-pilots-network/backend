@@ -4,13 +4,11 @@ import java.time.LocalDateTime;
 
 public interface LocateCommodityDto {
     
-    String commodityDisplayName();
+    ValidatedCommodityDto commodity();
     
     StationDto station();
     
-    String systemName();
-    
-    LocalDateTime pricesUpdatedAt();
+    LocalDateTime priceUpdatedAt();
     
     Long supply();
     

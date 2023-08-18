@@ -3,7 +3,7 @@ package io.edpn.backend.trade.application.domain;
 import java.time.LocalDateTime;
 
 public record LocateCommodity(
-        LocalDateTime pricesUpdatedAt,
+        LocalDateTime priceUpdatedAt,
         ValidatedCommodity validatedCommodity,
         Station station,
         System system,
