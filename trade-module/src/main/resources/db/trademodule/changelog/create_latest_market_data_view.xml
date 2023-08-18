@@ -6,8 +6,7 @@
     <changeSet id="latest_market_data_view" author="pveeckhout" runOnChange="true">
         <createView viewName="latest_market_data_view" replaceIfExists="true">
             <![CDATA[
-            SELECT DISTINCT
-            ON (md.station_id, md.commodity_id)
+            SELECT
                 md.station_id,
                 md.commodity_id,
                 md.mean_price,
@@ -21,14 +20,11 @@
                 md.prohibited,
                 md.timestamp
             FROM validated_market_datum_view md
-            WHERE (md.station_id, md.timestamp) IN (
-                SELECT DISTINCT ON (md2.station_id)
-                    md2.station_id,
-                    md2.timestamp
-                FROM validated_market_datum_view md2
-                ORDER BY md2.station_id,
-                    md2.timestamp DESC
-            );
+            INNER JOIN (
+              SELECT station_id, MAX(timestamp) AS latest_timestamp
+              FROM validated_market_datum_view
+              GROUP BY station_id
+            ) md2 ON md.station_id = md2.station_id AND md.timestamp = md2.latest_timestamp;
             ]]>
         </createView>
     </changeSet>
