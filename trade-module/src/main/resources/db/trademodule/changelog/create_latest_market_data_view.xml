@@ -7,24 +7,25 @@
         <createView viewName="latest_market_data_view" replaceIfExists="true">
             <![CDATA[
             SELECT
-                md.station_id,
-                md.commodity_id,
-                md.mean_price,
-                md.buy_price,
-                md.stock,
-                md.stock_bracket,
-                md.sell_price,
-                md.demand,
-                md.demand_bracket,
-                md.status_flags,
-                md.prohibited,
-                md.timestamp
-            FROM validated_market_datum_view md
+                md1.station_id,
+                md1.commodity_id,
+                md1.mean_price,
+                md1.buy_price,
+                md1.stock,
+                md1.stock_bracket,
+                md1.sell_price,
+                md1.demand,
+                md1.demand_bracket,
+                md1.status_flags,
+                md1.prohibited,
+                md1.timestamp
+            FROM market_datum md1
+            INNER JOIN validated_commodity_view vcv ON vcv.id = md1.commodity_id
             INNER JOIN (
               SELECT station_id, MAX(timestamp) AS latest_timestamp
-              FROM validated_market_datum_view
+              FROM market_datum
               GROUP BY station_id
-            ) md2 ON md.station_id = md2.station_id AND md.timestamp = md2.latest_timestamp;
+            ) md2 ON md1.station_id = md2.station_id AND md1.timestamp = md2.latest_timestamp;
             ]]>
         </createView>
     </changeSet>
