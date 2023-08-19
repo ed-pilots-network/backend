@@ -1,6 +1,7 @@
 package io.edpn.backend.trade.adapter.web.dto.object.mapper;
 
 import io.edpn.backend.trade.adapter.web.dto.object.RestStationDto;
+import io.edpn.backend.trade.adapter.web.dto.object.RestSystemDto;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.dto.web.object.StationDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.StationDtoMapper;
@@ -18,7 +19,7 @@ public class RestStationDtoMapper implements StationDtoMapper {
                 station.marketId(),
                 station.name(),
                 station.arrivalDistance(),
-                systemDtoMapper.map(station.system()),
+                (RestSystemDto)systemDtoMapper.map(station.system()),
                 station.planetary(),
                 station.requireOdyssey(),
                 station.fleetCarrier(),

@@ -1,11 +1,11 @@
 package io.edpn.backend.trade.adapter.web.dto.object;
 
 import io.edpn.backend.trade.application.dto.web.object.CommodityMarketInfoDto;
-import io.edpn.backend.trade.application.dto.web.object.StationDto;
-import io.edpn.backend.trade.application.dto.web.object.ValidatedCommodityDto;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(name = "CommodityMarketInfoDto")
 public record RestCommodityMarketInfoDto(
-        ValidatedCommodityDto commodity,
+        RestValidatedCommodityDto commodity,
         Double maxBuyPrice,
         Double minBuyPrice,
         Double avgBuyPrice,
@@ -22,6 +22,6 @@ public record RestCommodityMarketInfoDto(
         Integer stationsWithSellPrice,
         Integer stationsWithBuyPriceLowerThanAverage,
         Integer stationsWithSellPriceHigherThanAverage,
-        StationDto highestSellingToStation,
-        StationDto lowestBuyingFromStation) implements CommodityMarketInfoDto {
+        RestStationDto highestSellingToStation,
+        RestStationDto lowestBuyingFromStation) implements CommodityMarketInfoDto {
 }

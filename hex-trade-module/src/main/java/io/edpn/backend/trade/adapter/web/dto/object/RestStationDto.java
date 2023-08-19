@@ -1,15 +1,16 @@
 package io.edpn.backend.trade.adapter.web.dto.object;
 
 import io.edpn.backend.trade.application.dto.web.object.StationDto;
-import io.edpn.backend.trade.application.dto.web.object.SystemDto;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
 
+@Schema(name = "StationDto")
 public record RestStationDto(
         Long marketId,
         String name,
         Double arrivalDistance,
-        SystemDto system,
+        RestSystemDto system,
         Boolean planetary,
         Boolean requireOdyssey,
         Boolean fleetCarrier,

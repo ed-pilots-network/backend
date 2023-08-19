@@ -1,6 +1,8 @@
 package io.edpn.backend.trade.adapter.web.dto.object.mapper;
 
 import io.edpn.backend.trade.adapter.web.dto.object.RestCommodityMarketInfoDto;
+import io.edpn.backend.trade.adapter.web.dto.object.RestStationDto;
+import io.edpn.backend.trade.adapter.web.dto.object.RestValidatedCommodityDto;
 import io.edpn.backend.trade.application.domain.CommodityMarketInfo;
 import io.edpn.backend.trade.application.dto.web.object.CommodityMarketInfoDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.CommodityMarketInfoDtoMapper;
@@ -17,7 +19,7 @@ public class RestCommodityMarketInfoDtoMapper implements CommodityMarketInfoDtoM
     @Override
     public CommodityMarketInfoDto map(CommodityMarketInfo commodityMarketInfo) {
         return new RestCommodityMarketInfoDto(
-                commodityDtoMapper.map(commodityMarketInfo.validatedCommodity()),
+                (RestValidatedCommodityDto)commodityDtoMapper.map(commodityMarketInfo.validatedCommodity()),
                 commodityMarketInfo.maxBuyPrice(),
                 commodityMarketInfo.minBuyPrice(),
                 commodityMarketInfo.avgBuyPrice(),
@@ -34,8 +36,8 @@ public class RestCommodityMarketInfoDtoMapper implements CommodityMarketInfoDtoM
                 commodityMarketInfo.stationsWithSellPrice(),
                 commodityMarketInfo.stationsWithBuyPriceLowerThanAverage(),
                 commodityMarketInfo.stationsWithSellPriceHigherThanAverage(),
-                stationDtoMapper.map(commodityMarketInfo.highestSellingToStation()),
-                stationDtoMapper.map(commodityMarketInfo.lowestBuyingFromStation())
+                (RestStationDto)stationDtoMapper.map(commodityMarketInfo.highestSellingToStation()),
+                (RestStationDto)stationDtoMapper.map(commodityMarketInfo.lowestBuyingFromStation())
         );
     }
 }

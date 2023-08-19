@@ -1,14 +1,14 @@
 package io.edpn.backend.trade.adapter.web.dto.object;
 
 import io.edpn.backend.trade.application.dto.web.object.LocateCommodityDto;
-import io.edpn.backend.trade.application.dto.web.object.StationDto;
-import io.edpn.backend.trade.application.dto.web.object.ValidatedCommodityDto;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
 
+@Schema(name = "LocateCommodityDto")
 public record RestLocateCommodityDto(
-        ValidatedCommodityDto commodity,
-        StationDto station,
+        RestValidatedCommodityDto commodity,
+        RestStationDto station,
         LocalDateTime priceUpdatedAt,
         Long supply,
         Long demand,
