@@ -53,7 +53,7 @@ public class StationRepository implements CreateStationPort, LoadOrCreateBySyste
     }
     
     @Override
-    public Station loadOrCreateBySystemAndStatioName(System system, String stationName) {
+    public Station loadOrCreateBySystemAndStationName(System system, String stationName) {
         return mybatisStationRepository.findBySystemIdAndStationName(system.getId(), stationName)
                 .map(mybatisStationEntityMapper::map)
                 .orElseGet(() -> {

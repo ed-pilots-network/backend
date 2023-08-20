@@ -5,5 +5,5 @@ import io.edpn.backend.trade.application.domain.System;
 
 public interface LoadOrCreateBySystemAndStationNamePort {
     
-    Station loadOrCreateBySystemAndStatioName(System system, String stationName);
+    Station loadOrCreateBySystemAndStationName(System system, String stationName);
 }
