@@ -21,12 +21,12 @@ public class MybatisSystemEntityMapper implements SystemEntityMapper<MybatisSyst
     @Override
     public MybatisSystemEntity map(System system) {
         return MybatisSystemEntity.builder()
-                .id(system.id())
-                .eliteId(system.eliteId())
-                .name(system.name())
-                .xCoordinate(system.xCoordinate())
-                .yCoordinate(system.yCoordinate())
-                .zCoordinate(system.zCoordinate())
+                .id(system.getId())
+                .eliteId(system.getEliteId())
+                .name(system.getName())
+                .xCoordinate(system.getXCoordinate())
+                .yCoordinate(system.getYCoordinate())
+                .zCoordinate(system.getZCoordinate())
                 .build();
     }
 }

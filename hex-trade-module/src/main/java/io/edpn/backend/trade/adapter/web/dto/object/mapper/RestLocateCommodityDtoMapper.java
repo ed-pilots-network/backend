@@ -19,14 +19,14 @@ public class RestLocateCommodityDtoMapper implements LocateCommodityDtoMapper {
     @Override
     public LocateCommodityDto map(LocateCommodity locateCommodity) {
         return new RestLocateCommodityDto(
-                (RestValidatedCommodityDto)commodityDtoMapper.map(locateCommodity.validatedCommodity()),
-                (RestStationDto)stationDtoMapper.map(locateCommodity.station()),
-                locateCommodity.priceUpdatedAt(),
-                locateCommodity.supply(),
-                locateCommodity.demand(),
-                locateCommodity.buyPrice(),
-                locateCommodity.sellPrice(),
-                locateCommodity.distance()
+                (RestValidatedCommodityDto)commodityDtoMapper.map(locateCommodity.getValidatedCommodity()),
+                (RestStationDto)stationDtoMapper.map(locateCommodity.getStation()),
+                locateCommodity.getPriceUpdatedAt(),
+                locateCommodity.getSupply(),
+                locateCommodity.getDemand(),
+                locateCommodity.getBuyPrice(),
+                locateCommodity.getSellPrice(),
+                locateCommodity.getDistance()
                 
         );
     }

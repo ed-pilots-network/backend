@@ -17,8 +17,8 @@ public class MybatisCommodityEntityMapper implements CommodityEntityMapper<Mybat
     @Override
     public MybatisCommodityEntity map(Commodity commodity) {
         return MybatisCommodityEntity.builder()
-                .id(commodity.id())
-                .name(commodity.name())
+                .id(commodity.getId())
+                .name(commodity.getName())
                 .build();
     }
 }

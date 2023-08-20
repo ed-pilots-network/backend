@@ -37,17 +37,17 @@ public class MybatisStationEntityMapper implements StationEntityMapper<MybatisSt
     @Override
     public MybatisStationEntity map(Station station) {
         return MybatisStationEntity.builder()
-                .id(station.id())
-                .marketId(station.marketId())
-                .name(station.name())
-                .arrivalDistance(station.arrivalDistance())
-                .system(systemEntityMapper.map(station.system()))
-                .planetary(station.planetary())
-                .requireOdyssey(station.requireOdyssey())
-                .fleetCarrier(station.fleetCarrier())
-                .maxLandingPadSize(String.valueOf(station.maxLandingPadSize()))
-                .marketUpdatedAt(station.marketUpdatedAt())
-                .marketData(station.marketData().stream().map(marketDatumEntityMapper::map).toList())
+                .id(station.getId())
+                .marketId(station.getMarketId())
+                .name(station.getName())
+                .arrivalDistance(station.getArrivalDistance())
+                .system(systemEntityMapper.map(station.getSystem()))
+                .planetary(station.getPlanetary())
+                .requireOdyssey(station.getRequireOdyssey())
+                .fleetCarrier(station.getFleetCarrier())
+                .maxLandingPadSize(String.valueOf(station.getMaxLandingPadSize()))
+                .marketUpdatedAt(station.getMarketUpdatedAt())
+                .marketData(station.getMarketData().stream().map(marketDatumEntityMapper::map).toList())
                 .build();
     }
 }

@@ -9,11 +9,11 @@ public class RestSystemDtoMapper implements SystemDtoMapper {
     @Override
     public SystemDto map(System system) {
         return new RestSystemDto(
-                system.eliteId(),
-                system.name(),
-                system.xCoordinate(),
-                system.yCoordinate(),
-                system.zCoordinate()
+                system.getEliteId(),
+                system.getName(),
+                system.getXCoordinate(),
+                system.getYCoordinate(),
+                system.getZCoordinate()
         );
     }
 }

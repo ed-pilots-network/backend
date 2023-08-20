@@ -9,16 +9,16 @@ public class MybatisPersistenceLocateCommodityFilterMapper implements Persistenc
     @Override
     public MybatisLocateCommodityFilter map(LocateCommodityFilter locateCommodityFilter) {
         return MybatisLocateCommodityFilter.builder()
-                .commodityDisplayName(locateCommodityFilter.commodityDisplayName())
-                .xCoordinate(locateCommodityFilter.xCoordinate())
-                .yCoordinate(locateCommodityFilter.yCoordinate())
-                .zCoordinate(locateCommodityFilter.zCoordinate())
-                .includePlanetary(locateCommodityFilter.includePlanetary())
-                .includeOdyssey(locateCommodityFilter.includeOdyssey())
-                .includeFleetCarriers(locateCommodityFilter.includeFleetCarriers())
-                .maxLandingPadSize(String.valueOf(locateCommodityFilter.maxLandingPadSize()))
-                .minSupply(locateCommodityFilter.minSupply())
-                .minDemand(locateCommodityFilter.minDemand())
+                .commodityDisplayName(locateCommodityFilter.getCommodityDisplayName())
+                .xCoordinate(locateCommodityFilter.getXCoordinate())
+                .yCoordinate(locateCommodityFilter.getYCoordinate())
+                .zCoordinate(locateCommodityFilter.getZCoordinate())
+                .includePlanetary(locateCommodityFilter.getIncludePlanetary())
+                .includeOdyssey(locateCommodityFilter.getIncludeOdyssey())
+                .includeFleetCarriers(locateCommodityFilter.getIncludeFleetCarriers())
+                .maxLandingPadSize(String.valueOf(locateCommodityFilter.getMaxLandingPadSize()))
+                .minSupply(locateCommodityFilter.getMinSupply())
+                .minDemand(locateCommodityFilter.getMinDemand())
                 .build();
     }
 }

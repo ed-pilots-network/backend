@@ -19,25 +19,25 @@ public class RestCommodityMarketInfoDtoMapper implements CommodityMarketInfoDtoM
     @Override
     public CommodityMarketInfoDto map(CommodityMarketInfo commodityMarketInfo) {
         return new RestCommodityMarketInfoDto(
-                (RestValidatedCommodityDto)commodityDtoMapper.map(commodityMarketInfo.validatedCommodity()),
-                commodityMarketInfo.maxBuyPrice(),
-                commodityMarketInfo.minBuyPrice(),
-                commodityMarketInfo.avgBuyPrice(),
-                commodityMarketInfo.maxSellPrice(),
-                commodityMarketInfo.minSellPrice(),
-                commodityMarketInfo.avgSellPrice(),
-                commodityMarketInfo.minMeanPrice(),
-                commodityMarketInfo.maxMeanPrice(),
-                commodityMarketInfo.averageMeanPrice(),
-                commodityMarketInfo.totalStock(),
-                commodityMarketInfo.totalDemand(),
-                commodityMarketInfo.totalStations(),
-                commodityMarketInfo.stationsWithBuyPrice(),
-                commodityMarketInfo.stationsWithSellPrice(),
-                commodityMarketInfo.stationsWithBuyPriceLowerThanAverage(),
-                commodityMarketInfo.stationsWithSellPriceHigherThanAverage(),
-                (RestStationDto)stationDtoMapper.map(commodityMarketInfo.highestSellingToStation()),
-                (RestStationDto)stationDtoMapper.map(commodityMarketInfo.lowestBuyingFromStation())
+                (RestValidatedCommodityDto)commodityDtoMapper.map(commodityMarketInfo.getValidatedCommodity()),
+                commodityMarketInfo.getMaxBuyPrice(),
+                commodityMarketInfo.getMinBuyPrice(),
+                commodityMarketInfo.getAvgBuyPrice(),
+                commodityMarketInfo.getMaxSellPrice(),
+                commodityMarketInfo.getMinSellPrice(),
+                commodityMarketInfo.getAvgSellPrice(),
+                commodityMarketInfo.getMinMeanPrice(),
+                commodityMarketInfo.getMaxMeanPrice(),
+                commodityMarketInfo.getAverageMeanPrice(),
+                commodityMarketInfo.getTotalStock(),
+                commodityMarketInfo.getTotalDemand(),
+                commodityMarketInfo.getTotalStations(),
+                commodityMarketInfo.getStationsWithBuyPrice(),
+                commodityMarketInfo.getStationsWithSellPrice(),
+                commodityMarketInfo.getStationsWithBuyPriceLowerThanAverage(),
+                commodityMarketInfo.getStationsWithSellPriceHigherThanAverage(),
+                (RestStationDto)stationDtoMapper.map(commodityMarketInfo.getHighestSellingToStation()),
+                (RestStationDto)stationDtoMapper.map(commodityMarketInfo.getLowestBuyingFromStation())
         );
     }
 }

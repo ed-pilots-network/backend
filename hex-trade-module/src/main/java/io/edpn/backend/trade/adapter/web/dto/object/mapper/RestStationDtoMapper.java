@@ -16,15 +16,15 @@ public class RestStationDtoMapper implements StationDtoMapper {
     @Override
     public StationDto map(Station station) {
         return new RestStationDto(
-                station.marketId(),
-                station.name(),
-                station.arrivalDistance(),
-                (RestSystemDto)systemDtoMapper.map(station.system()),
-                station.planetary(),
-                station.requireOdyssey(),
-                station.fleetCarrier(),
-                String.valueOf(station.maxLandingPadSize()),
-                station.marketUpdatedAt()
+                station.getMarketId(),
+                station.getName(),
+                station.getArrivalDistance(),
+                (RestSystemDto)systemDtoMapper.map(station.getSystem()),
+                station.getPlanetary(),
+                station.getRequireOdyssey(),
+                station.getFleetCarrier(),
+                String.valueOf(station.getMaxLandingPadSize()),
+                station.getMarketUpdatedAt()
                 
         );
     }

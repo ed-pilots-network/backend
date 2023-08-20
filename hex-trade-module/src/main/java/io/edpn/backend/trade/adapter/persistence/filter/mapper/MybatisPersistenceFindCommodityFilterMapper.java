@@ -9,8 +9,8 @@ public class MybatisPersistenceFindCommodityFilterMapper implements PersistenceF
     @Override
     public MybatisFindCommodityFilter map(FindCommodityFilter findCommodityFilter) {
         return MybatisFindCommodityFilter.builder()
-                .type(findCommodityFilter.type())
-                .isRare(findCommodityFilter.isRare())
+                .type(findCommodityFilter.getType())
+                .isRare(findCommodityFilter.getIsRare())
                 .build();
     }
 }
