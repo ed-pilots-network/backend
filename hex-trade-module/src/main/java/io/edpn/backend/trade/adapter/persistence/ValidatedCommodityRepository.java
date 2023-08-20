@@ -1,10 +1,10 @@
 package io.edpn.backend.trade.adapter.persistence;
 
-import io.edpn.backend.trade.adapter.persistence.filter.MybatisFindCommodityFilter;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisValidatedCommodityEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceFindCommodityFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisValidatedCommodityRepository;
 import io.edpn.backend.trade.application.domain.ValidatedCommodity;
-import io.edpn.backend.trade.application.dto.persistence.filter.PersistenceFindCommodityFilter;
+import io.edpn.backend.trade.application.domain.filter.FindCommodityFilter;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadAllValidatedCommodityPort;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadValidatedCommodityByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadValidatedCommodityByNamePort;
@@ -20,6 +20,7 @@ public class ValidatedCommodityRepository implements LoadAllValidatedCommodityPo
 
     private final MybatisValidatedCommodityRepository mybatisValidatedCommodityRepository;
     private final MybatisValidatedCommodityEntityMapper mybatisValidatedCommodityEntityMapper;
+    private final MybatisPersistenceFindCommodityFilterMapper mybatisPersistenceFindCommodityFilterMapper;
     
     @Override
     public List<ValidatedCommodity> loadAll() {
@@ -31,9 +32,9 @@ public class ValidatedCommodityRepository implements LoadAllValidatedCommodityPo
     }
     
     @Override
-    public List<ValidatedCommodity> loadByFilter(PersistenceFindCommodityFilter persistenceFindCommodityFilter) {
+    public List<ValidatedCommodity> loadByFilter(FindCommodityFilter findCommodityFilter) {
         return mybatisValidatedCommodityRepository
-                .findByFilter((MybatisFindCommodityFilter) persistenceFindCommodityFilter)
+                .findByFilter(mybatisPersistenceFindCommodityFilterMapper.map(findCommodityFilter))
                 .stream()
                 .map(mybatisValidatedCommodityEntityMapper::map)
                 .toList();
