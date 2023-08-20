@@ -4,7 +4,12 @@ import io.edpn.backend.mybatisutil.StringListToArrayTypeHandler;
 import io.edpn.backend.mybatisutil.StringTrimmingTypeHandler;
 import io.edpn.backend.mybatisutil.UuidTypeHandler;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityMarketInfoRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisLocateCommodityRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisMessageRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisValidatedCommodityRepository;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -27,12 +32,20 @@ public class MyBatisConfiguration {
         return sessionFactoryBean.getObject();
     }
     
-    @Bean(name = "tradeMybatisValidatedCommodityRepository")
-    public MapperFactoryBean<MybatisValidatedCommodityRepository> mybatisValidatedCommodityRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
-        MapperFactoryBean<MybatisValidatedCommodityRepository> factoryBean = new MapperFactoryBean<>(MybatisValidatedCommodityRepository.class);
+    @Bean(name = "tradeMybatisCommodityMarketInfoRepository")
+    public MapperFactoryBean<MybatisCommodityMarketInfoRepository> mybatisCommodityMarketInfoRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+        MapperFactoryBean<MybatisCommodityMarketInfoRepository> factoryBean = new MapperFactoryBean<>(MybatisCommodityMarketInfoRepository.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }
+    
+    @Bean(name = "tradeMybatisCommodityRepository")
+    public MapperFactoryBean<MybatisCommodityRepository> mybatisCommodityRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+        MapperFactoryBean<MybatisCommodityRepository> factoryBean = new MapperFactoryBean<>(MybatisCommodityRepository.class);
+        factoryBean.setSqlSessionFactory(sqlSessionFactory);
+        return factoryBean;
+    }
+    
     
     @Bean(name = "tradeMybatisLocateCommodityRepository")
     public MapperFactoryBean<MybatisLocateCommodityRepository> mybatisLocateCommodityRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
@@ -41,9 +54,38 @@ public class MyBatisConfiguration {
         return factoryBean;
     }
     
-    @Bean(name = "tradeMybatisCommodityMarketInfoRepository")
-    public MapperFactoryBean<MybatisCommodityMarketInfoRepository> mybatisCommodityMarketInfoRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
-        MapperFactoryBean<MybatisCommodityMarketInfoRepository> factoryBean = new MapperFactoryBean<>(MybatisCommodityMarketInfoRepository.class);
+    @Bean(name = "tradeMybatisMarketDatumRepository")
+    public MapperFactoryBean<MybatisMarketDatumRepository> mybatisMarketDatumRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+        MapperFactoryBean<MybatisMarketDatumRepository> factoryBean = new MapperFactoryBean<>(MybatisMarketDatumRepository.class);
+        factoryBean.setSqlSessionFactory(sqlSessionFactory);
+        return factoryBean;
+    }
+    
+    
+    @Bean(name = "tradeMybatisRequestDataMessageRepository")
+    public MapperFactoryBean<MybatisMessageRepository> mybatisRequestDataMessageRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+        MapperFactoryBean<MybatisMessageRepository> factoryBean = new MapperFactoryBean<>(MybatisMessageRepository.class);
+        factoryBean.setSqlSessionFactory(sqlSessionFactory);
+        return factoryBean;
+    }
+    
+    @Bean(name = "tradeMybatisStationRepository")
+    public MapperFactoryBean<MybatisStationRepository> mybatisStationRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+        MapperFactoryBean<MybatisStationRepository> factoryBean = new MapperFactoryBean<>(MybatisStationRepository.class);
+        factoryBean.setSqlSessionFactory(sqlSessionFactory);
+        return factoryBean;
+    }
+    
+    @Bean(name = "tradeMybatisSystemRepository")
+    public MapperFactoryBean<MybatisSystemRepository> mybatisSystemRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+        MapperFactoryBean<MybatisSystemRepository> factoryBean = new MapperFactoryBean<>(MybatisSystemRepository.class);
+        factoryBean.setSqlSessionFactory(sqlSessionFactory);
+        return factoryBean;
+    }
+    
+    @Bean(name = "tradeMybatisValidatedCommodityRepository")
+    public MapperFactoryBean<MybatisValidatedCommodityRepository> mybatisValidatedCommodityRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+        MapperFactoryBean<MybatisValidatedCommodityRepository> factoryBean = new MapperFactoryBean<>(MybatisValidatedCommodityRepository.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }
