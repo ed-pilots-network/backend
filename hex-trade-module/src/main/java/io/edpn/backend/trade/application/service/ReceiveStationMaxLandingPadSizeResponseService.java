@@ -15,7 +15,7 @@ import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 @Slf4j
-public class ReceiveStationMaxLandingPadSizeResponseUseCase implements ReceiveKafkaMessageUseCase<StationMaxLandingPadSizeResponse> {
+public class ReceiveStationMaxLandingPadSizeResponseService implements ReceiveKafkaMessageUseCase<StationMaxLandingPadSizeResponse> {
     
     private final LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
     private final LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;

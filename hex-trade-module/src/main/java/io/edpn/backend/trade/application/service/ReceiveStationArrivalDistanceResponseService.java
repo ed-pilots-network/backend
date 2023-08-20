@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 @Slf4j
-public class ReceiveStationArrivalDistanceResponseUseCase implements ReceiveKafkaMessageUseCase<StationArrivalDistanceResponse> {
+public class ReceiveStationArrivalDistanceResponseService implements ReceiveKafkaMessageUseCase<StationArrivalDistanceResponse> {
 
     private final LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
     private final LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;

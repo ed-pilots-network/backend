@@ -1,6 +1,6 @@
 package io.edpn.backend.trade.application.service;
 
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationPlanetaryResponse;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationRequireOdysseyResponse;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
@@ -14,17 +14,17 @@ import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 @Slf4j
-public class ReceiveStationPlanetaryResponseUseCase implements ReceiveKafkaMessageUseCase<StationPlanetaryResponse> {
+public class ReceiveStationRequireOdysseyResponseService implements ReceiveKafkaMessageUseCase<StationRequireOdysseyResponse> {
     
     private final LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
     private final LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
     private final UpdateStationPort updateStationPort;
 
     @Override
-    public void receive(StationPlanetaryResponse message) {
+    public void receive(StationRequireOdysseyResponse message) {
         String systemName = message.getSystemName();
         String stationName = message.getStationName();
-        boolean planetary = message.isPlanetary();
+        boolean requireOdyssey = message.isRequireOdyssey();
         
         CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> loadOrCreateSystemByNamePort.loadOrCreateSystemByName(systemName));
         
@@ -34,7 +34,7 @@ public class ReceiveStationPlanetaryResponseUseCase implements ReceiveKafkaMessa
             if (throwable != null) {
                 log.error("Exception occurred in retrieving station", throwable);
             } else {
-                station.setPlanetary(planetary);
+                station.setRequireOdyssey(requireOdyssey);
             }
         });
         

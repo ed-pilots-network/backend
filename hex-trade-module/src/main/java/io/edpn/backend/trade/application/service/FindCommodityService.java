@@ -1,9 +1,8 @@
 package io.edpn.backend.trade.application.service;
 
 import io.edpn.backend.trade.application.dto.web.filter.FindCommodityFilterDto;
-import io.edpn.backend.trade.application.dto.web.object.ValidatedCommodityDto;
 import io.edpn.backend.trade.application.dto.web.filter.mapper.FindCommodityFilterDtoMapper;
-import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindCommodityFilterMapper;
+import io.edpn.backend.trade.application.dto.web.object.ValidatedCommodityDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.ValidatedCommodityDtoMapper;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindAllValidatedCommodityUseCase;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindValidatedCommodityByFilterUseCase;
@@ -24,7 +23,6 @@ public class FindCommodityService implements FindAllValidatedCommodityUseCase, F
     private final LoadValidatedCommodityByFilterPort loadValidatedCommodityByFilterPort;
     private final ValidatedCommodityDtoMapper validatedCommodityDTOMapper;
     private final FindCommodityFilterDtoMapper findCommodityFilterDtoMapper;
-    private final PersistenceFindCommodityFilterMapper persistenceFindCommodityFilterMapper;
 
 
     @Override
@@ -46,7 +44,7 @@ public class FindCommodityService implements FindAllValidatedCommodityUseCase, F
     @Override
     public List<ValidatedCommodityDto> findByFilter(FindCommodityFilterDto findCommodityRequest) {
         return loadValidatedCommodityByFilterPort
-                .loadByFilter(persistenceFindCommodityFilterMapper.map(findCommodityFilterDtoMapper.map(findCommodityRequest)))
+                .loadByFilter(findCommodityFilterDtoMapper.map(findCommodityRequest))
                 .stream()
                 .map(validatedCommodityDTOMapper::map)
                 .toList();
