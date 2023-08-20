@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,7 +25,9 @@ public class Station {
     private Boolean planetary;
     private Boolean requireOdyssey;
     private Boolean fleetCarrier;
-    private LandingPadSize maxLandingPadSize;
+    @Builder.Default
+    private LandingPadSize maxLandingPadSize = LandingPadSize.UNKNOWN;
     private LocalDateTime marketUpdatedAt;
-    private List<MarketDatum> marketData;
+    @Builder.Default
+    private List<MarketDatum> marketData = new ArrayList<>();
 }

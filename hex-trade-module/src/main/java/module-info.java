@@ -24,6 +24,7 @@ module edpn.backend.hextrade {
     requires spring.retry;
     requires spring.core;
     requires com.fasterxml.jackson.datatype.jdk8;
+    requires com.fasterxml.jackson.datatype.jsr310;
 
     exports io.edpn.backend.trade.adapter.web;
     exports io.edpn.backend.trade.application.domain;

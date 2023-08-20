@@ -24,7 +24,7 @@ public interface MybatisMarketDatumRepository {
     @Select("SELECT * FROM market_datum WHERE station_id = #{stationId} AND commodity_id = #{commodityId} AND timestamp = #{timestamp}")
     @Results(id = "marketDatumResultMap", value = {
             @Result(property = "commodity", column = "commodity_id", javaType = MybatisCommodityEntity.class,
-                    one = @One(select = "io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRepository.findById")),
+                    one = @One(select = "io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityRepository.findById")),
             @Result(property = "timestamp", column = "timestamp", javaType = LocalDateTime.class),
             @Result(property = "meanPrice", column = "mean_price", javaType = long.class),
             @Result(property = "buyPrice", column = "buy_price", javaType = long.class),

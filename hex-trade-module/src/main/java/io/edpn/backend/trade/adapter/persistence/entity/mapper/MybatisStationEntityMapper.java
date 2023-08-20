@@ -11,6 +11,8 @@ import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationEn
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemEntityMapper;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 public class MybatisStationEntityMapper implements StationEntityMapper<MybatisStationEntity> {
     
@@ -45,7 +47,7 @@ public class MybatisStationEntityMapper implements StationEntityMapper<MybatisSt
                 .planetary(station.getPlanetary())
                 .requireOdyssey(station.getRequireOdyssey())
                 .fleetCarrier(station.getFleetCarrier())
-                .maxLandingPadSize(String.valueOf(station.getMaxLandingPadSize()))
+                .maxLandingPadSize(Optional.ofNullable(station.getMaxLandingPadSize()).map(LandingPadSize::name).orElse(LandingPadSize.UNKNOWN.name()))
                 .marketUpdatedAt(station.getMarketUpdatedAt())
                 .marketData(station.getMarketData().stream().map(marketDatumEntityMapper::map).toList())
                 .build();

@@ -29,7 +29,7 @@ public class ReceiveStationPlanetaryResponseService implements ReceiveKafkaMessa
         CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> loadOrCreateSystemByNamePort.loadOrCreateSystemByName(systemName));
         
         // get station
-        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> loadOrCreateBySystemAndStationNamePort.loadOrCreateBySystemAndStatioName(systemCompletableFuture.join(), stationName));
+        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> loadOrCreateBySystemAndStationNamePort.loadOrCreateBySystemAndStationName(systemCompletableFuture.join(), stationName));
         stationCompletableFuture.whenComplete((station, throwable) -> {
             if (throwable != null) {
                 log.error("Exception occurred in retrieving station", throwable);

@@ -1,15 +1,20 @@
 package io.edpn.backend.trade.adapter.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.edpn.backend.trade.application.domain.Station;
+import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.dto.web.filter.mapper.FindCommodityFilterDtoMapper;
 import io.edpn.backend.trade.application.dto.web.filter.mapper.LocateCommodityFilterDtoMapper;
 import io.edpn.backend.trade.application.dto.web.object.mapper.CommodityMarketInfoDtoMapper;
 import io.edpn.backend.trade.application.dto.web.object.mapper.LocateCommodityDtoMapper;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.dto.web.object.mapper.ValidatedCommodityDtoMapper;
+import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
+import io.edpn.backend.trade.application.port.outgoing.commodity.LoadOrCreateCommodityByNamePort;
 import io.edpn.backend.trade.application.port.outgoing.commoditymarketinfo.GetFullCommodityMarketInfoPort;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.locatecommodity.LocateCommodityByFilterPort;
+import io.edpn.backend.trade.application.port.outgoing.marketdatum.ExistsByStationNameAndSystemNameAndTimestampPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
@@ -20,6 +25,7 @@ import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadVa
 import io.edpn.backend.trade.application.service.FindCommodityMarketInfoService;
 import io.edpn.backend.trade.application.service.FindCommodityService;
 import io.edpn.backend.trade.application.service.LocateCommodityService;
+import io.edpn.backend.trade.application.service.ReceiveCommodityMessageService;
 import io.edpn.backend.trade.application.service.ReceiveStationArrivalDistanceResponseService;
 import io.edpn.backend.trade.application.service.ReceiveStationMaxLandingPadSizeResponseService;
 import io.edpn.backend.trade.application.service.ReceiveStationPlanetaryResponseService;
@@ -34,6 +40,8 @@ import io.edpn.backend.trade.application.service.RequestSystemCoordinatesService
 import io.edpn.backend.trade.application.service.RequestSystemEliteIdService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 @Configuration("TradeServiceConfig")
 public class ServiceConfig {
@@ -62,6 +70,19 @@ public class ServiceConfig {
             LocateCommodityDtoMapper locateCommodityDtoMapper) {
         return new LocateCommodityService(locateCommodityByFilterPort, locateCommodityFilterDtoMapper, locateCommodityDtoMapper);
     }
+    
+    @Bean(name = "tradeRecieveCommodityMessageUsecase")
+    public ReceiveCommodityMessageService receiveCommodityMessageService(
+            ExistsByStationNameAndSystemNameAndTimestampPort existsByStationNameAndSystemNameAndTimestamp,
+            LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
+            LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort,
+            LoadOrCreateCommodityByNamePort loadOrCreateCommodityByNamePort,
+            UpdateStationPort updateStationPort,
+            List<RequestDataUseCase<Station>> stationRequestDataServices,
+            List<RequestDataUseCase<System>> systemRequestDataService) {
+        return new ReceiveCommodityMessageService(existsByStationNameAndSystemNameAndTimestamp, loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, loadOrCreateCommodityByNamePort, updateStationPort, stationRequestDataServices, systemRequestDataService);
+    }
+
     
     @Bean(name = "tradeReceiveStationArrivalDistanceResponseService")
     public ReceiveStationArrivalDistanceResponseService receiveStationArrivalDistanceResponseService(
