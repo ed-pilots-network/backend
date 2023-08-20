@@ -8,6 +8,6 @@ import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 public class KafkaMessageMapper implements MessageMapper {
     @Override
     public MessageDto map(Message message) {
-        return new KafkaMessageDto(message.topic(), message.message());
+        return new KafkaMessageDto(message.getTopic(), message.getMessage());
     }
 }

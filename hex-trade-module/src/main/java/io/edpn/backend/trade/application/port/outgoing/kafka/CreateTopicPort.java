@@ -1,4 +1,4 @@
-package io.edpn.backend.trade.application.port.outgoing;
+package io.edpn.backend.trade.application.port.outgoing.kafka;
 
 import java.util.concurrent.CompletableFuture;
 

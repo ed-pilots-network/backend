@@ -1,4 +1,4 @@
-package io.edpn.backend.trade.application.port.outgoing;
+package io.edpn.backend.trade.application.port.outgoing.kafka;
 
 import io.edpn.backend.trade.application.dto.web.object.MessageDto;
 
