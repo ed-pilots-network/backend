@@ -35,7 +35,7 @@ public class RequestStationArrivalDistanceService implements RequestDataUseCase<
         JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
 
         Message message = Message.builder()
-                .topic("tradeModuleStationArrivalDistanceDataRequest")
+                .topic("stationArrivalDistanceRequest")
                 .message(jsonNode.toString())
                 .build();
 

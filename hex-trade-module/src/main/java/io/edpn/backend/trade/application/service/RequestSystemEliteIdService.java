@@ -34,7 +34,7 @@ public class RequestSystemEliteIdService implements RequestDataUseCase<System> {
         JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
         
         Message message = Message.builder()
-                .topic("tradeModuleSystemEliteIdDataRequest")
+                .topic("systemEliteIdRequest")
                 .message(jsonNode.toString())
                 .build();
         

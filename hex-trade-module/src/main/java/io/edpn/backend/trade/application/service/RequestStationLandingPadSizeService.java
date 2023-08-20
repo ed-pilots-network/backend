@@ -36,7 +36,7 @@ public class RequestStationLandingPadSizeService implements RequestDataUseCase<S
         JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
 
         Message message = Message.builder()
-                .topic("tradeModuleStationMaxLandingPadSizeDataRequest")
+                .topic("stationMaxLandingPadSizeDataRequest")
                 .message(jsonNode.toString())
                 .build();
 

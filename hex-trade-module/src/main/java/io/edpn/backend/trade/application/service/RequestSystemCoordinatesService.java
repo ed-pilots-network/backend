@@ -34,7 +34,7 @@ public class RequestSystemCoordinatesService implements RequestDataUseCase<Syste
         JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
         
         Message message = Message.builder()
-                .topic("tradeModuleSystemCoordinatesDataRequest")
+                .topic("systemCoordinatesRequest")
                 .message(jsonNode.toString())
                 .build();
         
