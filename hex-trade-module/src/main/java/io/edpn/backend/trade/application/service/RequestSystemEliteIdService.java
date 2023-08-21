@@ -29,6 +29,7 @@ public class RequestSystemEliteIdService implements RequestDataUseCase<System> {
     @Override
     public void request(System system) {
         SystemDataRequest systemDataRequest = new SystemDataRequest();
+        systemDataRequest.setRequestingModule("trade");
         systemDataRequest.setSystemName(system.getName());
 
         JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);

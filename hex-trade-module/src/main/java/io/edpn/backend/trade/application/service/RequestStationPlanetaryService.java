@@ -29,6 +29,7 @@ public class RequestStationPlanetaryService implements RequestDataUseCase<Statio
     @Override
     public void request(Station station) {
         StationDataRequest stationDataRequest = new StationDataRequest();
+        stationDataRequest.setRequestingModule("trade");
         stationDataRequest.setStationName(station.getName());
         stationDataRequest.setSystemName(station.getSystem().getName());
 

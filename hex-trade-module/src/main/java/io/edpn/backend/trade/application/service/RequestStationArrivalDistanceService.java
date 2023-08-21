@@ -29,6 +29,7 @@ public class RequestStationArrivalDistanceService implements RequestDataUseCase<
     @Override
     public void request(Station station) {
         StationDataRequest stationDataRequest = new StationDataRequest();
+        stationDataRequest.setRequestingModule("trade");
         stationDataRequest.setStationName(station.getName());
         stationDataRequest.setSystemName(station.getSystem().getName());
 

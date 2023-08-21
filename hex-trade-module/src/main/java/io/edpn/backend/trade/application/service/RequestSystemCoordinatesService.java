@@ -29,6 +29,7 @@ public class RequestSystemCoordinatesService implements RequestDataUseCase<Syste
     @Override
     public void request(System system) {
         SystemDataRequest stationDataRequest = new SystemDataRequest();
+        stationDataRequest.setRequestingModule("trade");
         stationDataRequest.setSystemName(system.getName());
 
         JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);

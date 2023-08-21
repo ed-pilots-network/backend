@@ -29,13 +29,14 @@ public class RequestStationRequireOdysseyService implements RequestDataUseCase<S
     @Override
     public void request(Station station) {
         StationDataRequest stationDataRequest = new StationDataRequest();
+        stationDataRequest.setRequestingModule("trade");
         stationDataRequest.setStationName(station.getName());
         stationDataRequest.setSystemName(station.getSystem().getName());
 
         JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
 
         Message message = Message.builder()
-                .topic("tradeModuleStationRequireOdeysseyDataRequest")
+                .topic("tradeModuleStationRequireOdysseyDataRequest")
                 .message(jsonNode.toString())
                 .build();
 
