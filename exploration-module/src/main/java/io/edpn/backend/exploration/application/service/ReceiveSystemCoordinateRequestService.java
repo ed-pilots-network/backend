@@ -20,7 +20,7 @@ import org.springframework.retry.support.RetryTemplate;
 @Slf4j
 public class ReceiveSystemCoordinateRequestService implements ReceiveKafkaMessageUseCase<SystemDataRequest> {
 
-    private final static String TOPIC = "_systemCoordinatesDataResponse";
+    private final static String TOPIC = "_systemCoordinatesResponse";
 
     private final CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
     private final LoadSystemPort loadSystemPort;
