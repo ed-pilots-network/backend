@@ -51,6 +51,7 @@ public class ReceiveSystemCoordinateRequestService implements ReceiveKafkaMessag
     }
 
     private void saveRequest(String systemName, String requestingModule) {
+        //TODO: handle message consumption when duplicate keys
         SystemCoordinateRequest systemCoordinateDataRequest = new SystemCoordinateRequest(systemName, requestingModule);
         createSystemCoordinateRequestPort.create(systemCoordinateDataRequest);
     }
