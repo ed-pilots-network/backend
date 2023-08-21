@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Builder
 public class MybatisLocateCommodityEntity implements LocateCommodityEntity {
     
-    private LocalDateTime pricesUpdatedAt;
+    private LocalDateTime priceUpdatedAt;
     private MybatisValidatedCommodityEntity validatedCommodity;
     private MybatisStationEntity station;
     private MybatisSystemEntity system;

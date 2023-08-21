@@ -10,7 +10,7 @@ public interface LocateCommodityEntity {
     
     SystemEntity getSystem();
     
-    LocalDateTime getPricesUpdatedAt();
+    LocalDateTime getPriceUpdatedAt();
     
     Long getSupply();
     

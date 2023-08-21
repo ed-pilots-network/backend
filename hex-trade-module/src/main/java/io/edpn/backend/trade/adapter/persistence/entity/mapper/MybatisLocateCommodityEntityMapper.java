@@ -38,7 +38,7 @@ public class MybatisLocateCommodityEntityMapper implements LocateCommodityEntity
     @Override
     public MybatisLocateCommodityEntity map(LocateCommodity locateCommodity) {
         return MybatisLocateCommodityEntity.builder()
-                .pricesUpdatedAt(locateCommodity.getPriceUpdatedAt())
+                .priceUpdatedAt(locateCommodity.getPriceUpdatedAt())
                 .validatedCommodity(validatedCommodityEntityMapper.map(locateCommodity.getValidatedCommodity()))
                 .station(stationEntityMapper.map(locateCommodity.getStation()))
                 .system(systemEntityMapper.map(locateCommodity.getSystem()))
