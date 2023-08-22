@@ -45,8 +45,6 @@ public interface MybatisLocateCommodityRepository {
                     one = @One(select = "io.edpn.backend.trade.adapter.persistence.repository.MybatisValidatedCommodityRepository.findById")),
             @Result(property = "station", column = "station_id", javaType = MybatisStationEntity.class,
                     one = @One(select = "io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository.findById")),
-            @Result(property = "system", column = "system_id", javaType = MybatisSystemEntity.class,
-                    one = @One(select = "io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemRepository.findById")),
             @Result(property = "supply", column = "stock", javaType = Long.class),
             @Result(property = "demand", column = "demand", javaType = Long.class),
             @Result(property = "buyPrice", column = "buy_price", javaType = Long.class),

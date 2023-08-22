@@ -17,7 +17,6 @@ public class LocateCommodity {
     private LocalDateTime priceUpdatedAt;
     private ValidatedCommodity validatedCommodity;
     private Station station;
-    private System system;
     private Long supply;
     private Long demand;
     private Long buyPrice;

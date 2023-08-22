@@ -21,7 +21,6 @@ public class MybatisLocateCommodityEntity implements LocateCommodityEntity {
     private LocalDateTime priceUpdatedAt;
     private MybatisValidatedCommodityEntity validatedCommodity;
     private MybatisStationEntity station;
-    private MybatisSystemEntity system;
     private Long supply;
     private Long demand;
     private Long buyPrice;

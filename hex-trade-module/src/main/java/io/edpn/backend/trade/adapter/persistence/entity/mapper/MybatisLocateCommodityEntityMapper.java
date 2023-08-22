@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 public class MybatisLocateCommodityEntityMapper implements LocateCommodityEntityMapper<MybatisLocateCommodityEntity> {
     
     private final ValidatedCommodityEntityMapper<MybatisValidatedCommodityEntity> validatedCommodityEntityMapper;
-    private final SystemEntityMapper<MybatisSystemEntity> systemEntityMapper;
     private final StationEntityMapper<MybatisStationEntity> stationEntityMapper;
 
     
@@ -26,7 +25,6 @@ public class MybatisLocateCommodityEntityMapper implements LocateCommodityEntity
                 locateCommodityEntity.getPriceUpdatedAt(),
                 validatedCommodityEntityMapper.map(locateCommodityEntity.getValidatedCommodity()),
                 stationEntityMapper.map(locateCommodityEntity.getStation()),
-                systemEntityMapper.map(locateCommodityEntity.getSystem()),
                 locateCommodityEntity.getSupply(),
                 locateCommodityEntity.getDemand(),
                 locateCommodityEntity.getBuyPrice(),
@@ -41,7 +39,6 @@ public class MybatisLocateCommodityEntityMapper implements LocateCommodityEntity
                 .priceUpdatedAt(locateCommodity.getPriceUpdatedAt())
                 .validatedCommodity(validatedCommodityEntityMapper.map(locateCommodity.getValidatedCommodity()))
                 .station(stationEntityMapper.map(locateCommodity.getStation()))
-                .system(systemEntityMapper.map(locateCommodity.getSystem()))
                 .supply(locateCommodity.getSupply())
                 .demand(locateCommodity.getDemand())
                 .buyPrice(locateCommodity.getBuyPrice())

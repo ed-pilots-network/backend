@@ -8,8 +8,6 @@ public interface LocateCommodityEntity {
     
     StationEntity getStation();
     
-    SystemEntity getSystem();
-    
     LocalDateTime getPriceUpdatedAt();
     
     Long getSupply();
