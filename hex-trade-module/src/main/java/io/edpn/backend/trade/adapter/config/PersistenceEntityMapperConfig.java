@@ -56,9 +56,8 @@ public class PersistenceEntityMapperConfig {
     @Bean(name = "tradeLocateCommodityFilterMapper")
     public MybatisLocateCommodityEntityMapper locateCommodityEntityMapper(
             MybatisValidatedCommodityEntityMapper mybatisValidatedCommodityEntityMapper,
-            MybatisSystemEntityMapper mybatisSystemEntityMapper,
             MybatisStationEntityMapper mybatisStationEntityMapper) {
-        return new MybatisLocateCommodityEntityMapper(mybatisValidatedCommodityEntityMapper, mybatisSystemEntityMapper, mybatisStationEntityMapper);
+        return new MybatisLocateCommodityEntityMapper(mybatisValidatedCommodityEntityMapper, mybatisStationEntityMapper);
     }
     
     @Bean(name = "tradeCommodityMarketInfoEntityMapper")
