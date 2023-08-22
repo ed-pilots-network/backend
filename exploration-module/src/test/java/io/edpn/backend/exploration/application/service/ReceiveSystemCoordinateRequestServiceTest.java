@@ -72,7 +72,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
         JsonNode jsonNode = mock(JsonNode.class);
         when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
         when(jsonNode.toString()).thenReturn(jsonString);
-        Message kafkaMessage = new Message("module_systemCoordinatesDataResponse", jsonString);
+        Message kafkaMessage = new Message("module_systemCoordinatesResponse", jsonString);
         MessageDto messageDto = mock(MessageDto.class);
         when(messageMapper.map(kafkaMessage)).thenReturn(messageDto);
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
@@ -103,7 +103,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
         JsonNode jsonNode = mock(JsonNode.class);
         when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
         when(jsonNode.toString()).thenReturn(jsonString);
-        Message kafkaMessage = new Message("module_systemCoordinatesDataResponse", jsonString);
+        Message kafkaMessage = new Message("module_systemCoordinatesResponse", jsonString);
         MessageDto messageDto = mock(MessageDto.class);
         when(messageMapper.map(kafkaMessage)).thenReturn(messageDto);
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(false);
