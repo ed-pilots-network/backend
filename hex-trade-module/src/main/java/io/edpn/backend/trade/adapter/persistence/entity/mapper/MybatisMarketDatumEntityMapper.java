@@ -16,6 +16,7 @@ public class MybatisMarketDatumEntityMapper implements MarketDatumEntityMapper<M
     @Override
     public MarketDatum map(MarketDatumEntity marketDatumEntity) {
         return new MarketDatum(
+                //TODO: Remap to validatedCommodity?
                 commodityEntityMapper.map(marketDatumEntity.getCommodity()),
                 marketDatumEntity.getTimestamp(),
                 marketDatumEntity.getMeanPrice(),
