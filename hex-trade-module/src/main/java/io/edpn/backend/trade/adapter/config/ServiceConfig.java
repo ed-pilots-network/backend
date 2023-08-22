@@ -18,7 +18,12 @@ import io.edpn.backend.trade.application.port.outgoing.marketdatum.ExistsByStati
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
+import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
+import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.ExistsSystemCoordinateRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.RequestMissingSystemCoordinatesUseCase;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadAllValidatedCommodityPort;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadValidatedCommodityByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadValidatedCommodityByNamePort;
@@ -32,20 +37,24 @@ import io.edpn.backend.trade.application.service.ReceiveStationPlanetaryResponse
 import io.edpn.backend.trade.application.service.ReceiveStationRequireOdysseyResponseService;
 import io.edpn.backend.trade.application.service.ReceiveSystemCoordinatesResponseService;
 import io.edpn.backend.trade.application.service.ReceiveSystemEliteIdResponseService;
+import io.edpn.backend.trade.application.service.RequestMissingSystemCoordinatesService;
 import io.edpn.backend.trade.application.service.RequestStationArrivalDistanceService;
 import io.edpn.backend.trade.application.service.RequestStationLandingPadSizeService;
 import io.edpn.backend.trade.application.service.RequestStationPlanetaryService;
 import io.edpn.backend.trade.application.service.RequestStationRequireOdysseyService;
 import io.edpn.backend.trade.application.service.RequestSystemCoordinatesService;
 import io.edpn.backend.trade.application.service.RequestSystemEliteIdService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.retry.support.RetryTemplate;
 
 import java.util.List;
+import java.util.concurrent.Executor;
 
 @Configuration("TradeServiceConfig")
 public class ServiceConfig {
-    
+
     @Bean(name = "tradeFindCommodityService")
     public FindCommodityService findCommodityService(
             LoadAllValidatedCommodityPort loadAllValidatedCommodityPort,
@@ -55,14 +64,14 @@ public class ServiceConfig {
             FindCommodityFilterDtoMapper findCommodityFilterDtoMapper) {
         return new FindCommodityService(loadAllValidatedCommodityPort, loadValidatedCommodityByNamePort, loadValidatedCommodityByFilterPort, validatedCommodityDTOMapper, findCommodityFilterDtoMapper);
     }
-    
+
     @Bean(name = "tradeFindCommodityMarketInfoService")
     public FindCommodityMarketInfoService findCommodityMarketInfoService(
             GetFullCommodityMarketInfoPort commodityMarketInfoPort,
             CommodityMarketInfoDtoMapper commodityMarketInfoDtoMapper) {
         return new FindCommodityMarketInfoService(commodityMarketInfoPort, commodityMarketInfoDtoMapper);
     }
-    
+
     @Bean(name = "tradeLocateCommodityService")
     public LocateCommodityService locateCommodityService(
             LocateCommodityByFilterPort locateCommodityByFilterPort,
@@ -70,7 +79,7 @@ public class ServiceConfig {
             LocateCommodityDtoMapper locateCommodityDtoMapper) {
         return new LocateCommodityService(locateCommodityByFilterPort, locateCommodityFilterDtoMapper, locateCommodityDtoMapper);
     }
-    
+
     @Bean(name = "tradeRecieveCommodityMessageUsecase")
     public ReceiveCommodityMessageService receiveCommodityMessageService(
             ExistsByStationNameAndSystemNameAndTimestampPort existsByStationNameAndSystemNameAndTimestamp,
@@ -83,7 +92,7 @@ public class ServiceConfig {
         return new ReceiveCommodityMessageService(existsByStationNameAndSystemNameAndTimestamp, loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, loadOrCreateCommodityByNamePort, updateStationPort, stationRequestDataServices, systemRequestDataService);
     }
 
-    
+
     @Bean(name = "tradeReceiveStationArrivalDistanceResponseService")
     public ReceiveStationArrivalDistanceResponseService receiveStationArrivalDistanceResponseService(
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
@@ -91,7 +100,7 @@ public class ServiceConfig {
             UpdateStationPort updateStationPort) {
         return new ReceiveStationArrivalDistanceResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, updateStationPort);
     }
-    
+
     @Bean(name = "tradeReceiveStationMaxLandingPadSizeResponseService")
     public ReceiveStationMaxLandingPadSizeResponseService receiveStationMaxLandingPadSizeResponseService(
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
@@ -99,7 +108,7 @@ public class ServiceConfig {
             UpdateStationPort updateStationPort) {
         return new ReceiveStationMaxLandingPadSizeResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, updateStationPort);
     }
-    
+
     @Bean(name = "tradeReceiveStationPlanetaryResponseService")
     public ReceiveStationPlanetaryResponseService receiveStationPlanetaryResponseService(
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
@@ -107,7 +116,7 @@ public class ServiceConfig {
             UpdateStationPort updateStationPort) {
         return new ReceiveStationPlanetaryResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, updateStationPort);
     }
-    
+
     @Bean(name = "tradeReceiveStationRequireOdysseyResponseService")
     public ReceiveStationRequireOdysseyResponseService receiveStationRequireOdysseyResponseService(
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
@@ -115,67 +124,82 @@ public class ServiceConfig {
             UpdateStationPort updateStationPort) {
         return new ReceiveStationRequireOdysseyResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, updateStationPort);
     }
-    
+
     @Bean(name = "tradeReceiveSystemCoordinatesResponseService")
     public ReceiveSystemCoordinatesResponseService receiveSystemCoordinatesResponseService(
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
+            DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort,
             UpdateSystemPort updateSystemPort) {
-        return new ReceiveSystemCoordinatesResponseService(loadOrCreateSystemByNamePort, updateSystemPort);
+        return new ReceiveSystemCoordinatesResponseService(loadOrCreateSystemByNamePort, deleteSystemCoordinateRequestPort, updateSystemPort);
     }
-    
+
     @Bean(name = "tradeReceiveSystemEliteIdResponseService")
     public ReceiveSystemEliteIdResponseService receiveSystemEliteIdResponseService(
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
             UpdateSystemPort updateSystemPort) {
         return new ReceiveSystemEliteIdResponseService(loadOrCreateSystemByNamePort, updateSystemPort);
     }
-    
-    @Bean(name = "requestStationArrivalDistanceService")
+
+    @Bean(name = "tradeRequestStationArrivalDistanceService")
     public RequestStationArrivalDistanceService requestStationArrivalDistanceService(
             SendKafkaMessagePort sendKafkaMessagePort,
             ObjectMapper objectMapper,
             MessageMapper messageMapper) {
         return new RequestStationArrivalDistanceService(sendKafkaMessagePort, objectMapper, messageMapper);
     }
-    
-    @Bean(name = "requestStationLandingPadSizeService")
+
+    @Bean(name = "tradeRequestStationLandingPadSizeService")
     public RequestStationLandingPadSizeService requestStationLandingPadSizeService(
             SendKafkaMessagePort sendKafkaMessagePort,
             ObjectMapper objectMapper,
             MessageMapper messageMapper) {
         return new RequestStationLandingPadSizeService(sendKafkaMessagePort, objectMapper, messageMapper);
     }
-    
-    @Bean(name = "requestStationPlanetaryService")
+
+    @Bean(name = "tradeRequestStationPlanetaryService")
     public RequestStationPlanetaryService requestStationPlanetaryService(
             SendKafkaMessagePort sendKafkaMessagePort,
             ObjectMapper objectMapper,
             MessageMapper messageMapper) {
         return new RequestStationPlanetaryService(sendKafkaMessagePort, objectMapper, messageMapper);
     }
-    
-    @Bean(name = "requestStationRequireOdysseyService")
+
+    @Bean(name = "tradeRequestStationRequireOdysseyService")
     public RequestStationRequireOdysseyService requestStationRequireOdysseyService(
             SendKafkaMessagePort sendKafkaMessagePort,
             ObjectMapper objectMapper,
             MessageMapper messageMapper) {
         return new RequestStationRequireOdysseyService(sendKafkaMessagePort, objectMapper, messageMapper);
     }
-    
-    @Bean(name = "requestSystemCoordinateService")
+
+    @Bean(name = "tradeRequestSystemCoordinateService")
     public RequestSystemCoordinatesService requestSystemCoordinatesService(
             SendKafkaMessagePort sendKafkaMessagePort,
+            ExistsSystemCoordinateRequestPort existsSystemCoordinateRequestPort,
+            CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort,
             ObjectMapper objectMapper,
             MessageMapper messageMapper) {
-        return new RequestSystemCoordinatesService(sendKafkaMessagePort, objectMapper, messageMapper);
+        return new RequestSystemCoordinatesService(sendKafkaMessagePort, existsSystemCoordinateRequestPort, createSystemCoordinateRequestPort, objectMapper, messageMapper);
     }
-    
-    @Bean(name = "requestSystemEliteIdService")
+
+    @Bean(name = "tradeRequestSystemEliteIdService")
     public RequestSystemEliteIdService requestSystemEliteIdService(
             SendKafkaMessagePort sendKafkaMessagePort,
             ObjectMapper objectMapper,
             MessageMapper messageMapper) {
         return new RequestSystemEliteIdService(sendKafkaMessagePort, objectMapper, messageMapper);
     }
-    
+
+    @Bean(name = "tradeRequestMissingSystemCoordinatesService")
+    public RequestMissingSystemCoordinatesService requestMissingSystemCoordinatesUseCase(
+            LoadSystemsByFilterPort loadSystemsByFilterPort,
+            CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort,
+            SendKafkaMessagePort sendKafkaMessagePort,
+            @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
+            @Qualifier("tradeThreadPoolTaskExecutor") Executor executor,
+            ObjectMapper objectMapper,
+            MessageMapper messageMapper
+    ) {
+        return new RequestMissingSystemCoordinatesService(loadSystemsByFilterPort, createSystemCoordinateRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
+    }
 }
