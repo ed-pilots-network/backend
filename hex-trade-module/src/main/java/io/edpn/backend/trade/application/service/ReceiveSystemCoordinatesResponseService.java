@@ -18,6 +18,7 @@ public class ReceiveSystemCoordinatesResponseService implements ReceiveKafkaMess
     private final UpdateSystemPort updateSystemPort;
 
     @Override
+    //TODO: VERIFY RECEIVING CORRECTLY
     public void receive(SystemCoordinatesResponse message) {
         String systemName = message.getSystemName();
         double xCoordinate = message.getXCoordinate();
