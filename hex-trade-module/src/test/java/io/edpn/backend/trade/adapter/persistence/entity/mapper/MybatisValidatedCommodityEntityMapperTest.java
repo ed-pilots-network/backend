@@ -62,7 +62,7 @@ class MybatisValidatedCommodityEntityMapperTest {
         assertThat(entity.getId(), is(id));
         assertThat(entity.getCommodityName(), is("commodityName"));
         assertThat(entity.getDisplayName(), is("Commodity Name"));
-        assertThat(entity.getType(), is(CommodityType.TECHNOLOGY));
+        assertThat(entity.getType(), is("TECHNOLOGY"));
         assertThat(entity.getIsRare(), is(true));
     }
 }
