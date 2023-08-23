@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.dto.MessageDto;
-import io.edpn.backend.exploration.application.port.outgoing.CreateTopicPort;
-import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.topic.CreateTopicPort;
+import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 @Slf4j
-public class KafkaMessageSender implements SendKafkaMessagePort {
+public class KafkaMessageSender implements SendMessagePort {
 
     private final CreateTopicPort createTopicPort;
     private final ObjectMapper objectMapper;

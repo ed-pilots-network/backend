@@ -10,6 +10,7 @@ import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePor
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.RequestMissingSystemCoordinatesUseCase;
+import io.edpn.backend.util.Module;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.support.RetryTemplate;
@@ -42,9 +43,7 @@ public class RequestMissingSystemCoordinatesService implements RequestMissingSys
         loadSystemsByFilterPort.loadByFilter(filter).parallelStream()
                 .forEach(system ->
                         CompletableFuture.runAsync(() -> {
-                            SystemDataRequest stationDataRequest = new SystemDataRequest();
-                            stationDataRequest.setRequestingModule("trade");
-                            stationDataRequest.setSystemName(system.getName());
+                            SystemDataRequest stationDataRequest = new SystemDataRequest(Module.TRADE, system.getName());
 
                             JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
 

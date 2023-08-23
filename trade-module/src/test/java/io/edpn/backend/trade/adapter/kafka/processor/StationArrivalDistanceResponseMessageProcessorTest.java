@@ -37,7 +37,7 @@ class StationArrivalDistanceResponseMessageProcessorTest {
     @Test
     void listen_shouldInvokeUseCaseWithCorrectStationArrivalDistanceResponse() throws JsonProcessingException {
         JsonNode jsonNode = mock(JsonNode.class);
-        StationArrivalDistanceResponse stationArrivalDistanceResponse = new StationArrivalDistanceResponse();
+        StationArrivalDistanceResponse stationArrivalDistanceResponse = new StationArrivalDistanceResponse(null, null, 20);
         
         Mockito.when(objectMapper.treeToValue(jsonNode, StationArrivalDistanceResponse.class)).thenReturn(stationArrivalDistanceResponse);
         

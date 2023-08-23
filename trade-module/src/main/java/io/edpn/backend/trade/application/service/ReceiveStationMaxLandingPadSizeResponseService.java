@@ -23,9 +23,9 @@ public class ReceiveStationMaxLandingPadSizeResponseService implements ReceiveKa
 
     @Override
     public void receive(StationMaxLandingPadSizeResponse message) {
-        String systemName = message.getSystemName();
-        String stationName = message.getStationName();
-        LandingPadSize landingPadSize = LandingPadSize.valueOf(message.getMaxLandingPadSize());
+        String systemName = message.systemName();
+        String stationName = message.stationName();
+        LandingPadSize landingPadSize = LandingPadSize.valueOf(message.maxLandingPadSize());
         
         CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> loadOrCreateSystemByNamePort.loadOrCreateSystemByName(systemName));
         

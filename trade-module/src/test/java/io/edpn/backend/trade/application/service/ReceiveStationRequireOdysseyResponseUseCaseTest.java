@@ -41,10 +41,8 @@ public class ReceiveStationRequireOdysseyResponseUseCaseTest {
 
     @Test
     public void shouldReceiveStationRequireOdysseyResponse() {
-        StationRequireOdysseyResponse message = new StationRequireOdysseyResponse();
-        message.setSystemName("system");
-        message.setStationName("station");
-        message.setRequireOdyssey(true);
+        StationRequireOdysseyResponse message =
+                new StationRequireOdysseyResponse("station", "system", true);
 
         System system = mock(System.class);
         when(loadOrCreateSystemByNamePort.loadOrCreateSystemByName("system")).thenReturn(system);

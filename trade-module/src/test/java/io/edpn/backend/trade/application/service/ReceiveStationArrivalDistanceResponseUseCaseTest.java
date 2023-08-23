@@ -41,10 +41,9 @@ public class ReceiveStationArrivalDistanceResponseUseCaseTest {
 
     @Test
     public void shouldReceiveStationArrivalDistanceResponse() {
-        StationArrivalDistanceResponse message = new StationArrivalDistanceResponse();
-        message.setSystemName("system");
-        message.setStationName("station");
-        message.setArrivalDistance(1.0);
+        StationArrivalDistanceResponse message =
+                new StationArrivalDistanceResponse("station", "system", 1.0);
+
 
         System system = mock(System.class);
         when(loadOrCreateSystemByNamePort.loadOrCreateSystemByName("system")).thenReturn(system);

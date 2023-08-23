@@ -19,11 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -46,14 +44,14 @@ public class ReceiveCommodityMessageService implements ReceiveKafkaMessageUseCas
             log.debug("DefaultReceiveCommodityMessageUseCase.receive -> CommodityMessage: " + message);
         }
 
-        var updateTimestamp = message.getMessageTimeStamp();
+        var updateTimestamp = message.messageTimeStamp();
 
-        CommodityMessage.V3.Message payload = message.getMessage();
-        CommodityMessage.V3.Commodity[] commodities = payload.getCommodities();
-        long marketId = payload.getMarketId();
-        String systemName = payload.getSystemName();
-        String stationName = payload.getStationName();
-        String[] prohibitedCommodities = payload.getProhibited();
+        CommodityMessage.V3.Payload payload = message.message();
+        CommodityMessage.V3.Commodity[] commodities = payload.commodities();
+        long marketId = payload.marketId();
+        String systemName = payload.systemName();
+        String stationName = payload.stationName();
+        String[] prohibitedCommodities = payload.prohibited();
 
         //do we have this data already?
         if (existsByStationNameAndSystemNameAndTimestamp.exists(systemName, stationName, updateTimestamp)) {
@@ -100,7 +98,7 @@ public class ReceiveCommodityMessageService implements ReceiveKafkaMessageUseCas
         // get marketDataCollection
         List<CompletableFuture<MarketDatum>> completableFutureList = Arrays.stream(commodities).parallel().map(commodityFromMessage -> {
                     // get commodity
-                    CompletableFuture<Commodity> commodity = CompletableFuture.supplyAsync(() -> loadOrCreateCommodityByNamePort.loadOrCreate(commodityFromMessage.getName()));
+                    CompletableFuture<Commodity> commodity = CompletableFuture.supplyAsync(() -> loadOrCreateCommodityByNamePort.loadOrCreate(commodityFromMessage.name()));
                     // parse market data
                     CompletableFuture<MarketDatum> marketDatum = CompletableFuture.supplyAsync(() -> getMarketDatum(commodityFromMessage, prohibitedCommodities, updateTimestamp));
 
@@ -109,12 +107,12 @@ public class ReceiveCommodityMessageService implements ReceiveKafkaMessageUseCas
                         return md;
                     });
                 })
-                .collect(Collectors.toCollection(LinkedList::new));
+                .toList();
 
         CompletableFuture<List<MarketDatum>> combinedFuture = CompletableFuture.allOf(completableFutureList.toArray(new CompletableFuture[0]))
                 .thenApply(v -> completableFutureList.stream()
                         .map(CompletableFuture::join)
-                        .collect(Collectors.toCollection(LinkedList::new)));
+                        .toList());
 
 
         // put market data map in station
@@ -136,15 +134,15 @@ public class ReceiveCommodityMessageService implements ReceiveKafkaMessageUseCas
     private MarketDatum getMarketDatum(CommodityMessage.V3.Commodity commodity, String[] prohibitedCommodities, LocalDateTime timestamp) {
         return MarketDatum.builder()
                 .timestamp(timestamp)
-                .meanPrice(commodity.getMeanPrice())
-                .buyPrice(commodity.getBuyPrice())
-                .sellPrice(commodity.getSellPrice())
-                .stock(commodity.getStock())
-                .stockBracket(commodity.getStockBracket())
-                .demand(commodity.getDemand())
-                .demandBracket(commodity.getDemandBracket())
-                .statusFlags(CollectionUtil.toList(commodity.getStatusFlags()))
-                .prohibited(Arrays.stream(prohibitedCommodities).anyMatch(prohibitedCommodity -> prohibitedCommodity.equals(commodity.getName())))
+                .meanPrice(commodity.meanPrice())
+                .buyPrice(commodity.buyPrice())
+                .sellPrice(commodity.sellPrice())
+                .stock(commodity.stock())
+                .stockBracket(commodity.stockBracket())
+                .demand(commodity.demand())
+                .demandBracket(commodity.demandBracket())
+                .statusFlags(CollectionUtil.toList(commodity.statusFlags()))
+                .prohibited(Arrays.stream(prohibitedCommodities).anyMatch(prohibitedCommodity -> prohibitedCommodity.equals(commodity.name())))
                 .build();
     }
 }

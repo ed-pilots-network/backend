@@ -10,6 +10,8 @@ import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.ExistsSystemCoordinateRequestPort;
+import io.edpn.backend.util.Module;
+import io.edpn.backend.util.Topic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,16 +37,14 @@ public class RequestSystemCoordinatesService implements RequestDataUseCase<Syste
         final String systemName = system.getName();
         boolean shouldRequest = !existsSystemCoordinateRequestPort.exists(systemName);
         if (shouldRequest) {
-            SystemDataRequest stationDataRequest = new SystemDataRequest();
-            stationDataRequest.setRequestingModule("trade");
-            stationDataRequest.setSystemName(systemName);
+            SystemDataRequest stationDataRequest = new SystemDataRequest(Module.TRADE, systemName);
 
             JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
 
-            Message message = Message.builder()
-                    .topic("systemCoordinatesRequest")
-                    .message(jsonNode.toString())
-                    .build();
+        Message message = Message.builder()
+                .topic(Topic.Request.SYSTEM_COORDINATES.getTopicName())
+                .message(jsonNode.toString())
+                .build();
 
             sendKafkaMessagePort.send(messageMapper.map(message));
             createSystemCoordinateRequestPort.create(systemName);

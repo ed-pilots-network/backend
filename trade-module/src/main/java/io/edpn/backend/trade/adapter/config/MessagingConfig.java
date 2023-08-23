@@ -7,6 +7,7 @@ import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationArri
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationMaxLandingPadSizeResponse;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
+import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.MessageProcessor;
 import io.edpn.backend.trade.adapter.kafka.processor.CommodityV3MessageProcessor;
 import io.edpn.backend.trade.adapter.kafka.processor.StationArrivalDistanceResponseMessageProcessor;
 import io.edpn.backend.trade.adapter.kafka.processor.StationMaxLandingPadSizeResponseMessageProcessor;
@@ -31,28 +32,28 @@ public class MessagingConfig {
     }
     
     @Bean(name = "tradeStationArrivalDistanceResponseMessageProcessor")
-    public StationArrivalDistanceResponseMessageProcessor stationArrivalDistanceResponseMessageProcessor(
+    public MessageProcessor<StationArrivalDistanceResponse> stationArrivalDistanceResponseMessageProcessor(
             ReceiveKafkaMessageUseCase<StationArrivalDistanceResponse> receiveCommodityMessageUsecase,
             @Qualifier("tradeObjectMapper") ObjectMapper objectMapper) {
         return new StationArrivalDistanceResponseMessageProcessor(receiveCommodityMessageUsecase, objectMapper);
     }
     
     @Bean(name = "tradeStationMaxLandingPadSizeResponseMessageProcessor")
-    public StationMaxLandingPadSizeResponseMessageProcessor stationMaxLandingPadSizeResponseMessageProcessor(
+    public MessageProcessor<StationMaxLandingPadSizeResponse> stationMaxLandingPadSizeResponseMessageProcessor(
             ReceiveKafkaMessageUseCase<StationMaxLandingPadSizeResponse> receiveCommodityMessageUsecase,
             @Qualifier("tradeObjectMapper") ObjectMapper objectMapper) {
         return new StationMaxLandingPadSizeResponseMessageProcessor(receiveCommodityMessageUsecase, objectMapper);
     }
     
     @Bean(name = "tradeSystemCoordinatesResponseMessageProcessor")
-    public SystemCoordinatesResponseMessageProcessor systemCoordinatesResponseMessageProcessor(
+    public MessageProcessor<SystemCoordinatesResponse> systemCoordinatesResponseMessageProcessor(
             ReceiveKafkaMessageUseCase<SystemCoordinatesResponse> receiveCommodityMessageUsecase,
             @Qualifier("tradeObjectMapper") ObjectMapper objectMapper) {
         return new SystemCoordinatesResponseMessageProcessor(receiveCommodityMessageUsecase, objectMapper);
     }
     
     @Bean(name = "tradeSystemEliteIdResponseMessageProcessor")
-    public SystemEliteIdResponseMessageProcessor systemEliteIdResponseMessageProcessor(
+    public MessageProcessor<SystemEliteIdResponse> systemEliteIdResponseMessageProcessor(
             ReceiveKafkaMessageUseCase<SystemEliteIdResponse> receiveCommodityMessageUsecase,
             @Qualifier("tradeObjectMapper") ObjectMapper objectMapper) {
         return new SystemEliteIdResponseMessageProcessor(receiveCommodityMessageUsecase, objectMapper);

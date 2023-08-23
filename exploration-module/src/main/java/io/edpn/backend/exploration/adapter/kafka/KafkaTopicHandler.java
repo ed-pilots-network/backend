@@ -1,6 +1,6 @@
 package io.edpn.backend.exploration.adapter.kafka;
 
-import io.edpn.backend.exploration.application.port.outgoing.CreateTopicPort;
+import io.edpn.backend.exploration.application.port.outgoing.topic.CreateTopicPort;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.ListTopicsResult;

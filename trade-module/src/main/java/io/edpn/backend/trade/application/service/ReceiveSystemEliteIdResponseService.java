@@ -19,9 +19,9 @@ public class ReceiveSystemEliteIdResponseService implements ReceiveKafkaMessageU
 
     @Override
     public void receive(SystemEliteIdResponse message) {
-        String systemName = message.getSystemName();
-        long eliteId = message.getEliteId();
-        
+        String systemName = message.systemName();
+        long eliteId = message.eliteId();
+
         CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> loadOrCreateSystemByNamePort.loadOrCreateSystemByName(systemName))
                 .whenComplete((station, throwable) -> {
                     if (throwable != null) {

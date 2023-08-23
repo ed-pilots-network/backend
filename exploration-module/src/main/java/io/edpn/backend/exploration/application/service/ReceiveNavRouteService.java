@@ -1,5 +1,6 @@
 package io.edpn.backend.exploration.application.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.Message;
@@ -7,15 +8,20 @@ import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.dto.MessageDto;
 import io.edpn.backend.exploration.application.dto.mapper.MessageMapper;
 import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
+import io.edpn.backend.exploration.application.dto.mapper.SystemEliteIdResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
-import io.edpn.backend.exploration.application.port.outgoing.CreateSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.DeleteSystemCoordinateRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.LoadSystemCoordinateRequestBySystemNamePort;
-import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.SaveSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.system.CreateSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.system.SaveSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestBySystemNamePort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
+import io.edpn.backend.util.Topic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.support.RetryTemplate;
@@ -29,16 +35,17 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRouteMessage.V1> {
 
-    private final static String TOPIC = "_systemCoordinatesDataResponse";
-
 
     private final CreateSystemPort createSystemPort;
     private final LoadSystemPort loadSystemPort;
     private final SaveSystemPort saveSystemPort;
-    private final SendKafkaMessagePort sendKafkaMessagePort;
+    private final SendMessagePort sendMessagePort;
     private final LoadSystemCoordinateRequestBySystemNamePort loadSystemCoordinateRequestBySystemNamePort;
     private final DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
     private final SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
+    private final LoadSystemEliteIdRequestBySystemNamePort loadSystemEliteIdRequestBySystemNamePort;
+    private final DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort;
+    private final SystemEliteIdResponseMapper systemEliteIdResponseMapper;
     private final MessageMapper messageMapper;
     private final ObjectMapper objectMapper;
     private final RetryTemplate retryTemplate;
@@ -50,8 +57,8 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
         log.debug("DefaultReceiveNavRouteMessageUseCase.receive -> CommodityMessage: {}", message);
 
         //LocalDateTime updateTimestamp = message.getMessageTimeStamp();
-        NavRouteMessage.V1.Message payload = message.getMessage();
-        NavRouteMessage.V1.Item[] routeItems = payload.getItems();
+        NavRouteMessage.V1.Payload payload = message.message();
+        NavRouteMessage.V1.Item[] routeItems = payload.items();
 
 
         CompletableFuture.allOf(List.of(routeItems).parallelStream()
@@ -64,10 +71,14 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
     }
 
     private CompletableFuture<Void> process(NavRouteMessage.V1.Item item) {
-        return loadOrCreateSystem(item.getStarSystem())
+        return loadOrCreateSystem(item.starSystem())
                 .thenApply(system -> updateSystemFromItem(system, item))
-                .thenComposeAsync(this::saveSystem)
-                .thenAcceptAsync(this::sendResponse);
+                .thenComposeAsync(this::saveSystem).thenCompose(system -> {
+                    CompletableFuture<Void> sendCoordinateResponseFuture = CompletableFuture.runAsync(() -> sendCoordinateResponse(system), executor);
+                    CompletableFuture<Void> sendEliteIdResponseFuture = CompletableFuture.runAsync(() -> sendEliteIdResponse(system), executor);
+
+                    return CompletableFuture.allOf(sendCoordinateResponseFuture, sendEliteIdResponseFuture);
+                });
     }
 
     private CompletableFuture<System> loadOrCreateSystem(String systemName) {
@@ -78,15 +89,15 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
     private System updateSystemFromItem(final System system, NavRouteMessage.V1.Item item) {
         System returnSystem = system;
         if (Objects.isNull(system.eliteId())) {
-            returnSystem = returnSystem.withEliteId(item.getSystemAddress());
+            returnSystem = returnSystem.withEliteId(item.systemAddress());
         }
 
         if (Objects.isNull(system.starClass())) {
-            returnSystem = returnSystem.withStarClass(item.getStarClass());
+            returnSystem = returnSystem.withStarClass(item.starClass());
         }
 
         if (Objects.isNull(system.coordinate()) || Objects.isNull(system.coordinate().x()) || Objects.isNull(system.coordinate().y()) || Objects.isNull(system.coordinate().z())) {
-            returnSystem = returnSystem.withCoordinate(new Coordinate(item.getStarPos()[0], item.getStarPos()[1], item.getStarPos()[2]));
+            returnSystem = returnSystem.withCoordinate(new Coordinate(item.starPos()[0], item.starPos()[1], item.starPos()[2]));
         }
         return returnSystem;
     }
@@ -95,17 +106,42 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
         return CompletableFuture.supplyAsync(() -> saveSystemPort.save(system), executor);
     }
 
-    private void sendResponse(System system) {
+    private void sendCoordinateResponse(System system) {
         loadSystemCoordinateRequestBySystemNamePort.loadByName(system.name()).parallelStream()
                 .forEach(systemCoordinateRequest -> CompletableFuture.runAsync(() -> {
-                    SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
-                    String stringJson = objectMapper.valueToTree(systemCoordinatesResponse).toString();
-                    Message message = new Message(systemCoordinateRequest.requestingModule() + TOPIC, stringJson);
-                    MessageDto messageDto = messageMapper.map(message);
+                    try {
+                        SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
+                        String stringJson = objectMapper.writeValueAsString(systemCoordinatesResponse);
+                        String topic = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(systemCoordinateRequest.requestingModule());
+                        Message message = new Message(topic, stringJson);
+                        MessageDto messageDto = messageMapper.map(message);
 
-                    boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(messageDto));
-                    if (sendSuccessful) {
-                        deleteSystemCoordinateRequestPort.delete(system.name(), systemCoordinateRequest.requestingModule());
+                        boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
+                        if (sendSuccessful) {
+                            deleteSystemCoordinateRequestPort.delete(system.name(), systemCoordinateRequest.requestingModule());
+                        }
+                    } catch (JsonProcessingException jpe) {
+                        throw new RuntimeException(jpe);
+                    }
+                }, executor));
+    }
+
+    private void sendEliteIdResponse(System system) {
+        loadSystemEliteIdRequestBySystemNamePort.loadByName(system.name()).parallelStream()
+                .forEach(systemEliteIdRequest -> CompletableFuture.runAsync(() -> {
+                    try {
+                        SystemEliteIdResponse systemEliteIdsResponse = systemEliteIdResponseMapper.map(system);
+                        String stringJson = objectMapper.writeValueAsString(systemEliteIdsResponse);
+                        String topic = Topic.Response.SYSTEM_ELITE_ID.getFormattedTopicName(systemEliteIdRequest.requestingModule());
+                        Message message = new Message(topic, stringJson);
+                        MessageDto messageDto = messageMapper.map(message);
+
+                        boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
+                        if (sendSuccessful) {
+                            deleteSystemEliteIdRequestPort.delete(system.name(), systemEliteIdRequest.requestingModule());
+                        }
+                    } catch (JsonProcessingException jpe) {
+                        throw new RuntimeException(jpe);
                     }
                 }, executor));
 

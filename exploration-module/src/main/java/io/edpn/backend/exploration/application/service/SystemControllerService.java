@@ -4,7 +4,7 @@ import io.edpn.backend.exploration.application.domain.exception.ValidationExcept
 import io.edpn.backend.exploration.application.dto.SystemDto;
 import io.edpn.backend.exploration.application.dto.mapper.SystemDtoMapper;
 import io.edpn.backend.exploration.application.port.incomming.FindSystemsByNameContainingUseCase;
-import io.edpn.backend.exploration.application.port.outgoing.LoadSystemsByNameContainingPort;
+import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemsByNameContainingPort;
 import io.edpn.backend.exploration.application.validation.LoadByNameContainingValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

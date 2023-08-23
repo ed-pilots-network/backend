@@ -42,10 +42,8 @@ public class ReceiveStationMaxLandingPadSizeResponseUseCaseTest {
 
     @Test
     public void shouldReceiveStationMaxLandingPadSizeResponse() {
-        StationMaxLandingPadSizeResponse message = new StationMaxLandingPadSizeResponse();
-        message.setSystemName("system");
-        message.setStationName("station");
-        message.setMaxLandingPadSize("LARGE");
+        StationMaxLandingPadSizeResponse message =
+                new StationMaxLandingPadSizeResponse("station", "system", "LARGE");
 
         System system = mock(System.class);
         when(loadOrCreateSystemByNamePort.loadOrCreateSystemByName("system")).thenReturn(system);

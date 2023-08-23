@@ -37,7 +37,7 @@ class SystemCoordinateResponseMessageProcessorTest {
     @Test
     void listen_shouldInvokeUseCaseWithCorrectSystemCoordinatesResponse() throws JsonProcessingException {
         JsonNode jsonNode = mock(JsonNode.class);
-        SystemCoordinatesResponse systemCoordinatesResponse = new SystemCoordinatesResponse();
+        SystemCoordinatesResponse systemCoordinatesResponse = new SystemCoordinatesResponse(null, 1.0, 2.0, 3.0);
         
         Mockito.when(objectMapper.treeToValue(jsonNode, SystemCoordinatesResponse.class)).thenReturn(systemCoordinatesResponse);
         

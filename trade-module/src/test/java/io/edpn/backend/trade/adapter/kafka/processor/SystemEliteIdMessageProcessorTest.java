@@ -37,7 +37,7 @@ class SystemEliteIdMessageProcessorTest {
     @Test
     void listen_shouldInvokeUseCaseWithCorrectSystemEliteIdResponse() throws JsonProcessingException {
         JsonNode jsonNode = mock(JsonNode.class);
-        SystemEliteIdResponse systemEliteIdResponse = new SystemEliteIdResponse();
+        SystemEliteIdResponse systemEliteIdResponse = new SystemEliteIdResponse(null, 1L);
         
         Mockito.when(objectMapper.treeToValue(jsonNode, SystemEliteIdResponse.class)).thenReturn(systemEliteIdResponse);
         

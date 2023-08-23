@@ -22,10 +22,10 @@ public class ReceiveSystemCoordinatesResponseService implements ReceiveKafkaMess
     @Override
     //TODO: VERIFY RECEIVING CORRECTLY
     public void receive(SystemCoordinatesResponse message) {
-        final String systemName = message.getSystemName();
-        final double xCoordinate = message.getXCoordinate();
-        final double yCoordinate = message.getYCoordinate();
-        final double zCoordinate = message.getZCoordinate();
+        final String systemName = message.systemName();
+        final double xCoordinate = message.xCoordinate();
+        final double yCoordinate = message.yCoordinate();
+        final double zCoordinate = message.zCoordinate();
 
         CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> loadOrCreateSystemByNamePort.loadOrCreateSystemByName(systemName))
                 .whenComplete((system, throwable) -> {

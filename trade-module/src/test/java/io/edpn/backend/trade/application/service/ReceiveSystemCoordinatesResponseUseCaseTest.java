@@ -39,11 +39,8 @@ public class ReceiveSystemCoordinatesResponseUseCaseTest {
 
     @Test
     public void shouldReceiveSystemCoordinatesResponse() {
-        SystemCoordinatesResponse message = new SystemCoordinatesResponse();
-        message.setSystemName("system");
-        message.setXCoordinate(1.0);
-        message.setYCoordinate(2.0);
-        message.setZCoordinate(3.0);
+        SystemCoordinatesResponse message =
+                new SystemCoordinatesResponse("system", 1.0, 2.0, 3.0);
 
         System system = System.builder()
                 .name("system")

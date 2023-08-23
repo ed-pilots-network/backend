@@ -16,9 +16,14 @@ public class MybatisMessageEntityMapper implements MessageEntityMapper<MybatisMe
     
     @Override
     public MybatisMessageEntity map(Message message) {
+        String sanitizedTopicName = this.sanitizeTopicName(message.getTopic());
         return MybatisMessageEntity.builder()
                 .message(message.getMessage())
-                .topic(message.getTopic())
+                .topic(sanitizedTopicName)
                 .build();
+    }
+    
+    private String sanitizeTopicName(String topicName) {
+        return topicName.replaceAll("[^A-Za-z0-9._\\-]", "_");
     }
 }

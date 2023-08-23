@@ -4,9 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.adapter.kafka.processor.NavRouteV1MessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.processor.SystemCoordinatesRequestMessageProcessor;
+import io.edpn.backend.exploration.adapter.kafka.processor.SystemEliteIdRequestMessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.sender.KafkaMessageSender;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
-import io.edpn.backend.exploration.application.port.outgoing.CreateTopicPort;
+import io.edpn.backend.exploration.application.port.outgoing.topic.CreateTopicPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,6 +33,14 @@ public class MessagingConfig {
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper
     ) {
         return new SystemCoordinatesRequestMessageProcessor(receiveSystemDataRequestUseCase, objectMapper);
+    }
+
+    @Bean(name = "explorationSystemEliteIdRequestMessageProcessor")
+    public SystemEliteIdRequestMessageProcessor systemEliteIdRequestMessageProcessor(
+            ReceiveKafkaMessageUseCase<SystemDataRequest> receiveSystemDataRequestUseCase,
+            @Qualifier("explorationObjectMapper") ObjectMapper objectMapper
+    ) {
+        return new SystemEliteIdRequestMessageProcessor(receiveSystemDataRequestUseCase, objectMapper);
     }
 
     @Bean(name = "explorationKafkaMessageSender")

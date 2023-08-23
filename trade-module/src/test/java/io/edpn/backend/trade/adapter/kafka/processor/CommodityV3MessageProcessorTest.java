@@ -37,7 +37,7 @@ class CommodityV3MessageProcessorTest {
     @Test
     void listen_shouldInvokeUseCaseWithCorrectCommodityV3Message() throws JsonProcessingException {
         JsonNode jsonNode = mock(JsonNode.class);
-        CommodityMessage.V3 commodityMessage = new CommodityMessage.V3();
+        CommodityMessage.V3 commodityMessage = new CommodityMessage.V3(null, null, null);
         
         Mockito.when(objectMapper.treeToValue(jsonNode, CommodityMessage.V3.class)).thenReturn(commodityMessage);
         

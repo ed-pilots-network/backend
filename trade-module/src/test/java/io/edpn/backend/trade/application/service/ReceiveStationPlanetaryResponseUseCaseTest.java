@@ -40,10 +40,8 @@ public class ReceiveStationPlanetaryResponseUseCaseTest {
 
     @Test
     public void shouldReceiveStationPlanetaryResponse() {
-        StationPlanetaryResponse message = new StationPlanetaryResponse();
-        message.setSystemName("system");
-        message.setStationName("station");
-        message.setPlanetary(true);
+        StationPlanetaryResponse message =
+                new StationPlanetaryResponse("station", "system", true);
 
         System system = mock(System.class);
         when(loadOrCreateSystemByNamePort.loadOrCreateSystemByName(anyString())).thenReturn(system);

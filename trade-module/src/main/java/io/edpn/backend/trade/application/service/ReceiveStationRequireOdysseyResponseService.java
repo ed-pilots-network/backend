@@ -22,9 +22,9 @@ public class ReceiveStationRequireOdysseyResponseService implements ReceiveKafka
 
     @Override
     public void receive(StationRequireOdysseyResponse message) {
-        String systemName = message.getSystemName();
-        String stationName = message.getStationName();
-        boolean requireOdyssey = message.isRequireOdyssey();
+        String systemName = message.systemName();
+        String stationName = message.stationName();
+        boolean requireOdyssey = message.requireOdyssey();
         
         CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> loadOrCreateSystemByNamePort.loadOrCreateSystemByName(systemName));
         

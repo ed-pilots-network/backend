@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -68,18 +69,26 @@ class ReceiveCommodityMessageUseCaseTest {
         
         CommodityMessage.V3 message = mock(CommodityMessage.V3.class);
         
-        CommodityMessage.V3.Message payload = new CommodityMessage.V3.Message();
+        LocalDateTime timestamp = LocalDateTime.now();
         
         CommodityMessage.V3.Commodity mockCommodity = mock(CommodityMessage.V3.Commodity.class);
         
         CommodityMessage.V3.Commodity[] list = new CommodityMessage.V3.Commodity[1];
         list[0] = mockCommodity;
         
-        when(message.getMessage()).thenReturn(payload);
-        payload.setMarketId(123456L);
-        payload.setSystemName("system");
-        payload.setStationName("station");
-        payload.setCommodities(list);
+        CommodityMessage.V3.Payload payload =
+                new CommodityMessage.V3.Payload(
+                        "system",
+                        "station",
+                        123456L,
+                        true,
+                        true,
+                        timestamp.toString(),
+                        null,
+                        null,
+                        list);
+        
+        when(message.message()).thenReturn(payload);
         
         System system = mock(System.class);
         when(loadOrCreateSystemByNamePort.loadOrCreateSystemByName("system")).thenReturn(system);

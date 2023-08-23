@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.times;
@@ -35,9 +36,9 @@ public class ReceiveSystemEliteIdResponseUseCaseTest {
 
     @Test
     public void shouldReceiveSystemEliteIdResponse() {
-        SystemEliteIdResponse message = new SystemEliteIdResponse();
-        message.setSystemName("system");
-        message.setEliteId(1234);
+        SystemEliteIdResponse message = new SystemEliteIdResponse(
+                "system", 1234
+        );
 
         System system = System.builder()
                 .name("system")
@@ -49,6 +50,6 @@ public class ReceiveSystemEliteIdResponseUseCaseTest {
         verify(loadOrCreateSystemByNamePort, times(1)).loadOrCreateSystemByName(anyString());
         verify(updateSystemPort, times(1)).update(any());
 
-        assert (system.getEliteId() == 1234);
+        assertEquals(1234, system.getEliteId());
     }
 }

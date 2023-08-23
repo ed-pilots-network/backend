@@ -37,7 +37,7 @@ class StationMaxLandingPadSizeMessageProcessorTest {
     @Test
     void listen_shouldInvokeUseCaseWithCorrectStationMaxLandingPadSizeResponse() throws JsonProcessingException {
         JsonNode jsonNode = mock(JsonNode.class);
-        StationMaxLandingPadSizeResponse stationMaxLandingPadSizeResponse = new StationMaxLandingPadSizeResponse();
+        StationMaxLandingPadSizeResponse stationMaxLandingPadSizeResponse = new StationMaxLandingPadSizeResponse(null, null, null);
         
         Mockito.when(objectMapper.treeToValue(jsonNode, StationMaxLandingPadSizeResponse.class)).thenReturn(stationMaxLandingPadSizeResponse);
         

@@ -5,7 +5,6 @@ import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
@@ -15,7 +14,6 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,9 +31,7 @@ public interface MybatisStationRepository {
             @Result(property = "requireOdyssey", column = "require_odyssey", javaType = boolean.class),
             @Result(property = "fleetCarrier", column = "fleet_carrier", javaType = boolean.class),
             @Result(property = "maxLandingPadSize", column = "max_landing_pad_size", javaType = String.class),
-            @Result(property = "marketUpdatedAt", column = "market_updated_at", javaType = LocalDateTime.class),
-            @Result(property = "marketData", column = "id", javaType = List.class,
-                    many = @Many(select = "io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRepository.findByStationId"))
+            @Result(property = "marketUpdatedAt", column = "market_updated_at", javaType = LocalDateTime.class)
     })
     Optional<MybatisStationEntity> findById(@Param("id") UUID id);
 

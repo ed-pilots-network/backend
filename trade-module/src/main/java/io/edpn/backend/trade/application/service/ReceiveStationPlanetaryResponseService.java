@@ -22,9 +22,9 @@ public class ReceiveStationPlanetaryResponseService implements ReceiveKafkaMessa
 
     @Override
     public void receive(StationPlanetaryResponse message) {
-        String systemName = message.getSystemName();
-        String stationName = message.getStationName();
-        boolean planetary = message.isPlanetary();
+        String systemName = message.systemName();
+        String stationName = message.stationName();
+        boolean planetary = message.planetary();
         
         CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> loadOrCreateSystemByNamePort.loadOrCreateSystemByName(systemName));
         

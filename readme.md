@@ -38,74 +38,67 @@ The projects follow a hexagonal architecture pattern and adheres to Domain-Drive
 ```
 src
 ├── main
-├── java
-│   └── com
-│       └── example
-│           └── stations
-│               ├── application
-│               │   ├── controller
-│               │   ├── dto
-│               │   ├── mapper
-│               │   ├── service
-│               │   └── usecase
-│               ├── configuration
-│               ├── domain
-│               │   ├── controller
-│               │   ├── filter    
-│               │   ├── model
-│               │   ├── repository
-│               │   ├── service
-│               │   └── usecase
-│               ├── infrastructure
-│               │   ├── kafka
-│               │   └── persistence
-│               │       ├── entity
-│               │       ├── filter
-│               │       ├── mappers
-│               │       └── repository
-│               └── StationsApplication.java
-├── resources
-└── ...
+│   ├── java
+│   │   └── com
+│   │      └── example
+│   │          └── stations
+│   │              ├── adapter
+│   │              │   ├── config
+│   │              │   ├── kafka
+│   │              │   │   ├── dto
+│   │              │   │   ├── processor
+│   │              │   │   └── sender
+│   │              │   ├── persistence
+│   │              │   │   └── entity
+│   │              │   └── web
+│   │              │       └── dto
+│   │              └── application
+│   │                  ├── domain
+│   │                  │   └── exception
+│   │                  ├── dto
+│   │                  ├── port
+│   │                  │   └── incomming
+│   │                  │   └── outgoing
+│   │                  ├── service
+│   │                  └── validation
+│   └── resources
+└── test
 ```
+
+#### Adapter Layer
+
+The adapter layer serves as a bridge between the external components and the core application logic. It contains the following components:
+
+- **config**: This package contains all the configurations related to the application.
+- **kafka**:
+    - **dto**: This package contains the Data Transfer Objects (DTOs) specific to the kafka integration.
+    - **processor**: This package contains the processors for handling kafka messages.
+    - **sender**: This package contains classes for sending messages to kafka topics.
+- **persistence**:
+    - **entity**: This package contains the entity objects used for database interaction.
+- **web**:
+    - **dto**: This package contains the Data Transfer Objects (DTOs) used for communication between the web layer and the application layer.
 
 #### Application Layer
 
-The application layer contains the following components:
+The application layer is the heart of the hexagonal architecture, containing the core logic and rules of the application. It contains the following components:
 
-- **controller**: This package contains the REST controllers, which handle incoming HTTP requests and provide appropriate responses as defined by the domain controller interface.
-- **dto**: This package contains the Data Transfer Objects (DTOs) used for communication between the application layer and external clients.
-- **mapper**: This package contains mappers responsible for converting between DTO and domain model.
-- **service**: This package contains the implementations of the service defined in the domain.
-- **usecase**: This package contains the implementations of the use cases defined in the domain.
+- **domain**:
+    - **exception**: This package contains custom exceptions related to the domain logic.
+- **dto**: This package contains the main Data Transfer Objects (DTOs) used within the application layer.
+- **port**:
+    - **incomming**: This package defines the incoming ports, which expose the application's core functionality to the adapter layer.
+    - **outgoing**: This package defines the outgoing ports, which delegate external concerns, such as persistence, to the adapter layer.
+- **service**: This package contains the service implementations, encapsulating the core business logic of the application.
+- **validation**: This package contains validation classes for ensuring the integrity of the data within the application layer.
 
-#### Configuration Layer
+### Explanation of Hexagonal Architecture in the Context
 
-The config layer contains all the Bean configurations and annotations needed to instantiate the beans and bootstrap the Spring boot application
+In this architecture, the Application Layer encapsulates the core business logic, and it's isolated from external concerns, allowing for flexibility and maintainability. The Adapter Layer acts as the interface between external dependencies (such as databases, message queues, and web controllers) and the core logic within the Application Layer.
 
-### Domain Layer
+Through this structure, the system can easily adapt to changes in external dependencies or technologies without affecting the core business rules and logic. The separation of concerns provides a clear and maintainable path for both development and future evolution.
 
-The domain layer contains the following components:
-
-- **controller**: This package defines the controller interface for the application layer to implement.
-- **filter**: THis packages contains the domain filter object to package complex arguments to the persistence layer using domain concepts.
-- **model**: This package contains the domain models (entities and value objects) that represent the core concepts of the problem domain.
-- **repository**: This package contains the repository interfaces that define the contract for persisting and retrieving domain models.
-- **service**: This package contains the repository interfaces that define the contract for the application layer services.
-- **usecase**: This package contains the usecase interfaces that define the contract for the application layer usecases.
-
-### Infrastructure Layer
-
-The infrastructure layer contains the following components:
-
-- **kafka**: this package contains the processors for the kafka messages
-
-- **persistence**:
-  - **entity**: This package contains the entity objects used for storing the data in the database.
-  - **filter**: This package contains the packaged filter objects use for querying complex arguments in the database.
-  - **mappers**: 
-    - **entity**: This package contains mapper classes for convert between domain and entity objects.
-    - **mybatis**: This package contains the mybatis mappers to interface with the database.
-  - **repository**: This package contains the database specific repository implementations.
+This design also aligns well with Domain-Driven Design principles by emphasizing a rich and expressive domain model and placing the primary focus on the core problem domain.
 
 ___
 ## Data flow

@@ -8,6 +8,8 @@ import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
+import io.edpn.backend.util.Module;
+import io.edpn.backend.util.Topic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,14 +30,13 @@ public class RequestSystemEliteIdService implements RequestDataUseCase<System> {
 
     @Override
     public void request(System system) {
-        SystemDataRequest systemDataRequest = new SystemDataRequest();
-        systemDataRequest.setRequestingModule("trade");
-        systemDataRequest.setSystemName(system.getName());
-
+        SystemDataRequest systemDataRequest = new SystemDataRequest(
+                Module.TRADE, system.getName()
+        );
         JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
-        
+
         Message message = Message.builder()
-                .topic("systemEliteIdRequest")
+                .topic(Topic.Request.SYSTEM_ELITE_ID.getTopicName())
                 .message(jsonNode.toString())
                 .build();
         
