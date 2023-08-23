@@ -1,8 +1,9 @@
 package io.edpn.backend.trade.adapter.persistence;
 
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisSystemEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemRepository;
 import io.edpn.backend.trade.application.domain.System;
+import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemEntityMapper;
 import io.edpn.backend.trade.application.port.outgoing.system.CreateSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemByIdPort;
@@ -21,7 +22,7 @@ import java.util.UUID;
 public class SystemRepository implements CreateSystemPort, LoadOrCreateSystemByNamePort, LoadSystemByIdPort, UpdateSystemPort{
     
     private final IdGenerator idGenerator;
-    private final MybatisSystemEntityMapper mybatisSystemEntityMapper;
+    private final SystemEntityMapper<MybatisSystemEntity> mybatisSystemEntityMapper;
     private final MybatisSystemRepository mybatisSystemRepository;
     
     @Override

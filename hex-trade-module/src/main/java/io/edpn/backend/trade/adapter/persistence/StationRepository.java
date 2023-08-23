@@ -1,11 +1,11 @@
 package io.edpn.backend.trade.adapter.persistence;
 
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
+import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationEntityMapper;
 import io.edpn.backend.trade.application.port.outgoing.station.CreateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationByIdPort;
@@ -24,7 +24,7 @@ import java.util.UUID;
 public class StationRepository implements CreateStationPort, LoadOrCreateBySystemAndStationNamePort, LoadStationByIdPort, UpdateStationPort {
     
     private final IdGenerator idGenerator;
-    private final MybatisStationEntityMapper mybatisStationEntityMapper;
+    private final StationEntityMapper<MybatisStationEntity> mybatisStationEntityMapper;
     private final MybatisStationRepository mybatisStationRepository;
     private final MybatisMarketDatumRepository mybatisMarketDatumRepository;
     

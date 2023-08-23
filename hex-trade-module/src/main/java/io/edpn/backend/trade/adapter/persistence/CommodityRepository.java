@@ -1,8 +1,9 @@
 package io.edpn.backend.trade.adapter.persistence;
 
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisCommodityEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisCommodityEntity;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityRepository;
 import io.edpn.backend.trade.application.domain.Commodity;
+import io.edpn.backend.trade.application.dto.persistence.entity.mapper.CommodityEntityMapper;
 import io.edpn.backend.trade.application.port.outgoing.commodity.CreateCommodityPort;
 import io.edpn.backend.trade.application.port.outgoing.commodity.LoadCommodityByIdPort;
 import io.edpn.backend.trade.application.port.outgoing.commodity.LoadOrCreateCommodityByNamePort;
@@ -18,7 +19,7 @@ import java.util.UUID;
 public class CommodityRepository implements CreateCommodityPort, LoadCommodityByIdPort, LoadOrCreateCommodityByNamePort {
     
     private final IdGenerator idGenerator;
-    private final MybatisCommodityEntityMapper mybatisCommodityEntityMapper;
+    private final CommodityEntityMapper<MybatisCommodityEntity> mybatisCommodityEntityMapper;
     private final MybatisCommodityRepository mybatisCommodityRepository;
     
     @Override
