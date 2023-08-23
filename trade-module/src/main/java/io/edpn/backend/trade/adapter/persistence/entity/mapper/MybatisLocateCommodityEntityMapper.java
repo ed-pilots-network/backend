@@ -2,13 +2,11 @@ package io.edpn.backend.trade.adapter.persistence.entity.mapper;
 
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisLocateCommodityEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisValidatedCommodityEntity;
 import io.edpn.backend.trade.application.domain.LocateCommodity;
 import io.edpn.backend.trade.application.dto.persistence.entity.LocateCommodityEntity;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.LocateCommodityEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationEntityMapper;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.ValidatedCommodityEntityMapper;
 import lombok.RequiredArgsConstructor;
 

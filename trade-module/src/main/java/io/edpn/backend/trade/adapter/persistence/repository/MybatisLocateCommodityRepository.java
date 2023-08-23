@@ -2,7 +2,6 @@ package io.edpn.backend.trade.adapter.persistence.repository;
 
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisLocateCommodityEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisValidatedCommodityEntity;
 import io.edpn.backend.trade.adapter.persistence.filter.MybatisLocateCommodityFilter;
 import org.apache.ibatis.annotations.One;

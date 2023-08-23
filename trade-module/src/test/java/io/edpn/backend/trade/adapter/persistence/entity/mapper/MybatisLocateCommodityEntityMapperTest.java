@@ -2,7 +2,6 @@ package io.edpn.backend.trade.adapter.persistence.entity.mapper;
 
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisLocateCommodityEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisValidatedCommodityEntity;
 import io.edpn.backend.trade.application.domain.LocateCommodity;
 import io.edpn.backend.trade.application.domain.Station;
