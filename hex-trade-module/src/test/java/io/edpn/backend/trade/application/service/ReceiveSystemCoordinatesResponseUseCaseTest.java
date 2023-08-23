@@ -5,6 +5,7 @@ import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
+import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,13 +25,16 @@ public class ReceiveSystemCoordinatesResponseUseCaseTest {
     private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
     
     @Mock
+    private DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
+    
+    @Mock
     private UpdateSystemPort updateSystemPort;
 
     private ReceiveKafkaMessageUseCase<SystemCoordinatesResponse> underTest;
 
     @BeforeEach
     public void setUp() {
-        underTest = new ReceiveSystemCoordinatesResponseService(loadOrCreateSystemByNamePort, updateSystemPort);
+        underTest = new ReceiveSystemCoordinatesResponseService(loadOrCreateSystemByNamePort, deleteSystemCoordinateRequestPort,updateSystemPort);
     }
 
     @Test

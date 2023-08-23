@@ -2,6 +2,7 @@ package io.edpn.backend.trade.adapter.persistence.system;
 
 import io.edpn.backend.trade.adapter.persistence.SystemRepository;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceFindSystemFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemRepository;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemEntityMapper;
@@ -37,13 +38,16 @@ public class CreateSystemPortTest {
     private SystemEntityMapper<MybatisSystemEntity> mybatisSystemEntityMapper;
     
     @Mock
+    private MybatisPersistenceFindSystemFilterMapper mybatisPersistenceFindSystemFilterMapper;
+    
+    @Mock
     private MybatisSystemRepository mybatisSystemRepository;
     
     private CreateSystemPort underTest;
     
     @BeforeEach
     public void setUp(){
-        underTest = new SystemRepository(idGenerator, mybatisSystemEntityMapper, mybatisSystemRepository);
+        underTest = new SystemRepository(idGenerator, mybatisSystemEntityMapper, mybatisPersistenceFindSystemFilterMapper ,mybatisSystemRepository);
     }
     
     @Test

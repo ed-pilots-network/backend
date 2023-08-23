@@ -15,6 +15,7 @@ import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisValidatedCommodityEntity;
 import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceFindCommodityFilterMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceFindSystemFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceLocateCommodityFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityMarketInfoRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityRepository;
@@ -80,8 +81,9 @@ public class RepositoryConfig {
     public SystemRepository systemRepository(
             @Qualifier("tradeIdGenerator") IdGenerator idGenerator,
             MybatisSystemRepository mybatisSystemRepository,
+            MybatisPersistenceFindSystemFilterMapper mybatisPersistenceFindSystemFilterMapper,
             SystemEntityMapper<MybatisSystemEntity> mybatisSystemEntityMapper) {
-        return new SystemRepository(idGenerator, mybatisSystemEntityMapper, mybatisSystemRepository);
+        return new SystemRepository(idGenerator, mybatisSystemEntityMapper, mybatisPersistenceFindSystemFilterMapper, mybatisSystemRepository);
     }
 
     @Bean(name = "tradeValidatedCommodityRepository")
@@ -92,7 +94,7 @@ public class RepositoryConfig {
         return new ValidatedCommodityRepository(mybatisValidatedCommodityRepository, mybatisValidatedCommodityEntityMapper, mybatisPersistenceFindCommodityFilterMapper);
     }
 
-    @Bean(name = "tradeSys")
+    @Bean(name = "tradeSystemCoordinateRequestRepository")
     public SystemCoordinateRequestRepository systemCoordinateRequestRepository(
             MybatisSystemCoordinateRequestRepository mybatisSystemCoordinateRequestRepository) {
         return new SystemCoordinateRequestRepository(mybatisSystemCoordinateRequestRepository);
