@@ -33,7 +33,7 @@ public class RequestSystemCoordinatesService implements RequestDataUseCase<Syste
     @Override
     public void request(System system) {
         final String systemName = system.getName();
-        boolean shouldRequest = existsSystemCoordinateRequestPort.exists(systemName);
+        boolean shouldRequest = !existsSystemCoordinateRequestPort.exists(systemName);
         if (shouldRequest) {
             SystemDataRequest stationDataRequest = new SystemDataRequest();
             stationDataRequest.setRequestingModule("trade");
