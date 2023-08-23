@@ -39,7 +39,7 @@ public interface MybatisLocateCommodityRepository {
             </script>"""
     )
     @Results(id = "findCommodityResultMap", value = {
-            @Result(property = "pricesUpdatedAt", column = "timestamp", javaType = LocalDateTime.class),
+            @Result(property = "priceUpdatedAt", column = "timestamp", javaType = LocalDateTime.class),
             @Result(property = "validatedCommodity", column = "commodity_id", javaType = MybatisValidatedCommodityEntity.class,
                     one = @One(select = "io.edpn.backend.trade.adapter.persistence.repository.MybatisValidatedCommodityRepository.findById")),
             @Result(property = "station", column = "station_id", javaType = MybatisStationEntity.class,
