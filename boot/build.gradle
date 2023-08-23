@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(':hex-trade-module')
+    implementation project(':trade-module')
     implementation project(":exploration-module")
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
