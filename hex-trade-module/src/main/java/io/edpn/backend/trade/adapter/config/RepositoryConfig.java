@@ -5,6 +5,7 @@ import io.edpn.backend.trade.adapter.persistence.CommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.LocateCommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.MarketDatumRepository;
 import io.edpn.backend.trade.adapter.persistence.StationRepository;
+import io.edpn.backend.trade.adapter.persistence.SystemCoordinateRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.SystemRepository;
 import io.edpn.backend.trade.adapter.persistence.ValidatedCommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisCommodityEntity;
@@ -20,6 +21,7 @@ import io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityRepo
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisLocateCommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemCoordinateRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisValidatedCommodityRepository;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.CommodityEntityMapper;
@@ -35,14 +37,14 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration("TradeRepositoryConfig")
 public class RepositoryConfig {
-    
+
     @Bean(name = "tradeCommodityMarketInfoRepository")
     public CommodityMarketInfoRepository commodityMarketInfoRepository(
             MybatisCommodityMarketInfoRepository mybatisCommodityMarketInfoRepository,
             CommodityMarketInfoEntityMapper<MybatisCommodityMarketInfoEntity> mybatisCommodityMarketInfoEntityMapper) {
         return new CommodityMarketInfoRepository(mybatisCommodityMarketInfoRepository, mybatisCommodityMarketInfoEntityMapper);
     }
-    
+
     @Bean(name = "tradeCommodityRepository")
     public CommodityRepository commodityRepository(
             @Qualifier("tradeIdGenerator") IdGenerator idGenerator,
@@ -50,7 +52,7 @@ public class RepositoryConfig {
             CommodityEntityMapper<MybatisCommodityEntity> mybatisCommodityEntityMapper) {
         return new CommodityRepository(idGenerator, mybatisCommodityEntityMapper, mybatisCommodityRepository);
     }
-    
+
     @Bean(name = "tradeLocateCommodityRepository")
     public LocateCommodityRepository locateCommodityRepository(
             MybatisLocateCommodityRepository mybatisLocateCommodityRepository,
@@ -58,13 +60,13 @@ public class RepositoryConfig {
             MybatisPersistenceLocateCommodityFilterMapper mybatisPersistenceLocateCommodityFilterMapper) {
         return new LocateCommodityRepository(mybatisLocateCommodityRepository, mybatisLocateCommodityEntityMapper, mybatisPersistenceLocateCommodityFilterMapper);
     }
-    
+
     @Bean(name = "tradeMarketDatumRepository")
     public MarketDatumRepository marketDatumRepository(
             MybatisMarketDatumRepository mybatisMarketDatumRepository) {
         return new MarketDatumRepository(mybatisMarketDatumRepository);
     }
-    
+
     @Bean(name = "tradeStationRepository")
     public StationRepository stationRepository(
             @Qualifier("tradeIdGenerator") IdGenerator idGenerator,
@@ -73,7 +75,7 @@ public class RepositoryConfig {
             MybatisMarketDatumRepository mybatisMarketDatumRepository) {
         return new StationRepository(idGenerator, mybatisStationEntityMapper, mybatisStationRepository, mybatisMarketDatumRepository);
     }
-    
+
     @Bean(name = "tradeSystemRepository")
     public SystemRepository systemRepository(
             @Qualifier("tradeIdGenerator") IdGenerator idGenerator,
@@ -81,12 +83,18 @@ public class RepositoryConfig {
             SystemEntityMapper<MybatisSystemEntity> mybatisSystemEntityMapper) {
         return new SystemRepository(idGenerator, mybatisSystemEntityMapper, mybatisSystemRepository);
     }
-    
+
     @Bean(name = "tradeValidatedCommodityRepository")
     public ValidatedCommodityRepository validatedCommodityRepository(
             MybatisValidatedCommodityRepository mybatisValidatedCommodityRepository,
             ValidatedCommodityEntityMapper<MybatisValidatedCommodityEntity> mybatisValidatedCommodityEntityMapper,
             MybatisPersistenceFindCommodityFilterMapper mybatisPersistenceFindCommodityFilterMapper) {
         return new ValidatedCommodityRepository(mybatisValidatedCommodityRepository, mybatisValidatedCommodityEntityMapper, mybatisPersistenceFindCommodityFilterMapper);
+    }
+
+    @Bean(name = "tradeSys")
+    public SystemCoordinateRequestRepository systemCoordinateRequestRepository(
+            MybatisSystemCoordinateRequestRepository mybatisSystemCoordinateRequestRepository) {
+        return new SystemCoordinateRequestRepository(mybatisSystemCoordinateRequestRepository);
     }
 }

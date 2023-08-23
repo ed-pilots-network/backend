@@ -3,6 +3,7 @@ package io.edpn.backend.trade.adapter.persistence.repository;
 
 import io.edpn.backend.mybatisutil.UuidTypeHandler;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
+import io.edpn.backend.trade.adapter.persistence.filter.MybatisFindSystemFilter;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
@@ -12,6 +13,7 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,4 +44,12 @@ public interface MybatisSystemRepository {
 
     @Delete("DELETE FROM system WHERE id = #{id}")
     void delete(UUID id);
+
+    @Select({"SELECT * FROM system",
+            "WHERE 1 = 1",
+            "AND (#{name} IS NULL OR name ILIKE '%' || #{name} || '%' )",
+            "AND (#{hasEliteId} IS NULL OR elite_id IS NULL != #{hasEliteId})",
+            "AND (#{hasCoordinates} IS NULL OR ((x_coordinate IS NULL  OR y_coordinate IS NULL OR z_coordinate IS NULL) != #{hasCoordinates}))"})
+    @ResultMap("systemResultMap")
+    List<MybatisSystemEntity> findByFilter(MybatisFindSystemFilter map);
 }
