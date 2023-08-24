@@ -45,11 +45,15 @@ public interface MybatisSystemRepository {
     @Delete("DELETE FROM system WHERE id = #{id}")
     void delete(UUID id);
 
-    @Select({"SELECT * FROM system",
-            "WHERE 1 = 1",
-            "AND (#{name} IS NULL OR name ILIKE '%' || #{name} || '%' )",
-            "AND (#{hasEliteId} IS NULL OR elite_id IS NULL != #{hasEliteId})",
-            "AND (#{hasCoordinates} IS NULL OR ((x_coordinate IS NULL  OR y_coordinate IS NULL OR z_coordinate IS NULL) != #{hasCoordinates}))"})
+    @Select("""
+            <script>
+            SELECT * FROM system
+            WHERE 1 = 1
+            <if test='name != null'>AND name ILIKE '%' || #{name} || '%'</if>
+            <if test='hasEliteId != null'>AND elite_id IS NULL != #{hasEliteId}</if>
+            <if test='hasCoordinates != null'>AND ((x_coordinate IS NULL OR y_coordinate IS NULL OR z_coordinate IS NULL) != #{hasCoordinates}</if>
+            </script>
+            """)
     @ResultMap("systemResultMap")
     List<MybatisSystemEntity> findByFilter(MybatisFindSystemFilter map);
 }
