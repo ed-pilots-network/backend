@@ -78,7 +78,7 @@ public interface KafkaConfig {
             backOff.setMaxInterval(maxInterval);
             return new DefaultErrorHandler((consumerRecord, exception) -> {
                 // TODO should there be extra logic to execute when all the retry attempts are exhausted, or do we just drop the message?
-                log.error("A kafka message from topic '${}' could not be processed after multiple retries: '${}'", consumerRecord.topic(), consumerRecord.value(), exception);
+                log.error("A kafka message from topic {} could not be processed after multiple retries: {}", consumerRecord.topic(), consumerRecord.value(), exception);
             }, backOff);
         }
     }
