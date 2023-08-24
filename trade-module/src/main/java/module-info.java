@@ -1,4 +1,4 @@
-module edpn.backend.hextrade {
+module edpn.backend.trade {
     requires static lombok;
     requires spring.beans;
     requires spring.boot;
