@@ -7,5 +7,5 @@ management:
 spring:
   config:
     import:
-      - hextrademodule-local.yaml
+      - trademodule-local.yaml
       - explorationmodule-local.yaml
