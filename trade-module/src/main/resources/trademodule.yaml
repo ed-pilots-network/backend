@@ -1,16 +1,15 @@
-trade:
-  spring:
-    liquibase:
-      enabled: true
-      change-log: classpath:db/trademodule/changelog/trademodule-changelog.xml
+spring:
+  liquibase:
+    enabled: true
+    change-log: classpath:db/trademodule/changelog/trademodule-changelog.xml
 
-    datasource:
-      url: ${TRADEMODULE_DB_URL}
-      username: ${TRADEMODULE_DB_USERNAME}
-      password: ${TRADEMODULE_DB_PASSWORD}
-      driver-class-name: org.postgresql.Driver
+  datasource:
+    url: ${TRADEMODULE_DB_URL}
+    username: ${TRADEMODULE_DB_USERNAME}
+    password: ${TRADEMODULE_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
 
-    kafka:
-      bootstrap-servers: ${KAFKA_URL}
-      consumer:
-        value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+  kafka:
+    bootstrap-servers: ${KAFKA_URL}
+    consumer:
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer

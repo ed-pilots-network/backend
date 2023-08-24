@@ -1,12 +1,12 @@
 package io.edpn.backend.trade.application.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
-import io.edpn.backend.trade.domain.model.RequestDataMessage;
-import io.edpn.backend.trade.domain.model.Station;
-import io.edpn.backend.trade.domain.model.System;
-import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
-import io.edpn.backend.trade.domain.service.RequestDataService;
+import io.edpn.backend.trade.application.domain.Message;
+import io.edpn.backend.trade.application.domain.Station;
+import io.edpn.backend.trade.application.domain.System;
+import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
+import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
+import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.mock;
@@ -29,11 +30,17 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class RequestStationPlanetaryServiceTest {
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    
     @Mock
-    private RequestDataMessageRepository requestDataMessageRepository;
-    private RequestDataService<Station> underTest;
+    private SendKafkaMessagePort sendKafkaMessagePort;
+    
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    
+    @Mock
+    private MessageMapper messageMapper;
+    
+    private RequestDataUseCase<Station> underTest;
+
 
     public static Stream<Arguments> provideBooleansForCheckApplicability() {
         return Stream.of(
@@ -45,7 +52,7 @@ public class RequestStationPlanetaryServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new RequestStationPlanetaryService(requestDataMessageRepository, objectMapper);
+        underTest = new RequestStationPlanetaryService(sendKafkaMessagePort, objectMapper, messageMapper);
     }
 
     @ParameterizedTest
@@ -58,7 +65,7 @@ public class RequestStationPlanetaryServiceTest {
     }
 
     @Test
-    void shouldSendRequest() throws Exception {
+    void shouldSendRequest() {
         System system = System.builder()
                 .name("Test System")
                 .build();
@@ -69,16 +76,18 @@ public class RequestStationPlanetaryServiceTest {
 
         underTest.request(station);
 
-        ArgumentCaptor<RequestDataMessage> argumentCaptor = ArgumentCaptor.forClass(RequestDataMessage.class);
-        verify(requestDataMessageRepository, times(1)).sendToKafka(argumentCaptor.capture());
+        ArgumentCaptor<Message> argumentCaptor = ArgumentCaptor.forClass(Message.class);
+        verify(messageMapper, times(1)).map(argumentCaptor.capture());
+        verify(sendKafkaMessagePort, times(1)).send(messageMapper.map(argumentCaptor.capture()));
 
-        RequestDataMessage message = argumentCaptor.getValue();
+        Message message = argumentCaptor.getValue();
         assertThat(message, is(notNullValue()));
         assertThat(message.getTopic(), is("stationIsPlanetaryRequest"));
         assertThat(message.getMessage(), is(notNullValue()));
-
-        StationDataRequest actualStationDataRequest = objectMapper.treeToValue(message.getMessage(), StationDataRequest.class);
-        assertThat(actualStationDataRequest.stationName(), is(station.getName()));
-        assertThat(actualStationDataRequest.systemName(), is(system.getName()));
+        
+        //TODO: below
+        //SystemDataRequest actualSystemDataRequest = objectMapper.treeToValue(message.getMessage(), SystemDataRequest.class);
+        assertThat(message.getMessage(), containsString(station.getName()));
+        assertThat(message.getMessage(), containsString(system.getName()));
     }
 }

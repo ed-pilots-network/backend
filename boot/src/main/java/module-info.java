@@ -4,10 +4,10 @@ module edpn.backend.boot {
     requires org.mybatis.spring;
     requires spring.boot.autoconfigure;
     requires spring.context;
-    requires edpn.backend.trade;
     requires spring.web;
     requires spring.beans;
     requires edpn.backend.exploration;
+    requires edpn.backend.trade;
 
     opens io.edpn.backend.application.controller to spring.core;
 }

@@ -1,0 +1,11 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,health
+
+spring:
+  config:
+    import:
+      - trademodule-local.yaml
+      - explorationmodule-local.yaml

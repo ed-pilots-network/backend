@@ -21,10 +21,21 @@ module edpn.backend.trade {
     requires jakarta.validation;
     requires io.swagger.v3.oas.annotations;
     requires liquibase.core;
+    requires spring.retry;
+    requires spring.core;
+    requires com.fasterxml.jackson.datatype.jdk8;
+    requires com.fasterxml.jackson.datatype.jsr310;
 
-    exports io.edpn.backend.trade.domain.service.v1;
-    exports io.edpn.backend.trade.domain.controller.v1;
-    exports io.edpn.backend.trade.application.service.v1;
-    exports io.edpn.backend.trade.application.controller.v1;
-    exports io.edpn.backend.trade.application.dto.v1;
+    exports io.edpn.backend.trade.adapter.web;
+    exports io.edpn.backend.trade.application.domain;
+    exports io.edpn.backend.trade.application.domain.filter;
+    exports io.edpn.backend.trade.application.dto.persistence.entity;
+    exports io.edpn.backend.trade.application.dto.persistence.filter;
+    exports io.edpn.backend.trade.application.dto.web.filter;
+    exports io.edpn.backend.trade.application.dto.web.object;
+    exports io.edpn.backend.trade.application.port.incomming.validatedcommodity;
+    exports io.edpn.backend.trade.application.port.incomming.locatecommodity;
+    exports io.edpn.backend.trade.application.port.incomming.commoditymarketinfo;
+    exports io.edpn.backend.trade.adapter.web.dto.object;
+    exports io.edpn.backend.trade.adapter.web.dto.filter;
 }

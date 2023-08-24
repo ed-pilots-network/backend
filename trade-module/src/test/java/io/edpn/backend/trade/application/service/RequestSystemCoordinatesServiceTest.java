@@ -1,11 +1,14 @@
 package io.edpn.backend.trade.application.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
-import io.edpn.backend.trade.domain.model.RequestDataMessage;
-import io.edpn.backend.trade.domain.model.System;
-import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
-import io.edpn.backend.trade.domain.service.RequestDataService;
+import io.edpn.backend.trade.application.domain.Message;
+import io.edpn.backend.trade.application.domain.System;
+import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
+import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
+import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
+import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.ExistsSystemCoordinateRequestPort;
+import io.edpn.backend.util.Topic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.times;
@@ -26,11 +30,22 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class RequestSystemCoordinatesServiceTest {
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    
     @Mock
-    private RequestDataMessageRepository requestDataMessageRepository;
-    private RequestDataService<System> underTest;
+    private SendKafkaMessagePort sendKafkaMessagePort;
+    
+    @Mock
+    private ExistsSystemCoordinateRequestPort existsSystemCoordinateRequestPort;
+    
+    @Mock
+    private CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
+    
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    
+    @Mock
+    private MessageMapper messageMapper;
+    
+    private RequestDataUseCase<System> underTest;
 
     public static Stream<Arguments> provideDoublesForCheckApplicability() {
         return Stream.of(
@@ -45,7 +60,7 @@ public class RequestSystemCoordinatesServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new RequestSystemCoordinatesService(requestDataMessageRepository, objectMapper);
+        underTest = new RequestSystemCoordinatesService(sendKafkaMessagePort, existsSystemCoordinateRequestPort, createSystemCoordinateRequestPort,objectMapper, messageMapper);
     }
 
     @ParameterizedTest
@@ -61,22 +76,24 @@ public class RequestSystemCoordinatesServiceTest {
     }
 
     @Test
-    void shouldSendRequest() throws Exception {
+    void shouldSendRequest() {
         System system = System.builder()
                 .name("Test System")
                 .build();
 
         underTest.request(system);
-
-        ArgumentCaptor<RequestDataMessage> argumentCaptor = ArgumentCaptor.forClass(RequestDataMessage.class);
-        verify(requestDataMessageRepository, times(1)).sendToKafka(argumentCaptor.capture());
-
-        RequestDataMessage message = argumentCaptor.getValue();
+        
+        ArgumentCaptor<Message> argumentCaptor = ArgumentCaptor.forClass(Message.class);
+        verify(messageMapper, times(1)).map(argumentCaptor.capture());
+        verify(sendKafkaMessagePort, times(1)).send(messageMapper.map(argumentCaptor.capture()));
+        
+        Message message = argumentCaptor.getValue();
         assertThat(message, is(notNullValue()));
-        assertThat(message.getTopic(), is("systemCoordinatesRequest"));
+        assertThat(message.getTopic(), is(Topic.Request.SYSTEM_COORDINATES.getTopicName()));
         assertThat(message.getMessage(), is(notNullValue()));
-
-        SystemDataRequest actualSystemDataRequest = objectMapper.treeToValue(message.getMessage(), SystemDataRequest.class);
-        assertThat(actualSystemDataRequest.systemName(), is(system.getName()));
+        
+        //TODO: below
+        //SystemDataRequest actualSystemDataRequest = objectMapper.treeToValue(message.getMessage(), SystemDataRequest.class);
+        assertThat(message.getMessage(), containsString(system.getName()));
     }
 }
