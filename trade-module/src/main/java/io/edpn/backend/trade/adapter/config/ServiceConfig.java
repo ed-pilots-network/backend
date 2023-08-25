@@ -24,6 +24,7 @@ import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.C
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.ExistsSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.ExistsSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadAllValidatedCommodityPort;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadValidatedCommodityByFilterPort;
@@ -137,8 +138,9 @@ public class ServiceConfig {
     @Bean(name = "tradeReceiveSystemEliteIdResponseService")
     public ReceiveSystemEliteIdResponseService receiveSystemEliteIdResponseService(
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
+            DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort,
             UpdateSystemPort updateSystemPort) {
-        return new ReceiveSystemEliteIdResponseService(loadOrCreateSystemByNamePort, updateSystemPort);
+        return new ReceiveSystemEliteIdResponseService(loadOrCreateSystemByNamePort, deleteSystemEliteIdRequestPort, updateSystemPort);
     }
 
     @Bean(name = "tradeRequestStationArrivalDistanceService")
@@ -190,7 +192,7 @@ public class ServiceConfig {
             CreateSystemEliteIdRequestPort createSystemEliteIdRequestPort,
             ObjectMapper objectMapper,
             MessageMapper messageMapper) {
-        return new RequestSystemEliteIdService(sendKafkaMessagePort,existsSystemEliteIdRequestPort, createSystemEliteIdRequestPort, objectMapper, messageMapper);
+        return new RequestSystemEliteIdService(sendKafkaMessagePort, existsSystemEliteIdRequestPort, createSystemEliteIdRequestPort, objectMapper, messageMapper);
     }
 
     @Bean(name = "tradeRequestMissingSystemCoordinatesService")
