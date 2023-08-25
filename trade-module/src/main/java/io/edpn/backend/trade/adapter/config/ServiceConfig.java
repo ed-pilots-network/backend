@@ -17,6 +17,8 @@ import io.edpn.backend.trade.application.port.outgoing.locatecommodity.LocateCom
 import io.edpn.backend.trade.application.port.outgoing.marketdatum.ExistsByStationNameAndSystemNameAndTimestampPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
+import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateStationArrivalDistanceRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.ExistsStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
@@ -142,9 +144,11 @@ public class ServiceConfig {
     @Bean(name = "tradeRequestStationArrivalDistanceService")
     public RequestStationArrivalDistanceService requestStationArrivalDistanceService(
             SendKafkaMessagePort sendKafkaMessagePort,
+            ExistsStationArrivalDistanceRequestPort existsStationArrivalDistanceRequestPort,
+            CreateStationArrivalDistanceRequestPort createStationArrivalDistanceRequestPort,
             ObjectMapper objectMapper,
             MessageMapper messageMapper) {
-        return new RequestStationArrivalDistanceService(sendKafkaMessagePort, objectMapper, messageMapper);
+        return new RequestStationArrivalDistanceService(sendKafkaMessagePort, existsStationArrivalDistanceRequestPort, createStationArrivalDistanceRequestPort, objectMapper, messageMapper);
     }
 
     @Bean(name = "tradeRequestStationLandingPadSizeService")
