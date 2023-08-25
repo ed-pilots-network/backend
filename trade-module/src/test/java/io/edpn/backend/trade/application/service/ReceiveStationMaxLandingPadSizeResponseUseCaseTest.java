@@ -7,6 +7,7 @@ import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
+import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.DeleteStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,13 +24,16 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ReceiveStationMaxLandingPadSizeResponseUseCaseTest {
-    
+
     @Mock
     private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
-    
+
+    @Mock
+    private DeleteStationLandingPadSizeRequestPort deleteStationLandingPadSizeRequestPort;
+
     @Mock
     private LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
-    
+
     @Mock
     private UpdateStationPort updateStationPort;
 
@@ -37,7 +41,7 @@ public class ReceiveStationMaxLandingPadSizeResponseUseCaseTest {
 
     @BeforeEach
     public void setUp() {
-        underTest = new ReceiveStationMaxLandingPadSizeResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, updateStationPort);
+        underTest = new ReceiveStationMaxLandingPadSizeResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, deleteStationLandingPadSizeRequestPort, updateStationPort);
     }
 
     @Test
@@ -58,6 +62,7 @@ public class ReceiveStationMaxLandingPadSizeResponseUseCaseTest {
         verify(loadOrCreateSystemByNamePort, times(1)).loadOrCreateSystemByName(anyString());
         verify(loadOrCreateBySystemAndStationNamePort, times(1)).loadOrCreateBySystemAndStationName(any(), anyString());
         verify(updateStationPort, times(1)).update(any());
+        verify(deleteStationLandingPadSizeRequestPort, times(1)).delete("system", "station");
 
         assert (station.getMaxLandingPadSize() == LandingPadSize.LARGE);
     }
