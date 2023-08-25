@@ -8,6 +8,7 @@ import io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityRepo
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisLocateCommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisMessageRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationLandingPadSizeRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemCoordinateRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemRepository;
@@ -23,67 +24,65 @@ import javax.sql.DataSource;
 
 @Configuration("TradeModuleMyBatisConfiguration")
 public class MyBatisConfiguration {
-    
+
     @Bean(name = "tradeSqlSessionFactory")
     public SqlSessionFactory sqlSessionFactory(@Qualifier("tradeDataSource") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
         sessionFactoryBean.setDataSource(dataSource);
         sessionFactoryBean.setTypeHandlers(new UuidTypeHandler(), new StringTrimmingTypeHandler(), new StringListToArrayTypeHandler());
-        
+
         return sessionFactoryBean.getObject();
     }
-    
+
     @Bean(name = "tradeMybatisCommodityMarketInfoRepository")
     public MapperFactoryBean<MybatisCommodityMarketInfoRepository> mybatisCommodityMarketInfoRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<MybatisCommodityMarketInfoRepository> factoryBean = new MapperFactoryBean<>(MybatisCommodityMarketInfoRepository.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }
-    
+
     @Bean(name = "tradeMybatisCommodityRepository")
     public MapperFactoryBean<MybatisCommodityRepository> mybatisCommodityRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<MybatisCommodityRepository> factoryBean = new MapperFactoryBean<>(MybatisCommodityRepository.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }
-    
-    
+
     @Bean(name = "tradeMybatisLocateCommodityRepository")
     public MapperFactoryBean<MybatisLocateCommodityRepository> mybatisLocateCommodityRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<MybatisLocateCommodityRepository> factoryBean = new MapperFactoryBean<>(MybatisLocateCommodityRepository.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }
-    
+
     @Bean(name = "tradeMybatisMarketDatumRepository")
     public MapperFactoryBean<MybatisMarketDatumRepository> mybatisMarketDatumRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<MybatisMarketDatumRepository> factoryBean = new MapperFactoryBean<>(MybatisMarketDatumRepository.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }
-    
-    
+
     @Bean(name = "tradeMybatisRequestDataMessageRepository")
     public MapperFactoryBean<MybatisMessageRepository> mybatisRequestDataMessageRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<MybatisMessageRepository> factoryBean = new MapperFactoryBean<>(MybatisMessageRepository.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }
-    
+
     @Bean(name = "tradeMybatisStationRepository")
     public MapperFactoryBean<MybatisStationRepository> mybatisStationRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<MybatisStationRepository> factoryBean = new MapperFactoryBean<>(MybatisStationRepository.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }
-    
+
     @Bean(name = "tradeMybatisSystemRepository")
     public MapperFactoryBean<MybatisSystemRepository> mybatisSystemRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<MybatisSystemRepository> factoryBean = new MapperFactoryBean<>(MybatisSystemRepository.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }
-    
+
     @Bean(name = "tradeMybatisValidatedCommodityRepository")
     public MapperFactoryBean<MybatisValidatedCommodityRepository> mybatisValidatedCommodityRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<MybatisValidatedCommodityRepository> factoryBean = new MapperFactoryBean<>(MybatisValidatedCommodityRepository.class);
@@ -94,6 +93,13 @@ public class MyBatisConfiguration {
     @Bean(name = "tradeMybatisSystemCoordinateRequestRepository")
     public MapperFactoryBean<MybatisSystemCoordinateRequestRepository> mybatisSystemCoordinateRequestRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<MybatisSystemCoordinateRequestRepository> factoryBean = new MapperFactoryBean<>(MybatisSystemCoordinateRequestRepository.class);
+        factoryBean.setSqlSessionFactory(sqlSessionFactory);
+        return factoryBean;
+    }
+
+    @Bean(name = "tradeMybatisStationLandingPadSizeRequestRepository")
+    public MapperFactoryBean<MybatisStationLandingPadSizeRequestRepository> mybatisStationLandingPadSizeRequestRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+        MapperFactoryBean<MybatisStationLandingPadSizeRequestRepository> factoryBean = new MapperFactoryBean<>(MybatisStationLandingPadSizeRequestRepository.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }

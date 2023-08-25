@@ -17,6 +17,8 @@ import io.edpn.backend.trade.application.port.outgoing.locatecommodity.LocateCom
 import io.edpn.backend.trade.application.port.outgoing.marketdatum.ExistsByStationNameAndSystemNameAndTimestampPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
+import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CreateStationLandingPadSizeRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.ExistsStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
@@ -150,9 +152,11 @@ public class ServiceConfig {
     @Bean(name = "tradeRequestStationLandingPadSizeService")
     public RequestStationLandingPadSizeService requestStationLandingPadSizeService(
             SendKafkaMessagePort sendKafkaMessagePort,
+            ExistsStationLandingPadSizeRequestPort existsStationLandingPadSizeRequestPort,
+            CreateStationLandingPadSizeRequestPort createStationLandingPadSizeRequestPort,
             ObjectMapper objectMapper,
             MessageMapper messageMapper) {
-        return new RequestStationLandingPadSizeService(sendKafkaMessagePort, objectMapper, messageMapper);
+        return new RequestStationLandingPadSizeService(sendKafkaMessagePort, existsStationLandingPadSizeRequestPort, createStationLandingPadSizeRequestPort, objectMapper, messageMapper);
     }
 
     @Bean(name = "tradeRequestStationPlanetaryService")
