@@ -6,6 +6,7 @@ import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,18 +25,21 @@ import static org.mockito.Mockito.when;
 public class ReceiveStationPlanetaryResponseUseCaseTest {
     @Mock
     private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
-    
+
     @Mock
     private LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
-    
+
+    @Mock
+    private DeleteStationPlanetaryRequestPort deleteStationPlanetaryRequestPort;
+
     @Mock
     private UpdateStationPort updateStationPort;
-    
+
     private ReceiveKafkaMessageUseCase<StationPlanetaryResponse> underTest;
-    
+
     @BeforeEach
     public void setUp() {
-        underTest = new ReceiveStationPlanetaryResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, updateStationPort);
+        underTest = new ReceiveStationPlanetaryResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, deleteStationPlanetaryRequestPort, updateStationPort);
     }
 
     @Test
@@ -56,6 +60,7 @@ public class ReceiveStationPlanetaryResponseUseCaseTest {
         verify(loadOrCreateSystemByNamePort, times(1)).loadOrCreateSystemByName(anyString());
         verify(loadOrCreateBySystemAndStationNamePort, times(1)).loadOrCreateBySystemAndStationName(any(), anyString());
         verify(updateStationPort, times(1)).update(any());
+        verify(deleteStationPlanetaryRequestPort, times(1)).delete("system", "station");
 
         assert (station.getPlanetary());
     }

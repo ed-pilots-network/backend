@@ -3,14 +3,14 @@ package io.edpn.backend.trade.adapter.persistence;
 
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationPlanetaryRequestRepository;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
-import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationRequireOdysseyRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
-public class StationPlanetaryRequestRepository implements CreateStationPlanetaryRequestPort, ExistsStationPlanetaryRequestPort, DeleteStationRequireOdysseyRequestPort {
+public class StationPlanetaryRequestRepository implements CreateStationPlanetaryRequestPort, ExistsStationPlanetaryRequestPort, DeleteStationPlanetaryRequestPort {
 
     private final MybatisStationPlanetaryRequestRepository mybatisStationPlanetaryRequestRepository;
 

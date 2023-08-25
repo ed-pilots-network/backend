@@ -2,7 +2,7 @@ package io.edpn.backend.trade.adapter.persistence.stationplanetaryrequest;
 
 import io.edpn.backend.trade.adapter.persistence.StationPlanetaryRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationPlanetaryRequestRepository;
-import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationRequireOdysseyRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,12 +12,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class DeleteStationRequireOdysseyRequestPortTest {
+public class DeleteStationPlanetaryRequestPortTest {
 
     @Mock
     private MybatisStationPlanetaryRequestRepository mybatisStationPlanetaryRequestRepository;
 
-    private DeleteStationRequireOdysseyRequestPort underTest;
+    private DeleteStationPlanetaryRequestPort underTest;
 
     @BeforeEach
     public void setup() {
