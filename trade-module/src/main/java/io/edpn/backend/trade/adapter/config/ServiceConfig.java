@@ -18,6 +18,7 @@ import io.edpn.backend.trade.application.port.outgoing.marketdatum.ExistsByStati
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateStationRequireOdysseyRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.ExistsStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
@@ -122,8 +123,9 @@ public class ServiceConfig {
     public ReceiveStationRequireOdysseyResponseService receiveStationRequireOdysseyResponseService(
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
             LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort,
+            DeleteStationRequireOdysseyRequestPort deleteStationRequireOdysseyRequestPort,
             UpdateStationPort updateStationPort) {
-        return new ReceiveStationRequireOdysseyResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, updateStationPort);
+        return new ReceiveStationRequireOdysseyResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, deleteStationRequireOdysseyRequestPort, updateStationPort);
     }
 
     @Bean(name = "tradeReceiveSystemCoordinatesResponseService")
