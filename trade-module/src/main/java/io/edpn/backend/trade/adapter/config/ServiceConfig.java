@@ -18,6 +18,7 @@ import io.edpn.backend.trade.application.port.outgoing.marketdatum.ExistsByStati
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateStationArrivalDistanceRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.DeleteStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.ExistsStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
@@ -98,8 +99,9 @@ public class ServiceConfig {
     public ReceiveStationArrivalDistanceResponseService receiveStationArrivalDistanceResponseService(
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
             LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort,
+            DeleteStationArrivalDistanceRequestPort deleteStationArrivalDistanceRequestPort,
             UpdateStationPort updateStationPort) {
-        return new ReceiveStationArrivalDistanceResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, updateStationPort);
+        return new ReceiveStationArrivalDistanceResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, deleteStationArrivalDistanceRequestPort, updateStationPort);
     }
 
     @Bean(name = "tradeReceiveStationMaxLandingPadSizeResponseService")

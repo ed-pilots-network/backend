@@ -6,6 +6,7 @@ import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
+import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.DeleteStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,9 @@ public class ReceiveStationArrivalDistanceResponseUseCaseTest {
     
     @Mock
     private LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
+
+    @Mock
+    private DeleteStationArrivalDistanceRequestPort deleteStationArrivalDistanceRequestPort;
     
     @Mock
     private UpdateStationPort updateStationPort;
@@ -36,7 +40,7 @@ public class ReceiveStationArrivalDistanceResponseUseCaseTest {
 
     @BeforeEach
     public void setUp() {
-        underTest = new ReceiveStationArrivalDistanceResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, updateStationPort);
+        underTest = new ReceiveStationArrivalDistanceResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, deleteStationArrivalDistanceRequestPort, updateStationPort);
     }
 
     @Test
@@ -56,6 +60,7 @@ public class ReceiveStationArrivalDistanceResponseUseCaseTest {
         verify(loadOrCreateSystemByNamePort, times(1)).loadOrCreateSystemByName(anyString());
         verify(loadOrCreateBySystemAndStationNamePort, times(1)).loadOrCreateBySystemAndStationName(any(), anyString());
         verify(updateStationPort, times(1)).update(any());
-        
+        verify(deleteStationArrivalDistanceRequestPort, times(1)).delete("system", "station");
+
     }
 }
