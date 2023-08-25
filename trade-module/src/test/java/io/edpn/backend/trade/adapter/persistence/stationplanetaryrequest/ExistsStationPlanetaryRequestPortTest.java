@@ -1,4 +1,4 @@
-package io.edpn.backend.trade.adapter.persistence.stationrequireodysseyrequest;
+package io.edpn.backend.trade.adapter.persistence.stationplanetaryrequest;
 
 import io.edpn.backend.trade.adapter.persistence.StationPlanetaryRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationPlanetaryRequestRepository;
