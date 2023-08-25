@@ -1,12 +1,19 @@
 package io.edpn.backend.trade.application.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
 import io.edpn.backend.trade.application.domain.Message;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
+import io.edpn.backend.trade.application.dto.web.object.MessageDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
+import io.edpn.backend.util.Module;
+import io.edpn.backend.util.Topic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,9 +27,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -30,15 +37,19 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class RequestStationPlanetaryServiceTest {
-    
+
     @Mock
     private SendKafkaMessagePort sendKafkaMessagePort;
-    
-    private final ObjectMapper objectMapper = new ObjectMapper();
-    
+    @Mock
+    private ObjectMapper objectMapper;
+    @Mock
+    private ExistsStationPlanetaryRequestPort existsStationPlanetaryRequestPort;
+    @Mock
+    private CreateStationPlanetaryRequestPort createStationPlanetaryRequestPort;
+
     @Mock
     private MessageMapper messageMapper;
-    
+
     private RequestDataUseCase<Station> underTest;
 
 
@@ -52,7 +63,7 @@ public class RequestStationPlanetaryServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new RequestStationPlanetaryService(sendKafkaMessagePort, objectMapper, messageMapper);
+        underTest = new RequestStationPlanetaryService(sendKafkaMessagePort, existsStationPlanetaryRequestPort, createStationPlanetaryRequestPort, objectMapper, messageMapper);
     }
 
     @ParameterizedTest
@@ -65,29 +76,46 @@ public class RequestStationPlanetaryServiceTest {
     }
 
     @Test
-    void shouldSendRequest() {
+    public void testRequestWhenIdDoesNotExist() {
+        String systemName = "Test System";
+        String stationName = "Test Station";
+
         System system = System.builder()
-                .name("Test System")
+                .name(systemName)
                 .build();
         Station station = Station.builder()
-                .name("Test Station")
+                .name(stationName)
                 .system(system)
                 .build();
 
-        underTest.request(station);
+        JsonNode mockJsonNode = mock(JsonNode.class);
+        String mockJsonString = "jsonString";
+        MessageDto mockMessageDto = mock(MessageDto.class);
+
+        when(existsStationPlanetaryRequestPort.exists(systemName, stationName)).thenReturn(false);
+        when(objectMapper.valueToTree(argThat(arg -> {
+            if (arg instanceof StationDataRequest stationDataRequest) {
+                return systemName.equals(stationDataRequest.systemName()) && stationName.equals(stationDataRequest.stationName()) && Module.TRADE.equals(stationDataRequest.requestingModule());
+            } else {
+                return false;
+            }
+        }))).thenReturn(mockJsonNode);
+        when(mockJsonNode.toString()).thenReturn(mockJsonString);
+        when(messageMapper.map(argThat(argument ->
+                argument.getMessage().equals(mockJsonString) && argument.getTopic().equals(Topic.Request.STATION_IS_PLANETARY.getTopicName())
+        ))).thenReturn(mockMessageDto);
 
         ArgumentCaptor<Message> argumentCaptor = ArgumentCaptor.forClass(Message.class);
-        verify(messageMapper, times(1)).map(argumentCaptor.capture());
-        verify(sendKafkaMessagePort, times(1)).send(messageMapper.map(argumentCaptor.capture()));
 
+
+        underTest.request(station);
+
+        verify(sendKafkaMessagePort).send(mockMessageDto);
+        verify(createStationPlanetaryRequestPort).create(systemName, stationName);
+        verify(messageMapper, times(1)).map(argumentCaptor.capture());
         Message message = argumentCaptor.getValue();
         assertThat(message, is(notNullValue()));
-        assertThat(message.getTopic(), is("stationIsPlanetaryRequest"));
-        assertThat(message.getMessage(), is(notNullValue()));
-        
-        //TODO: below
-        //SystemDataRequest actualSystemDataRequest = objectMapper.treeToValue(message.getMessage(), SystemDataRequest.class);
-        assertThat(message.getMessage(), containsString(station.getName()));
-        assertThat(message.getMessage(), containsString(system.getName()));
+        assertThat(message.getTopic(), is(Topic.Request.STATION_IS_PLANETARY.getTopicName()));
+        assertThat(message.getMessage(), is("jsonString"));
     }
 }
