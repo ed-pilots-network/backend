@@ -5,7 +5,7 @@ import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.dto.mapper.SystemEntityMapper;
-import io.edpn.backend.exploration.application.port.outgoing.system.SaveSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,14 +19,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class SaveSystemPortTest {
+class SaveOrUpdateSystemPortTest {
     @Mock
     private MybatisSystemRepository mybatisSystemRepository;
 
     @Mock
     private SystemEntityMapper<MybatisSystemEntity> systemEntityMapper;
 
-    private SaveSystemPort underTest;
+    private SaveOrUpdateSystemPort underTest;
 
     @BeforeEach
     void setUp() {
@@ -44,7 +44,7 @@ class SaveSystemPortTest {
         when(systemEntityMapper.map(entity)).thenReturn(loaded);
 
 
-        System result = underTest.save(system);
+        System result = underTest.saveOrUpdate(system);
 
 
         assertThat(result, is(loaded));

@@ -6,7 +6,7 @@ import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.dto.mapper.SystemEntityMapper;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemsByNameContainingPort;
-import io.edpn.backend.exploration.application.port.outgoing.system.SaveSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
-public class SystemRepository implements SaveSystemPort, LoadSystemPort, LoadSystemsByNameContainingPort {
+public class SystemRepository implements SaveOrUpdateSystemPort, LoadSystemPort, LoadSystemsByNameContainingPort {
 
     private final MybatisSystemRepository mybatisSystemRepository;
     private final SystemEntityMapper<MybatisSystemEntity> systemEntityMapper;
@@ -27,7 +27,7 @@ public class SystemRepository implements SaveSystemPort, LoadSystemPort, LoadSys
     }
 
     @Override
-    public System save(System system) {
+    public System saveOrUpdate(System system) {
         return systemEntityMapper.map(mybatisSystemRepository.insertOrUpdateOnConflict(systemEntityMapper.map(system)));
     }
 

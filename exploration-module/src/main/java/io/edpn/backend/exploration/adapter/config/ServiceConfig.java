@@ -8,8 +8,8 @@ import io.edpn.backend.exploration.adapter.web.dto.mapper.RestSystemDtoMapper;
 import io.edpn.backend.exploration.application.dto.mapper.MessageMapper;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.system.SaveSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestBySystemNamePort;
@@ -37,7 +37,7 @@ public class ServiceConfig {
     @Bean(name = "explorationReceiveNavRouteService")
     public ReceiveNavRouteService receiveNavRouteService(
             @Qualifier("explorationIdGenerator") IdGenerator idGenerator,
-            SaveSystemPort saveSystemPort,
+            SaveOrUpdateSystemPort saveOrUpdateSystemPort,
             SendMessagePort sendMessagePort,
             LoadSystemCoordinateRequestBySystemNamePort loadSystemCoordinateRequestBySystemNamePort,
             DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort,
@@ -52,7 +52,7 @@ public class ServiceConfig {
     ) {
         return new ReceiveNavRouteService(
                 idGenerator,
-                saveSystemPort,
+                saveOrUpdateSystemPort,
                 sendMessagePort,
                 loadSystemCoordinateRequestBySystemNamePort,
                 deleteSystemCoordinateRequestPort,
@@ -68,7 +68,7 @@ public class ServiceConfig {
 
     @Bean(name = "explorationReceiveSystemCoordinateRequestService")
     public ReceiveSystemCoordinateRequestService receiveSystemCoordinateRequestService(
-            CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort,
+            CreateIfNotExistsSystemCoordinateRequestPort createIfNotExistsSystemCoordinateRequestPort,
             LoadSystemPort loadSystemPort,
             SendMessagePort sendMessagePort,
             KafkaSystemCoordinatesResponseMapper kafkaSystemCoordinatesResponseMapper,
@@ -77,7 +77,7 @@ public class ServiceConfig {
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate
     ) {
         return new ReceiveSystemCoordinateRequestService(
-                createSystemCoordinateRequestPort,
+                createIfNotExistsSystemCoordinateRequestPort,
                 loadSystemPort,
                 sendMessagePort,
                 kafkaSystemCoordinatesResponseMapper,

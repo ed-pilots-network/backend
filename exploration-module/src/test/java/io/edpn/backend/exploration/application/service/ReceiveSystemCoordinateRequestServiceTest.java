@@ -11,7 +11,7 @@ import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesRespo
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.util.Module;
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
 public class ReceiveSystemCoordinateRequestServiceTest {
 
     @Mock
-    private CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
+    private CreateIfNotExistsSystemCoordinateRequestPort createIfNotExistsSystemCoordinateRequestPort;
     @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
@@ -57,7 +57,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
     @BeforeEach
     public void setup() {
-        underTest = new ReceiveSystemCoordinateRequestService(createSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, systemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate);
+        underTest = new ReceiveSystemCoordinateRequestService(createIfNotExistsSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, systemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate);
     }
 
     @SneakyThrows
@@ -88,7 +88,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
         verify(loadSystemPort).load(systemName);
         verify(sendMessagePort).send(messageDto);
-        verify(createSystemCoordinateRequestPort, never()).create(any());
+        verify(createIfNotExistsSystemCoordinateRequestPort, never()).createIfNotExists(any());
     }
 
     @SneakyThrows
@@ -120,7 +120,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
         verify(loadSystemPort).load(systemName);
         verify(sendMessagePort).send(messageDto);
-        verify(createSystemCoordinateRequestPort).create(systemCoordinateDataRequest);
+        verify(createIfNotExistsSystemCoordinateRequestPort).createIfNotExists(systemCoordinateDataRequest);
     }
 
     @Test
@@ -140,7 +140,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
         verify(loadSystemPort).load(systemName);
         verify(sendMessagePort, never()).send(any());
-        verify(createSystemCoordinateRequestPort).create(systemCoordinateDataRequest);
+        verify(createIfNotExistsSystemCoordinateRequestPort).createIfNotExists(systemCoordinateDataRequest);
     }
 
     @SneakyThrows
@@ -161,7 +161,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
         assertThrows(RuntimeException.class, () -> underTest.receive(message));
 
         verify(loadSystemPort).load(systemName);
-        verifyNoInteractions(sendMessagePort, createSystemCoordinateRequestPort);
+        verifyNoInteractions(sendMessagePort, createIfNotExistsSystemCoordinateRequestPort);
     }
 
 }
