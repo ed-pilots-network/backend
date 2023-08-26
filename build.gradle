@@ -56,6 +56,9 @@ subprojects {
         compileOnly {
             extendsFrom annotationProcessor
         }
+        testCompileClasspath {
+            attributes { attribute(Attribute.of("javaModule", Boolean), false) }
+        }
     }
 
     tasks.named('test') {
@@ -86,6 +89,7 @@ subprojects {
         mockitoVersion = "5.4.0"
         hamcrestVersion = "2.2"
         swaggerAnnotationsVersion = "2.1.13"
+        testcontainersVersion = '1.18.3'
     }
 
     dependencies {
@@ -113,11 +117,11 @@ subprojects {
             compileOnly "org.projectlombok:lombok:${lombokVersion}"
             annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
             testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-            testImplementation "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
-            testImplementation "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
-            testImplementation "org.junit.jupiter:junit-jupiter-params:${junitJupiterVersion}"
+            testImplementation "org.junit.jupiter:junit-jupiter:${junitJupiterVersion}"
             testImplementation "org.mockito:mockito-junit-jupiter:${mockitoVersion}"
             testImplementation "org.hamcrest:hamcrest:${hamcrestVersion}"
+            testImplementation "org.hamcrest:hamcrest-core:${hamcrestVersion}"
+            testImplementation "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
             testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
             testCompileOnly "org.mockito:mockito-core:${mockitoVersion}"
             testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"

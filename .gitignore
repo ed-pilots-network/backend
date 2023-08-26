@@ -1,5 +1,6 @@
 /target/
 !message-processors/edpn-commodityv3-message-processor/.mvn/wrapper/maven-wrapper.jar
+.run/
 
 ### STS ###
 .apt_generated
