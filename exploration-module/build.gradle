@@ -1,3 +1,4 @@
+
 dependencies {
     implementation 'io.edpn.backend:backend-util'
     implementation 'io.edpn.backend:backend-mybatis-util'
@@ -19,13 +20,14 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    testImplementation platform('org.testcontainers:testcontainers-bom')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.mockito:mockito-junit-jupiter'
     testImplementation 'org.hamcrest:hamcrest'
-    testImplementation 'org.testcontainers:testcontainers'
-    testImplementation 'org.testcontainers:junit-jupiter'
-    testImplementation 'org.testcontainers:postgresql'
+//    testImplementation platform('org.testcontainers:testcontainers-bom')
+//    testImplementation ('org.testcontainers:junit-jupiter')
+//    javaModulesMergeJars("org.testcontainers:testcontainers")
+//    javaModulesMergeJars("org.testcontainers:jdbc")
+//    javaModulesMergeJars("org.testcontainers:postgresql")
 
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
@@ -37,11 +39,10 @@ extraJavaModuleInfo {
     automaticModule("dependency-management-plugin-1.1.0.jar","dependency.management.plugin")
     automaticModule("jsr305-3.0.2.jar","jsr305")
     automaticModule("snappy-java-1.1.8.4.jar","snappy.java")
-
-    automaticModule("junit-jupiter-1.18.3.jar", "junit")
-    automaticModule("postgresql-1.18.3.jar", "junit")
-    automaticModule("jdbc-1.18.3.jar", "junit")
-    automaticModule("database-commons-1.18.3.jar", "junit")
-    automaticModule("testcontainers-1.18.3.jar", "junit")
-    automaticModule("duct-tape-1.0.8.jar", "junit")
+//    automaticModule("org.testcontainers:junit-jupiter", "org.testcontainers.junit.jupiter")
+//    automaticModule("duct-tape-1.0.8.jar", "org.rnorth.duct.tape")
+//    automaticModule("org.testcontainers:testcontainers", "org.testcontainers") {
+//        mergeJar("org.testcontainers:postgresql")
+//        mergeJar("org.testcontainers:jdbc")
+//    }
 }

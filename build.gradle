@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'io.spring.dependency-management' version '1.1.0' apply false
     id 'org.javamodularity.moduleplugin' version '1.8.12' apply false
-    id "org.gradlex.extra-java-module-info" version "1.4"
+    id "org.gradlex.extra-java-module-info" version "1.2"
 }
 
 repositories {
@@ -26,7 +26,6 @@ allprojects {
     version = '0.0.3-SNAPSHOT'
     compileJava.options.encoding = 'UTF-8'
 }
-
 subprojects {
     apply plugin: "java"
     apply plugin: "org.javamodularity.moduleplugin"
@@ -41,6 +40,21 @@ subprojects {
             maven {
                 url 'https://nexus.edpn.io/repository/maven-snapshots/'
             }
+        }
+    }
+    dependencies {
+        testImplementation platform('org.testcontainers:testcontainers-bom:1.18.3')
+        testImplementation 'org.testcontainers:junit-jupiter:1.18.3'
+        javaModulesMergeJars("org.testcontainers:testcontainers:1.18.3")
+        javaModulesMergeJars("org.testcontainers:jdbc:1.18.3")
+        javaModulesMergeJars("org.testcontainers:postgresql:1.18.3")
+    }
+    extraJavaModuleInfo {
+        automaticModule("org.testcontainers:junit-jupiter", "org.testcontainers.junit.jupiter")
+        automaticModule("duct-tape-1.0.8.jar", "org.rnorth.duct.tape")
+        automaticModule("org.testcontainers:testcontainers", "org.testcontainers") {
+            mergeJar("org.testcontainers:postgresql")
+            mergeJar("org.testcontainers:jdbc")
         }
     }
 
