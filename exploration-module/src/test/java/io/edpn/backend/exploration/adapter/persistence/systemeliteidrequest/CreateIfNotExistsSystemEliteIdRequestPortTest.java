@@ -43,6 +43,6 @@ class CreateIfNotExistsSystemEliteIdRequestPortTest {
         underTest.createIfNotExists(request);
 
 
-        verify(mybatisSystemEliteIdRequestRepository).insertIfNoExists(entity);
+        verify(mybatisSystemEliteIdRequestRepository).insertIfNotExists(entity);
     }
 }

@@ -24,7 +24,7 @@ public class SystemEliteIdRequestRepository implements CreateIfNotExistsSystemEl
 
     @Override
     public void createIfNotExists(SystemEliteIdRequest systemEliteIdRequest) {
-        mybatisSystemEliteIdRequestRepository.insertIfNoExists(mybatisSystemEliteIdRequestEntityMapper.map(systemEliteIdRequest));
+        mybatisSystemEliteIdRequestRepository.insertIfNotExists(mybatisSystemEliteIdRequestEntityMapper.map(systemEliteIdRequest));
     }
 
     @Override

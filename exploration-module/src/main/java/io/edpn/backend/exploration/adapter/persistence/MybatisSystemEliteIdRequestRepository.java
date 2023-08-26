@@ -21,7 +21,7 @@ public interface MybatisSystemEliteIdRequestRepository {
             "ON CONFLICT (requesting_module, system_name)",
             "DO NOTHING"
     })
-    void insertIfNoExists(MybatisSystemEliteIdRequestEntity requestDataMessageEntity);
+    void insertIfNotExists(MybatisSystemEliteIdRequestEntity requestDataMessageEntity);
 
     @Delete("DELETE FROM system_eliteId_data_request WHERE requesting_module = #{requestingModule} AND system_name = #{systemName}")
     void delete(MybatisSystemEliteIdRequestEntity requestDataMessageEntity);
