@@ -5,7 +5,7 @@ import io.edpn.backend.exploration.adapter.persistence.SystemEliteIdRequestRepos
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEliteIdRequestEntity;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemEliteIdRequestEntityMapper;
 import io.edpn.backend.exploration.application.domain.SystemEliteIdRequest;
-import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.CreateIfNotExistsSystemEliteIdRequestPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CreateSystemEliteIdRequestPortTest {
+class CreateIfNotExistsSystemEliteIdRequestPortTest {
 
     @Mock
     private MybatisSystemEliteIdRequestRepository mybatisSystemEliteIdRequestRepository;
@@ -25,7 +25,7 @@ class CreateSystemEliteIdRequestPortTest {
     @Mock
     private MybatisSystemEliteIdRequestEntityMapper mybatisSystemEliteIdRequestEntityMapper;
 
-    private CreateSystemEliteIdRequestPort underTest;
+    private CreateIfNotExistsSystemEliteIdRequestPort underTest;
 
     @BeforeEach
     void setUp() {
@@ -40,9 +40,9 @@ class CreateSystemEliteIdRequestPortTest {
         when(mybatisSystemEliteIdRequestEntityMapper.map(request)).thenReturn(entity);
 
 
-        underTest.create(request);
+        underTest.createIfNotExists(request);
 
 
-        verify(mybatisSystemEliteIdRequestRepository).insert(entity);
+        verify(mybatisSystemEliteIdRequestRepository).insertIfNoExists(entity);
     }
 }

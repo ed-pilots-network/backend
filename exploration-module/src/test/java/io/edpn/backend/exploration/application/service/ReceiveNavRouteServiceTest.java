@@ -12,7 +12,7 @@ import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesRespo
 import io.edpn.backend.exploration.application.dto.mapper.SystemEliteIdResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
-import io.edpn.backend.exploration.application.port.outgoing.system.SaveSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestBySystemNamePort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
@@ -51,7 +51,7 @@ class ReceiveNavRouteServiceTest {
     @Mock
     private IdGenerator idGenerator;
     @Mock
-    private SaveSystemPort saveSystemPort;
+    private SaveOrUpdateSystemPort saveOrUpdateSystemPort;
     @Mock
     private SendMessagePort sendMessagePort;
     @Mock
@@ -79,7 +79,7 @@ class ReceiveNavRouteServiceTest {
     void setUp() {
         when(idGenerator.generateId()).thenReturn(java.util.UUID.fromString(UUID));
         Executor executor = Runnable::run;
-        underTest = new ReceiveNavRouteService(idGenerator, saveSystemPort, sendMessagePort, loadSystemCoordinateRequestBySystemNamePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, loadSystemEliteIdRequestBySystemNamePort, deleteSystemEliteIdRequestPort, systemEliteIdResponseMapper, messageMapper, objectMapper, retryTemplate, executor);
+        underTest = new ReceiveNavRouteService(idGenerator, saveOrUpdateSystemPort, sendMessagePort, loadSystemCoordinateRequestBySystemNamePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, loadSystemEliteIdRequestBySystemNamePort, deleteSystemEliteIdRequestPort, systemEliteIdResponseMapper, messageMapper, objectMapper, retryTemplate, executor);
     }
 
     @SneakyThrows
@@ -104,7 +104,7 @@ class ReceiveNavRouteServiceTest {
         when(item.starSystem()).thenReturn(systemName);
         when(item.starClass()).thenReturn(starClass);
         when(item.starPos()).thenReturn(new Double[]{xCoord, yCoord, zCoord});
-        when(saveSystemPort.save(argThat(argument ->
+        when(saveOrUpdateSystemPort.saveOrUpdate(argThat(argument ->
                 argument.id().equals(java.util.UUID.fromString(UUID)) &&
                         argument.eliteId().equals(systemEliteId) &&
                         argument.name().equals(systemName) &&
@@ -167,7 +167,7 @@ class ReceiveNavRouteServiceTest {
         when(item.starSystem()).thenReturn(systemName);
         when(item.starClass()).thenReturn(starClass);
         when(item.starPos()).thenReturn(new Double[]{xCoord, yCoord, zCoord});
-        when(saveSystemPort.save(argThat(argument ->
+        when(saveOrUpdateSystemPort.saveOrUpdate(argThat(argument ->
                 argument.id().equals(java.util.UUID.fromString(UUID)) &&
                         argument.eliteId().equals(systemEliteId) &&
                         argument.name().equals(systemName) &&
@@ -216,7 +216,7 @@ class ReceiveNavRouteServiceTest {
         when(item.starSystem()).thenReturn(systemName);
         when(item.starClass()).thenReturn(starClass);
         when(item.starPos()).thenReturn(new Double[]{xCoord, yCoord, zCoord});
-        when(saveSystemPort.save(argThat(argument ->
+        when(saveOrUpdateSystemPort.saveOrUpdate(argThat(argument ->
                 argument.id().equals(java.util.UUID.fromString(UUID)) &&
                         argument.eliteId().equals(systemEliteId) &&
                         argument.name().equals(systemName) &&

@@ -3,7 +3,7 @@ package io.edpn.backend.exploration.adapter.persistence;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemCoordinateRequestEntity;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemCoordinateRequestEntityMapper;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
-import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestBySystemNamePort;
@@ -17,14 +17,14 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
-public class SystemCoordinateRequestRepository implements CreateSystemCoordinateRequestPort, LoadSystemCoordinateRequestPort, LoadSystemCoordinateRequestBySystemNamePort, LoadAllSystemCoordinateRequestPort, DeleteSystemCoordinateRequestPort {
+public class SystemCoordinateRequestRepository implements CreateIfNotExistsSystemCoordinateRequestPort, LoadSystemCoordinateRequestPort, LoadSystemCoordinateRequestBySystemNamePort, LoadAllSystemCoordinateRequestPort, DeleteSystemCoordinateRequestPort {
 
     private final MybatisSystemCoordinateRequestRepository mybatisSystemCoordinateRequestRepository;
     private final MybatisSystemCoordinateRequestEntityMapper mybatisSystemCoordinateRequestEntityMapper;
 
     @Override
-    public void create(SystemCoordinateRequest systemCoordinateRequest) {
-        mybatisSystemCoordinateRequestRepository.insert(mybatisSystemCoordinateRequestEntityMapper.map(systemCoordinateRequest));
+    public void createIfNotExists(SystemCoordinateRequest systemCoordinateRequest) {
+        mybatisSystemCoordinateRequestRepository.insertIfNotExist(mybatisSystemCoordinateRequestEntityMapper.map(systemCoordinateRequest));
     }
 
     @Override

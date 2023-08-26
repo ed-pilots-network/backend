@@ -10,7 +10,7 @@ import io.edpn.backend.exploration.application.dto.mapper.SystemEliteIdResponseM
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.CreateIfNotExistsSystemEliteIdRequestPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
 import io.edpn.backend.util.Module;
@@ -24,7 +24,7 @@ import org.springframework.retry.support.RetryTemplate;
 public class ReceiveSystemEliteIdRequestService implements ReceiveKafkaMessageUseCase<SystemDataRequest> {
 
 
-    private final CreateSystemEliteIdRequestPort createSystemEliteIdRequestPort;
+    private final CreateIfNotExistsSystemEliteIdRequestPort createIfNotExistsSystemEliteIdRequestPort;
     private final LoadSystemPort loadSystemPort;
     private final SendMessagePort sendMessagePort;
     private final SystemEliteIdResponseMapper systemEliteIdResponseMapper;
@@ -59,6 +59,6 @@ public class ReceiveSystemEliteIdRequestService implements ReceiveKafkaMessageUs
 
     private void saveRequest(String systemName, Module requestingModule) {
         SystemEliteIdRequest systemEliteIdRequest = new SystemEliteIdRequest(systemName, requestingModule);
-        createSystemEliteIdRequestPort.create(systemEliteIdRequest);
+        createIfNotExistsSystemEliteIdRequestPort.createIfNotExists(systemEliteIdRequest);
     }
 }

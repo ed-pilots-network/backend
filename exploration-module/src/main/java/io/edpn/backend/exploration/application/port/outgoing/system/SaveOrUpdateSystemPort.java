@@ -2,7 +2,7 @@ package io.edpn.backend.exploration.application.port.outgoing.system;
 
 import io.edpn.backend.exploration.application.domain.System;
 
-public interface SaveSystemPort {
+public interface SaveOrUpdateSystemPort {
 
-    System save(System system);
+    System saveOrUpdate(System system);
 }

@@ -11,7 +11,7 @@ import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesRespo
 import io.edpn.backend.exploration.application.dto.mapper.SystemEliteIdResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
-import io.edpn.backend.exploration.application.port.outgoing.system.SaveSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestBySystemNamePort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
@@ -34,7 +34,7 @@ import java.util.concurrent.Executor;
 public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRouteMessage.V1> {
 
     private final IdGenerator idGenerator;
-    private final SaveSystemPort saveSystemPort;
+    private final SaveOrUpdateSystemPort saveOrUpdateSystemPort;
     private final SendMessagePort sendMessagePort;
     private final LoadSystemCoordinateRequestBySystemNamePort loadSystemCoordinateRequestBySystemNamePort;
     private final DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
@@ -78,7 +78,7 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
 
     private CompletableFuture<System> createOrUpdateFromItem(NavRouteMessage.V1.Item item) {
         return CompletableFuture.supplyAsync(() ->
-                saveSystemPort.save(
+                saveOrUpdateSystemPort.saveOrUpdate(
                         new System(idGenerator.generateId(),
                                 item.systemAddress(),
                                 item.starSystem(),
