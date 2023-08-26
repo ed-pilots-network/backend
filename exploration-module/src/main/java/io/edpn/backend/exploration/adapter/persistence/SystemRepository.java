@@ -4,12 +4,9 @@ package io.edpn.backend.exploration.adapter.persistence;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.dto.mapper.SystemEntityMapper;
-import io.edpn.backend.exploration.application.port.outgoing.system.CreateSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemsByNameContainingPort;
 import io.edpn.backend.exploration.application.port.outgoing.system.SaveSystemPort;
-import io.edpn.backend.util.IdGenerator;
-import io.edpn.backend.util.exception.DatabaseEntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,18 +15,10 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
-public class SystemRepository implements CreateSystemPort, LoadSystemPort, SaveSystemPort, LoadSystemsByNameContainingPort {
+public class SystemRepository implements SaveSystemPort, LoadSystemPort, LoadSystemsByNameContainingPort {
 
     private final MybatisSystemRepository mybatisSystemRepository;
     private final SystemEntityMapper<MybatisSystemEntity> systemEntityMapper;
-    private final IdGenerator idGenerator;
-
-    @Override
-    public System create(String systemName) throws DatabaseEntityNotFoundException {
-        return systemEntityMapper.map(
-                mybatisSystemRepository.insertOnConflictLoad(
-                        new MybatisSystemEntity(idGenerator.generateId(), systemName, null, null, null, null, null)));
-    }
 
     @Override
     public Optional<System> load(String name) {
@@ -39,11 +28,7 @@ public class SystemRepository implements CreateSystemPort, LoadSystemPort, SaveS
 
     @Override
     public System save(System system) {
-        mybatisSystemRepository.update(systemEntityMapper.map(system));
-
-        return mybatisSystemRepository.findById(system.id())
-                .map(systemEntityMapper::map)
-                .orElseThrow(() -> new DatabaseEntityNotFoundException("System '" + system + "' could not be found after update"));
+        return systemEntityMapper.map(mybatisSystemRepository.insertOrUpdateOnConflict(systemEntityMapper.map(system)));
     }
 
     @Override
