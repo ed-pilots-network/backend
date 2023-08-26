@@ -26,9 +26,9 @@ public class SystemRepository implements CreateSystemPort, LoadSystemPort, SaveS
 
     @Override
     public System create(String systemName) throws DatabaseEntityNotFoundException {
-        mybatisSystemRepository.insert(new MybatisSystemEntity(idGenerator.generateId(), systemName, null, null, null, null,null));
-        return load(systemName)
-                .orElseThrow(() -> new DatabaseEntityNotFoundException("System with name '" + systemName + "' could not be found after create"));
+        return systemEntityMapper.map(
+                mybatisSystemRepository.insertOnConflictLoad(
+                        new MybatisSystemEntity(idGenerator.generateId(), systemName, null, null, null, null, null)));
     }
 
     @Override

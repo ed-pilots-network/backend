@@ -12,7 +12,6 @@ import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessag
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.util.Module;
@@ -42,8 +41,6 @@ public class ReceiveSystemCoordinateRequestServiceTest {
     @Mock
     private CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
     @Mock
-    private LoadSystemCoordinateRequestPort loadSystemCoordinateRequestPort;
-    @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
     private SendMessagePort sendMessagePort;
@@ -60,7 +57,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
     @BeforeEach
     public void setup() {
-        underTest = new ReceiveSystemCoordinateRequestService(createSystemCoordinateRequestPort, loadSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, systemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate);
+        underTest = new ReceiveSystemCoordinateRequestService(createSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, systemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate);
     }
 
     @SneakyThrows

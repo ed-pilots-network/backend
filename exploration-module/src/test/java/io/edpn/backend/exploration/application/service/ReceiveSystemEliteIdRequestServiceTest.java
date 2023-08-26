@@ -12,7 +12,6 @@ import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessag
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
 import io.edpn.backend.util.Module;
@@ -42,8 +41,6 @@ public class ReceiveSystemEliteIdRequestServiceTest {
     @Mock
     private CreateSystemEliteIdRequestPort createSystemEliteIdRequestPort;
     @Mock
-    private LoadSystemEliteIdRequestPort loadSystemEliteIdRequestPort;
-    @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
     private SendMessagePort sendMessagePort;
@@ -60,7 +57,7 @@ public class ReceiveSystemEliteIdRequestServiceTest {
 
     @BeforeEach
     public void setup() {
-        underTest = new ReceiveSystemEliteIdRequestService(createSystemEliteIdRequestPort, loadSystemEliteIdRequestPort, loadSystemPort, sendMessagePort, systemEliteIdResponseMapper, messageMapper, objectMapper, retryTemplate);
+        underTest = new ReceiveSystemEliteIdRequestService(createSystemEliteIdRequestPort, loadSystemPort, sendMessagePort, systemEliteIdResponseMapper, messageMapper, objectMapper, retryTemplate);
     }
 
     @SneakyThrows

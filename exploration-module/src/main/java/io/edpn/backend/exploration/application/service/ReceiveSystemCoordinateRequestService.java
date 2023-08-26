@@ -11,7 +11,6 @@ import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessag
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.util.Module;
@@ -26,7 +25,6 @@ public class ReceiveSystemCoordinateRequestService implements ReceiveKafkaMessag
 
 
     private final CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
-    private final LoadSystemCoordinateRequestPort loadSystemCoordinateRequestPort;
     private final LoadSystemPort loadSystemPort;
     private final SendMessagePort sendMessagePort;
     private final SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
@@ -61,8 +59,6 @@ public class ReceiveSystemCoordinateRequestService implements ReceiveKafkaMessag
 
     private void saveRequest(String systemName, Module requestingModule) {
         SystemCoordinateRequest systemCoordinateDataRequest = new SystemCoordinateRequest(systemName, requestingModule);
-        if (loadSystemCoordinateRequestPort.load(systemCoordinateDataRequest).isEmpty()) {
-            createSystemCoordinateRequestPort.create(systemCoordinateDataRequest);
-        }
+        createSystemCoordinateRequestPort.create(systemCoordinateDataRequest);
     }
 }

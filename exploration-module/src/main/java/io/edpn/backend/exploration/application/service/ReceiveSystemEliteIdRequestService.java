@@ -11,7 +11,6 @@ import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessag
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
 import io.edpn.backend.util.Module;
@@ -26,7 +25,6 @@ public class ReceiveSystemEliteIdRequestService implements ReceiveKafkaMessageUs
 
 
     private final CreateSystemEliteIdRequestPort createSystemEliteIdRequestPort;
-    private final LoadSystemEliteIdRequestPort loadSystemEliteIdRequestPort;
     private final LoadSystemPort loadSystemPort;
     private final SendMessagePort sendMessagePort;
     private final SystemEliteIdResponseMapper systemEliteIdResponseMapper;
@@ -61,8 +59,6 @@ public class ReceiveSystemEliteIdRequestService implements ReceiveKafkaMessageUs
 
     private void saveRequest(String systemName, Module requestingModule) {
         SystemEliteIdRequest systemEliteIdRequest = new SystemEliteIdRequest(systemName, requestingModule);
-        if (loadSystemEliteIdRequestPort.load(systemEliteIdRequest).isEmpty()) {
-            createSystemEliteIdRequestPort.create(systemEliteIdRequest);
-        }
+        createSystemEliteIdRequestPort.create(systemEliteIdRequest);
     }
 }

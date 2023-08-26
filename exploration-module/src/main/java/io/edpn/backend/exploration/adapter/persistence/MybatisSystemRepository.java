@@ -35,8 +35,14 @@ public interface MybatisSystemRepository {
     Optional<MybatisSystemEntity> findByName(@Param("name") String name);
 
     @Insert({"INSERT INTO system (id, name, star_class, elite_id, x_coordinate, y_coordinate, z_coordinate)",
-            "VALUES (#{id}, #{name}, #{starClass}, #{eliteId}, #{xCoordinate}, #{yCoordinate}, #{zCoordinate})"})
-    void insert(MybatisSystemEntity system);
+            "VALUES (#{id}, #{name}, #{starClass}, #{eliteId}, #{xCoordinate}, #{yCoordinate}, #{zCoordinate})",
+            "ON CONFLICT (name)",
+            "DO UPDATE",
+            "SET name = excluded.name",
+            "RETURNING *"
+    })
+    @ResultMap("systemResultMap")
+    MybatisSystemEntity insertOnConflictLoad(MybatisSystemEntity system);
 
     @Update({"UPDATE system SET name = #{name}, star_class = #{starClass}, elite_id = #{eliteId}, x_coordinate = #{xCoordinate}, ",
             "y_coordinate = #{yCoordinate}, z_coordinate = #{zCoordinate} WHERE id = #{id}"})
