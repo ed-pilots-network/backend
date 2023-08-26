@@ -15,7 +15,12 @@ import java.util.Optional;
 
 public interface MybatisSystemCoordinateRequestRepository {
 
-    @Insert("INSERT INTO system_coordinate_data_request (requesting_module, system_name) VALUES (#{requestingModule}, #{systemName})")
+    @Insert({
+            "INSERT INTO system_coordinate_data_request (requesting_module, system_name)",
+            "VALUES (#{requestingModule}, #{systemName})",
+            "ON CONFLICT (requesting_module, system_name)",
+            "DO NOTHING"
+    })
     void insert(MybatisSystemCoordinateRequestEntity requestDataMessageEntity);
 
     @Delete("DELETE FROM system_coordinate_data_request WHERE requesting_module = #{requestingModule} AND system_name = #{systemName}")

@@ -72,7 +72,6 @@ public class ServiceConfig {
     @Bean(name = "explorationReceiveSystemCoordinateRequestService")
     public ReceiveSystemCoordinateRequestService receiveSystemCoordinateRequestService(
             CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort,
-            LoadSystemCoordinateRequestPort loadSystemCoordinateRequestPort,
             LoadSystemPort loadSystemPort,
             SendMessagePort sendMessagePort,
             KafkaSystemCoordinatesResponseMapper kafkaSystemCoordinatesResponseMapper,
@@ -82,7 +81,6 @@ public class ServiceConfig {
     ) {
         return new ReceiveSystemCoordinateRequestService(
                 createSystemCoordinateRequestPort,
-                loadSystemCoordinateRequestPort,
                 loadSystemPort,
                 sendMessagePort,
                 kafkaSystemCoordinatesResponseMapper,
