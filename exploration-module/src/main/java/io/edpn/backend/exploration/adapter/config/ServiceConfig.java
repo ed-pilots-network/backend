@@ -7,7 +7,6 @@ import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
 import io.edpn.backend.exploration.adapter.web.dto.mapper.RestSystemDtoMapper;
 import io.edpn.backend.exploration.application.dto.mapper.MessageMapper;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
-import io.edpn.backend.exploration.application.port.outgoing.system.CreateSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.system.SaveSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
@@ -23,6 +22,7 @@ import io.edpn.backend.exploration.application.service.ReceiveNavRouteService;
 import io.edpn.backend.exploration.application.service.ReceiveSystemCoordinateRequestService;
 import io.edpn.backend.exploration.application.service.SystemControllerService;
 import io.edpn.backend.exploration.application.validation.LoadByNameContainingValidator;
+import io.edpn.backend.util.IdGenerator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -36,8 +36,7 @@ public class ServiceConfig {
 
     @Bean(name = "explorationReceiveNavRouteService")
     public ReceiveNavRouteService receiveNavRouteService(
-            CreateSystemPort createSystemPort,
-            LoadSystemPort loadSystemPort,
+            @Qualifier("explorationIdGenerator") IdGenerator idGenerator,
             SaveSystemPort saveSystemPort,
             SendMessagePort sendMessagePort,
             LoadSystemCoordinateRequestBySystemNamePort loadSystemCoordinateRequestBySystemNamePort,
@@ -52,8 +51,7 @@ public class ServiceConfig {
             @Qualifier("explorationThreadPoolTaskExecutor") Executor executor
     ) {
         return new ReceiveNavRouteService(
-                createSystemPort,
-                loadSystemPort,
+                idGenerator,
                 saveSystemPort,
                 sendMessagePort,
                 loadSystemCoordinateRequestBySystemNamePort,
