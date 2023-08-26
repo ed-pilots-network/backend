@@ -37,4 +37,11 @@ extraJavaModuleInfo {
     automaticModule("dependency-management-plugin-1.1.0.jar","dependency.management.plugin")
     automaticModule("jsr305-3.0.2.jar","jsr305")
     automaticModule("snappy-java-1.1.8.4.jar","snappy.java")
+
+    automaticModule("junit-jupiter-1.18.3.jar", "junit")
+    automaticModule("postgresql-1.18.3.jar", "junit")
+    automaticModule("jdbc-1.18.3.jar", "junit")
+    automaticModule("database-commons-1.18.3.jar", "junit")
+    automaticModule("testcontainers-1.18.3.jar", "junit")
+    automaticModule("duct-tape-1.0.8.jar", "junit")
 }
