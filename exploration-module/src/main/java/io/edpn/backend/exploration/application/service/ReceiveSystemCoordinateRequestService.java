@@ -26,7 +26,6 @@ public class ReceiveSystemCoordinateRequestService implements ReceiveKafkaMessag
 
 
     private final CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
-    private final LoadSystemCoordinateRequestPort loadSystemCoordinateRequestPort;
     private final LoadSystemPort loadSystemPort;
     private final SendMessagePort sendMessagePort;
     private final SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
@@ -61,8 +60,6 @@ public class ReceiveSystemCoordinateRequestService implements ReceiveKafkaMessag
 
     private void saveRequest(String systemName, Module requestingModule) {
         SystemCoordinateRequest systemCoordinateDataRequest = new SystemCoordinateRequest(systemName, requestingModule);
-        if (loadSystemCoordinateRequestPort.load(systemCoordinateDataRequest).isEmpty()) {
-            createSystemCoordinateRequestPort.create(systemCoordinateDataRequest);
-        }
+        createSystemCoordinateRequestPort.create(systemCoordinateDataRequest);
     }
 }

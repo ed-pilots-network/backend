@@ -42,8 +42,6 @@ public class ReceiveSystemCoordinateRequestServiceTest {
     @Mock
     private CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
     @Mock
-    private LoadSystemCoordinateRequestPort loadSystemCoordinateRequestPort;
-    @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
     private SendMessagePort sendMessagePort;
@@ -60,7 +58,7 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
     @BeforeEach
     public void setup() {
-        underTest = new ReceiveSystemCoordinateRequestService(createSystemCoordinateRequestPort, loadSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, systemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate);
+        underTest = new ReceiveSystemCoordinateRequestService(createSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, systemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate);
     }
 
     @SneakyThrows

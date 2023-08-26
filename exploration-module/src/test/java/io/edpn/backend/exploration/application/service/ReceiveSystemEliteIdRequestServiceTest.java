@@ -42,8 +42,6 @@ public class ReceiveSystemEliteIdRequestServiceTest {
     @Mock
     private CreateSystemEliteIdRequestPort createSystemEliteIdRequestPort;
     @Mock
-    private LoadSystemEliteIdRequestPort loadSystemEliteIdRequestPort;
-    @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
     private SendMessagePort sendMessagePort;
@@ -60,7 +58,7 @@ public class ReceiveSystemEliteIdRequestServiceTest {
 
     @BeforeEach
     public void setup() {
-        underTest = new ReceiveSystemEliteIdRequestService(createSystemEliteIdRequestPort, loadSystemEliteIdRequestPort, loadSystemPort, sendMessagePort, systemEliteIdResponseMapper, messageMapper, objectMapper, retryTemplate);
+        underTest = new ReceiveSystemEliteIdRequestService(createSystemEliteIdRequestPort, loadSystemPort, sendMessagePort, systemEliteIdResponseMapper, messageMapper, objectMapper, retryTemplate);
     }
 
     @SneakyThrows
