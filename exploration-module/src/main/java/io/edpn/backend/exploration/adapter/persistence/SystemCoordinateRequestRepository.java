@@ -24,7 +24,7 @@ public class SystemCoordinateRequestRepository implements CreateIfNotExistsSyste
 
     @Override
     public void createIfNotExists(SystemCoordinateRequest systemCoordinateRequest) {
-        mybatisSystemCoordinateRequestRepository.insertIfNotExist(mybatisSystemCoordinateRequestEntityMapper.map(systemCoordinateRequest));
+        mybatisSystemCoordinateRequestRepository.insertIfNotExists(mybatisSystemCoordinateRequestEntityMapper.map(systemCoordinateRequest));
     }
 
     @Override

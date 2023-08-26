@@ -43,6 +43,6 @@ class CreateIfNotExistsSystemCoordinateRequestPortTest {
         underTest.createIfNotExists(request);
 
 
-        verify(mybatisSystemCoordinateRequestRepository).insertIfNotExist(entity);
+        verify(mybatisSystemCoordinateRequestRepository).insertIfNotExists(entity);
     }
 }
