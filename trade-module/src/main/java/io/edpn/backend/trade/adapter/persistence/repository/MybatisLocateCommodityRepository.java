@@ -36,6 +36,10 @@ public interface MybatisLocateCommodityRepository {
             <if test='maxLandingPadSize == "LARGE"'>AND max_landing_pad_size = 'LARGE'</if>
             <if test='maxLandingPadSize == "MEDIUM"'>AND max_landing_pad_size IN ('MEDIUM', 'LARGE')</if>
             ORDER BY distance
+            <if test='page != null'>
+                LIMIT #{page.size}
+                OFFSET (#{page.size} * #{page.page})
+            </if>
             </script>"""
     )
     @Results(id = "findCommodityResultMap", value = {

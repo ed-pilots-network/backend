@@ -23,4 +23,5 @@ public class LocateCommodityFilter {
     private LandingPadSize maxLandingPadSize;
     private Long minSupply;
     private Long minDemand;
+    private PageFilter pageFilter;
 }
