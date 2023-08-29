@@ -16,6 +16,6 @@ public record RestLocateCommodityFilterDto(
         String maxLandingPadSize,
         Long minSupply,
         Long minDemand,
-        PageFilterDto page
+        RestPageFilterDto page
 ) implements LocateCommodityFilterDto {
 }
