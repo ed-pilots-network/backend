@@ -7,14 +7,14 @@ import io.edpn.backend.trade.application.dto.web.filter.mapper.PageFilterDtoMapp
 public class RestPageFilterDtoMapper implements PageFilterDtoMapper {
     @Override
     public PageFilter map(PageFilterDto pageFilterDto) {
-        PageFilter.PageFilterBuilder bulder = getDefaultFilterBuilder();
+        PageFilter.PageFilterBuilder builder = getDefaultFilterBuilder();
         if (pageFilterDto.size() > 0) {
-            bulder.size(pageFilterDto.size());
+            builder.size(pageFilterDto.size());
         }
         if (pageFilterDto.page() >= 0) {
-            bulder.page(pageFilterDto.page());
+            builder.page(pageFilterDto.page());
         }
-        return bulder.build();
+        return builder.build();
     }
 
     @Override
