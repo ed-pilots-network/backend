@@ -195,7 +195,7 @@ public class ServiceConfig {
             CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort,
             SendKafkaMessagePort sendKafkaMessagePort,
             @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
-            @Qualifier("tradeThreadPoolTaskExecutor") Executor executor,
+            @Qualifier("tradeForkJoinPool") Executor executor,
             ObjectMapper objectMapper,
             MessageMapper messageMapper
     ) {

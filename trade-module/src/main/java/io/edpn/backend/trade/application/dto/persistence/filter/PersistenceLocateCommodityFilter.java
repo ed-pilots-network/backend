@@ -16,7 +16,7 @@ public interface PersistenceLocateCommodityFilter {
     
     Boolean getIncludeFleetCarriers();
     
-    String getMaxLandingPadSize();
+    String getShipSize();
     
     Long getMinSupply();
     

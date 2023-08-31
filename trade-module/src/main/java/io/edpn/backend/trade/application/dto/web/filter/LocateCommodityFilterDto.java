@@ -16,7 +16,7 @@ public interface LocateCommodityFilterDto {
 
     Boolean includeFleetCarriers();
 
-    String maxLandingPadSize();
+    String shipSize();
 
     Long minSupply();
 

@@ -26,7 +26,7 @@ public class MybatisLocateCommodityFilter implements PersistenceLocateCommodityF
     private Boolean includePlanetary;
     private Boolean includeOdyssey;
     private Boolean includeFleetCarriers;
-    private String maxLandingPadSize;
+    private String shipSize;
     private Long minSupply;
     private Long minDemand;
     private PersistencePageFilter page;

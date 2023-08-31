@@ -41,7 +41,7 @@ class MybatisPersistenceLocateCommodityFilterMapperTest {
                 .includePlanetary(true)
                 .includeOdyssey(false)
                 .includeFleetCarriers(true)
-                .maxLandingPadSize(LandingPadSize.MEDIUM)
+                .shipSize(LandingPadSize.MEDIUM)
                 .minSupply(123L)
                 .minDemand(321L)
                 .pageFilter(null)
@@ -56,7 +56,7 @@ class MybatisPersistenceLocateCommodityFilterMapperTest {
         assertThat(entity.getIncludeFleetCarriers(), is(true));
         assertThat(entity.getIncludeOdyssey(), is(false));
         assertThat(entity.getIncludeFleetCarriers(), is(true));
-        assertThat(entity.getMaxLandingPadSize(), is(String.valueOf(LandingPadSize.MEDIUM)));
+        assertThat(entity.getShipSize(), is(String.valueOf(LandingPadSize.MEDIUM)));
         assertThat(entity.getMinSupply(), is(123L));
         assertThat(entity.getMinDemand(), is(321L));
         assertThat(entity.getPage(), nullValue());
@@ -76,7 +76,7 @@ class MybatisPersistenceLocateCommodityFilterMapperTest {
                 .includePlanetary(true)
                 .includeOdyssey(false)
                 .includeFleetCarriers(true)
-                .maxLandingPadSize(LandingPadSize.MEDIUM)
+                .shipSize(LandingPadSize.MEDIUM)
                 .minSupply(123L)
                 .minDemand(321L)
                 .pageFilter(pageFilter)
@@ -93,7 +93,7 @@ class MybatisPersistenceLocateCommodityFilterMapperTest {
         assertThat(entity.getIncludeFleetCarriers(), is(true));
         assertThat(entity.getIncludeOdyssey(), is(false));
         assertThat(entity.getIncludeFleetCarriers(), is(true));
-        assertThat(entity.getMaxLandingPadSize(), is(String.valueOf(LandingPadSize.MEDIUM)));
+        assertThat(entity.getShipSize(), is(String.valueOf(LandingPadSize.MEDIUM)));
         assertThat(entity.getMinSupply(), is(123L));
         assertThat(entity.getMinDemand(), is(321L));
         assertThat(entity.getPage(), notNullValue());

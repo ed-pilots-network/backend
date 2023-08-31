@@ -50,7 +50,7 @@ public class ServiceConfig {
             MessageMapper messageMapper,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
-            @Qualifier("explorationThreadPoolTaskExecutor") Executor executor
+            @Qualifier("explorationForkJoinPool") Executor executor
     ) {
         return new ReceiveNavRouteService(
                 createSystemPort,
@@ -125,7 +125,7 @@ public class ServiceConfig {
             MessageMapper messageMapper,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
-            @Qualifier("explorationThreadPoolTaskExecutor") Executor executor
+            @Qualifier("explorationForkJoinPool") Executor executor
     ) {
         return new ProcessPendingSystemCoordinateRequestService(
                 loadAllSystemCoordinateRequestPort,
@@ -149,7 +149,7 @@ public class ServiceConfig {
             MessageMapper messageMapper,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
-            @Qualifier("explorationThreadPoolTaskExecutor") Executor executor
+            @Qualifier("explorationForkJoinPool") Executor executor
     ) {
         return new ProcessPendingSystemEliteIdRequestService(
                 loadAllSystemEliteIdRequestPort,

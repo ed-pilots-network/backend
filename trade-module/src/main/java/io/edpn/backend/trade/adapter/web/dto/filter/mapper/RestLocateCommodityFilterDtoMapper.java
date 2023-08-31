@@ -23,7 +23,9 @@ public class RestLocateCommodityFilterDtoMapper implements LocateCommodityFilter
                 locateCommodityFilterDto.includePlanetary(),
                 locateCommodityFilterDto.includeOdyssey(),
                 locateCommodityFilterDto.includeFleetCarriers(),
-                LandingPadSize.valueOf(locateCommodityFilterDto.maxLandingPadSize()),
+                Optional.ofNullable(locateCommodityFilterDto.shipSize())
+                        .map(LandingPadSize::valueOf)
+                        .orElse(null),
                 locateCommodityFilterDto.minSupply(),
                 locateCommodityFilterDto.minDemand(),
                 Optional.ofNullable(locateCommodityFilterDto.page())

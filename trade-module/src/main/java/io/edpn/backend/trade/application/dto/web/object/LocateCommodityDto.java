@@ -1,6 +1,7 @@
 package io.edpn.backend.trade.application.dto.web.object;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public interface LocateCommodityDto {
     
@@ -19,4 +20,6 @@ public interface LocateCommodityDto {
     Long sellPrice();
     
     Double distance();
+
+    Optional<? extends PageInfoDto> pageInfo();
 }

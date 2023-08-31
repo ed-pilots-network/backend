@@ -60,7 +60,7 @@ class RestLocateCommodityFilterDtoMapperTest {
         assertThat(domainObject.getIncludePlanetary(), is(true));
         assertThat(domainObject.getIncludeOdyssey(), is(false));
         assertThat(domainObject.getIncludeFleetCarriers(), is(true));
-        assertThat(domainObject.getMaxLandingPadSize(), is(LandingPadSize.MEDIUM));
+        assertThat(domainObject.getShipSize(), is(LandingPadSize.MEDIUM));
         assertThat(domainObject.getMinSupply(), is(123L));
         assertThat(domainObject.getMinDemand(), is(321L));
         assertThat(domainObject.getPageFilter().getPage(), is(0));
@@ -69,7 +69,7 @@ class RestLocateCommodityFilterDtoMapperTest {
 
     @Test
     public void testMap_givenDto_shouldReturnDomainObject() {
-        RestPageFilterDto pageFilterDto = new RestPageFilterDto(20,4);
+        RestPageFilterDto pageFilterDto = new RestPageFilterDto(20, 4);
         LocateCommodityFilterDto dto = new RestLocateCommodityFilterDto(
                 "Display Name",
                 1.0,
@@ -96,7 +96,7 @@ class RestLocateCommodityFilterDtoMapperTest {
         assertThat(domainObject.getIncludePlanetary(), is(true));
         assertThat(domainObject.getIncludeOdyssey(), is(false));
         assertThat(domainObject.getIncludeFleetCarriers(), is(true));
-        assertThat(domainObject.getMaxLandingPadSize(), is(LandingPadSize.MEDIUM));
+        assertThat(domainObject.getShipSize(), is(LandingPadSize.MEDIUM));
         assertThat(domainObject.getMinSupply(), is(123L));
         assertThat(domainObject.getMinDemand(), is(321L));
         assertThat(domainObject.getPageFilter().getPage(), is(4));

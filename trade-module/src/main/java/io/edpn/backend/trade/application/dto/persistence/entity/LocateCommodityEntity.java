@@ -19,4 +19,7 @@ public interface LocateCommodityEntity {
     Long getSellPrice();
     
     Double getDistance();
+    Integer getPageSize();
+    Integer getCurrentPage();
+    Integer getTotalItems();
 }

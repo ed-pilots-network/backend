@@ -22,7 +22,7 @@ public class MybatisPersistenceLocateCommodityFilterMapper implements Persistenc
                 .includePlanetary(locateCommodityFilter.getIncludePlanetary())
                 .includeOdyssey(locateCommodityFilter.getIncludeOdyssey())
                 .includeFleetCarriers(locateCommodityFilter.getIncludeFleetCarriers())
-                .maxLandingPadSize(String.valueOf(locateCommodityFilter.getMaxLandingPadSize()))
+                .shipSize(Optional.ofNullable(locateCommodityFilter.getShipSize()).map(Enum::name).orElse(null))
                 .minSupply(locateCommodityFilter.getMinSupply())
                 .minDemand(locateCommodityFilter.getMinDemand())
                 .page(Optional.ofNullable(locateCommodityFilter.getPageFilter()).map(pageFilterMapper::map).orElse(null))

@@ -33,7 +33,7 @@ public class TradeModuleController {
     public List<RestValidatedCommodityDto> findAll() {
         return findAllValidatedCommodityUseCase.findAll()
                 .stream()
-                .map(x -> (RestValidatedCommodityDto)x)
+                .map(x -> (RestValidatedCommodityDto) x)
                 .toList();
     }
 
@@ -42,7 +42,7 @@ public class TradeModuleController {
         return findValidatedCommodityByFilterUseCase
                 .findByFilter(findCommodityRequest)
                 .stream()
-                .map(x -> (RestValidatedCommodityDto)x)
+                .map(x -> (RestValidatedCommodityDto) x)
                 .toList();
     }
 
@@ -50,24 +50,24 @@ public class TradeModuleController {
     public Optional<RestValidatedCommodityDto> findByName(@PathVariable String displayName) {
         return findValidatedCommodityByNameUseCase
                 .findByName(displayName)
-                .map(x -> (RestValidatedCommodityDto)x);
+                .map(x -> (RestValidatedCommodityDto) x);
     }
-    
-    @GetMapping("/locate-commodity/filter")
-    public List<RestLocateCommodityDto> locateCommodityWithFilters(RestLocateCommodityFilterDto locateCommodityFilterDto){
+
+    @GetMapping("/locate-commodity")
+    public List<RestLocateCommodityDto> locateCommodityWithFilters(RestLocateCommodityFilterDto locateCommodityFilterDto) {
         return locateCommodityUseCase
                 .locateCommodityOrderByDistance(locateCommodityFilterDto)
                 .stream()
-                .map(x -> (RestLocateCommodityDto)x)
+                .map(x -> (RestLocateCommodityDto) x)
                 .toList();
     }
-    
+
     @GetMapping("/best-price")
     List<RestCommodityMarketInfoDto> fullMarketInfo() {
         return getFullCommodityMarketInfoUseCase
                 .findAll()
                 .stream()
-                .map(x -> (RestCommodityMarketInfoDto)x)
+                .map(x -> (RestCommodityMarketInfoDto) x)
                 .toList();
     }
 }
