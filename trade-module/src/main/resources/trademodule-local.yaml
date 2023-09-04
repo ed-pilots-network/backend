@@ -1,6 +1,5 @@
 trade:
   spring:
-
     liquibase:
       enabled: true
       change-log: classpath:db/trademodule/changelog/trademodule-changelog.xml
