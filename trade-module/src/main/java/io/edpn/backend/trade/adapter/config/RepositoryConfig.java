@@ -7,6 +7,7 @@ import io.edpn.backend.trade.adapter.persistence.MarketDatumRepository;
 import io.edpn.backend.trade.adapter.persistence.StationRepository;
 import io.edpn.backend.trade.adapter.persistence.SystemCoordinateRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.StationLandingPadSizeRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.SystemEliteIdRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.SystemRepository;
 import io.edpn.backend.trade.adapter.persistence.ValidatedCommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisCommodityEntity;
@@ -24,6 +25,7 @@ import io.edpn.backend.trade.adapter.persistence.repository.MybatisLocateCommodi
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemCoordinateRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemEliteIdRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationLandingPadSizeRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisValidatedCommodityRepository;
@@ -100,6 +102,12 @@ public class RepositoryConfig {
     public SystemCoordinateRequestRepository systemCoordinateRequestRepository(
             MybatisSystemCoordinateRequestRepository mybatisSystemCoordinateRequestRepository) {
         return new SystemCoordinateRequestRepository(mybatisSystemCoordinateRequestRepository);
+    }
+
+    @Bean(name = "tradeSystemEliteIdRequestRepository")
+    public SystemEliteIdRequestRepository systemEliteIdRequestRepository(
+            MybatisSystemEliteIdRequestRepository mybatisSystemEliteIdRequestRepository) {
+        return new SystemEliteIdRequestRepository(mybatisSystemEliteIdRequestRepository);
     }
 
     @Bean(name = "tradeStationLandingPadSizeRequestRepository")

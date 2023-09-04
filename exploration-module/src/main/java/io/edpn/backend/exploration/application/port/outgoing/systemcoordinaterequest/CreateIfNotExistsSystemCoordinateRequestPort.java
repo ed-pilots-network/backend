@@ -2,7 +2,7 @@ package io.edpn.backend.exploration.application.port.outgoing.systemcoordinatere
 
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
 
-public interface CreateSystemCoordinateRequestPort {
+public interface CreateIfNotExistsSystemCoordinateRequestPort {
 
-    void create(SystemCoordinateRequest systemCoordinateRequest);
+    void createIfNotExists(SystemCoordinateRequest systemCoordinateRequest);
 }

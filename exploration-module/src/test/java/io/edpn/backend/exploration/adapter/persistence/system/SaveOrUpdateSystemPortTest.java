@@ -5,39 +5,32 @@ import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.dto.mapper.SystemEntityMapper;
-import io.edpn.backend.exploration.application.port.outgoing.system.SaveSystemPort;
-import io.edpn.backend.util.IdGenerator;
+import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class SaveSystemPortTest {
+class SaveOrUpdateSystemPortTest {
     @Mock
     private MybatisSystemRepository mybatisSystemRepository;
 
     @Mock
     private SystemEntityMapper<MybatisSystemEntity> systemEntityMapper;
 
-    @Mock
-    private IdGenerator idGenerator;
-
-    private SaveSystemPort underTest;
+    private SaveOrUpdateSystemPort underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new SystemRepository(mybatisSystemRepository, systemEntityMapper, idGenerator);
+        underTest = new SystemRepository(mybatisSystemRepository, systemEntityMapper);
     }
 
     @Test
@@ -47,15 +40,13 @@ class SaveSystemPortTest {
         MybatisSystemEntity entity = mock(MybatisSystemEntity.class);
         System loaded = mock(System.class);
         when(systemEntityMapper.map(system)).thenReturn(entity);
-        when(mybatisSystemRepository.findById(any())).thenReturn(Optional.of(entity));
+        when(mybatisSystemRepository.insertOrUpdateOnConflict(any())).thenReturn(entity);
         when(systemEntityMapper.map(entity)).thenReturn(loaded);
 
 
-        System result = underTest.save(system);
+        System result = underTest.saveOrUpdate(system);
 
 
         assertThat(result, is(loaded));
-        verify(mybatisSystemRepository).update(entity);
-        verify(mybatisSystemRepository).findById(system.id());
     }
 }

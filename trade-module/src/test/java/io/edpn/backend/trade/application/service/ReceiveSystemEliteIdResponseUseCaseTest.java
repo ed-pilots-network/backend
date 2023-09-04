@@ -5,6 +5,7 @@ import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +24,9 @@ public class ReceiveSystemEliteIdResponseUseCaseTest {
     
     @Mock
     private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
+
+    @Mock
+    private DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort;
     
     @Mock
     private UpdateSystemPort updateSystemPort;
@@ -31,7 +35,7 @@ public class ReceiveSystemEliteIdResponseUseCaseTest {
 
     @BeforeEach
     public void setUp() {
-        underTest = new ReceiveSystemEliteIdResponseService(loadOrCreateSystemByNamePort, updateSystemPort);
+        underTest = new ReceiveSystemEliteIdResponseService(loadOrCreateSystemByNamePort, deleteSystemEliteIdRequestPort, updateSystemPort);
     }
 
     @Test
@@ -49,6 +53,7 @@ public class ReceiveSystemEliteIdResponseUseCaseTest {
 
         verify(loadOrCreateSystemByNamePort, times(1)).loadOrCreateSystemByName(anyString());
         verify(updateSystemPort, times(1)).update(any());
+        verify(deleteSystemEliteIdRequestPort, times(1)).delete("system");
 
         assertEquals(1234, system.getEliteId());
     }

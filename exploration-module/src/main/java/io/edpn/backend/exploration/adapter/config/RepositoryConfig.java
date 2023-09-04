@@ -9,8 +9,6 @@ import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemCoordinateRequestEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemEliteIdRequestEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemEntityMapper;
-import io.edpn.backend.util.IdGenerator;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,10 +18,9 @@ public class RepositoryConfig {
     @Bean(name = "explorationSystemRepository")
     public SystemRepository systemRepository(
             MybatisSystemRepository mybatisSystemRepository,
-            MybatisSystemEntityMapper mybatisSystemEntityMapper,
-            @Qualifier("explorationIdGenerator") IdGenerator idGenerator
+            MybatisSystemEntityMapper mybatisSystemEntityMapper
     ) {
-        return new SystemRepository(mybatisSystemRepository, mybatisSystemEntityMapper, idGenerator);
+        return new SystemRepository(mybatisSystemRepository, mybatisSystemEntityMapper);
     }
 
     @Bean(name = "explorationSystemCoordinateRequestRepository")
