@@ -11,8 +11,7 @@ import io.edpn.backend.exploration.application.dto.mapper.SystemEliteIdResponseM
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.CreateIfNotExistsSystemEliteIdRequestPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
 import io.edpn.backend.util.Module;
@@ -40,9 +39,7 @@ import static org.mockito.Mockito.when;
 public class ReceiveSystemEliteIdRequestServiceTest {
 
     @Mock
-    private CreateSystemEliteIdRequestPort createSystemEliteIdRequestPort;
-    @Mock
-    private LoadSystemEliteIdRequestPort loadSystemEliteIdRequestPort;
+    private CreateIfNotExistsSystemEliteIdRequestPort createIfNotExistsSystemEliteIdRequestPort;
     @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
@@ -60,7 +57,7 @@ public class ReceiveSystemEliteIdRequestServiceTest {
 
     @BeforeEach
     public void setup() {
-        underTest = new ReceiveSystemEliteIdRequestService(createSystemEliteIdRequestPort, loadSystemEliteIdRequestPort, loadSystemPort, sendMessagePort, systemEliteIdResponseMapper, messageMapper, objectMapper, retryTemplate);
+        underTest = new ReceiveSystemEliteIdRequestService(createIfNotExistsSystemEliteIdRequestPort, loadSystemPort, sendMessagePort, systemEliteIdResponseMapper, messageMapper, objectMapper, retryTemplate);
     }
 
     @SneakyThrows
@@ -91,7 +88,7 @@ public class ReceiveSystemEliteIdRequestServiceTest {
 
         verify(loadSystemPort).load(systemName);
         verify(sendMessagePort).send(messageDto);
-        verify(createSystemEliteIdRequestPort, never()).create(any());
+        verify(createIfNotExistsSystemEliteIdRequestPort, never()).createIfNotExists(any());
     }
 
     @SneakyThrows
@@ -123,7 +120,7 @@ public class ReceiveSystemEliteIdRequestServiceTest {
 
         verify(loadSystemPort).load(systemName);
         verify(sendMessagePort).send(messageDto);
-        verify(createSystemEliteIdRequestPort).create(systemEliteIdDataRequest);
+        verify(createIfNotExistsSystemEliteIdRequestPort).createIfNotExists(systemEliteIdDataRequest);
     }
 
     @Test
@@ -143,7 +140,7 @@ public class ReceiveSystemEliteIdRequestServiceTest {
 
         verify(loadSystemPort).load(systemName);
         verify(sendMessagePort, never()).send(any());
-        verify(createSystemEliteIdRequestPort).create(systemEliteIdDataRequest);
+        verify(createIfNotExistsSystemEliteIdRequestPort).createIfNotExists(systemEliteIdDataRequest);
     }
 
 
@@ -165,6 +162,6 @@ public class ReceiveSystemEliteIdRequestServiceTest {
         assertThrows(RuntimeException.class, () -> underTest.receive(message));
 
         verify(loadSystemPort).load(systemName);
-        verifyNoInteractions(sendMessagePort, createSystemEliteIdRequestPort);
+        verifyNoInteractions(sendMessagePort, createIfNotExistsSystemEliteIdRequestPort);
     }
 }

@@ -6,7 +6,6 @@ import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntit
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.dto.mapper.SystemEntityMapper;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemsByNameContainingPort;
-import io.edpn.backend.util.IdGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,14 +28,11 @@ class LoadSystemsByNameContainingPortTest {
     @Mock
     private SystemEntityMapper<MybatisSystemEntity> systemEntityMapper;
 
-    @Mock
-    private IdGenerator idGenerator;
-
     private LoadSystemsByNameContainingPort underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new SystemRepository(mybatisSystemRepository, systemEntityMapper, idGenerator);
+        underTest = new SystemRepository(mybatisSystemRepository, systemEntityMapper);
     }
 
     @Test

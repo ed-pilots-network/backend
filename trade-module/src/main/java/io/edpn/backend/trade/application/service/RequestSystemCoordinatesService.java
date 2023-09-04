@@ -33,7 +33,7 @@ public class RequestSystemCoordinatesService implements RequestDataUseCase<Syste
     }
 
     @Override
-    public void request(System system) {
+    public synchronized void request(System system) {
         final String systemName = system.getName();
         boolean shouldRequest = !existsSystemCoordinateRequestPort.exists(systemName);
         if (shouldRequest) {
@@ -41,10 +41,10 @@ public class RequestSystemCoordinatesService implements RequestDataUseCase<Syste
 
             JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
 
-        Message message = Message.builder()
-                .topic(Topic.Request.SYSTEM_COORDINATES.getTopicName())
-                .message(jsonNode.toString())
-                .build();
+            Message message = Message.builder()
+                    .topic(Topic.Request.SYSTEM_COORDINATES.getTopicName())
+                    .message(jsonNode.toString())
+                    .build();
 
             sendKafkaMessagePort.send(messageMapper.map(message));
             createSystemCoordinateRequestPort.create(systemName);
