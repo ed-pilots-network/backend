@@ -11,9 +11,7 @@ import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesRespo
 import io.edpn.backend.exploration.application.dto.mapper.SystemEliteIdResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
-import io.edpn.backend.exploration.application.port.outgoing.system.CreateSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.system.SaveSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestBySystemNamePort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
@@ -21,13 +19,13 @@ import io.edpn.backend.exploration.application.port.outgoing.systemeliteidreques
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
+import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Topic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.support.RetryTemplate;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
@@ -35,10 +33,8 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRouteMessage.V1> {
 
-
-    private final CreateSystemPort createSystemPort;
-    private final LoadSystemPort loadSystemPort;
-    private final SaveSystemPort saveSystemPort;
+    private final IdGenerator idGenerator;
+    private final SaveOrUpdateSystemPort saveOrUpdateSystemPort;
     private final SendMessagePort sendMessagePort;
     private final LoadSystemCoordinateRequestBySystemNamePort loadSystemCoordinateRequestBySystemNamePort;
     private final DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
@@ -71,9 +67,8 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
     }
 
     private CompletableFuture<Void> process(NavRouteMessage.V1.Item item) {
-        return loadOrCreateSystem(item.starSystem())
-                .thenApply(system -> updateSystemFromItem(system, item))
-                .thenComposeAsync(this::saveSystem).thenCompose(system -> {
+        return createOrUpdateFromItem(item)
+                .thenComposeAsync(system -> {
                     CompletableFuture<Void> sendCoordinateResponseFuture = CompletableFuture.runAsync(() -> sendCoordinateResponse(system), executor);
                     CompletableFuture<Void> sendEliteIdResponseFuture = CompletableFuture.runAsync(() -> sendEliteIdResponse(system), executor);
 
@@ -81,29 +76,14 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
                 });
     }
 
-    private CompletableFuture<System> loadOrCreateSystem(String systemName) {
-        return CompletableFuture.supplyAsync(() -> loadSystemPort.load(systemName)
-                .orElseGet(() -> createSystemPort.create(systemName)), executor);
-    }
-
-    private System updateSystemFromItem(final System system, NavRouteMessage.V1.Item item) {
-        System returnSystem = system;
-        if (Objects.isNull(system.eliteId())) {
-            returnSystem = returnSystem.withEliteId(item.systemAddress());
-        }
-
-        if (Objects.isNull(system.starClass())) {
-            returnSystem = returnSystem.withStarClass(item.starClass());
-        }
-
-        if (Objects.isNull(system.coordinate()) || Objects.isNull(system.coordinate().x()) || Objects.isNull(system.coordinate().y()) || Objects.isNull(system.coordinate().z())) {
-            returnSystem = returnSystem.withCoordinate(new Coordinate(item.starPos()[0], item.starPos()[1], item.starPos()[2]));
-        }
-        return returnSystem;
-    }
-
-    private CompletableFuture<System> saveSystem(System system) {
-        return CompletableFuture.supplyAsync(() -> saveSystemPort.save(system), executor);
+    private CompletableFuture<System> createOrUpdateFromItem(NavRouteMessage.V1.Item item) {
+        return CompletableFuture.supplyAsync(() ->
+                saveOrUpdateSystemPort.saveOrUpdate(
+                        new System(idGenerator.generateId(),
+                                item.systemAddress(),
+                                item.starSystem(),
+                                item.starClass(),
+                                new Coordinate(item.starPos()[0], item.starPos()[1], item.starPos()[2]))));
     }
 
     private void sendCoordinateResponse(System system) {
