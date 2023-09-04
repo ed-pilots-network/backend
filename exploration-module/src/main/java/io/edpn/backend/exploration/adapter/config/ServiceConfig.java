@@ -7,14 +7,12 @@ import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
 import io.edpn.backend.exploration.adapter.web.dto.mapper.RestSystemDtoMapper;
 import io.edpn.backend.exploration.application.dto.mapper.MessageMapper;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
-import io.edpn.backend.exploration.application.port.outgoing.system.CreateSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.system.SaveSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestBySystemNamePort;
-import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestBySystemNamePort;
@@ -24,6 +22,7 @@ import io.edpn.backend.exploration.application.service.ReceiveNavRouteService;
 import io.edpn.backend.exploration.application.service.ReceiveSystemCoordinateRequestService;
 import io.edpn.backend.exploration.application.service.SystemControllerService;
 import io.edpn.backend.exploration.application.validation.LoadByNameContainingValidator;
+import io.edpn.backend.util.IdGenerator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -37,9 +36,8 @@ public class ServiceConfig {
 
     @Bean(name = "explorationReceiveNavRouteService")
     public ReceiveNavRouteService receiveNavRouteService(
-            CreateSystemPort createSystemPort,
-            LoadSystemPort loadSystemPort,
-            SaveSystemPort saveSystemPort,
+            @Qualifier("explorationIdGenerator") IdGenerator idGenerator,
+            SaveOrUpdateSystemPort saveOrUpdateSystemPort,
             SendMessagePort sendMessagePort,
             LoadSystemCoordinateRequestBySystemNamePort loadSystemCoordinateRequestBySystemNamePort,
             DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort,
@@ -53,9 +51,8 @@ public class ServiceConfig {
             @Qualifier("explorationThreadPoolTaskExecutor") Executor executor
     ) {
         return new ReceiveNavRouteService(
-                createSystemPort,
-                loadSystemPort,
-                saveSystemPort,
+                idGenerator,
+                saveOrUpdateSystemPort,
                 sendMessagePort,
                 loadSystemCoordinateRequestBySystemNamePort,
                 deleteSystemCoordinateRequestPort,
@@ -71,8 +68,7 @@ public class ServiceConfig {
 
     @Bean(name = "explorationReceiveSystemCoordinateRequestService")
     public ReceiveSystemCoordinateRequestService receiveSystemCoordinateRequestService(
-            CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort,
-            LoadSystemCoordinateRequestPort loadSystemCoordinateRequestPort,
+            CreateIfNotExistsSystemCoordinateRequestPort createIfNotExistsSystemCoordinateRequestPort,
             LoadSystemPort loadSystemPort,
             SendMessagePort sendMessagePort,
             KafkaSystemCoordinatesResponseMapper kafkaSystemCoordinatesResponseMapper,
@@ -81,8 +77,7 @@ public class ServiceConfig {
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate
     ) {
         return new ReceiveSystemCoordinateRequestService(
-                createSystemCoordinateRequestPort,
-                loadSystemCoordinateRequestPort,
+                createIfNotExistsSystemCoordinateRequestPort,
                 loadSystemPort,
                 sendMessagePort,
                 kafkaSystemCoordinatesResponseMapper,

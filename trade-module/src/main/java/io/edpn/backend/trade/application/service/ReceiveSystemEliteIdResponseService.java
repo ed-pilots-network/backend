@@ -5,6 +5,7 @@ import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,8 +14,9 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 @Slf4j
 public class ReceiveSystemEliteIdResponseService implements ReceiveKafkaMessageUseCase<SystemEliteIdResponse> {
-    
+
     private final LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
+    private final DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort;
     private final UpdateSystemPort updateSystemPort;
 
     @Override
@@ -30,7 +32,8 @@ public class ReceiveSystemEliteIdResponseService implements ReceiveKafkaMessageU
                         station.setEliteId(eliteId);
                     }
                 });
-        
+
         updateSystemPort.update(systemCompletableFuture.join());
+        deleteSystemEliteIdRequestPort.delete(systemName);
     }
 }

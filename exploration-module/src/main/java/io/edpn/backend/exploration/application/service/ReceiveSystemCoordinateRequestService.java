@@ -10,8 +10,7 @@ import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesRespo
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.util.Module;
@@ -25,8 +24,7 @@ import org.springframework.retry.support.RetryTemplate;
 public class ReceiveSystemCoordinateRequestService implements ReceiveKafkaMessageUseCase<SystemDataRequest> {
 
 
-    private final CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
-    private final LoadSystemCoordinateRequestPort loadSystemCoordinateRequestPort;
+    private final CreateIfNotExistsSystemCoordinateRequestPort createIfNotExistsSystemCoordinateRequestPort;
     private final LoadSystemPort loadSystemPort;
     private final SendMessagePort sendMessagePort;
     private final SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
@@ -61,8 +59,6 @@ public class ReceiveSystemCoordinateRequestService implements ReceiveKafkaMessag
 
     private void saveRequest(String systemName, Module requestingModule) {
         SystemCoordinateRequest systemCoordinateDataRequest = new SystemCoordinateRequest(systemName, requestingModule);
-        if (loadSystemCoordinateRequestPort.load(systemCoordinateDataRequest).isEmpty()) {
-            createSystemCoordinateRequestPort.create(systemCoordinateDataRequest);
-        }
+        createIfNotExistsSystemCoordinateRequestPort.createIfNotExists(systemCoordinateDataRequest);
     }
 }
