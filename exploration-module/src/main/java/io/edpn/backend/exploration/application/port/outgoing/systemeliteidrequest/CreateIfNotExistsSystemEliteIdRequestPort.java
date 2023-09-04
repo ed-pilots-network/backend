@@ -2,7 +2,7 @@ package io.edpn.backend.exploration.application.port.outgoing.systemeliteidreque
 
 import io.edpn.backend.exploration.application.domain.SystemEliteIdRequest;
 
-public interface CreateSystemEliteIdRequestPort {
+public interface CreateIfNotExistsSystemEliteIdRequestPort {
 
-    void create(SystemEliteIdRequest systemEliteIdRequest);
+    void createIfNotExists(SystemEliteIdRequest systemEliteIdRequest);
 }

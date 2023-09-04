@@ -5,7 +5,7 @@ import io.edpn.backend.exploration.adapter.persistence.SystemCoordinateRequestRe
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemCoordinateRequestEntity;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemCoordinateRequestEntityMapper;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
-import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CreateSystemCoordinateRequestPortTest {
+class CreateIfNotExistsSystemCoordinateRequestPortTest {
 
     @Mock
     private MybatisSystemCoordinateRequestRepository mybatisSystemCoordinateRequestRepository;
@@ -25,7 +25,7 @@ class CreateSystemCoordinateRequestPortTest {
     @Mock
     private MybatisSystemCoordinateRequestEntityMapper mybatisSystemCoordinateRequestEntityMapper;
 
-    private CreateSystemCoordinateRequestPort underTest;
+    private CreateIfNotExistsSystemCoordinateRequestPort underTest;
 
     @BeforeEach
     void setUp() {
@@ -40,9 +40,9 @@ class CreateSystemCoordinateRequestPortTest {
         when(mybatisSystemCoordinateRequestEntityMapper.map(request)).thenReturn(entity);
 
 
-        underTest.create(request);
+        underTest.createIfNotExists(request);
 
 
-        verify(mybatisSystemCoordinateRequestRepository).insert(entity);
+        verify(mybatisSystemCoordinateRequestRepository).insertIfNotExists(entity);
     }
 }
