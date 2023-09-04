@@ -3,7 +3,7 @@ package io.edpn.backend.exploration.adapter.persistence;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEliteIdRequestEntity;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemEliteIdRequestEntityMapper;
 import io.edpn.backend.exploration.application.domain.SystemEliteIdRequest;
-import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.CreateIfNotExistsSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestBySystemNamePort;
@@ -17,14 +17,14 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
-public class SystemEliteIdRequestRepository implements CreateSystemEliteIdRequestPort, LoadSystemEliteIdRequestPort, LoadSystemEliteIdRequestBySystemNamePort, LoadAllSystemEliteIdRequestPort, DeleteSystemEliteIdRequestPort {
+public class SystemEliteIdRequestRepository implements CreateIfNotExistsSystemEliteIdRequestPort, LoadSystemEliteIdRequestPort, LoadSystemEliteIdRequestBySystemNamePort, LoadAllSystemEliteIdRequestPort, DeleteSystemEliteIdRequestPort {
 
     private final MybatisSystemEliteIdRequestRepository mybatisSystemEliteIdRequestRepository;
     private final MybatisSystemEliteIdRequestEntityMapper mybatisSystemEliteIdRequestEntityMapper;
 
     @Override
-    public void create(SystemEliteIdRequest systemEliteIdRequest) {
-        mybatisSystemEliteIdRequestRepository.insert(mybatisSystemEliteIdRequestEntityMapper.map(systemEliteIdRequest));
+    public void createIfNotExists(SystemEliteIdRequest systemEliteIdRequest) {
+        mybatisSystemEliteIdRequestRepository.insertIfNotExists(mybatisSystemEliteIdRequestEntityMapper.map(systemEliteIdRequest));
     }
 
     @Override

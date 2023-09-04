@@ -26,7 +26,6 @@ public class SystemCoordinateRequestRepository implements CreateSystemCoordinate
 
     @Override
     public boolean exists(String systemName) {
-        boolean result = mybatisSystemCoordinateRequestRepository.exists(systemName);
-        return result;
+        return mybatisSystemCoordinateRequestRepository.exists(systemName);
     }
 }
