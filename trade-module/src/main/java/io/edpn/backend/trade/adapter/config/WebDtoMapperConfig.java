@@ -53,9 +53,8 @@ public class WebDtoMapperConfig {
     @Bean(name = "tradeLocateCommodityDtoMapper")
     public LocateCommodityDtoMapper locateCommodityDtoMapper(
             StationDtoMapper stationDtoMapper,
-            ValidatedCommodityDtoMapper validatedCommodityDtoMapper,
-            PageInfoDtoMapper pageInfoDtoMapper) {
-        return new RestLocateCommodityDtoMapper(stationDtoMapper, validatedCommodityDtoMapper, pageInfoDtoMapper);
+            ValidatedCommodityDtoMapper validatedCommodityDtoMapper) {
+        return new RestLocateCommodityDtoMapper(stationDtoMapper, validatedCommodityDtoMapper);
     }
 
     @Bean(name = "tradeCommodityMarketInfoDtoMapper")

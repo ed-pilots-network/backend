@@ -5,5 +5,5 @@ import io.edpn.backend.trade.application.dto.web.object.PageInfoDto;
 
 public interface PageInfoDtoMapper {
 
-    PageInfoDto map(PageInfo pageInfo);
+    <T extends PageInfoDto> T map(PageInfo pageInfo);
 }

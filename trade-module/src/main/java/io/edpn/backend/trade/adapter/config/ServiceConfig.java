@@ -8,6 +8,7 @@ import io.edpn.backend.trade.application.dto.web.filter.mapper.LocateCommodityFi
 import io.edpn.backend.trade.application.dto.web.object.mapper.CommodityMarketInfoDtoMapper;
 import io.edpn.backend.trade.application.dto.web.object.mapper.LocateCommodityDtoMapper;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
+import io.edpn.backend.trade.application.dto.web.object.mapper.PageInfoDtoMapper;
 import io.edpn.backend.trade.application.dto.web.object.mapper.ValidatedCommodityDtoMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.commodity.LoadOrCreateCommodityByNamePort;
@@ -75,8 +76,9 @@ public class ServiceConfig {
     public LocateCommodityService locateCommodityService(
             LocateCommodityByFilterPort locateCommodityByFilterPort,
             LocateCommodityFilterDtoMapper locateCommodityFilterDtoMapper,
-            LocateCommodityDtoMapper locateCommodityDtoMapper) {
-        return new LocateCommodityService(locateCommodityByFilterPort, locateCommodityFilterDtoMapper, locateCommodityDtoMapper);
+            LocateCommodityDtoMapper locateCommodityDtoMapper,
+            PageInfoDtoMapper pageInfoDtoMapper) {
+        return new LocateCommodityService(locateCommodityByFilterPort, locateCommodityFilterDtoMapper, locateCommodityDtoMapper, pageInfoDtoMapper);
     }
 
     @Bean(name = "tradeRecieveCommodityMessageUsecase")

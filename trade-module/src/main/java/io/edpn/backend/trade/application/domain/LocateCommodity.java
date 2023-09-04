@@ -22,6 +22,5 @@ public class LocateCommodity {
     private Long buyPrice;
     private Long sellPrice;
     private Double distance;
-    private PageInfo pageInfo;
     
 }

@@ -4,14 +4,11 @@ import io.edpn.backend.trade.adapter.persistence.entity.MybatisLocateCommodityEn
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisValidatedCommodityEntity;
 import io.edpn.backend.trade.application.domain.LocateCommodity;
-import io.edpn.backend.trade.application.domain.PageInfo;
 import io.edpn.backend.trade.application.dto.persistence.entity.LocateCommodityEntity;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.LocateCommodityEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.ValidatedCommodityEntityMapper;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 public class MybatisLocateCommodityEntityMapper implements LocateCommodityEntityMapper<MybatisLocateCommodityEntity> {
@@ -29,13 +26,7 @@ public class MybatisLocateCommodityEntityMapper implements LocateCommodityEntity
                 locateCommodityEntity.getDemand(),
                 locateCommodityEntity.getBuyPrice(),
                 locateCommodityEntity.getSellPrice(),
-                locateCommodityEntity.getDistance(),
-                Optional.ofNullable(locateCommodityEntity.getPageSize()).map(pageSize ->
-                        PageInfo.builder()
-                                .pageSize(pageSize)
-                                .currentPage(locateCommodityEntity.getCurrentPage())
-                                .totalItems(locateCommodityEntity.getTotalItems())
-                                .build()).orElse(null)
+                locateCommodityEntity.getDistance()
         );
     }
 

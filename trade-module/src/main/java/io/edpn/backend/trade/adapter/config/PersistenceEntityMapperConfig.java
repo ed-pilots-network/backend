@@ -4,6 +4,7 @@ import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisCommodityE
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisCommodityMarketInfoEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisLocateCommodityEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisMarketDatumEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisPageInfoMapper;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisSystemEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisValidatedCommodityEntityMapper;
@@ -11,6 +12,7 @@ import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenc
 import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceFindSystemFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceLocateCommodityFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistencePageFilterMapper;
+import io.edpn.backend.trade.application.dto.persistence.entity.mapper.PersistencePageInfoMapper;
 import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistencePageFilterMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -78,6 +80,11 @@ public class PersistenceEntityMapperConfig {
             MybatisValidatedCommodityEntityMapper mybatisValidatedCommodityEntityMapper,
             MybatisStationEntityMapper mybatisStationEntityMapper) {
         return new MybatisCommodityMarketInfoEntityMapper(mybatisValidatedCommodityEntityMapper, mybatisStationEntityMapper);
+    }
+
+    @Bean(name = "tradePersistencePageInfoMapper")
+    public PersistencePageInfoMapper persistencePageInfoMapper() {
+        return new MybatisPageInfoMapper();
     }
 
 

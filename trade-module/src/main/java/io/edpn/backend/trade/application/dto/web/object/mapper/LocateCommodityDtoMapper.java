@@ -5,5 +5,5 @@ import io.edpn.backend.trade.application.dto.web.object.LocateCommodityDto;
 
 public interface LocateCommodityDtoMapper {
     
-    LocateCommodityDto map(LocateCommodity locateCommodity);
+    <F extends LocateCommodityDto> F map(LocateCommodity locateCommodity);
 }
