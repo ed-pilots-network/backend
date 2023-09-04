@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-@RequestMapping("/v1/api/trade")
+@RequestMapping("/api/v1/trade")
 public class TradeModuleController {
 
     private final FindAllValidatedCommodityUseCase findAllValidatedCommodityUseCase;

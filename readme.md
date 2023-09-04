@@ -127,7 +127,9 @@ to run the stack for local development, follow these steps:
 2. install Docker-compose
 3. run the following command from the root project folder: `docker compose -f docker-compose-localdev.yml up -d`. This command will:
     - create a stack which contains a Zookeeper, a Kafka, and a postgres with the needed ports exposed on localhost
-4. You can now run/debug the project main class (`io.edpn.backend.EDPNApplication` in boot project) with spring profile `local`
+4. Jigsaw modulartiy prevents from running / debuggin directly from IDE, so we wil need to run / debug from gradle
+    - either create gradle a run config in IDE or run in terminal from project root the following command
+    - `gradle clean bootRun --args='--spring.profiles.active=local'`
 
 **keep in mind that the EddnMessageListener application needs to be run separately to receive messages to process**
 
