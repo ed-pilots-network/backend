@@ -23,6 +23,10 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class RequestMissingSystemCoordinatesService implements RequestMissingSystemCoordinatesUseCase {
 
+    public static final FindSystemFilter FIND_SYSTEM_FILTER = FindSystemFilter.builder()
+            .hasCoordinates(false)
+            .build();
+
     private final LoadSystemsByFilterPort loadSystemsByFilterPort;
     private final CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
     private final SendKafkaMessagePort sendKafkaMessagePort;
