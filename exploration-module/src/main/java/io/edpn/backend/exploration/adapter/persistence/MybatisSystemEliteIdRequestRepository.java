@@ -15,8 +15,13 @@ import java.util.Optional;
 
 public interface MybatisSystemEliteIdRequestRepository {
 
-    @Insert("INSERT INTO system_eliteId_data_request (requesting_module, system_name) VALUES (#{requestingModule}, #{systemName})")
-    void insert(MybatisSystemEliteIdRequestEntity requestDataMessageEntity);
+    @Insert({
+            "INSERT INTO system_eliteId_data_request (requesting_module, system_name)",
+            "VALUES (#{requestingModule}, #{systemName})",
+            "ON CONFLICT (requesting_module, system_name)",
+            "DO NOTHING"
+    })
+    void insertIfNotExists(MybatisSystemEliteIdRequestEntity requestDataMessageEntity);
 
     @Delete("DELETE FROM system_eliteId_data_request WHERE requesting_module = #{requestingModule} AND system_name = #{systemName}")
     void delete(MybatisSystemEliteIdRequestEntity requestDataMessageEntity);
