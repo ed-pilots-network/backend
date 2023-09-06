@@ -11,6 +11,7 @@ import io.edpn.backend.trade.adapter.persistence.repository.MybatisMessageReposi
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationLandingPadSizeRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemCoordinateRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRequireOdysseyRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemEliteIdRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisValidatedCommodityRepository;
@@ -98,7 +99,14 @@ public class MyBatisConfiguration {
         return factoryBean;
     }
 
-    @Bean(name = "tradeMybatisSystemEliteIdRequestRepository")
+    @Bean(name = "tradeMybatisStationRequireOdysseyRequestRepository")
+    public MapperFactoryBean<MybatisStationRequireOdysseyRequestRepository> mybatisStationRequireOdysseyRequestRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+        MapperFactoryBean<MybatisStationRequireOdysseyRequestRepository> factoryBean = new MapperFactoryBean<>(MybatisStationRequireOdysseyRequestRepository.class);
+        factoryBean.setSqlSessionFactory(sqlSessionFactory);
+        return factoryBean;
+    }
+
+  @Bean(name = "tradeMybatisSystemEliteIdRequestRepository")
     public MapperFactoryBean<MybatisSystemEliteIdRequestRepository> mybatisSystemEliteIdRequestRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<MybatisSystemEliteIdRequestRepository> factoryBean = new MapperFactoryBean<>(MybatisSystemEliteIdRequestRepository.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);

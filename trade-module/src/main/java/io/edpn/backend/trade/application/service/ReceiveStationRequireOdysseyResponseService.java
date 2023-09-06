@@ -6,6 +6,7 @@ import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ public class ReceiveStationRequireOdysseyResponseService implements ReceiveKafka
     
     private final LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
     private final LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
+    private final DeleteStationRequireOdysseyRequestPort deleteStationRequireOdysseyRequestPort;
     private final UpdateStationPort updateStationPort;
 
     @Override
@@ -39,5 +41,6 @@ public class ReceiveStationRequireOdysseyResponseService implements ReceiveKafka
         });
         
         updateStationPort.update(stationCompletableFuture.join());
+        deleteStationRequireOdysseyRequestPort.delete(systemName, stationName);
     }
 }
