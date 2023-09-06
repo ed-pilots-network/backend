@@ -146,3 +146,4 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
         verify(sendKafkaMessagePort, times(2)).send(any());
         verify(createSystemCoordinateRequestPort, times(2)).create(any());
     }
+}
