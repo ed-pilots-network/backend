@@ -6,7 +6,11 @@ import io.edpn.backend.trade.adapter.persistence.LocateCommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.MarketDatumRepository;
 import io.edpn.backend.trade.adapter.persistence.StationRepository;
 import io.edpn.backend.trade.adapter.persistence.SystemCoordinateRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.StationLandingPadSizeRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.StationRequireOdysseyRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.SystemEliteIdRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.StationArrivalDistanceRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.StationPlanetaryRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.SystemRepository;
 import io.edpn.backend.trade.adapter.persistence.ValidatedCommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisCommodityEntity;
@@ -24,7 +28,11 @@ import io.edpn.backend.trade.adapter.persistence.repository.MybatisLocateCommodi
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemCoordinateRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationArrivalDistanceRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRequireOdysseyRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemEliteIdRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationPlanetaryRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationLandingPadSizeRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisValidatedCommodityRepository;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.CommodityEntityMapper;
@@ -104,9 +112,33 @@ public class RepositoryConfig {
         return new SystemCoordinateRequestRepository(mybatisSystemCoordinateRequestRepository);
     }
 
+    @Bean(name = "tradeStationRequireOdysseyRequestRepository")
+    public StationRequireOdysseyRequestRepository stationRequireOdysseyRequestRepository(
+            MybatisStationRequireOdysseyRequestRepository mybatisStationRequireOdysseyRequestRepository) {
+        return new StationRequireOdysseyRequestRepository(mybatisStationRequireOdysseyRequestRepository);
+    }
+ 
     @Bean(name = "tradeSystemEliteIdRequestRepository")
     public SystemEliteIdRequestRepository systemEliteIdRequestRepository(
             MybatisSystemEliteIdRequestRepository mybatisSystemEliteIdRequestRepository) {
         return new SystemEliteIdRequestRepository(mybatisSystemEliteIdRequestRepository);
+    }
+
+    @Bean(name = "tradeStationArrivalDistanceRequestRepository")
+    public StationArrivalDistanceRequestRepository stationArrivalDistanceRequestRepository(
+            MybatisStationArrivalDistanceRequestRepository mybatisStationArrivalDistanceRequestRepository) {
+        return new StationArrivalDistanceRequestRepository(mybatisStationArrivalDistanceRequestRepository);
+    }
+  
+    @Bean(name = "tradeStationPlanetaryRequestRepository")
+    public StationPlanetaryRequestRepository stationPlanetaryRequestRepository(
+            MybatisStationPlanetaryRequestRepository mybatisStationPlanetaryRequestRepository) {
+        return new StationPlanetaryRequestRepository(mybatisStationPlanetaryRequestRepository);
+    }
+  
+    @Bean(name = "tradeStationLandingPadSizeRequestRepository")
+    public StationLandingPadSizeRequestRepository stationLandingPadSizeRequestRepository(
+            MybatisStationLandingPadSizeRequestRepository mybatisStationLandingPadSizeRequestRepository) {
+        return new StationLandingPadSizeRequestRepository(mybatisStationLandingPadSizeRequestRepository);
     }
 }

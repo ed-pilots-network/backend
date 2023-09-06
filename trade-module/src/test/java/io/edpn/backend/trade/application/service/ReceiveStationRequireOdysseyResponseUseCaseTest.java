@@ -6,6 +6,7 @@ import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,21 +23,24 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ReceiveStationRequireOdysseyResponseUseCaseTest {
-    
+
     @Mock
     private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
-    
+
     @Mock
     private LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
-    
+
+    @Mock
+    private DeleteStationRequireOdysseyRequestPort deleteStationRequireOdysseyRequestPort;
+
     @Mock
     private UpdateStationPort updateStationPort;
-    
+
     private ReceiveKafkaMessageUseCase<StationRequireOdysseyResponse> underTest;
-    
+
     @BeforeEach
     public void setUp() {
-        underTest = new ReceiveStationRequireOdysseyResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, updateStationPort);
+        underTest = new ReceiveStationRequireOdysseyResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, deleteStationRequireOdysseyRequestPort, updateStationPort);
     }
 
     @Test
@@ -57,7 +61,8 @@ public class ReceiveStationRequireOdysseyResponseUseCaseTest {
         verify(loadOrCreateSystemByNamePort, times(1)).loadOrCreateSystemByName(anyString());
         verify(loadOrCreateBySystemAndStationNamePort, times(1)).loadOrCreateBySystemAndStationName(any(), anyString());
         verify(updateStationPort, times(1)).update(any());
+        verify(deleteStationRequireOdysseyRequestPort, times(1)).delete("system", "station");
 
-        assert(station.getRequireOdyssey());
+        assert (station.getRequireOdyssey());
     }
 }
