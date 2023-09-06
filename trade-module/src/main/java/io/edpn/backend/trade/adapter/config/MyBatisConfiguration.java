@@ -14,6 +14,7 @@ import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemCoordin
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationPlanetaryRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRequireOdysseyRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemEliteIdRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationArrivalDistanceRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisValidatedCommodityRepository;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -114,6 +115,13 @@ public class MyBatisConfiguration {
         return factoryBean;
     }
 
+    @Bean(name = "tradeMybatisStationArrivalDistanceRequestRepository")
+    public MapperFactoryBean<MybatisStationArrivalDistanceRequestRepository> mybatisStationArrivalDistanceRequestRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+        MapperFactoryBean<MybatisStationArrivalDistanceRequestRepository> factoryBean = new MapperFactoryBean<>(MybatisStationArrivalDistanceRequestRepository.class);
+        factoryBean.setSqlSessionFactory(sqlSessionFactory);
+        return factoryBean;
+    }
+ 
     @Bean(name = "tradeMybatisStationPlanetaryRequestRepository")
     public MapperFactoryBean<MybatisStationPlanetaryRequestRepository> mybatisStationPlanetaryRequestRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<MybatisStationPlanetaryRequestRepository> factoryBean = new MapperFactoryBean<>(MybatisStationPlanetaryRequestRepository.class);

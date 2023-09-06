@@ -9,6 +9,7 @@ import io.edpn.backend.trade.adapter.persistence.SystemCoordinateRequestReposito
 import io.edpn.backend.trade.adapter.persistence.StationLandingPadSizeRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.StationRequireOdysseyRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.SystemEliteIdRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.StationArrivalDistanceRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.StationPlanetaryRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.SystemRepository;
 import io.edpn.backend.trade.adapter.persistence.ValidatedCommodityRepository;
@@ -27,6 +28,7 @@ import io.edpn.backend.trade.adapter.persistence.repository.MybatisLocateCommodi
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemCoordinateRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationArrivalDistanceRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRequireOdysseyRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemEliteIdRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationPlanetaryRequestRepository;
@@ -120,6 +122,12 @@ public class RepositoryConfig {
         return new SystemEliteIdRequestRepository(mybatisSystemEliteIdRequestRepository);
     }
 
+    @Bean(name = "tradeStationArrivalDistanceRequestRepository")
+    public StationArrivalDistanceRequestRepository stationArrivalDistanceRequestRepository(
+            MybatisStationArrivalDistanceRequestRepository mybatisStationArrivalDistanceRequestRepository) {
+        return new StationArrivalDistanceRequestRepository(mybatisStationArrivalDistanceRequestRepository);
+    }
+  
     @Bean(name = "tradeStationPlanetaryRequestRepository")
     public StationPlanetaryRequestRepository stationPlanetaryRequestRepository(
             MybatisStationPlanetaryRequestRepository mybatisStationPlanetaryRequestRepository) {

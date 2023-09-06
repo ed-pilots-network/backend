@@ -18,6 +18,7 @@
     <include file="/db/trademodule/changelog/create_system_coordinate_data_request_table.xml"/>
     <include file="/db/trademodule/changelog/create_station_require_odyssey_data_request_table.xml"/>
     <include file="/db/trademodule/changelog/create_system_elite_id_data_request_table.xml"/>
+    <include file="/db/trademodule/changelog/create_station_arrival_distance_data_request_table.xml"/>
     <include file="/db/trademodule/changelog/create_station_planetary_data_request_table.xml"/>
     <include file="/db/trademodule/changelog/create_station_landing_pad_size_data_request_table.xml"/>
 

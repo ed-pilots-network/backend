@@ -17,6 +17,9 @@ import io.edpn.backend.trade.application.port.outgoing.locatecommodity.LocateCom
 import io.edpn.backend.trade.application.port.outgoing.marketdatum.ExistsByStationNameAndSystemNameAndTimestampPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
+import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateStationArrivalDistanceRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.DeleteStationArrivalDistanceRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.ExistsStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
@@ -108,8 +111,9 @@ public class ServiceConfig {
     public ReceiveStationArrivalDistanceResponseService receiveStationArrivalDistanceResponseService(
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
             LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort,
+            DeleteStationArrivalDistanceRequestPort deleteStationArrivalDistanceRequestPort,
             UpdateStationPort updateStationPort) {
-        return new ReceiveStationArrivalDistanceResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, updateStationPort);
+        return new ReceiveStationArrivalDistanceResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, deleteStationArrivalDistanceRequestPort, updateStationPort);
     }
 
     @Bean(name = "tradeReceiveStationMaxLandingPadSizeResponseService")
@@ -158,9 +162,11 @@ public class ServiceConfig {
     @Bean(name = "tradeRequestStationArrivalDistanceService")
     public RequestStationArrivalDistanceService requestStationArrivalDistanceService(
             SendKafkaMessagePort sendKafkaMessagePort,
+            ExistsStationArrivalDistanceRequestPort existsStationArrivalDistanceRequestPort,
+            CreateStationArrivalDistanceRequestPort createStationArrivalDistanceRequestPort,
             ObjectMapper objectMapper,
             MessageMapper messageMapper) {
-        return new RequestStationArrivalDistanceService(sendKafkaMessagePort, objectMapper, messageMapper);
+        return new RequestStationArrivalDistanceService(sendKafkaMessagePort, existsStationArrivalDistanceRequestPort, createStationArrivalDistanceRequestPort, objectMapper, messageMapper);
     }
 
     @Bean(name = "tradeRequestStationLandingPadSizeService")
