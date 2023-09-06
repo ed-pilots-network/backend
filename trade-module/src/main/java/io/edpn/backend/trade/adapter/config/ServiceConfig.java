@@ -20,6 +20,15 @@ import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.DeleteStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.ExistsStationArrivalDistanceRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CreateStationLandingPadSizeRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.DeleteStationLandingPadSizeRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.ExistsStationLandingPadSizeRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateStationRequireOdysseyRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.ExistsStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
@@ -111,24 +120,27 @@ public class ServiceConfig {
     public ReceiveStationMaxLandingPadSizeResponseService receiveStationMaxLandingPadSizeResponseService(
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
             LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort,
+            DeleteStationLandingPadSizeRequestPort deleteStationLandingPadSizeRequestPort,
             UpdateStationPort updateStationPort) {
-        return new ReceiveStationMaxLandingPadSizeResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, updateStationPort);
+        return new ReceiveStationMaxLandingPadSizeResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, deleteStationLandingPadSizeRequestPort, updateStationPort);
     }
 
     @Bean(name = "tradeReceiveStationPlanetaryResponseService")
     public ReceiveStationPlanetaryResponseService receiveStationPlanetaryResponseService(
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
             LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort,
+            DeleteStationPlanetaryRequestPort deleteStationPlanetaryRequestPort,
             UpdateStationPort updateStationPort) {
-        return new ReceiveStationPlanetaryResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, updateStationPort);
+        return new ReceiveStationPlanetaryResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, deleteStationPlanetaryRequestPort, updateStationPort);
     }
 
     @Bean(name = "tradeReceiveStationRequireOdysseyResponseService")
     public ReceiveStationRequireOdysseyResponseService receiveStationRequireOdysseyResponseService(
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
             LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort,
+            DeleteStationRequireOdysseyRequestPort deleteStationRequireOdysseyRequestPort,
             UpdateStationPort updateStationPort) {
-        return new ReceiveStationRequireOdysseyResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, updateStationPort);
+        return new ReceiveStationRequireOdysseyResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, deleteStationRequireOdysseyRequestPort, updateStationPort);
     }
 
     @Bean(name = "tradeReceiveSystemCoordinatesResponseService")
@@ -160,25 +172,31 @@ public class ServiceConfig {
     @Bean(name = "tradeRequestStationLandingPadSizeService")
     public RequestStationLandingPadSizeService requestStationLandingPadSizeService(
             SendKafkaMessagePort sendKafkaMessagePort,
+            ExistsStationLandingPadSizeRequestPort existsStationLandingPadSizeRequestPort,
+            CreateStationLandingPadSizeRequestPort createStationLandingPadSizeRequestPort,
             ObjectMapper objectMapper,
             MessageMapper messageMapper) {
-        return new RequestStationLandingPadSizeService(sendKafkaMessagePort, objectMapper, messageMapper);
+        return new RequestStationLandingPadSizeService(sendKafkaMessagePort, existsStationLandingPadSizeRequestPort, createStationLandingPadSizeRequestPort, objectMapper, messageMapper);
     }
 
     @Bean(name = "tradeRequestStationPlanetaryService")
     public RequestStationPlanetaryService requestStationPlanetaryService(
             SendKafkaMessagePort sendKafkaMessagePort,
+            ExistsStationPlanetaryRequestPort existsStationPlanetaryRequestPort,
+            CreateStationPlanetaryRequestPort createStationPlanetaryRequestPort,
             ObjectMapper objectMapper,
             MessageMapper messageMapper) {
-        return new RequestStationPlanetaryService(sendKafkaMessagePort, objectMapper, messageMapper);
+        return new RequestStationPlanetaryService(sendKafkaMessagePort, existsStationPlanetaryRequestPort, createStationPlanetaryRequestPort, objectMapper, messageMapper);
     }
 
     @Bean(name = "tradeRequestStationRequireOdysseyService")
     public RequestStationRequireOdysseyService requestStationRequireOdysseyService(
             SendKafkaMessagePort sendKafkaMessagePort,
+            ExistsStationRequireOdysseyRequestPort existsStationRequireOdysseyRequestPort,
+            CreateStationRequireOdysseyRequestPort createStationRequireOdysseyRequestPort,
             ObjectMapper objectMapper,
             MessageMapper messageMapper) {
-        return new RequestStationRequireOdysseyService(sendKafkaMessagePort, objectMapper, messageMapper);
+        return new RequestStationRequireOdysseyService(sendKafkaMessagePort, existsStationRequireOdysseyRequestPort, createStationRequireOdysseyRequestPort, objectMapper, messageMapper);
     }
 
     @Bean(name = "tradeRequestSystemCoordinateService")
