@@ -8,8 +8,8 @@ import io.edpn.backend.trade.application.domain.filter.FindSystemFilter;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
-import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
-import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.RequestMissingSystemCoordinatesUseCase;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.RequestMissingSystemEliteIdsUseCase;
 import io.edpn.backend.util.Module;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,14 +21,14 @@ import java.util.concurrent.Executor;
 
 @AllArgsConstructor
 @Slf4j
-public class RequestMissingSystemCoordinatesService implements RequestMissingSystemCoordinatesUseCase {
+public class RequestMissingSystemEliteIdsService implements RequestMissingSystemEliteIdsUseCase {
 
     public static final FindSystemFilter FIND_SYSTEM_FILTER = FindSystemFilter.builder()
-            .hasCoordinates(false)
+            .hasEliteId(false)
             .build();
 
     private final LoadSystemsByFilterPort loadSystemsByFilterPort;
-    private final CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
+    private final CreateSystemEliteIdRequestPort createSystemEliteIdRequestPort;
     private final SendKafkaMessagePort sendKafkaMessagePort;
     private final RetryTemplate retryTemplate;
     private final Executor executor;
@@ -38,28 +38,22 @@ public class RequestMissingSystemCoordinatesService implements RequestMissingSys
     @Override
     @Scheduled(cron = "0 0 */12 * * *")
     public void requestMissing() {
-        FindSystemFilter filter = FindSystemFilter.builder()
-                .hasCoordinates(false)
-                .hasEliteId(null)
-                .name(null)
-                .build();
-
-        loadSystemsByFilterPort.loadByFilter(filter).parallelStream()
+        loadSystemsByFilterPort.loadByFilter(FIND_SYSTEM_FILTER).parallelStream()
                 .forEach(system ->
                         CompletableFuture.runAsync(() -> {
-                            SystemDataRequest stationDataRequest = new SystemDataRequest(Module.TRADE, system.getName());
+                            SystemDataRequest systemDataRequest = new SystemDataRequest(Module.TRADE, system.getName());
 
-                            JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
+                            JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
 
                             Message message = Message.builder()
-                                    .topic("systemCoordinatesRequest")
+                                    .topic("systemEliteIdRequest")
                                     .message(jsonNode.toString())
                                     .build();
 
                             boolean sendSuccessful = retryTemplate.execute(retryContext ->
                                     sendKafkaMessagePort.send(messageMapper.map(message)));
                             if (sendSuccessful) {
-                                createSystemCoordinateRequestPort.create(system.getName());
+                                createSystemEliteIdRequestPort.create(system.getName());
                             }
                         }, executor));
     }
