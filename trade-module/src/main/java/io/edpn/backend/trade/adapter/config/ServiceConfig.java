@@ -17,6 +17,9 @@ import io.edpn.backend.trade.application.port.outgoing.locatecommodity.LocateCom
 import io.edpn.backend.trade.application.port.outgoing.marketdatum.ExistsByStationNameAndSystemNameAndTimestampPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CreateStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.DeleteStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.ExistsStationLandingPadSizeRequestPort;
@@ -122,8 +125,9 @@ public class ServiceConfig {
     public ReceiveStationPlanetaryResponseService receiveStationPlanetaryResponseService(
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
             LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort,
+            DeleteStationPlanetaryRequestPort deleteStationPlanetaryRequestPort,
             UpdateStationPort updateStationPort) {
-        return new ReceiveStationPlanetaryResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, updateStationPort);
+        return new ReceiveStationPlanetaryResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, deleteStationPlanetaryRequestPort, updateStationPort);
     }
 
     @Bean(name = "tradeReceiveStationRequireOdysseyResponseService")
@@ -172,9 +176,11 @@ public class ServiceConfig {
     @Bean(name = "tradeRequestStationPlanetaryService")
     public RequestStationPlanetaryService requestStationPlanetaryService(
             SendKafkaMessagePort sendKafkaMessagePort,
+            ExistsStationPlanetaryRequestPort existsStationPlanetaryRequestPort,
+            CreateStationPlanetaryRequestPort createStationPlanetaryRequestPort,
             ObjectMapper objectMapper,
             MessageMapper messageMapper) {
-        return new RequestStationPlanetaryService(sendKafkaMessagePort, objectMapper, messageMapper);
+        return new RequestStationPlanetaryService(sendKafkaMessagePort, existsStationPlanetaryRequestPort, createStationPlanetaryRequestPort, objectMapper, messageMapper);
     }
 
     @Bean(name = "tradeRequestStationRequireOdysseyService")

@@ -9,6 +9,7 @@ import io.edpn.backend.trade.adapter.persistence.SystemCoordinateRequestReposito
 import io.edpn.backend.trade.adapter.persistence.StationLandingPadSizeRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.StationRequireOdysseyRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.SystemEliteIdRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.StationPlanetaryRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.SystemRepository;
 import io.edpn.backend.trade.adapter.persistence.ValidatedCommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisCommodityEntity;
@@ -28,6 +29,7 @@ import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationReposi
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemCoordinateRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRequireOdysseyRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemEliteIdRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationPlanetaryRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationLandingPadSizeRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisValidatedCommodityRepository;
@@ -118,6 +120,12 @@ public class RepositoryConfig {
         return new SystemEliteIdRequestRepository(mybatisSystemEliteIdRequestRepository);
     }
 
+    @Bean(name = "tradeStationPlanetaryRequestRepository")
+    public StationPlanetaryRequestRepository stationPlanetaryRequestRepository(
+            MybatisStationPlanetaryRequestRepository mybatisStationPlanetaryRequestRepository) {
+        return new StationPlanetaryRequestRepository(mybatisStationPlanetaryRequestRepository);
+    }
+  
     @Bean(name = "tradeStationLandingPadSizeRequestRepository")
     public StationLandingPadSizeRequestRepository stationLandingPadSizeRequestRepository(
             MybatisStationLandingPadSizeRequestRepository mybatisStationLandingPadSizeRequestRepository) {

@@ -8,6 +8,8 @@ import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
 import io.edpn.backend.util.Module;
 import io.edpn.backend.util.Topic;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +20,10 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Slf4j
 public class RequestStationPlanetaryService implements RequestDataUseCase<Station> {
-    
+
     private final SendKafkaMessagePort sendKafkaMessagePort;
+    private final ExistsStationPlanetaryRequestPort existsStationPlanetaryRequestPort;
+    private final CreateStationPlanetaryRequestPort createStationPlanetaryRequestPort;
     private final ObjectMapper objectMapper;
     private final MessageMapper messageMapper;
 
@@ -29,17 +33,24 @@ public class RequestStationPlanetaryService implements RequestDataUseCase<Statio
     }
 
     @Override
-    public void request(Station station) {
-        StationDataRequest stationDataRequest = new StationDataRequest(
-                Module.TRADE, station.getName(), station.getSystem().getName()
-        );
-        JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
+    public synchronized void request(Station station) {
+        String stationName = station.getName();
+        String systemName = station.getSystem().getName();
+        boolean shouldRequest = !existsStationPlanetaryRequestPort.exists(systemName, stationName);
+        if (shouldRequest) {
+            StationDataRequest stationDataRequest = new StationDataRequest(
+                    Module.TRADE, stationName, systemName
+            );
 
-        Message message = Message.builder()
-                .topic(Topic.Request.STATION_IS_PLANETARY.getTopicName())
-                .message(jsonNode.toString())
-                .build();
+            JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
 
-        sendKafkaMessagePort.send(messageMapper.map(message));
+            Message message = Message.builder()
+                    .topic(Topic.Request.STATION_IS_PLANETARY.getTopicName())
+                    .message(jsonNode.toString())
+                    .build();
+
+            sendKafkaMessagePort.send(messageMapper.map(message));
+            createStationPlanetaryRequestPort.create(systemName, stationName);
+        }
     }
 }
