@@ -18,6 +18,7 @@
     <include file="/db/trademodule/changelog/create_system_coordinate_data_request_table.xml"/>
     <include file="/db/trademodule/changelog/create_station_require_odyssey_data_request_table.xml"/>
     <include file="/db/trademodule/changelog/create_system_elite_id_data_request_table.xml"/>
+    <include file="/db/trademodule/changelog/create_station_landing_pad_size_data_request_table.xml"/>
 
     <!-- views always last as they might depend on new columns -->
     <include file="/db/trademodule/changelog/create_validated_commodity_view.xml"/>
