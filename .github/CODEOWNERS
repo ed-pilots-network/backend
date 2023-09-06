@@ -4,4 +4,4 @@
 # the repo. Unless a later match takes precedence,
 # @backend will be requested for review when someone
 # opens a pull request.
-*       @backend
+*       @ed-pilots-network/backend
