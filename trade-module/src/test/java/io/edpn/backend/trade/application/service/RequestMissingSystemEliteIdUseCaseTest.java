@@ -10,7 +10,7 @@ import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
-import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.RequestMissingSystemEliteIdsUseCase;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.RequestMissingSystemEliteIdUseCase;
 import io.edpn.backend.util.Module;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class RequestMissingSystemEliteIdsUseCaseTest {
+public class RequestMissingSystemEliteIdUseCaseTest {
     @Mock
     private LoadSystemsByFilterPort loadSystemsByFilterPort;
 
@@ -55,13 +55,13 @@ public class RequestMissingSystemEliteIdsUseCaseTest {
     @Mock
     private MessageMapper messageMapper;
 
-    private RequestMissingSystemEliteIdsUseCase undertest;
+    private RequestMissingSystemEliteIdUseCase undertest;
 
     private final Executor executor = Runnable::run;
 
     @BeforeEach
     public void setUp() {
-        undertest = new RequestMissingSystemEliteIdsService(loadSystemsByFilterPort, createSystemEliteIdRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
+        undertest = new RequestMissingSystemEliteIdService(loadSystemsByFilterPort, createSystemEliteIdRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class RequestMissingSystemEliteIdsUseCaseTest {
                 .hasEliteId(false)
                 .build();
 
-        assertThat(RequestMissingSystemEliteIdsService.FIND_SYSTEM_FILTER, equalTo(findSystemFilter));
+        assertThat(RequestMissingSystemEliteIdService.FIND_SYSTEM_FILTER, equalTo(findSystemFilter));
     }
 
     @Test

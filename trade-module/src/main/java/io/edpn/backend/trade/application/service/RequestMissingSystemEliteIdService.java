@@ -9,7 +9,7 @@ import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
-import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.RequestMissingSystemEliteIdsUseCase;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.RequestMissingSystemEliteIdUseCase;
 import io.edpn.backend.util.Module;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import java.util.concurrent.Executor;
 
 @AllArgsConstructor
 @Slf4j
-public class RequestMissingSystemEliteIdsService implements RequestMissingSystemEliteIdsUseCase {
+public class RequestMissingSystemEliteIdService implements RequestMissingSystemEliteIdUseCase {
 
     public static final FindSystemFilter FIND_SYSTEM_FILTER = FindSystemFilter.builder()
             .hasEliteId(false)
