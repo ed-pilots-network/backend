@@ -3,6 +3,7 @@ package io.edpn.backend.trade.adapter.persistence.repository;
 import io.edpn.backend.mybatisutil.UuidTypeHandler;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
+import io.edpn.backend.trade.application.dto.persistence.filter.PersistenceFindStationFilter;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.One;
@@ -14,6 +15,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -50,4 +52,14 @@ public interface MybatisStationRepository {
 
     @Delete("DELETE FROM station WHERE id = #{id}")
     void delete(@Param("id") UUID id);
+
+    @Select("""
+            <script>
+            SELECT * FROM station
+            WHERE 1 = 1
+            <if test='hasRequiredOdyssey != null'>AND require_odyssey IS NULL != #{hasRequiredOdyssey}</if>
+            </script>
+            """)
+    @ResultMap("stationResultMap")
+    List<MybatisStationEntity> findByFilter(PersistenceFindStationFilter filter);
 }

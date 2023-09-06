@@ -12,7 +12,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 @ExtendWith(MockitoExtension.class)
-class MybatisPersistenceLocateCommodityFilterMapperTest {
+class PersistenceLocateCommodityFilterMapperTest {
     
     private MybatisPersistenceLocateCommodityFilterMapper underTest;
 

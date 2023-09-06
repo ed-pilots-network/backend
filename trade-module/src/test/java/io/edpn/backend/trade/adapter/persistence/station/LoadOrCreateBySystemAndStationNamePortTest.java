@@ -7,6 +7,7 @@ import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationReposi
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationEntityMapper;
+import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindStationFilterMapper;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.util.IdGenerator;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,26 +30,29 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class LoadOrCreateBySystemAndStationNamePortTest {
-    
+
     @Mock
     private IdGenerator idGenerator;
-    
+
     @Mock
     private StationEntityMapper<MybatisStationEntity> mybatisStationEntityMapper;
-    
+
     @Mock
     private MybatisStationRepository mybatisStationRepository;
-    
+
     @Mock
     private MybatisMarketDatumRepository mybatisMarketDatumRepository;
-    
+
+    @Mock
+    private PersistenceFindStationFilterMapper persistenceFindStationFilterMapper;
+
     private LoadOrCreateBySystemAndStationNamePort underTest;
-    
+
     @BeforeEach
-    public void setUp(){
-        underTest = new StationRepository(idGenerator, mybatisStationEntityMapper, mybatisStationRepository, mybatisMarketDatumRepository);
+    public void setUp() {
+        underTest = new StationRepository(idGenerator, mybatisStationEntityMapper, mybatisStationRepository, mybatisMarketDatumRepository, persistenceFindStationFilterMapper);
     }
-    
+
     @Test
     void findOrCreateByNameNew() {
         String stationName = "Test Station";
@@ -57,9 +61,9 @@ public class LoadOrCreateBySystemAndStationNamePortTest {
         UUID systemId = UUID.randomUUID();
         MybatisStationEntity mockStationEntityWithoutId = mock(MybatisStationEntity.class);
         MybatisStationEntity mockSavedStationEntity = mock(MybatisStationEntity.class);
-        
+
         Station expected = mock(Station.class);
-        
+
         when(system.getId()).thenReturn(systemId);
         when(mybatisStationRepository.findBySystemIdAndStationName(systemId, stationName)).thenReturn(Optional.empty());
         when(mybatisStationEntityMapper.map(argThat((Station input) -> input.getId() == null && input.getName().equals(stationName)))).thenReturn(mockStationEntityWithoutId);
@@ -67,9 +71,9 @@ public class LoadOrCreateBySystemAndStationNamePortTest {
         when(idGenerator.generateId()).thenReturn(id);
         when(mybatisStationRepository.findById(id)).thenReturn(Optional.ofNullable(mockSavedStationEntity));
         when(mybatisStationEntityMapper.map(mockSavedStationEntity)).thenReturn(expected);
-        
+
         Station result = underTest.loadOrCreateBySystemAndStationName(system, stationName);
-        
+
         verify(mybatisStationRepository).findBySystemIdAndStationName(systemId, stationName);
         verify(mybatisStationEntityMapper).map(argThat((Station input) -> input.getId() == null && input.getName().equals(stationName)));
         verify(idGenerator).generateId();
@@ -77,29 +81,29 @@ public class LoadOrCreateBySystemAndStationNamePortTest {
         verify(mybatisStationRepository).findById(id);
         verify(mybatisStationEntityMapper).map(mockSavedStationEntity);
         verifyNoMoreInteractions(mybatisStationRepository, mybatisStationEntityMapper, idGenerator, mybatisMarketDatumRepository);
-        
+
         assertThat(result, is(expected));
     }
-    
+
     @Test
     void findOrCreateByNameFound() {
         String name = "Test Station";
         System system = mock(System.class);
         UUID systemId = UUID.randomUUID();
         MybatisStationEntity mockSavedStationEntity = mock(MybatisStationEntity.class);
-        
+
         Station expected = mock(Station.class);
-        
+
         when(system.getId()).thenReturn(systemId);
         when(mybatisStationRepository.findBySystemIdAndStationName(systemId, name)).thenReturn(Optional.of(mockSavedStationEntity));
         when(mybatisStationEntityMapper.map(mockSavedStationEntity)).thenReturn(expected);
-        
+
         Station result = underTest.loadOrCreateBySystemAndStationName(system, name);
-        
+
         verify(mybatisStationRepository).findBySystemIdAndStationName(systemId, name);
         verify(mybatisStationEntityMapper).map(mockSavedStationEntity);
         verifyNoMoreInteractions(mybatisStationRepository, mybatisStationEntityMapper, idGenerator, mybatisMarketDatumRepository);
-        
+
         assertThat(result, is(expected));
     }
 }

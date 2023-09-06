@@ -8,8 +8,11 @@ import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationEnt
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisSystemEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisValidatedCommodityEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceFindCommodityFilterMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceFindStationFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceFindSystemFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceLocateCommodityFilterMapper;
+import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindStationFilterMapper;
+import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindSystemFilterMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,10 +35,9 @@ public class PersistenceEntityMapperConfig {
     }
     
     @Bean(name = "tradePersistenceFindSystemFilterMapper")
-    public MybatisPersistenceFindSystemFilterMapper findSystemFilterMapper(){
+    public PersistenceFindSystemFilterMapper persistenceFindSystemFilterMapper(){
         return new MybatisPersistenceFindSystemFilterMapper();
     }
-    
     @Bean(name = "tradeSystemEntityMapper")
     public MybatisSystemEntityMapper systemEntityMapper() {
         return new MybatisSystemEntityMapper();
@@ -72,6 +74,9 @@ public class PersistenceEntityMapperConfig {
             MybatisStationEntityMapper mybatisStationEntityMapper ){
         return new MybatisCommodityMarketInfoEntityMapper(mybatisValidatedCommodityEntityMapper, mybatisStationEntityMapper);
     }
-    
-    
+
+    @Bean(name = "tradePersistenceFindStationFilterMapper")
+    public PersistenceFindStationFilterMapper persistenceFindStationFilterMapper(){
+        return new MybatisPersistenceFindStationFilterMapper();
+    }
 }
