@@ -10,6 +10,7 @@ public class MybatisPersistenceFindStationFilterMapper implements PersistenceFin
     public MybatisFindStationFilter map(FindStationFilter findStationFilter) {
         return MybatisFindStationFilter.builder()
                 .hasRequiredOdyssey(findStationFilter.getHasRequiredOdyssey())
+                .hasPlanetary(findStationFilter.getHasPlanetary())
                 .build();
     }
 }
