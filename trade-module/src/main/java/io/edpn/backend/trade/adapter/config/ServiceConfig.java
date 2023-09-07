@@ -21,6 +21,7 @@ import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.DeleteStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.ExistsStationArrivalDistanceRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.RequestMissingStationArrivalDistanceUseCase;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CreateStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.DeleteStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.ExistsStationLandingPadSizeRequestPort;
@@ -53,6 +54,7 @@ import io.edpn.backend.trade.application.service.ReceiveStationPlanetaryResponse
 import io.edpn.backend.trade.application.service.ReceiveStationRequireOdysseyResponseService;
 import io.edpn.backend.trade.application.service.ReceiveSystemCoordinatesResponseService;
 import io.edpn.backend.trade.application.service.ReceiveSystemEliteIdResponseService;
+import io.edpn.backend.trade.application.service.RequestMissingStationArrivalDistanceService;
 import io.edpn.backend.trade.application.service.RequestMissingStationRequireOdysseyService;
 import io.edpn.backend.trade.application.service.RequestMissingSystemCoordinatesService;
 import io.edpn.backend.trade.application.service.RequestStationArrivalDistanceService;
@@ -246,5 +248,18 @@ public class ServiceConfig {
             MessageMapper messageMapper
     ) {
         return new RequestMissingStationRequireOdysseyService(loadStationsByFilterPort, createStationRequireOdysseyRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
+    }
+
+    @Bean(name = "tradeRequestMissingArrivalDistanceOdysseyUseCase")
+    public RequestMissingStationArrivalDistanceUseCase requestMissingStationArrivalDistanceUseCase(
+            LoadStationsByFilterPort loadStationsByFilterPort,
+            CreateStationArrivalDistanceRequestPort createStationArrivalDistanceRequestPort,
+            SendKafkaMessagePort sendKafkaMessagePort,
+            @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
+            @Qualifier("tradeThreadPoolTaskExecutor") Executor executor,
+            ObjectMapper objectMapper,
+            MessageMapper messageMapper
+    ) {
+        return new RequestMissingStationArrivalDistanceService(loadStationsByFilterPort, createStationArrivalDistanceRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
     }
 }

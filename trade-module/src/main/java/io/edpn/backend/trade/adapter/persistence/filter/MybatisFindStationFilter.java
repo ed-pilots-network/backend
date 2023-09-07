@@ -19,4 +19,5 @@ import lombok.ToString;
 public class MybatisFindStationFilter implements PersistenceFindStationFilter {
 
     private Boolean hasRequiredOdyssey;
+    private Boolean hasArrivalDistance;
 }
