@@ -1,11 +1,11 @@
 package io.edpn.backend.trade.adapter.persistence;
 
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
-import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceFindSystemFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemRepository;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindSystemFilter;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemEntityMapper;
+import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindSystemFilterMapper;
 import io.edpn.backend.trade.application.port.outgoing.system.CreateSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemByIdPort;
@@ -27,7 +27,7 @@ public class SystemRepository implements CreateSystemPort, LoadOrCreateSystemByN
 
     private final IdGenerator idGenerator;
     private final SystemEntityMapper<MybatisSystemEntity> mybatisSystemEntityMapper;
-    private final MybatisPersistenceFindSystemFilterMapper mybatisPersistenceFindSystemFilterMapper;
+    private final PersistenceFindSystemFilterMapper persistenceFindSystemFilter;
     private final MybatisSystemRepository mybatisSystemRepository;
 
     @Override
@@ -73,7 +73,7 @@ public class SystemRepository implements CreateSystemPort, LoadOrCreateSystemByN
 
     @Override
     public List<System> loadByFilter(FindSystemFilter findSystemFilter) {
-        return mybatisSystemRepository.findByFilter(mybatisPersistenceFindSystemFilterMapper.map(findSystemFilter))
+        return mybatisSystemRepository.findByFilter(persistenceFindSystemFilter.map(findSystemFilter))
                 .stream()
                 .map(mybatisSystemEntityMapper::map)
                 .toList();
