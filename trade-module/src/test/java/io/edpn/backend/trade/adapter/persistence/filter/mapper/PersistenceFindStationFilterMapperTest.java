@@ -26,7 +26,7 @@ class PersistenceFindStationFilterMapperTest {
 
         FindStationFilter domainObject = FindStationFilter.builder()
                 .hasRequiredOdyssey(false)
-                .hasRequiredOdyssey(false)
+                .hasLandingPadSize(false)
                 .build();
 
         PersistenceFindStationFilter entity = underTest.map(domainObject);
