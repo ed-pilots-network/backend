@@ -6,6 +6,7 @@ import io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRe
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationEntityMapper;
+import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindStationFilterMapper;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationByIdPort;
 import io.edpn.backend.util.IdGenerator;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,56 +30,59 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class LoadStationByIdPortTest {
-    
+
     @Mock
     private IdGenerator idGenerator;
-    
+
     @Mock
     private StationEntityMapper<MybatisStationEntity> mybatisStationEntityMapper;
-    
+
     @Mock
     private MybatisStationRepository mybatisStationRepository;
-    
+
     @Mock
     private MybatisMarketDatumRepository mybatisMarketDatumRepository;
-    
+
+    @Mock
+    private PersistenceFindStationFilterMapper persistenceFindStationFilterMapper;
+
     private LoadStationByIdPort underTest;
-    
+
     @BeforeEach
-    public void setUp(){
-        underTest = new StationRepository(idGenerator, mybatisStationEntityMapper, mybatisStationRepository, mybatisMarketDatumRepository);
+    public void setUp() {
+        underTest = new StationRepository(idGenerator, mybatisStationEntityMapper, mybatisStationRepository, mybatisMarketDatumRepository, persistenceFindStationFilterMapper);
     }
-    
+
     @Test
     void findById() {
         UUID id = UUID.randomUUID();
         MybatisStationEntity mockStationEntity = mock(MybatisStationEntity.class);
         Station mockStation = mock(Station.class);
-        
+
         when(mybatisStationRepository.findById(id)).thenReturn(Optional.of(mockStationEntity));
         when(mybatisStationEntityMapper.map(mockStationEntity)).thenReturn(mockStation);
-        
+
         Optional<Station> results = underTest.loadById(id);
-        
+
         verify(mybatisStationRepository).findById(id);
         verify(mybatisStationEntityMapper).map(mockStationEntity);
         verifyNoMoreInteractions(mybatisStationRepository, mybatisStationEntityMapper, idGenerator, mybatisMarketDatumRepository);
-        
+
         assertThat(results.isPresent(), is(true));
         assertThat(results.get(), equalTo(mockStation));
     }
-    
+
     @Test
     void findByIdNotFound() {
         UUID id = UUID.randomUUID();
-        
+
         when(mybatisStationRepository.findById(id)).thenReturn(Optional.empty());
         Optional<Station> result = underTest.loadById(id);
-        
+
         verify(mybatisStationRepository).findById(id);
         verify(mybatisStationEntityMapper, never()).map(any(MybatisStationEntity.class));
         verifyNoMoreInteractions(mybatisStationRepository, mybatisStationEntityMapper, idGenerator, mybatisMarketDatumRepository);
-        
+
         assertThat(result, equalTo(Optional.empty()));
     }
 }

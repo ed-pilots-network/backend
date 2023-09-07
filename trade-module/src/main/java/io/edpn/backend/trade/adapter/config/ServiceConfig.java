@@ -16,19 +16,21 @@ import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePor
 import io.edpn.backend.trade.application.port.outgoing.locatecommodity.LocateCommodityByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.marketdatum.ExistsByStationNameAndSystemNameAndTimestampPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
+import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.DeleteStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.ExistsStationArrivalDistanceRequestPort;
-import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
-import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
-import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CreateStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.DeleteStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.ExistsStationLandingPadSizeRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.ExistsStationRequireOdysseyRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.RequestMissingStationRequireOdysseyUseCase;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
@@ -52,6 +54,7 @@ import io.edpn.backend.trade.application.service.ReceiveStationPlanetaryResponse
 import io.edpn.backend.trade.application.service.ReceiveStationRequireOdysseyResponseService;
 import io.edpn.backend.trade.application.service.ReceiveSystemCoordinatesResponseService;
 import io.edpn.backend.trade.application.service.ReceiveSystemEliteIdResponseService;
+import io.edpn.backend.trade.application.service.RequestMissingStationRequireOdysseyService;
 import io.edpn.backend.trade.application.service.RequestMissingSystemCoordinatesService;
 import io.edpn.backend.trade.application.service.RequestMissingSystemEliteIdService;
 import io.edpn.backend.trade.application.service.RequestStationArrivalDistanceService;
@@ -232,6 +235,19 @@ public class ServiceConfig {
             MessageMapper messageMapper
     ) {
         return new RequestMissingSystemCoordinatesService(loadSystemsByFilterPort, createSystemCoordinateRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
+    }
+
+    @Bean(name = "tradeRequestMissingStationRequireOdysseyUseCase")
+    public RequestMissingStationRequireOdysseyUseCase requestMissingStationRequireOdysseyUseCase(
+            LoadStationsByFilterPort loadStationsByFilterPort,
+            CreateStationRequireOdysseyRequestPort createStationRequireOdysseyRequestPort,
+            SendKafkaMessagePort sendKafkaMessagePort,
+            @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
+            @Qualifier("tradeThreadPoolTaskExecutor") Executor executor,
+            ObjectMapper objectMapper,
+            MessageMapper messageMapper
+    ) {
+        return new RequestMissingStationRequireOdysseyService(loadStationsByFilterPort, createStationRequireOdysseyRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
     }
 
     @Bean(name = "tradeRequestMissingSystemEliteIdUseCase")

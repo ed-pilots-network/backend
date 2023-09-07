@@ -6,6 +6,7 @@ import io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRe
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationEntityMapper;
+import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindStationFilterMapper;
 import io.edpn.backend.trade.application.port.outgoing.station.CreateStationPort;
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.exception.DatabaseEntityNotFoundException;
@@ -42,12 +43,15 @@ public class CreateStationPortTest {
     
     @Mock
     private MybatisMarketDatumRepository mybatisMarketDatumRepository;
+
+    @Mock
+    private PersistenceFindStationFilterMapper persistenceFindStationFilterMapper;
     
     private CreateStationPort underTest;
     
     @BeforeEach
     public void setUp(){
-        underTest = new StationRepository(idGenerator, mybatisStationEntityMapper, mybatisStationRepository, mybatisMarketDatumRepository);
+        underTest = new StationRepository(idGenerator, mybatisStationEntityMapper, mybatisStationRepository, mybatisMarketDatumRepository, persistenceFindStationFilterMapper);
     }
     
     @Test

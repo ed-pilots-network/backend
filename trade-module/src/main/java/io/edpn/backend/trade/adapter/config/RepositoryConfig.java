@@ -4,13 +4,13 @@ import io.edpn.backend.trade.adapter.persistence.CommodityMarketInfoRepository;
 import io.edpn.backend.trade.adapter.persistence.CommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.LocateCommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.MarketDatumRepository;
-import io.edpn.backend.trade.adapter.persistence.StationRepository;
-import io.edpn.backend.trade.adapter.persistence.SystemCoordinateRequestRepository;
-import io.edpn.backend.trade.adapter.persistence.StationLandingPadSizeRequestRepository;
-import io.edpn.backend.trade.adapter.persistence.StationRequireOdysseyRequestRepository;
-import io.edpn.backend.trade.adapter.persistence.SystemEliteIdRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.StationArrivalDistanceRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.StationLandingPadSizeRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.StationPlanetaryRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.StationRepository;
+import io.edpn.backend.trade.adapter.persistence.StationRequireOdysseyRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.SystemCoordinateRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.SystemEliteIdRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.SystemRepository;
 import io.edpn.backend.trade.adapter.persistence.ValidatedCommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisCommodityEntity;
@@ -20,19 +20,18 @@ import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisValidatedCommodityEntity;
 import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceFindCommodityFilterMapper;
-import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceFindSystemFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceLocateCommodityFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityMarketInfoRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisLocateCommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRepository;
-import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository;
-import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemCoordinateRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationArrivalDistanceRequestRepository;
-import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRequireOdysseyRequestRepository;
-import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemEliteIdRequestRepository;
-import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationPlanetaryRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationLandingPadSizeRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationPlanetaryRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRequireOdysseyRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemCoordinateRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemEliteIdRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisValidatedCommodityRepository;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.CommodityEntityMapper;
@@ -41,6 +40,8 @@ import io.edpn.backend.trade.application.dto.persistence.entity.mapper.LocateCom
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.ValidatedCommodityEntityMapper;
+import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindStationFilterMapper;
+import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindSystemFilterMapper;
 import io.edpn.backend.util.IdGenerator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -83,15 +84,16 @@ public class RepositoryConfig {
             @Qualifier("tradeIdGenerator") IdGenerator idGenerator,
             MybatisStationRepository mybatisStationRepository,
             StationEntityMapper<MybatisStationEntity> mybatisStationEntityMapper,
-            MybatisMarketDatumRepository mybatisMarketDatumRepository) {
-        return new StationRepository(idGenerator, mybatisStationEntityMapper, mybatisStationRepository, mybatisMarketDatumRepository);
+            MybatisMarketDatumRepository mybatisMarketDatumRepository,
+            PersistenceFindStationFilterMapper persistenceFindStationFilterMapper) {
+        return new StationRepository(idGenerator, mybatisStationEntityMapper, mybatisStationRepository, mybatisMarketDatumRepository, persistenceFindStationFilterMapper);
     }
 
     @Bean(name = "tradeSystemRepository")
     public SystemRepository systemRepository(
             @Qualifier("tradeIdGenerator") IdGenerator idGenerator,
             MybatisSystemRepository mybatisSystemRepository,
-            MybatisPersistenceFindSystemFilterMapper mybatisPersistenceFindSystemFilterMapper,
+            PersistenceFindSystemFilterMapper mybatisPersistenceFindSystemFilterMapper,
             SystemEntityMapper<MybatisSystemEntity> mybatisSystemEntityMapper) {
         return new SystemRepository(idGenerator, mybatisSystemEntityMapper, mybatisPersistenceFindSystemFilterMapper, mybatisSystemRepository);
     }
@@ -115,7 +117,7 @@ public class RepositoryConfig {
             MybatisStationRequireOdysseyRequestRepository mybatisStationRequireOdysseyRequestRepository) {
         return new StationRequireOdysseyRequestRepository(mybatisStationRequireOdysseyRequestRepository);
     }
- 
+
     @Bean(name = "tradeSystemEliteIdRequestRepository")
     public SystemEliteIdRequestRepository systemEliteIdRequestRepository(
             MybatisSystemEliteIdRequestRepository mybatisSystemEliteIdRequestRepository) {
@@ -127,13 +129,13 @@ public class RepositoryConfig {
             MybatisStationArrivalDistanceRequestRepository mybatisStationArrivalDistanceRequestRepository) {
         return new StationArrivalDistanceRequestRepository(mybatisStationArrivalDistanceRequestRepository);
     }
-  
+
     @Bean(name = "tradeStationPlanetaryRequestRepository")
     public StationPlanetaryRequestRepository stationPlanetaryRequestRepository(
             MybatisStationPlanetaryRequestRepository mybatisStationPlanetaryRequestRepository) {
         return new StationPlanetaryRequestRepository(mybatisStationPlanetaryRequestRepository);
     }
-  
+
     @Bean(name = "tradeStationLandingPadSizeRequestRepository")
     public StationLandingPadSizeRequestRepository stationLandingPadSizeRequestRepository(
             MybatisStationLandingPadSizeRequestRepository mybatisStationLandingPadSizeRequestRepository) {
