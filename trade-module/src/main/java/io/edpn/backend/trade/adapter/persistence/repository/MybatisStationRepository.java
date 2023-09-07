@@ -58,6 +58,7 @@ public interface MybatisStationRepository {
             SELECT * FROM station
             WHERE 1 = 1
             <if test='hasRequiredOdyssey != null'>AND require_odyssey IS NULL != #{hasRequiredOdyssey}</if>
+            <if test='hasLandingPadSize != null'>AND max_landing_pad_size IS NULL != #{hasLandingPadSize}</if>
             </script>
             """)
     @ResultMap("stationResultMap")
