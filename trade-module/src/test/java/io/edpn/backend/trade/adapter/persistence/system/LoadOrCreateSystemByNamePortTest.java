@@ -2,10 +2,10 @@ package io.edpn.backend.trade.adapter.persistence.system;
 
 import io.edpn.backend.trade.adapter.persistence.SystemRepository;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
-import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceFindSystemFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemRepository;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemEntityMapper;
+import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindSystemFilterMapper;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.util.IdGenerator;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +36,7 @@ public class LoadOrCreateSystemByNamePortTest {
     private SystemEntityMapper<MybatisSystemEntity> mybatisSystemEntityMapper;
     
     @Mock
-    private MybatisPersistenceFindSystemFilterMapper mybatisPersistenceFindSystemFilterMapper;
+    private PersistenceFindSystemFilterMapper persistenceFindSystemFilterMapper;
     
     @Mock
     private MybatisSystemRepository mybatisSystemRepository;
@@ -45,7 +45,7 @@ public class LoadOrCreateSystemByNamePortTest {
     
     @BeforeEach
     public void setUp(){
-        underTest = new SystemRepository(idGenerator, mybatisSystemEntityMapper, mybatisPersistenceFindSystemFilterMapper, mybatisSystemRepository);
+        underTest = new SystemRepository(idGenerator, mybatisSystemEntityMapper, persistenceFindSystemFilterMapper, mybatisSystemRepository);
     }
     
     @Test

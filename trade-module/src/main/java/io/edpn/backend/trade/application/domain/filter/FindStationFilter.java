@@ -13,8 +13,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class FindSystemFilter {
-    private String name;
-    private Boolean hasEliteId;
-    private Boolean hasCoordinates;
+public class FindStationFilter {
+    private Boolean hasRequiredOdyssey;
 }
