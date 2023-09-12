@@ -16,17 +16,22 @@ import java.util.UUID;
 
 public interface MybatisSystemRepository {
 
-    @Insert({"INSERT INTO system (id, name, star_class, elite_id, x_coordinate, y_coordinate, z_coordinate)",
+    @Select({"INSERT INTO system (id, name, star_class, elite_id, x_coordinate, y_coordinate, z_coordinate)",
             "VALUES (#{id}, #{name}, #{starClass}, #{eliteId}, #{xCoordinate}, #{yCoordinate}, #{zCoordinate})",
             "ON CONFLICT (name)",
-            "DO UPDATE",
-            "star_class = CASE WHEN system.star_class IS NULL THEN excluded.star_class ELSE system.star_class END,",
-            "elite_id = CASE WHEN system.elite_id IS NULL THEN excluded.elite_id ELSE system.elite_id END,",
-            "x_coordinate = CASE WHEN system.x_coordinate IS NULL THEN excluded.x_coordinate ELSE system.x_coordinate END,",
-            "y_coordinate = CASE WHEN system.y_coordinate IS NULL THEN excluded.y_coordinate ELSE system.y_coordinate END,",
-            "z_coordinate = CASE WHEN system.z_coordinate IS NULL THEN excluded.z_coordinate ELSE system.z_coordinate END",
+            "DO UPDATE SET",
+            "star_class = COALESCE(system.star_class, EXCLUDED.star_class),",
+            "elite_id = COALESCE(system.elite_id, EXCLUDED.elite_id),",
+            "x_coordinate = COALESCE(system.x_coordinate, EXCLUDED.x_coordinate),",
+            "y_coordinate = COALESCE(system.y_coordinate, EXCLUDED.y_coordinate),",
+            "z_coordinate = COALESCE(system.z_coordinate, EXCLUDED.z_coordinate)",
             "RETURNING *"
     })
+    @ResultMap("systemResultMap")
+    MybatisSystemEntity insertOrUpdateOnConflict(MybatisSystemEntity system);
+
+
+    @Select("SELECT * FROM system WHERE name = #{name}")
     @Results(id = "systemResultMap", value = {
             @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name", javaType = String.class),
@@ -36,11 +41,6 @@ public interface MybatisSystemRepository {
             @Result(property = "yCoordinate", column = "y_coordinate", javaType = Double.class),
             @Result(property = "zCoordinate", column = "z_coordinate", javaType = Double.class)
     })
-    MybatisSystemEntity insertOrUpdateOnConflict(MybatisSystemEntity system);
-
-
-    @Select("SELECT * FROM system WHERE name = #{name}")
-    @ResultMap("systemResultMap")
     Optional<MybatisSystemEntity> findByName(@Param("name") String name);
 
     @Select({"SELECT *",
