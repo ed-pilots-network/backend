@@ -243,7 +243,7 @@ public class ServiceConfig {
             CreateStationRequireOdysseyRequestPort createStationRequireOdysseyRequestPort,
             SendKafkaMessagePort sendKafkaMessagePort,
             @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
-            @Qualifier("tradeThreadPoolTaskExecutor") Executor executor,
+            @Qualifier("tradeForkJoinPool") Executor executor,
             ObjectMapper objectMapper,
             MessageMapper messageMapper
     ) {
