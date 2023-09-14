@@ -1,7 +1,6 @@
 package io.edpn.backend.trade.adapter.web.dto.filter.mapper;
 
 import io.edpn.backend.trade.adapter.web.dto.filter.RestLocateCommodityFilterDto;
-import io.edpn.backend.trade.adapter.web.dto.filter.RestPageFilterDto;
 import io.edpn.backend.trade.application.domain.LandingPadSize;
 import io.edpn.backend.trade.application.domain.filter.LocateCommodityFilter;
 import io.edpn.backend.trade.application.domain.filter.PageFilter;
@@ -14,8 +13,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Objects;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,7 +35,6 @@ class RestLocateCommodityFilterDtoMapperTest {
 
     @Test
     public void testMap_givenDto_shouldReturnDomainObject_nullPageFilter() {
-        RestPageFilterDto pageFilterDto = null;
         LocateCommodityFilterDto dto = new RestLocateCommodityFilterDto(
                 "Display Name",
                 1.0,
@@ -45,8 +46,9 @@ class RestLocateCommodityFilterDtoMapperTest {
                 String.valueOf(LandingPadSize.MEDIUM),
                 123L,
                 321L,
-                pageFilterDto);
-        when(pageFilterDtoMapper.getDefaultFilter()).thenReturn(PageFilter.builder()
+                null,
+                null);
+        when(pageFilterDtoMapper.map(argThat(argument -> argument != null && Objects.isNull(argument.page()) && Objects.isNull(argument.page())))).thenReturn(PageFilter.builder()
                 .size(20)
                 .page(0)
                 .build());
@@ -69,7 +71,6 @@ class RestLocateCommodityFilterDtoMapperTest {
 
     @Test
     public void testMap_givenDto_shouldReturnDomainObject() {
-        RestPageFilterDto pageFilterDto = new RestPageFilterDto(20, 4);
         LocateCommodityFilterDto dto = new RestLocateCommodityFilterDto(
                 "Display Name",
                 1.0,
@@ -81,8 +82,9 @@ class RestLocateCommodityFilterDtoMapperTest {
                 String.valueOf(LandingPadSize.MEDIUM),
                 123L,
                 321L,
-                pageFilterDto);
-        when(pageFilterDtoMapper.map(pageFilterDto)).thenReturn(PageFilter.builder()
+                20,
+                0);
+        when(pageFilterDtoMapper.map(dto)).thenReturn(PageFilter.builder()
                 .size(20)
                 .page(4)
                 .build());

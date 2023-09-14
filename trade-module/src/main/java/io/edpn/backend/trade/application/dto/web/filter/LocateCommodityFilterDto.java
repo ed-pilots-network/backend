@@ -1,6 +1,6 @@
 package io.edpn.backend.trade.application.dto.web.filter;
 
-public interface LocateCommodityFilterDto {
+public interface LocateCommodityFilterDto extends PageFilterDto {
 
     String commodityDisplayName();
 
@@ -21,6 +21,4 @@ public interface LocateCommodityFilterDto {
     Long minSupply();
 
     Long minDemand();
-
-    PageFilterDto page();
 }

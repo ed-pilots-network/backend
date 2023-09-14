@@ -4,14 +4,16 @@ import io.edpn.backend.trade.application.domain.filter.PageFilter;
 import io.edpn.backend.trade.application.dto.web.filter.PageFilterDto;
 import io.edpn.backend.trade.application.dto.web.filter.mapper.PageFilterDtoMapper;
 
+import java.util.Objects;
+
 public class RestPageFilterDtoMapper implements PageFilterDtoMapper {
     @Override
     public PageFilter map(PageFilterDto pageFilterDto) {
         PageFilter.PageFilterBuilder builder = getDefaultFilterBuilder();
-        if (pageFilterDto.size() > 0) {
+        if (Objects.nonNull(pageFilterDto.size()) && pageFilterDto.size() > 0) {
             builder.size(pageFilterDto.size());
         }
-        if (pageFilterDto.page() >= 0) {
+        if (Objects.nonNull(pageFilterDto.page()) && pageFilterDto.page() >= 0) {
             builder.page(pageFilterDto.page());
         }
         return builder.build();

@@ -23,14 +23,16 @@ public class RestLocateCommodityFilterDtoMapper implements LocateCommodityFilter
                 locateCommodityFilterDto.includePlanetary(),
                 locateCommodityFilterDto.includeOdyssey(),
                 locateCommodityFilterDto.includeFleetCarriers(),
-                Optional.ofNullable(locateCommodityFilterDto.shipSize())
-                        .map(LandingPadSize::valueOf)
-                        .orElse(null),
+                getShipSize(locateCommodityFilterDto),
                 locateCommodityFilterDto.minSupply(),
                 locateCommodityFilterDto.minDemand(),
-                Optional.ofNullable(locateCommodityFilterDto.page())
-                        .map(pageFilterDtoMapper::map)
-                        .orElse(pageFilterDtoMapper.getDefaultFilter())
+                pageFilterDtoMapper.map(locateCommodityFilterDto)
         );
+    }
+
+    private static LandingPadSize getShipSize(LocateCommodityFilterDto locateCommodityFilterDto) {
+        return Optional.ofNullable(locateCommodityFilterDto.shipSize())
+                .map(LandingPadSize::valueOf)
+                .orElse(null);
     }
 }
