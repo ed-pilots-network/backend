@@ -109,8 +109,8 @@ public interface MybatisLocateCommodityRepository {
             @Result(property = "buyPrice", column = "buy_price", javaType = Long.class),
             @Result(property = "sellPrice", column = "sell_price", javaType = Long.class),
             @Result(property = "distance", column = "distance", javaType = Double.class),
-            @Result(property = "pageSize", column = "pageSize", javaType = Integer.class),
-            @Result(property = "currentPage", column = "current_page", javaType = Integer.class),
+            @Result(property = "pageSize", column = "page_size", javaType = Integer.class),
+            @Result(property = "currentPage", column = "page_number", javaType = Integer.class),
             @Result(property = "totalItems", column = "total_items", javaType = Integer.class)
 
     })

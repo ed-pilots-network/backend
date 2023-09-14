@@ -10,7 +10,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public interface PagedResultDtoMapper {
-    static <T, F, Z extends PageInfoDto, U extends PagedResultDto<F>> PagedResultDto<F> map(
+    static <T, F, Z extends PageInfoDto, U extends PagedResultDto<F, Z>> PagedResultDto<F, Z> map(
             PagedResult<T> pagedResult,
             Function<T, F> dtoMapper,
             Function<PageInfo, Z> pageInfoMapper,

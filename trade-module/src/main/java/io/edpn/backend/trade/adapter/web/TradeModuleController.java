@@ -5,18 +5,13 @@ import io.edpn.backend.trade.adapter.web.dto.filter.RestLocateCommodityFilterDto
 import io.edpn.backend.trade.adapter.web.dto.object.RestCommodityMarketInfoDto;
 import io.edpn.backend.trade.adapter.web.dto.object.RestLocateCommodityDto;
 import io.edpn.backend.trade.adapter.web.dto.object.RestPageInfoDto;
-import io.edpn.backend.trade.adapter.web.dto.object.RestPagedResultDto;
+import io.edpn.backend.trade.adapter.web.dto.object.RestPagedLocateCommodityDto;
 import io.edpn.backend.trade.adapter.web.dto.object.RestValidatedCommodityDto;
-import io.edpn.backend.trade.application.dto.web.object.PagedResultDto;
 import io.edpn.backend.trade.application.port.incomming.commoditymarketinfo.GetFullCommodityMarketInfoUseCase;
 import io.edpn.backend.trade.application.port.incomming.locatecommodity.LocateCommodityUseCase;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindAllValidatedCommodityUseCase;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindValidatedCommodityByFilterUseCase;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindValidatedCommodityByNameUseCase;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,14 +55,14 @@ public class TradeModuleController {
                 .findByName(displayName)
                 .map(x -> (RestValidatedCommodityDto) x);
     }
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = RestPagedResultDto.class), mediaType = "application/json")})
-    })
-    @GetMapping("/locate-commodity")
-    public PagedResultDto<RestLocateCommodityDto> locateCommodityWithFilters(RestLocateCommodityFilterDto locateCommodityFilterDto) {
-        BiFunction<List<RestLocateCommodityDto>, RestPageInfoDto, RestPagedResultDto<RestLocateCommodityDto>> constructor = RestPagedResultDto::new;
-        return locateCommodityUseCase
+
+    @GetMapping(value = "/locate-commodity")
+    public RestPagedLocateCommodityDto locateCommodityWithFilters(RestLocateCommodityFilterDto locateCommodityFilterDto) {
+        BiFunction<List<RestLocateCommodityDto>, RestPageInfoDto, RestPagedLocateCommodityDto> constructor = RestPagedLocateCommodityDto::new;
+        var temp = locateCommodityUseCase
                 .locateCommodityOrderByDistance(locateCommodityFilterDto, constructor);
+
+        return (RestPagedLocateCommodityDto) temp;
     }
 
     @GetMapping("/best-price")

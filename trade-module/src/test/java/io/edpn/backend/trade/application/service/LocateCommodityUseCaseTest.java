@@ -2,7 +2,7 @@ package io.edpn.backend.trade.application.service;
 
 import io.edpn.backend.trade.adapter.web.dto.object.RestLocateCommodityDto;
 import io.edpn.backend.trade.adapter.web.dto.object.RestPageInfoDto;
-import io.edpn.backend.trade.adapter.web.dto.object.RestPagedResultDto;
+import io.edpn.backend.trade.adapter.web.dto.object.RestPagedLocateCommodityDto;
 import io.edpn.backend.trade.application.domain.LocateCommodity;
 import io.edpn.backend.trade.application.domain.PageInfo;
 import io.edpn.backend.trade.application.domain.PagedResult;
@@ -69,9 +69,9 @@ public class LocateCommodityUseCaseTest {
         when(locateCommodityByFilterPort.locateCommodityByFilter(locateCommodityFilter)).thenReturn(pagedResult);
         when(locateCommodityDtoMapper.map(locateCommodity)).thenReturn(locateCommodityDto);
         when(pageInfoDtoMapper.map(pageInfo)).thenReturn(pageInfoDto);
-        BiFunction<List<RestLocateCommodityDto>, RestPageInfoDto, RestPagedResultDto<RestLocateCommodityDto>> constructor = RestPagedResultDto::new;
+        BiFunction<List<RestLocateCommodityDto>, RestPageInfoDto, RestPagedLocateCommodityDto> constructor = RestPagedLocateCommodityDto::new;
 
-        PagedResultDto<RestLocateCommodityDto> responses = underTest.locateCommodityOrderByDistance(locateCommodityFilterDto, constructor);
+        PagedResultDto<RestLocateCommodityDto, RestPageInfoDto> responses = underTest.locateCommodityOrderByDistance(locateCommodityFilterDto, constructor);
 
         ArgumentCaptor<LocateCommodityFilter> argumentCaptor = ArgumentCaptor.forClass(LocateCommodityFilter.class);
         verify(locateCommodityByFilterPort).locateCommodityByFilter(argumentCaptor.capture());

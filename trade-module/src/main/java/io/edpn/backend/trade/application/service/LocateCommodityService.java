@@ -27,7 +27,7 @@ public class LocateCommodityService implements LocateCommodityUseCase {
     private final PageInfoDtoMapper pageInfoDtoMapper;
 
     @Override
-    public <T extends LocateCommodityDto, U extends PagedResultDto<T>, R extends PageInfoDto> PagedResultDto<T> locateCommodityOrderByDistance(LocateCommodityFilterDto locateCommodityFilterDto, BiFunction<List<T>, R, U> pagedResultConstructor) {
+    public <T extends LocateCommodityDto, U extends PagedResultDto<T, R>, R extends PageInfoDto> PagedResultDto<T, R> locateCommodityOrderByDistance(LocateCommodityFilterDto locateCommodityFilterDto, BiFunction<List<T>, R, U> pagedResultConstructor) {
         LocateCommodityFilter filter = locateCommodityFilterDtoMapper.map(locateCommodityFilterDto);
         PagedResult<LocateCommodity> locateCommodityPagedResult = locateCommodityByFilterPort.locateCommodityByFilter(filter);
 

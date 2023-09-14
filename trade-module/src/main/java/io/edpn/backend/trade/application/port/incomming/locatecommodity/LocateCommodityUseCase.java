@@ -10,6 +10,6 @@ import java.util.function.BiFunction;
 
 public interface LocateCommodityUseCase {
 
-    <T extends LocateCommodityDto, U extends PagedResultDto<T>, R extends PageInfoDto> PagedResultDto<T> locateCommodityOrderByDistance(LocateCommodityFilterDto locateCommodityFilterDto, BiFunction<List<T>, R, U> pagedResultConstructor);
+    <T extends LocateCommodityDto, U extends PagedResultDto<T, R>, R extends PageInfoDto> PagedResultDto<T, R> locateCommodityOrderByDistance(LocateCommodityFilterDto locateCommodityFilterDto, BiFunction<List<T>, R, U> pagedResultConstructor);
 
 }
