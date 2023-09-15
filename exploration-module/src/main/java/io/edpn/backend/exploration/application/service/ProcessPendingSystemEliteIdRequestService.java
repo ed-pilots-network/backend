@@ -37,7 +37,7 @@ public class ProcessPendingSystemEliteIdRequestService implements ProcessPending
     private final Executor executor;
 
     @Override
-    @Scheduled(cron = "0 */12 * * *")
+    @Scheduled(cron = "0 0 0/12 * * *")
     public void processPending() {
         loadAllSystemEliteIdRequestPort.loadAll().parallelStream()
                 .forEach(systemEliteIdRequest -> CompletableFuture.runAsync(() -> loadSystemPort.load(systemEliteIdRequest.systemName())
