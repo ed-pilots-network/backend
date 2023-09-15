@@ -37,7 +37,7 @@ public class RequestMissingStationRequireOdysseyService implements RequestMissin
     private final MessageMapper messageMapper;
 
     @Override
-    @Scheduled(cron = "0 0 */12 * * *")
+    @Scheduled(cron = "0 */12 * * *")
     public void requestMissing() {
         loadStationsByFilterPort.loadByFilter(FIND_STATION_FILTER).parallelStream()
                 .forEach(station ->
