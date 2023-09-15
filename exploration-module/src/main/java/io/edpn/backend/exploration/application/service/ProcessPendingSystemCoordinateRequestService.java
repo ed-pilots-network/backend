@@ -37,7 +37,7 @@ public class ProcessPendingSystemCoordinateRequestService implements ProcessPend
     private final Executor executor;
 
     @Override
-    @Scheduled(cron = "0 */12 * * *")
+    @Scheduled(cron = "0 0 0/12 * * *")
     public void processPending() {
         loadAllSystemCoordinateRequestPort.loadAll().parallelStream()
                 .forEach(systemCoordinateRequest -> CompletableFuture.runAsync(() -> loadSystemPort.load(systemCoordinateRequest.systemName())

@@ -36,7 +36,7 @@ public class RequestMissingSystemCoordinatesService implements RequestMissingSys
     private final MessageMapper messageMapper;
 
     @Override
-    @Scheduled(cron = "0 */12 * * *")
+    @Scheduled(cron = "0 0 0/12 * * *")
     public void requestMissing() {
         FindSystemFilter filter = FindSystemFilter.builder()
                 .hasCoordinates(false)
