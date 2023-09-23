@@ -24,6 +24,7 @@ import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancereq
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CreateStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.DeleteStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.ExistsStationLandingPadSizeRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.RequestMissingStationLandingPadSizeUseCase;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
@@ -54,6 +55,7 @@ import io.edpn.backend.trade.application.service.ReceiveStationPlanetaryResponse
 import io.edpn.backend.trade.application.service.ReceiveStationRequireOdysseyResponseService;
 import io.edpn.backend.trade.application.service.ReceiveSystemCoordinatesResponseService;
 import io.edpn.backend.trade.application.service.ReceiveSystemEliteIdResponseService;
+import io.edpn.backend.trade.application.service.RequestMissingStationMaxLandingPadSizeService;
 import io.edpn.backend.trade.application.service.RequestMissingStationPlanetaryService;
 import io.edpn.backend.trade.application.service.RequestMissingStationRequireOdysseyService;
 import io.edpn.backend.trade.application.service.RequestMissingSystemCoordinatesService;
@@ -248,6 +250,19 @@ public class ServiceConfig {
             MessageMapper messageMapper
     ) {
         return new RequestMissingStationRequireOdysseyService(loadStationsByFilterPort, createStationRequireOdysseyRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
+    }
+
+    @Bean(name = "tradeRequestMissingStationLandingPadSizeUseCase")
+    public RequestMissingStationLandingPadSizeUseCase requestMissingStationMaxLandingPadSizeService(
+            LoadStationsByFilterPort loadStationsByFilterPort,
+            CreateStationLandingPadSizeRequestPort createStationLandingPadSizeRequestPort,
+            SendKafkaMessagePort sendKafkaMessagePort,
+            @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
+            @Qualifier("tradeThreadPoolTaskExecutor") Executor executor,
+            ObjectMapper objectMapper,
+            MessageMapper messageMapper
+    ) {
+        return new RequestMissingStationMaxLandingPadSizeService(loadStationsByFilterPort, createStationLandingPadSizeRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
     }
 
     @Bean(name = "tradeRequestMissingStationPlanetaryUseCase")
