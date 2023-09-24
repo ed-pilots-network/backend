@@ -9,8 +9,8 @@ import io.edpn.backend.trade.application.dto.web.object.MessageDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
-import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
-import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.RequestMissingSystemCoordinatesUseCase;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.RequestMissingSystemEliteIdUseCase;
 import io.edpn.backend.util.Module;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,12 +36,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class RequestMissingSystemCoordinatesUseCaseTest {
+public class RequestMissingSystemEliteIdUseCaseTest {
     @Mock
     private LoadSystemsByFilterPort loadSystemsByFilterPort;
 
     @Mock
-    private CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
+    private CreateSystemEliteIdRequestPort createSystemEliteIdRequestPort;
 
     @Mock
     private SendKafkaMessagePort sendKafkaMessagePort;
@@ -55,22 +55,22 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
     @Mock
     private MessageMapper messageMapper;
 
-    private RequestMissingSystemCoordinatesUseCase undertest;
+    private RequestMissingSystemEliteIdUseCase undertest;
 
     private final Executor executor = Runnable::run;
 
     @BeforeEach
     public void setUp() {
-        undertest = new RequestMissingSystemCoordinatesService(loadSystemsByFilterPort, createSystemCoordinateRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
+        undertest = new RequestMissingSystemEliteIdService(loadSystemsByFilterPort, createSystemEliteIdRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
     }
 
     @Test
     public void testFindSystemsFilter() {
         FindSystemFilter findSystemFilter = FindSystemFilter.builder()
-                .hasCoordinates(false)
+                .hasEliteId(false)
                 .build();
 
-        assertThat(RequestMissingSystemCoordinatesService.FIND_SYSTEM_FILTER, equalTo(findSystemFilter));
+        assertThat(RequestMissingSystemEliteIdService.FIND_SYSTEM_FILTER, equalTo(findSystemFilter));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
         undertest.requestMissing();
 
         verify(sendKafkaMessagePort, never()).send(any());
-        verify(createSystemCoordinateRequestPort, never()).create(any());
+        verify(createSystemEliteIdRequestPort, never()).create(any());
     }
 
     @Test
@@ -98,14 +98,14 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
         }))).thenReturn(jsonNode);
         when(jsonNode.toString()).thenReturn("jsonNodeString");
         MessageDto messageDto = mock(MessageDto.class);
-        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("systemCoordinatesRequest") && argument.getMessage().equals("jsonNodeString")))).thenReturn(messageDto);
+        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("systemEliteIdRequest") && argument.getMessage().equals("jsonNodeString")))).thenReturn(messageDto);
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
         undertest.requestMissing();
 
         verify(sendKafkaMessagePort).send(any());
-        verify(createSystemCoordinateRequestPort).create(any());
+        verify(createSystemEliteIdRequestPort).create(any());
     }
 
     @Test
@@ -135,8 +135,8 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
         when(jsonNode2.toString()).thenReturn("jsonNodeString2");
         MessageDto messageDto1 = mock(MessageDto.class);
         MessageDto messageDto2 = mock(MessageDto.class);
-        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("systemCoordinatesRequest") && argument.getMessage().equals("jsonNodeString1")))).thenReturn(messageDto1);
-        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("systemCoordinatesRequest") && argument.getMessage().equals("jsonNodeString2")))).thenReturn(messageDto2);
+        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("systemEliteIdRequest") && argument.getMessage().equals("jsonNodeString1")))).thenReturn(messageDto1);
+        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("systemEliteIdRequest") && argument.getMessage().equals("jsonNodeString2")))).thenReturn(messageDto2);
         when(sendKafkaMessagePort.send(messageDto1)).thenReturn(true);
         when(sendKafkaMessagePort.send(messageDto2)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
@@ -144,6 +144,7 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
         undertest.requestMissing();
 
         verify(sendKafkaMessagePort, times(2)).send(any());
-        verify(createSystemCoordinateRequestPort, times(2)).create(any());
+        verify(createSystemEliteIdRequestPort, times(2)).create(any());
     }
+
 }
