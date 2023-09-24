@@ -33,7 +33,7 @@ public class RequestStationArrivalDistanceService implements RequestDataUseCase<
     }
 
     @Override
-    public void request(Station station) {
+    public synchronized void request(Station station) {
         String stationName = station.getName();
         String systemName = station.getSystem().getName();
         boolean shouldRequest = !existsStationArrivalDistanceRequestPort.exists(systemName, stationName);

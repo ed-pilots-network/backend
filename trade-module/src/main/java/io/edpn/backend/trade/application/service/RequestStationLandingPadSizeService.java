@@ -34,7 +34,7 @@ public class RequestStationLandingPadSizeService implements RequestDataUseCase<S
     }
 
     @Override
-    public void request(Station station) {
+    public synchronized void request(Station station) {
         String stationName = station.getName();
         String systemName = station.getSystem().getName();
         boolean shouldRequest = !existsStationLandingPadSizeRequestPort.exists(systemName, stationName);
