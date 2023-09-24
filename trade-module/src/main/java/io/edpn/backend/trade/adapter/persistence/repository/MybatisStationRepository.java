@@ -58,6 +58,8 @@ public interface MybatisStationRepository {
             SELECT * FROM station
             WHERE 1 = 1
             <if test='hasRequiredOdyssey != null'>AND require_odyssey IS NULL != #{hasRequiredOdyssey}</if>
+            <if test='hasLandingPadSize != null'>AND max_landing_pad_size IS NULL != #{hasLandingPadSize}</if>
+            <if test='hasPlanetary != null'>AND planetary IS NULL != #{hasPlanetary}</if>
             <if test='hasArrivalDistance != null'>AND arrival_distance IS NULL != #{hasArrivalDistance}</if>
             </script>
             """)

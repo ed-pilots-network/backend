@@ -2,15 +2,16 @@ package io.edpn.backend.trade.application.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
+import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindSystemFilter;
 import io.edpn.backend.trade.application.dto.web.object.MessageDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
-import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
-import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
-import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.RequestMissingSystemCoordinatesUseCase;
+import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.RequestMissingStationPlanetaryUseCase;
 import io.edpn.backend.util.Module;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,12 +37,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class RequestMissingSystemCoordinatesUseCaseTest {
+public class RequestMissingStationPlanetaryUseCaseTest {
     @Mock
-    private LoadSystemsByFilterPort loadSystemsByFilterPort;
+    private LoadStationsByFilterPort loadStationsByFilterPort;
 
     @Mock
-    private CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
+    private CreateStationPlanetaryRequestPort createStationPlanetaryRequestPort;
 
     @Mock
     private SendKafkaMessagePort sendKafkaMessagePort;
@@ -55,13 +56,13 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
     @Mock
     private MessageMapper messageMapper;
 
-    private RequestMissingSystemCoordinatesUseCase undertest;
+    private RequestMissingStationPlanetaryUseCase underTest;
 
     private final Executor executor = Runnable::run;
 
     @BeforeEach
     public void setUp() {
-        undertest = new RequestMissingSystemCoordinatesService(loadSystemsByFilterPort, createSystemCoordinateRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
+        underTest = new RequestMissingStationPlanetaryService(loadStationsByFilterPort, createStationPlanetaryRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
     }
 
     @Test
@@ -75,58 +76,67 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
 
     @Test
     public void testRequestMissingForZeroResults() {
-        when(loadSystemsByFilterPort.loadByFilter(any())).thenReturn(Collections.emptyList());
+        when(loadStationsByFilterPort.loadByFilter(any())).thenReturn(Collections.emptyList());
 
-        undertest.requestMissing();
+        underTest.requestMissing();
 
         verify(sendKafkaMessagePort, never()).send(any());
-        verify(createSystemCoordinateRequestPort, never()).create(any());
+        verify(createStationPlanetaryRequestPort, never()).create(any(), any());
     }
 
     @Test
     public void testRequestMissingForOneResult() {
         System system = mock(System.class);
         when(system.getName()).thenReturn("Alpha");
-        when(loadSystemsByFilterPort.loadByFilter(any())).thenReturn(List.of(system));
+        Station station = mock(Station.class);
+        when(station.getName()).thenReturn("home");
+        when(station.getSystem()).thenReturn(system);
+        when(loadStationsByFilterPort.loadByFilter(any())).thenReturn(List.of(station));
         JsonNode jsonNode = mock(JsonNode.class);
         when(objectMapper.valueToTree(argThat(argument -> {
-            if (argument instanceof SystemDataRequest systemDataRequest) {
-                return Module.TRADE == systemDataRequest.requestingModule() && systemDataRequest.systemName().equals("Alpha");
+            if (argument instanceof StationDataRequest stationDataRequest) {
+                return Module.TRADE == stationDataRequest.requestingModule() && stationDataRequest.stationName().equals("home") && stationDataRequest.systemName().equals("Alpha");
             } else {
                 return false;
             }
         }))).thenReturn(jsonNode);
         when(jsonNode.toString()).thenReturn("jsonNodeString");
         MessageDto messageDto = mock(MessageDto.class);
-        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("systemCoordinatesRequest") && argument.getMessage().equals("jsonNodeString")))).thenReturn(messageDto);
+        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("stationIsPlanetaryRequest") && argument.getMessage().equals("jsonNodeString")))).thenReturn(messageDto);
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
-        undertest.requestMissing();
+        underTest.requestMissing();
 
         verify(sendKafkaMessagePort).send(any());
-        verify(createSystemCoordinateRequestPort).create(any());
+        verify(createStationPlanetaryRequestPort).create(any(), any());
     }
 
     @Test
     public void testRequestMissingForMultipleResult() {
         System system1 = mock(System.class);
         when(system1.getName()).thenReturn("Alpha");
+        Station station1 = mock(Station.class);
+        when(station1.getName()).thenReturn("home");
+        when(station1.getSystem()).thenReturn(system1);
         System system2 = mock(System.class);
         when(system2.getName()).thenReturn("Bravo");
-        when(loadSystemsByFilterPort.loadByFilter(any())).thenReturn(List.of(system1, system2));
+        Station station2 = mock(Station.class);
+        when(station2.getName()).thenReturn("away");
+        when(station2.getSystem()).thenReturn(system2);
+        when(loadStationsByFilterPort.loadByFilter(any())).thenReturn(List.of(station1, station2));
         JsonNode jsonNode1 = mock(JsonNode.class);
         JsonNode jsonNode2 = mock(JsonNode.class);
         when(objectMapper.valueToTree(argThat(argument -> {
-            if (argument instanceof SystemDataRequest systemDataRequest) {
-                return Module.TRADE == systemDataRequest.requestingModule() && systemDataRequest.systemName().equals("Alpha");
+            if (argument instanceof StationDataRequest stationDataRequest) {
+                return Module.TRADE == stationDataRequest.requestingModule() && stationDataRequest.stationName().equals("home") && stationDataRequest.systemName().equals("Alpha");
             } else {
                 return false;
             }
         }))).thenReturn(jsonNode1);
         when(objectMapper.valueToTree(argThat(argument -> {
-            if (argument instanceof SystemDataRequest systemDataRequest) {
-                return Module.TRADE == systemDataRequest.requestingModule() && systemDataRequest.systemName().equals("Bravo");
+            if (argument instanceof StationDataRequest stationDataRequest) {
+                return Module.TRADE == stationDataRequest.requestingModule() && stationDataRequest.stationName().equals("away") && stationDataRequest.systemName().equals("Bravo");
             } else {
                 return false;
             }
@@ -135,15 +145,16 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
         when(jsonNode2.toString()).thenReturn("jsonNodeString2");
         MessageDto messageDto1 = mock(MessageDto.class);
         MessageDto messageDto2 = mock(MessageDto.class);
-        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("systemCoordinatesRequest") && argument.getMessage().equals("jsonNodeString1")))).thenReturn(messageDto1);
-        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("systemCoordinatesRequest") && argument.getMessage().equals("jsonNodeString2")))).thenReturn(messageDto2);
+        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("stationIsPlanetaryRequest") && argument.getMessage().equals("jsonNodeString1")))).thenReturn(messageDto1);
+        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("stationIsPlanetaryRequest") && argument.getMessage().equals("jsonNodeString2")))).thenReturn(messageDto2);
         when(sendKafkaMessagePort.send(messageDto1)).thenReturn(true);
         when(sendKafkaMessagePort.send(messageDto2)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
-        undertest.requestMissing();
+        underTest.requestMissing();
 
         verify(sendKafkaMessagePort, times(2)).send(any());
-        verify(createSystemCoordinateRequestPort, times(2)).create(any());
+        verify(createStationPlanetaryRequestPort, times(2)).create(any(), any());
     }
+
 }

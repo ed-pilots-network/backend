@@ -15,5 +15,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class FindStationFilter {
     private Boolean hasRequiredOdyssey;
+    private Boolean hasLandingPadSize;
+    private Boolean hasPlanetary;
     private Boolean hasArrivalDistance;
 }
