@@ -28,6 +28,7 @@ import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequ
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.RequestMissingStationPlanetaryUseCase;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.ExistsStationRequireOdysseyRequestPort;
@@ -55,6 +56,7 @@ import io.edpn.backend.trade.application.service.ReceiveStationRequireOdysseyRes
 import io.edpn.backend.trade.application.service.ReceiveSystemCoordinatesResponseService;
 import io.edpn.backend.trade.application.service.ReceiveSystemEliteIdResponseService;
 import io.edpn.backend.trade.application.service.RequestMissingStationMaxLandingPadSizeService;
+import io.edpn.backend.trade.application.service.RequestMissingStationPlanetaryService;
 import io.edpn.backend.trade.application.service.RequestMissingStationRequireOdysseyService;
 import io.edpn.backend.trade.application.service.RequestMissingSystemCoordinatesService;
 import io.edpn.backend.trade.application.service.RequestStationArrivalDistanceService;
@@ -261,5 +263,18 @@ public class ServiceConfig {
             MessageMapper messageMapper
     ) {
         return new RequestMissingStationMaxLandingPadSizeService(loadStationsByFilterPort, createStationLandingPadSizeRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
+    }
+
+    @Bean(name = "tradeRequestMissingStationPlanetaryUseCase")
+    public RequestMissingStationPlanetaryUseCase requestMissingStationPlanetaryUseCase(
+            LoadStationsByFilterPort loadStationsByFilterPort,
+            CreateStationPlanetaryRequestPort createStationPlanetaryRequestPort,
+            SendKafkaMessagePort sendKafkaMessagePort,
+            @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
+            @Qualifier("tradeThreadPoolTaskExecutor") Executor executor,
+            ObjectMapper objectMapper,
+            MessageMapper messageMapper
+    ) {
+        return new RequestMissingStationPlanetaryService(loadStationsByFilterPort, createStationPlanetaryRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
     }
 }

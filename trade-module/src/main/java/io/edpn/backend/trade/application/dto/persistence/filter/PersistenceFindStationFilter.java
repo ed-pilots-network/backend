@@ -4,4 +4,5 @@ public interface PersistenceFindStationFilter {
     
     Boolean getHasRequiredOdyssey();
     Boolean getHasLandingPadSize();
+    Boolean getHasPlanetary();
 }

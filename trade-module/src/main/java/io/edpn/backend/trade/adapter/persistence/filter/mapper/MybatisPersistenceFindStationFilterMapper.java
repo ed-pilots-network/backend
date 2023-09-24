@@ -11,6 +11,7 @@ public class MybatisPersistenceFindStationFilterMapper implements PersistenceFin
         return MybatisFindStationFilter.builder()
                 .hasRequiredOdyssey(findStationFilter.getHasRequiredOdyssey())
                 .hasLandingPadSize(findStationFilter.getHasLandingPadSize())
+                .hasPlanetary(findStationFilter.getHasPlanetary())
                 .build();
     }
 }

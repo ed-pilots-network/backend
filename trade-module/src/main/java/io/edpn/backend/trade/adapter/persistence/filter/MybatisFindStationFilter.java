@@ -20,4 +20,5 @@ public class MybatisFindStationFilter implements PersistenceFindStationFilter {
 
     private Boolean hasRequiredOdyssey;
     private Boolean hasLandingPadSize;
+    private Boolean hasPlanetary;
 }
