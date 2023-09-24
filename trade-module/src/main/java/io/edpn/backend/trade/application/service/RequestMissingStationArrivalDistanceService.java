@@ -38,7 +38,7 @@ public class RequestMissingStationArrivalDistanceService implements RequestMissi
 
     @Override
     @Scheduled(cron = "0 0 0/12 * * *")
-    public void requestMissing() {
+    public synchronized void requestMissing() {
         loadStationsByFilterPort.loadByFilter(FIND_STATION_FILTER).parallelStream()
                 .forEach(station ->
                         CompletableFuture.runAsync(() -> {
