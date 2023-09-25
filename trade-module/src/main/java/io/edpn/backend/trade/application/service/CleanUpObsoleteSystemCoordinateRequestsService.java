@@ -7,11 +7,10 @@ import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilte
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CleanUpObsoleteSystemCoordinateRequestsUseCase;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestsPort;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
-
-import java.util.List;
 
 @AllArgsConstructor
 @Slf4j
@@ -34,7 +33,7 @@ public class CleanUpObsoleteSystemCoordinateRequestsService implements CleanUpOb
         // items that are in open requests, but not in items with missing info can be removed
         dataRequests.stream()
                 .filter(dataRequest -> missingItemsList.stream()
-                        .anyMatch(system -> system.getName().equals(dataRequest.systemName())))
+                        .noneMatch(system -> system.getName().equals(dataRequest.systemName())))
                 .forEach(dataRequest -> deleteSystemCoordinateRequestPort.delete(dataRequest.systemName()));
     }
 }

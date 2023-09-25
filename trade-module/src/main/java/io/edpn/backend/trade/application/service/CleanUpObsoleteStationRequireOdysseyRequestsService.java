@@ -7,11 +7,10 @@ import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFil
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CleanUpObsoleteStationRequireOdysseyRequestsUseCase;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.LoadAllStationRequireOdysseyRequestsPort;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
-
-import java.util.List;
 
 @AllArgsConstructor
 @Slf4j
@@ -34,7 +33,7 @@ public class CleanUpObsoleteStationRequireOdysseyRequestsService implements Clea
         // items that are in open requests, but not in items with missing info can be removed
         dataRequests.stream()
                 .filter(dataRequest -> missingItemsList.stream()
-                        .anyMatch(station -> station.getName().equals(dataRequest.stationName()) && station.getSystem().getName().equals(dataRequest.systemName())))
+                        .noneMatch(station -> station.getName().equals(dataRequest.stationName()) && station.getSystem().getName().equals(dataRequest.systemName())))
                 .forEach(dataRequest -> deleteStationRequireOdysseyRequestPort.delete(dataRequest.systemName(), dataRequest.stationName()));
     }
 }

@@ -47,7 +47,7 @@ public class RequestMissingStationMaxLandingPadSizeService implements RequestMis
                             JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
 
                             Message message = Message.builder()
-                                    .topic(Topic.Request.STATION_REQUIRE_ODYSSEY.getTopicName())
+                                    .topic(Topic.Request.STATION_MAX_LANDING_PAD_SIZE.getTopicName())
                                     .message(jsonNode.toString())
                                     .build();
 

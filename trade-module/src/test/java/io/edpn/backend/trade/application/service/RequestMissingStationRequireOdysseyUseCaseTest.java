@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
-import io.edpn.backend.trade.application.domain.filter.FindSystemFilter;
+import io.edpn.backend.trade.application.domain.filter.FindStationFilter;
 import io.edpn.backend.trade.application.dto.web.object.MessageDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
@@ -13,6 +13,9 @@ import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFil
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.RequestMissingStationRequireOdysseyUseCase;
 import io.edpn.backend.util.Module;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Executor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,10 +23,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.RetryCallback;
 import org.springframework.retry.support.RetryTemplate;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Executor;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -66,12 +65,12 @@ public class RequestMissingStationRequireOdysseyUseCaseTest {
     }
 
     @Test
-    public void testFindSystemsFilter() {
-        FindSystemFilter findSystemFilter = FindSystemFilter.builder()
-                .hasCoordinates(false)
+    public void testFindStationsFilter() {
+        FindStationFilter findStationFilter = FindStationFilter.builder()
+                .hasRequiredOdyssey(false)
                 .build();
 
-        assertThat(RequestMissingSystemCoordinatesService.FIND_SYSTEM_FILTER, equalTo(findSystemFilter));
+        assertThat(RequestMissingStationRequireOdysseyService.FIND_STATION_FILTER, equalTo(findStationFilter));
     }
 
     @Test

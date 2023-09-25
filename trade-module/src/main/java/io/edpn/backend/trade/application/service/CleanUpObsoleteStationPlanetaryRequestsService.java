@@ -34,7 +34,7 @@ public class CleanUpObsoleteStationPlanetaryRequestsService implements CleanUpOb
         // items that are in open requests, but not in items with missing info can be removed
         dataRequests.stream()
                 .filter(dataRequest -> missingItemsList.stream()
-                        .anyMatch(station -> station.getName().equals(dataRequest.stationName()) && station.getSystem().getName().equals(dataRequest.systemName())))
+                        .noneMatch(station -> station.getName().equals(dataRequest.stationName()) && station.getSystem().getName().equals(dataRequest.systemName())))
                 .forEach(dataRequest -> deleteStationPlanetaryRequestPort.delete(dataRequest.systemName(), dataRequest.stationName()));
     }
 }

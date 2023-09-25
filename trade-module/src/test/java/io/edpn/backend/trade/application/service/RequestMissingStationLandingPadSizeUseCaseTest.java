@@ -10,8 +10,8 @@ import io.edpn.backend.trade.application.dto.web.object.MessageDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
-import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
-import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.RequestMissingStationPlanetaryUseCase;
+import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CreateStationLandingPadSizeRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.RequestMissingStationLandingPadSizeUseCase;
 import io.edpn.backend.util.Module;
 import java.util.Collections;
 import java.util.List;
@@ -36,12 +36,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class RequestMissingStationPlanetaryUseCaseTest {
+public class RequestMissingStationLandingPadSizeUseCaseTest {
     @Mock
     private LoadStationsByFilterPort loadStationsByFilterPort;
 
     @Mock
-    private CreateStationPlanetaryRequestPort createStationPlanetaryRequestPort;
+    private CreateStationLandingPadSizeRequestPort createStationLandingPadSizeRequestPort;
 
     @Mock
     private SendKafkaMessagePort sendKafkaMessagePort;
@@ -55,22 +55,22 @@ public class RequestMissingStationPlanetaryUseCaseTest {
     @Mock
     private MessageMapper messageMapper;
 
-    private RequestMissingStationPlanetaryUseCase underTest;
+    private RequestMissingStationLandingPadSizeUseCase underTest;
 
     private final Executor executor = Runnable::run;
 
     @BeforeEach
     public void setUp() {
-        underTest = new RequestMissingStationPlanetaryService(loadStationsByFilterPort, createStationPlanetaryRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
+        underTest = new RequestMissingStationMaxLandingPadSizeService(loadStationsByFilterPort, createStationLandingPadSizeRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
     }
 
     @Test
-    public void testFindStationsFilter() {
-        FindStationFilter findStationFilter = FindStationFilter.builder()
-                .hasPlanetary(false)
+    public void testFindSystemsFilter() {
+        FindStationFilter findSystemFilter = FindStationFilter.builder()
+                .hasLandingPadSize(false)
                 .build();
 
-        assertThat(RequestMissingStationPlanetaryService.FIND_STATION_FILTER, equalTo(findStationFilter));
+        assertThat(RequestMissingStationMaxLandingPadSizeService.FIND_STATION_FILTER, equalTo(findSystemFilter));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class RequestMissingStationPlanetaryUseCaseTest {
         underTest.requestMissing();
 
         verify(sendKafkaMessagePort, never()).send(any());
-        verify(createStationPlanetaryRequestPort, never()).create(any(), any());
+        verify(createStationLandingPadSizeRequestPort, never()).create(any(), any());
     }
 
     @Test
@@ -101,14 +101,14 @@ public class RequestMissingStationPlanetaryUseCaseTest {
         }))).thenReturn(jsonNode);
         when(jsonNode.toString()).thenReturn("jsonNodeString");
         MessageDto messageDto = mock(MessageDto.class);
-        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("stationIsPlanetaryRequest") && argument.getMessage().equals("jsonNodeString")))).thenReturn(messageDto);
+        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("stationMaxLandingPadSizeRequest") && argument.getMessage().equals("jsonNodeString")))).thenReturn(messageDto);
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
         underTest.requestMissing();
 
         verify(sendKafkaMessagePort).send(any());
-        verify(createStationPlanetaryRequestPort).create(any(), any());
+        verify(createStationLandingPadSizeRequestPort).create(any(), any());
     }
 
     @Test
@@ -144,8 +144,8 @@ public class RequestMissingStationPlanetaryUseCaseTest {
         when(jsonNode2.toString()).thenReturn("jsonNodeString2");
         MessageDto messageDto1 = mock(MessageDto.class);
         MessageDto messageDto2 = mock(MessageDto.class);
-        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("stationIsPlanetaryRequest") && argument.getMessage().equals("jsonNodeString1")))).thenReturn(messageDto1);
-        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("stationIsPlanetaryRequest") && argument.getMessage().equals("jsonNodeString2")))).thenReturn(messageDto2);
+        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("stationMaxLandingPadSizeRequest") && argument.getMessage().equals("jsonNodeString1")))).thenReturn(messageDto1);
+        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("stationMaxLandingPadSizeRequest") && argument.getMessage().equals("jsonNodeString2")))).thenReturn(messageDto2);
         when(sendKafkaMessagePort.send(messageDto1)).thenReturn(true);
         when(sendKafkaMessagePort.send(messageDto2)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
@@ -153,7 +153,7 @@ public class RequestMissingStationPlanetaryUseCaseTest {
         underTest.requestMissing();
 
         verify(sendKafkaMessagePort, times(2)).send(any());
-        verify(createStationPlanetaryRequestPort, times(2)).create(any(), any());
+        verify(createStationLandingPadSizeRequestPort, times(2)).create(any(), any());
     }
 
 }
