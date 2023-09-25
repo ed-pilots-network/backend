@@ -37,7 +37,9 @@ import io.edpn.backend.trade.adapter.persistence.repository.MybatisValidatedComm
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.CommodityEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.CommodityMarketInfoEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.LocateCommodityEntityMapper;
+import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationDataRequestEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationEntityMapper;
+import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemDataRequestEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.ValidatedCommodityEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindStationFilterMapper;
@@ -108,37 +110,43 @@ public class RepositoryConfig {
 
     @Bean(name = "tradeSystemCoordinateRequestRepository")
     public SystemCoordinateRequestRepository systemCoordinateRequestRepository(
-            MybatisSystemCoordinateRequestRepository mybatisSystemCoordinateRequestRepository) {
-        return new SystemCoordinateRequestRepository(mybatisSystemCoordinateRequestRepository);
+            MybatisSystemCoordinateRequestRepository mybatisSystemCoordinateRequestRepository,
+            SystemDataRequestEntityMapper systemDataRequestEntityMapper) {
+        return new SystemCoordinateRequestRepository(mybatisSystemCoordinateRequestRepository, systemDataRequestEntityMapper);
     }
 
     @Bean(name = "tradeStationRequireOdysseyRequestRepository")
     public StationRequireOdysseyRequestRepository stationRequireOdysseyRequestRepository(
-            MybatisStationRequireOdysseyRequestRepository mybatisStationRequireOdysseyRequestRepository) {
-        return new StationRequireOdysseyRequestRepository(mybatisStationRequireOdysseyRequestRepository);
+            MybatisStationRequireOdysseyRequestRepository mybatisStationRequireOdysseyRequestRepository,
+            StationDataRequestEntityMapper stationDataRequestEntityMapper) {
+        return new StationRequireOdysseyRequestRepository(mybatisStationRequireOdysseyRequestRepository, stationDataRequestEntityMapper);
     }
 
     @Bean(name = "tradeSystemEliteIdRequestRepository")
     public SystemEliteIdRequestRepository systemEliteIdRequestRepository(
-            MybatisSystemEliteIdRequestRepository mybatisSystemEliteIdRequestRepository) {
-        return new SystemEliteIdRequestRepository(mybatisSystemEliteIdRequestRepository);
+            MybatisSystemEliteIdRequestRepository mybatisSystemEliteIdRequestRepository,
+            SystemDataRequestEntityMapper systemDataRequestEntityMapper) {
+        return new SystemEliteIdRequestRepository(mybatisSystemEliteIdRequestRepository, systemDataRequestEntityMapper);
     }
 
     @Bean(name = "tradeStationArrivalDistanceRequestRepository")
     public StationArrivalDistanceRequestRepository stationArrivalDistanceRequestRepository(
-            MybatisStationArrivalDistanceRequestRepository mybatisStationArrivalDistanceRequestRepository) {
-        return new StationArrivalDistanceRequestRepository(mybatisStationArrivalDistanceRequestRepository);
+            MybatisStationArrivalDistanceRequestRepository mybatisStationArrivalDistanceRequestRepository,
+            StationDataRequestEntityMapper stationDataRequestEntityMapper) {
+        return new StationArrivalDistanceRequestRepository(mybatisStationArrivalDistanceRequestRepository, stationDataRequestEntityMapper);
     }
 
     @Bean(name = "tradeStationPlanetaryRequestRepository")
     public StationPlanetaryRequestRepository stationPlanetaryRequestRepository(
-            MybatisStationPlanetaryRequestRepository mybatisStationPlanetaryRequestRepository) {
-        return new StationPlanetaryRequestRepository(mybatisStationPlanetaryRequestRepository);
+            MybatisStationPlanetaryRequestRepository mybatisStationPlanetaryRequestRepository,
+            StationDataRequestEntityMapper stationDataRequestEntityMapper) {
+        return new StationPlanetaryRequestRepository(mybatisStationPlanetaryRequestRepository, stationDataRequestEntityMapper);
     }
 
     @Bean(name = "tradeStationLandingPadSizeRequestRepository")
     public StationLandingPadSizeRequestRepository stationLandingPadSizeRequestRepository(
-            MybatisStationLandingPadSizeRequestRepository mybatisStationLandingPadSizeRequestRepository) {
-        return new StationLandingPadSizeRequestRepository(mybatisStationLandingPadSizeRequestRepository);
+            MybatisStationLandingPadSizeRequestRepository mybatisStationLandingPadSizeRequestRepository,
+            StationDataRequestEntityMapper stationDataRequestEntityMapper) {
+        return new StationLandingPadSizeRequestRepository(mybatisStationLandingPadSizeRequestRepository, stationDataRequestEntityMapper);
     }
 }

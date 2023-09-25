@@ -18,35 +18,53 @@ import io.edpn.backend.trade.application.port.outgoing.marketdatum.ExistsByStati
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
+import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CleanUpObsoleteStationArrivalDistanceRequestsUseCase;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.DeleteStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.ExistsStationArrivalDistanceRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.LoadAllStationArrivalDistanceRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.RequestMissingStationArrivalDistanceUseCase;
+import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CleanUpObsoleteStationLandingPadSizeRequestsUseCase;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CreateStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.DeleteStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.ExistsStationLandingPadSizeRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.LoadAllStationLandingPadSizeRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.RequestMissingStationLandingPadSizeUseCase;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CleanUpObsoleteStationPlanetaryRequestsUseCase;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.LoadAllStationPlanetaryRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.RequestMissingStationPlanetaryUseCase;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CleanUpObsoleteStationRequireOdysseyRequestsUseCase;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.ExistsStationRequireOdysseyRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.LoadAllStationRequireOdysseyRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.RequestMissingStationRequireOdysseyUseCase;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
+import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CleanUpObsoleteSystemCoordinateRequestsUseCase;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.ExistsSystemCoordinateRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestsPort;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CleanUpObsoleteSystemEliteIdRequestsUseCase;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.ExistsSystemEliteIdRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.RequestMissingSystemEliteIdUseCase;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadAllValidatedCommodityPort;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadValidatedCommodityByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadValidatedCommodityByNamePort;
+import io.edpn.backend.trade.application.service.CleanUpObsoleteStationArrivalDistanceRequestsService;
+import io.edpn.backend.trade.application.service.CleanUpObsoleteStationLandingPadSizeRequestsService;
+import io.edpn.backend.trade.application.service.CleanUpObsoleteStationPlanetaryRequestsService;
+import io.edpn.backend.trade.application.service.CleanUpObsoleteStationRequireOdysseyRequestsService;
+import io.edpn.backend.trade.application.service.CleanUpObsoleteSystemCoordinateRequestsService;
+import io.edpn.backend.trade.application.service.CleanUpObsoleteSystemEliteIdRequestsService;
 import io.edpn.backend.trade.application.service.FindCommodityMarketInfoService;
 import io.edpn.backend.trade.application.service.FindCommodityService;
 import io.edpn.backend.trade.application.service.LocateCommodityService;
@@ -57,9 +75,9 @@ import io.edpn.backend.trade.application.service.ReceiveStationPlanetaryResponse
 import io.edpn.backend.trade.application.service.ReceiveStationRequireOdysseyResponseService;
 import io.edpn.backend.trade.application.service.ReceiveSystemCoordinatesResponseService;
 import io.edpn.backend.trade.application.service.ReceiveSystemEliteIdResponseService;
+import io.edpn.backend.trade.application.service.RequestMissingStationArrivalDistanceService;
 import io.edpn.backend.trade.application.service.RequestMissingStationMaxLandingPadSizeService;
 import io.edpn.backend.trade.application.service.RequestMissingStationPlanetaryService;
-import io.edpn.backend.trade.application.service.RequestMissingStationArrivalDistanceService;
 import io.edpn.backend.trade.application.service.RequestMissingStationRequireOdysseyService;
 import io.edpn.backend.trade.application.service.RequestMissingSystemCoordinatesService;
 import io.edpn.backend.trade.application.service.RequestMissingSystemEliteIdService;
@@ -306,5 +324,53 @@ public class ServiceConfig {
             MessageMapper messageMapper
     ) {
         return new RequestMissingStationArrivalDistanceService(loadStationsByFilterPort, createStationArrivalDistanceRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
+    }
+
+    @Bean(name = "tradeCleanUpObsoleteStationArrivalDistanceRequestsUseCase")
+    public CleanUpObsoleteStationArrivalDistanceRequestsUseCase cleanUpObsoleteStationArrivalDistanceRequestsUseCase(
+            LoadStationsByFilterPort loadStationsByFilterPort,
+            LoadAllStationArrivalDistanceRequestsPort loadAllStationArrivalDistanceRequestsPort,
+            DeleteStationArrivalDistanceRequestPort deleteStationArrivalDistanceRequestPort) {
+        return new CleanUpObsoleteStationArrivalDistanceRequestsService(loadStationsByFilterPort, loadAllStationArrivalDistanceRequestsPort, deleteStationArrivalDistanceRequestPort);
+    }
+
+    @Bean(name = "tradeCleanUpObsoleteStationLandingPadSizeRequestsUseCase")
+    public CleanUpObsoleteStationLandingPadSizeRequestsUseCase cleanUpObsoleteStationLandingPadSizeRequestsUseCase(
+            LoadStationsByFilterPort loadStationsByFilterPort,
+            LoadAllStationLandingPadSizeRequestsPort loadAllStationLandingPadSizeRequestsPort,
+            DeleteStationLandingPadSizeRequestPort deleteStationLandingPadSizeRequestPort) {
+        return new CleanUpObsoleteStationLandingPadSizeRequestsService(loadStationsByFilterPort, loadAllStationLandingPadSizeRequestsPort, deleteStationLandingPadSizeRequestPort);
+    }
+
+    @Bean(name = "tradeCleanUpObsoleteStationPlanetaryRequestsUseCase")
+    public CleanUpObsoleteStationPlanetaryRequestsUseCase cleanUpObsoleteStationPlanetaryRequestsUseCase(
+            LoadStationsByFilterPort loadStationsByFilterPort,
+            LoadAllStationPlanetaryRequestsPort loadAllStationPlanetaryRequestsPort,
+            DeleteStationPlanetaryRequestPort deleteStationPlanetaryRequestPort) {
+        return new CleanUpObsoleteStationPlanetaryRequestsService(loadStationsByFilterPort, loadAllStationPlanetaryRequestsPort, deleteStationPlanetaryRequestPort);
+    }
+
+    @Bean(name = "tradeCleanUpObsoleteStationRequireOdysseyRequestsUseCase")
+    public CleanUpObsoleteStationRequireOdysseyRequestsUseCase cleanUpObsoleteStationRequireOdysseyRequestsUseCase(
+            LoadStationsByFilterPort loadStationsByFilterPort,
+            LoadAllStationRequireOdysseyRequestsPort loadAllStationRequireOdysseyRequestsPort,
+            DeleteStationRequireOdysseyRequestPort deleteStationRequireOdysseyRequestPort) {
+        return new CleanUpObsoleteStationRequireOdysseyRequestsService(loadStationsByFilterPort, loadAllStationRequireOdysseyRequestsPort, deleteStationRequireOdysseyRequestPort);
+    }
+
+    @Bean(name = "tradeCleanUpObsoleteSystemCoordinateRequestsUseCase")
+    public CleanUpObsoleteSystemCoordinateRequestsUseCase cleanUpObsoleteSystemCoordinateRequestsUseCase(
+            LoadSystemsByFilterPort loadSystemsByFilterPort,
+            LoadAllSystemCoordinateRequestsPort loadAllSystemCoordinateRequestsPort,
+            DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort) {
+        return new CleanUpObsoleteSystemCoordinateRequestsService(loadSystemsByFilterPort, loadAllSystemCoordinateRequestsPort, deleteSystemCoordinateRequestPort);
+    }
+
+    @Bean(name = "tradeCleanUpObsoleteSystemEliteIdRequestsUseCase")
+    public CleanUpObsoleteSystemEliteIdRequestsUseCase cleanUpObsoleteSystemEliteIdRequestsUseCase(
+            LoadSystemsByFilterPort loadSystemsByFilterPort,
+            LoadAllSystemEliteIdRequestsPort loadAllSystemEliteIdRequestsPort,
+            DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort) {
+        return new CleanUpObsoleteSystemEliteIdRequestsService(loadSystemsByFilterPort, loadAllSystemEliteIdRequestsPort, deleteSystemEliteIdRequestPort);
     }
 }

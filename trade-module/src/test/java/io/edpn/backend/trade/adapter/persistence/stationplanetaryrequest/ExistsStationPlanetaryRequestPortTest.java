@@ -2,6 +2,7 @@ package io.edpn.backend.trade.adapter.persistence.stationplanetaryrequest;
 
 import io.edpn.backend.trade.adapter.persistence.StationPlanetaryRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationPlanetaryRequestRepository;
+import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationDataRequestEntityMapper;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,12 +19,14 @@ public class ExistsStationPlanetaryRequestPortTest {
 
     @Mock
     private MybatisStationPlanetaryRequestRepository mybatisStationPlanetaryRequestRepository;
+    @Mock
+    private StationDataRequestEntityMapper stationDataRequestEntityMapper;
 
     private ExistsStationPlanetaryRequestPort underTest;
 
     @BeforeEach
     public void setup() {
-        underTest = new StationPlanetaryRequestRepository(mybatisStationPlanetaryRequestRepository);
+        underTest = new StationPlanetaryRequestRepository(mybatisStationPlanetaryRequestRepository, stationDataRequestEntityMapper);
     }
 
     @Test
