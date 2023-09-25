@@ -12,11 +12,10 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class MybatisLocateCommodityEntityMapper implements LocateCommodityEntityMapper<MybatisLocateCommodityEntity> {
-    
+
     private final ValidatedCommodityEntityMapper<MybatisValidatedCommodityEntity> validatedCommodityEntityMapper;
     private final StationEntityMapper<MybatisStationEntity> stationEntityMapper;
 
-    
     @Override
     public LocateCommodity map(LocateCommodityEntity locateCommodityEntity) {
         return new LocateCommodity(
@@ -30,7 +29,7 @@ public class MybatisLocateCommodityEntityMapper implements LocateCommodityEntity
                 locateCommodityEntity.getDistance()
         );
     }
-    
+
     @Override
     public MybatisLocateCommodityEntity map(LocateCommodity locateCommodity) {
         return MybatisLocateCommodityEntity.builder()

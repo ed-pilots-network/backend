@@ -1,6 +1,7 @@
 package io.edpn.backend.trade.adapter.persistence.filter;
 
 import io.edpn.backend.trade.application.dto.persistence.filter.PersistenceLocateCommodityFilter;
+import io.edpn.backend.trade.application.dto.persistence.filter.PersistencePageFilter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -25,7 +26,8 @@ public class MybatisLocateCommodityFilter implements PersistenceLocateCommodityF
     private Boolean includePlanetary;
     private Boolean includeOdyssey;
     private Boolean includeFleetCarriers;
-    private String maxLandingPadSize;
+    private String shipSize;
     private Long minSupply;
     private Long minDemand;
+    private PersistencePageFilter page;
 }

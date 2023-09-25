@@ -12,7 +12,10 @@ public record RestLocateCommodityFilterDto(
         Boolean includePlanetary,
         Boolean includeOdyssey,
         Boolean includeFleetCarriers,
-        String maxLandingPadSize,
+        String shipSize,
         Long minSupply,
-        Long minDemand) implements LocateCommodityFilterDto {
+        Long minDemand,
+        Integer size,
+        Integer page
+) implements LocateCommodityFilterDto {
 }

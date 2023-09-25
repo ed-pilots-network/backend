@@ -37,6 +37,7 @@ import io.edpn.backend.trade.adapter.persistence.repository.MybatisValidatedComm
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.CommodityEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.CommodityMarketInfoEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.LocateCommodityEntityMapper;
+import io.edpn.backend.trade.application.dto.persistence.entity.mapper.PersistencePageInfoMapper;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.ValidatedCommodityEntityMapper;
@@ -69,8 +70,9 @@ public class RepositoryConfig {
     public LocateCommodityRepository locateCommodityRepository(
             MybatisLocateCommodityRepository mybatisLocateCommodityRepository,
             LocateCommodityEntityMapper<MybatisLocateCommodityEntity> mybatisLocateCommodityEntityMapper,
-            MybatisPersistenceLocateCommodityFilterMapper mybatisPersistenceLocateCommodityFilterMapper) {
-        return new LocateCommodityRepository(mybatisLocateCommodityRepository, mybatisLocateCommodityEntityMapper, mybatisPersistenceLocateCommodityFilterMapper);
+            MybatisPersistenceLocateCommodityFilterMapper mybatisPersistenceLocateCommodityFilterMapper,
+            PersistencePageInfoMapper persistencePageInfoMapper) {
+        return new LocateCommodityRepository(mybatisLocateCommodityRepository, mybatisLocateCommodityEntityMapper, mybatisPersistenceLocateCommodityFilterMapper, persistencePageInfoMapper);
     }
 
     @Bean(name = "tradeMarketDatumRepository")

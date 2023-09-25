@@ -26,4 +26,7 @@ public class MybatisLocateCommodityEntity implements LocateCommodityEntity {
     private Long buyPrice;
     private Long sellPrice;
     private Double distance;
+    private Integer pageSize;
+    private Integer currentPage;
+    private Integer totalItems;
 }

@@ -18,5 +18,6 @@ public record RestLocateCommodityDto(
         Long demand,
         Long buyPrice,
         Long sellPrice,
-        Double distance) implements LocateCommodityDto {
+        Double distance
+) implements LocateCommodityDto {
 }
