@@ -12,13 +12,12 @@ import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequ
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.RequestMissingStationLandingPadSizeUseCase;
 import io.edpn.backend.util.Module;
 import io.edpn.backend.util.Topic;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 @AllArgsConstructor
 @Slf4j
@@ -57,5 +56,6 @@ public class RequestMissingStationMaxLandingPadSizeService implements RequestMis
                                 createStationLandingPadSizeRequestPort.create(station.getSystem().getName(), station.getName());
                             }
                         }, executor));
+        log.info("requested missing StationLandingPadSize");
     }
 }

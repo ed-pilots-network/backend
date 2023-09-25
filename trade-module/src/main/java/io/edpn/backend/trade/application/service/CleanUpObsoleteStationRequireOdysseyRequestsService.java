@@ -35,5 +35,6 @@ public class CleanUpObsoleteStationRequireOdysseyRequestsService implements Clea
                 .filter(dataRequest -> missingItemsList.stream()
                         .noneMatch(station -> station.getName().equals(dataRequest.stationName()) && station.getSystem().getName().equals(dataRequest.systemName())))
                 .forEach(dataRequest -> deleteStationRequireOdysseyRequestPort.delete(dataRequest.systemName(), dataRequest.stationName()));
+        log.info("cleaned obsolete StationRequireOdysseyRequests");
     }
 }

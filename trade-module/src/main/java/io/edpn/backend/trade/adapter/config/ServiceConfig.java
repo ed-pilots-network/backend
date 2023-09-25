@@ -254,7 +254,7 @@ public class ServiceConfig {
             CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort,
             SendKafkaMessagePort sendKafkaMessagePort,
             @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
-            @Qualifier("tradeThreadPoolTaskExecutor") Executor executor,
+            @Qualifier("tradeForkJoinPool") Executor executor,
             ObjectMapper objectMapper,
             MessageMapper messageMapper
     ) {
@@ -267,7 +267,7 @@ public class ServiceConfig {
             CreateStationRequireOdysseyRequestPort createStationRequireOdysseyRequestPort,
             SendKafkaMessagePort sendKafkaMessagePort,
             @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
-            @Qualifier("tradeThreadPoolTaskExecutor") Executor executor,
+            @Qualifier("tradeForkJoinPool") Executor executor,
             ObjectMapper objectMapper,
             MessageMapper messageMapper
     ) {
@@ -280,7 +280,7 @@ public class ServiceConfig {
             CreateStationLandingPadSizeRequestPort createStationLandingPadSizeRequestPort,
             SendKafkaMessagePort sendKafkaMessagePort,
             @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
-            @Qualifier("tradeThreadPoolTaskExecutor") Executor executor,
+            @Qualifier("tradeForkJoinPool") Executor executor,
             ObjectMapper objectMapper,
             MessageMapper messageMapper
     ) {
@@ -293,7 +293,7 @@ public class ServiceConfig {
             CreateStationPlanetaryRequestPort createStationPlanetaryRequestPort,
             SendKafkaMessagePort sendKafkaMessagePort,
             @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
-            @Qualifier("tradeThreadPoolTaskExecutor") Executor executor,
+            @Qualifier("tradeForkJoinPool") Executor executor,
             ObjectMapper objectMapper,
             MessageMapper messageMapper
     ) {
@@ -306,7 +306,7 @@ public class ServiceConfig {
             CreateSystemEliteIdRequestPort createSystemEliteIdRequestPort,
             SendKafkaMessagePort sendKafkaMessagePort,
             @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
-            @Qualifier("tradeThreadPoolTaskExecutor") Executor executor,
+            @Qualifier("tradeForkJoinPool") Executor executor,
             ObjectMapper objectMapper,
             MessageMapper messageMapper
     ) {
@@ -319,7 +319,7 @@ public class ServiceConfig {
             CreateStationArrivalDistanceRequestPort createStationArrivalDistanceRequestPort,
             SendKafkaMessagePort sendKafkaMessagePort,
             @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
-            @Qualifier("tradeThreadPoolTaskExecutor") Executor executor,
+            @Qualifier("tradeForkJoinPool") Executor executor,
             ObjectMapper objectMapper,
             MessageMapper messageMapper
     ) {

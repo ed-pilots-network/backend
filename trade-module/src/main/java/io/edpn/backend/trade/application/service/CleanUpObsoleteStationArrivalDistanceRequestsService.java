@@ -36,5 +36,6 @@ public class CleanUpObsoleteStationArrivalDistanceRequestsService implements Cle
                 .filter(dataRequest -> missingItemsList.stream()
                         .noneMatch(station -> station.getName().equals(dataRequest.stationName()) && station.getSystem().getName().equals(dataRequest.systemName())))
                 .forEach(dataRequest -> deleteStationArrivalDistanceRequestPort.delete(dataRequest.systemName(), dataRequest.stationName()));
+        log.info("cleaned obsolete StationArrivalDistanceRequests");
     }
 }

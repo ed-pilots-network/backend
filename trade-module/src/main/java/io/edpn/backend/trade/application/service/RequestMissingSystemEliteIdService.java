@@ -56,5 +56,6 @@ public class RequestMissingSystemEliteIdService implements RequestMissingSystemE
                                 createSystemEliteIdRequestPort.create(system.getName());
                             }
                         }, executor));
+        log.info("requested missing SystemEliteId");
     }
 }

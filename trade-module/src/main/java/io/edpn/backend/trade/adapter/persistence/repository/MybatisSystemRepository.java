@@ -51,7 +51,7 @@ public interface MybatisSystemRepository {
             WHERE 1 = 1
             <if test='name != null'>AND name ILIKE '%' || #{name} || '%'</if>
             <if test='hasEliteId != null'>AND elite_id IS NULL != #{hasEliteId}</if>
-            <if test='hasCoordinates != null'>AND ((x_coordinate IS NULL OR y_coordinate IS NULL OR z_coordinate IS NULL) != #{hasCoordinates}</if>
+            <if test='hasCoordinates != null'>AND (x_coordinate IS NULL OR y_coordinate IS NULL OR z_coordinate IS NULL) != #{hasCoordinates}</if>
             </script>
             """)
     @ResultMap("systemResultMap")

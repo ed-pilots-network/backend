@@ -57,5 +57,6 @@ public class RequestMissingStationArrivalDistanceService implements RequestMissi
                                 createStationArrivalDistanceRequestPort.create(station.getSystem().getName(), station.getName());
                             }
                         }, executor));
+        log.info("requested missing StationArrivalDistance");
     }
 }

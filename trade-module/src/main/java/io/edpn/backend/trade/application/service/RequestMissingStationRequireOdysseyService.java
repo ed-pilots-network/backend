@@ -57,5 +57,6 @@ public class RequestMissingStationRequireOdysseyService implements RequestMissin
                                 createStationRequireOdysseyRequestPort.create(station.getSystem().getName(), station.getName());
                             }
                         }, executor));
+        log.info("requested missing StationRequireOdyssey");
     }
 }

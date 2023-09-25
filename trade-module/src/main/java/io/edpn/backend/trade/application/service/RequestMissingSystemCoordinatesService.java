@@ -62,5 +62,6 @@ public class RequestMissingSystemCoordinatesService implements RequestMissingSys
                                 createSystemCoordinateRequestPort.create(system.getName());
                             }
                         }, executor));
+        log.info("requested missing SystemCoordinate");
     }
 }

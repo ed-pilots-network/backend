@@ -35,5 +35,6 @@ public class CleanUpObsoleteSystemEliteIdRequestsService implements CleanUpObsol
                 .filter(dataRequest -> missingItemsList.stream()
                         .noneMatch(system -> system.getName().equals(dataRequest.systemName())))
                 .forEach(dataRequest -> deleteSystemEliteIdRequestPort.delete(dataRequest.systemName()));
+        log.info("cleaned obsolete SystemEliteIdRequests");
     }
 }

@@ -36,5 +36,6 @@ public class CleanUpObsoleteStationLandingPadSizeRequestsService implements Clea
                 .filter(dataRequest -> missingItemsList.stream()
                         .noneMatch(station -> station.getName().equals(dataRequest.stationName()) && station.getSystem().getName().equals(dataRequest.systemName())))
                 .forEach(dataRequest -> deleteStationLandingPadSizeRequestPort.delete(dataRequest.systemName(), dataRequest.stationName()));
+        log.info("cleaned obsolete StationLandingPadSizeRequests");
     }
 }

@@ -57,5 +57,6 @@ public class RequestMissingStationPlanetaryService implements RequestMissingStat
                                 createStationPlanetaryRequestPort.create(station.getSystem().getName(), station.getName());
                             }
                         }, executor));
+        log.info("requested missing StationPlanetary");
     }
 }

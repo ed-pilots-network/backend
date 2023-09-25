@@ -27,6 +27,7 @@ public interface MybatisSystemCoordinateRequestRepository {
     void delete(MybatisSystemCoordinateRequestEntity requestDataMessageEntity);
 
     @Select("SELECT * FROM system_coordinate_data_request")
+    @ResultMap("commodityMarketInfoResultMap")
     List<MybatisSystemCoordinateRequestEntity> findAll();
 
     @Select("SELECT * FROM system_coordinate_data_request WHERE system_name = #{systemName}")

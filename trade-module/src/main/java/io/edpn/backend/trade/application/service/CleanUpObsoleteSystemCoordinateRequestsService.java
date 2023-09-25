@@ -35,5 +35,6 @@ public class CleanUpObsoleteSystemCoordinateRequestsService implements CleanUpOb
                 .filter(dataRequest -> missingItemsList.stream()
                         .noneMatch(system -> system.getName().equals(dataRequest.systemName())))
                 .forEach(dataRequest -> deleteSystemCoordinateRequestPort.delete(dataRequest.systemName()));
+        log.info("cleaned obsolete SystemCoordinateRequests");
     }
 }
