@@ -5,14 +5,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
-import io.edpn.backend.trade.application.domain.filter.FindSystemFilter;
+import io.edpn.backend.trade.application.domain.filter.FindStationFilter;
 import io.edpn.backend.trade.application.dto.web.object.MessageDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
+import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
+import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateStationArrivalDistanceRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.DeleteStationArrivalDistanceRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.ExistsStationArrivalDistanceRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.LoadAllStationArrivalDistanceRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.RequestMissingStationArrivalDistanceUseCase;
+import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.util.Module;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Executor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,10 +29,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.RetryCallback;
 import org.springframework.retry.support.RetryTemplate;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Executor;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -40,19 +45,26 @@ import static org.mockito.Mockito.when;
 public class RequestMissingStationArrivalDistanceUseCaseTest {
     @Mock
     private LoadStationsByFilterPort loadStationsByFilterPort;
-
+    @Mock
+    private LoadAllStationArrivalDistanceRequestsPort loadAllStationArrivalDistanceRequestsPort;
+    @Mock
+    private DeleteStationArrivalDistanceRequestPort deleteStationArrivalDistanceRequestPort;
+    @Mock
+    private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
+    @Mock
+    private LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
+    @Mock
+    private ExistsStationArrivalDistanceRequestPort existsStationArrivalDistanceRequestPort;
     @Mock
     private CreateStationArrivalDistanceRequestPort createStationArrivalDistanceRequestPort;
-
+    @Mock
+    private UpdateStationPort updateStationPort;
     @Mock
     private SendKafkaMessagePort sendKafkaMessagePort;
-
     @Mock
     private RetryTemplate retryTemplate;
-
     @Mock
     private ObjectMapper objectMapper;
-
     @Mock
     private MessageMapper messageMapper;
 
@@ -62,16 +74,29 @@ public class RequestMissingStationArrivalDistanceUseCaseTest {
 
     @BeforeEach
     public void setUp() {
-        underTest = new RequestMissingStationArrivalDistanceService(loadStationsByFilterPort, createStationArrivalDistanceRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
+        underTest = new StationArrivalDistanceInterModuleCommunicationService(
+                loadStationsByFilterPort,
+                loadAllStationArrivalDistanceRequestsPort,
+                loadOrCreateSystemByNamePort,
+                loadOrCreateBySystemAndStationNamePort,
+                existsStationArrivalDistanceRequestPort,
+                createStationArrivalDistanceRequestPort,
+                deleteStationArrivalDistanceRequestPort,
+                updateStationPort,
+                sendKafkaMessagePort,
+                retryTemplate,
+                executor,
+                objectMapper,
+                messageMapper);
     }
 
     @Test
-    public void testFindSystemsFilter() {
-        FindSystemFilter findSystemFilter = FindSystemFilter.builder()
-                .hasCoordinates(false)
+    public void testFindStationsFilter() {
+        FindStationFilter findStationFilter = FindStationFilter.builder()
+                .hasArrivalDistance(false)
                 .build();
 
-        assertThat(RequestMissingSystemCoordinatesService.FIND_SYSTEM_FILTER, equalTo(findSystemFilter));
+        assertThat(StationArrivalDistanceInterModuleCommunicationService.FIND_STATION_FILTER, equalTo(findStationFilter));
     }
 
     @Test

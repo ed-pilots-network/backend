@@ -8,8 +8,13 @@ import io.edpn.backend.trade.application.domain.filter.FindSystemFilter;
 import io.edpn.backend.trade.application.dto.web.object.MessageDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
+import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
+import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.ExistsSystemCoordinateRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.RequestMissingSystemCoordinatesUseCase;
 import io.edpn.backend.util.Module;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,29 +44,47 @@ import static org.mockito.Mockito.when;
 public class RequestMissingSystemCoordinatesUseCaseTest {
     @Mock
     private LoadSystemsByFilterPort loadSystemsByFilterPort;
-
+    @Mock
+    private LoadAllSystemCoordinateRequestsPort loadAllSystemCoordinateRequestsPort;
+    @Mock
+    private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
+    @Mock
+    private ExistsSystemCoordinateRequestPort existsSystemCoordinateRequestPort;
     @Mock
     private CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
-
+    @Mock
+    private DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
+    @Mock
+    private UpdateSystemPort updateSystemPort;
     @Mock
     private SendKafkaMessagePort sendKafkaMessagePort;
-
     @Mock
     private RetryTemplate retryTemplate;
-
     @Mock
     private ObjectMapper objectMapper;
-
     @Mock
     private MessageMapper messageMapper;
 
-    private RequestMissingSystemCoordinatesUseCase undertest;
+    private RequestMissingSystemCoordinatesUseCase underTest;
 
     private final Executor executor = Runnable::run;
 
     @BeforeEach
     public void setUp() {
-        undertest = new RequestMissingSystemCoordinatesService(loadSystemsByFilterPort, createSystemCoordinateRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
+        underTest = new SystemCoordinateInterModuleCommunicationService(
+                loadSystemsByFilterPort,
+                loadAllSystemCoordinateRequestsPort,
+                loadOrCreateSystemByNamePort,
+                existsSystemCoordinateRequestPort,
+                createSystemCoordinateRequestPort,
+                deleteSystemCoordinateRequestPort,
+                updateSystemPort,
+                sendKafkaMessagePort,
+                retryTemplate,
+                executor,
+                objectMapper,
+                messageMapper
+        );
     }
 
     @Test
@@ -70,14 +93,14 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
                 .hasCoordinates(false)
                 .build();
 
-        assertThat(RequestMissingSystemCoordinatesService.FIND_SYSTEM_FILTER, equalTo(findSystemFilter));
+        assertThat(SystemCoordinateInterModuleCommunicationService.FIND_SYSTEM_FILTER, equalTo(findSystemFilter));
     }
 
     @Test
     public void testRequestMissingForZeroResults() {
         when(loadSystemsByFilterPort.loadByFilter(any())).thenReturn(Collections.emptyList());
 
-        undertest.requestMissing();
+        underTest.requestMissing();
 
         verify(sendKafkaMessagePort, never()).send(any());
         verify(createSystemCoordinateRequestPort, never()).create(any());
@@ -102,7 +125,7 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
-        undertest.requestMissing();
+        underTest.requestMissing();
 
         verify(sendKafkaMessagePort).send(any());
         verify(createSystemCoordinateRequestPort).create(any());
@@ -141,7 +164,7 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
         when(sendKafkaMessagePort.send(messageDto2)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
-        undertest.requestMissing();
+        underTest.requestMissing();
 
         verify(sendKafkaMessagePort, times(2)).send(any());
         verify(createSystemCoordinateRequestPort, times(2)).create(any());

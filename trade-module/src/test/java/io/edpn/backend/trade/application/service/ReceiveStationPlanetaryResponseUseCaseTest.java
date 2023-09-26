@@ -1,18 +1,27 @@
 package io.edpn.backend.trade.application.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationPlanetaryResponse;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
+import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
+import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
+import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.LoadAllStationPlanetaryRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
+import java.util.concurrent.Executor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.retry.support.RetryTemplate;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.anyString;
@@ -24,22 +33,51 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class ReceiveStationPlanetaryResponseUseCaseTest {
     @Mock
+    private LoadStationsByFilterPort loadStationsByFilterPort;
+    @Mock
+    private LoadAllStationPlanetaryRequestsPort loadAllStationPlanetaryRequestsPort;
+    @Mock
     private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
-
     @Mock
     private LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
-
+    @Mock
+    private ExistsStationPlanetaryRequestPort existsStationPlanetaryRequestPort;
+    @Mock
+    private CreateStationPlanetaryRequestPort createStationPlanetaryRequestPort;
     @Mock
     private DeleteStationPlanetaryRequestPort deleteStationPlanetaryRequestPort;
-
     @Mock
     private UpdateStationPort updateStationPort;
+    @Mock
+    private SendKafkaMessagePort sendKafkaMessagePort;
+    @Mock
+    private RetryTemplate retryTemplate;
+    @Mock
+    private Executor executor;
+    @Mock
+    private ObjectMapper objectMapper;
+    @Mock
+    private MessageMapper messageMapper;
 
     private ReceiveKafkaMessageUseCase<StationPlanetaryResponse> underTest;
 
     @BeforeEach
     public void setUp() {
-        underTest = new ReceiveStationPlanetaryResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, deleteStationPlanetaryRequestPort, updateStationPort);
+        underTest = new StationPlanetaryInterModuleCommunicationService(
+                loadStationsByFilterPort,
+                loadAllStationPlanetaryRequestsPort,
+                loadOrCreateSystemByNamePort,
+                loadOrCreateBySystemAndStationNamePort,
+                existsStationPlanetaryRequestPort,
+                createStationPlanetaryRequestPort,
+                deleteStationPlanetaryRequestPort,
+                updateStationPort,
+                sendKafkaMessagePort,
+                retryTemplate,
+                executor,
+                objectMapper,
+                messageMapper
+        );
     }
 
     @Test

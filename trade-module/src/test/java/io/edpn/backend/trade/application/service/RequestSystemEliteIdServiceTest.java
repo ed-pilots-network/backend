@@ -9,10 +9,17 @@ import io.edpn.backend.trade.application.dto.web.object.MessageDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
+import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
+import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
+import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.ExistsSystemEliteIdRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestsPort;
 import io.edpn.backend.util.Module;
 import io.edpn.backend.util.Topic;
+import java.util.concurrent.Executor;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,8 +29,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.stream.Stream;
+import org.springframework.retry.support.RetryTemplate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -41,13 +47,27 @@ import static org.mockito.Mockito.when;
 public class RequestSystemEliteIdServiceTest {
 
     @Mock
-    private ObjectMapper objectMapper;
+    private LoadSystemsByFilterPort loadSystemsByFilterPort;
+    @Mock
+    private LoadAllSystemEliteIdRequestsPort loadAllSystemEliteIdRequestsPort;
+    @Mock
+    private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
     @Mock
     private ExistsSystemEliteIdRequestPort existsSystemEliteIdRequestPort;
     @Mock
     private CreateSystemEliteIdRequestPort createSystemEliteIdRequestPort;
     @Mock
+    private DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort;
+    @Mock
+    private UpdateSystemPort updateSystemPort;
+    @Mock
     private SendKafkaMessagePort sendKafkaMessagePort;
+    @Mock
+    private RetryTemplate retryTemplate;
+    @Mock
+    private Executor executor;
+    @Mock
+    private ObjectMapper objectMapper;
     @Mock
     private MessageMapper messageMapper;
 
@@ -63,7 +83,20 @@ public class RequestSystemEliteIdServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new RequestSystemEliteIdService(sendKafkaMessagePort, existsSystemEliteIdRequestPort, createSystemEliteIdRequestPort, objectMapper, messageMapper);
+        underTest = new SystemEliteIdInterModuleCommunicationService(
+                loadSystemsByFilterPort,
+                loadAllSystemEliteIdRequestsPort,
+                loadOrCreateSystemByNamePort,
+                existsSystemEliteIdRequestPort,
+                createSystemEliteIdRequestPort,
+                deleteSystemEliteIdRequestPort,
+                updateSystemPort,
+                sendKafkaMessagePort,
+                retryTemplate,
+                executor,
+                objectMapper,
+                messageMapper
+        );
     }
 
     @ParameterizedTest
