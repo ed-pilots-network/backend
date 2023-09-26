@@ -21,6 +21,7 @@ import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystem
 import io.edpn.backend.util.Module;
 import io.edpn.backend.util.Topic;
 import java.util.concurrent.Executor;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,8 +31,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.stream.Stream;
 import org.springframework.retry.support.RetryTemplate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -71,8 +70,8 @@ public class RequestStationArrivalDistanceServiceTest {
     private RetryTemplate retryTemplate;
     @Mock
     private Executor executor;
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    @Mock
+    private ObjectMapper objectMapper;
     @Mock
     private MessageMapper messageMapper;
 

@@ -34,12 +34,10 @@ import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.D
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.LoadAllStationPlanetaryRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.RequestMissingStationPlanetaryUseCase;
-import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CleanUpObsoleteStationRequireOdysseyRequestsUseCase;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.ExistsStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.LoadAllStationRequireOdysseyRequestsPort;
-import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.RequestMissingStationRequireOdysseyUseCase;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
@@ -56,21 +54,18 @@ import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadVa
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadValidatedCommodityByNamePort;
 import io.edpn.backend.trade.application.service.CleanUpObsoleteStationLandingPadSizeRequestsService;
 import io.edpn.backend.trade.application.service.CleanUpObsoleteStationPlanetaryRequestsService;
-import io.edpn.backend.trade.application.service.CleanUpObsoleteStationRequireOdysseyRequestsService;
 import io.edpn.backend.trade.application.service.FindCommodityMarketInfoService;
 import io.edpn.backend.trade.application.service.FindCommodityService;
 import io.edpn.backend.trade.application.service.LocateCommodityService;
 import io.edpn.backend.trade.application.service.ReceiveCommodityMessageService;
 import io.edpn.backend.trade.application.service.ReceiveStationMaxLandingPadSizeResponseService;
 import io.edpn.backend.trade.application.service.ReceiveStationPlanetaryResponseService;
-import io.edpn.backend.trade.application.service.ReceiveStationRequireOdysseyResponseService;
 import io.edpn.backend.trade.application.service.RequestMissingStationMaxLandingPadSizeService;
 import io.edpn.backend.trade.application.service.RequestMissingStationPlanetaryService;
-import io.edpn.backend.trade.application.service.RequestMissingStationRequireOdysseyService;
 import io.edpn.backend.trade.application.service.RequestStationLandingPadSizeService;
 import io.edpn.backend.trade.application.service.RequestStationPlanetaryService;
-import io.edpn.backend.trade.application.service.RequestStationRequireOdysseyService;
 import io.edpn.backend.trade.application.service.StationArrivalDistanceInterModuleCommunicationService;
+import io.edpn.backend.trade.application.service.StationRequireOdysseyInterModuleCommunicationService;
 import io.edpn.backend.trade.application.service.SystemCoordinateInterModuleCommunicationService;
 import io.edpn.backend.trade.application.service.SystemEliteIdInterModuleCommunicationService;
 import java.util.List;
@@ -170,15 +165,6 @@ public class ServiceConfig {
         return new ReceiveStationPlanetaryResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, deleteStationPlanetaryRequestPort, updateStationPort);
     }
 
-    @Bean(name = "tradeReceiveStationRequireOdysseyResponseService")
-    public ReceiveStationRequireOdysseyResponseService receiveStationRequireOdysseyResponseService(
-            LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
-            LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort,
-            DeleteStationRequireOdysseyRequestPort deleteStationRequireOdysseyRequestPort,
-            UpdateStationPort updateStationPort) {
-        return new ReceiveStationRequireOdysseyResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, deleteStationRequireOdysseyRequestPort, updateStationPort);
-    }
-
     @Bean(name = "tradeReceiveSystemCoordinatesResponseService")
     public SystemCoordinateInterModuleCommunicationService receiveSystemCoordinatesResponseService(
             LoadSystemsByFilterPort loadSystemsByFilterPort,
@@ -231,13 +217,36 @@ public class ServiceConfig {
     }
 
     @Bean(name = "tradeRequestStationRequireOdysseyService")
-    public RequestStationRequireOdysseyService requestStationRequireOdysseyService(
-            SendKafkaMessagePort sendKafkaMessagePort,
+    public StationRequireOdysseyInterModuleCommunicationService requestStationRequireOdysseyService(
+            LoadStationsByFilterPort loadStationsByFilterPort,
+            LoadAllStationRequireOdysseyRequestsPort loadAllStationRequireOdysseyRequestsPort,
+            LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
+            LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort,
             ExistsStationRequireOdysseyRequestPort existsStationRequireOdysseyRequestPort,
             CreateStationRequireOdysseyRequestPort createStationRequireOdysseyRequestPort,
+            DeleteStationRequireOdysseyRequestPort deleteStationRequireOdysseyRequestPort,
+            UpdateStationPort updateStationPort,
+            SendKafkaMessagePort sendKafkaMessagePort,
+            @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
+            @Qualifier("tradeForkJoinPool") Executor executor,
             ObjectMapper objectMapper,
-            MessageMapper messageMapper) {
-        return new RequestStationRequireOdysseyService(sendKafkaMessagePort, existsStationRequireOdysseyRequestPort, createStationRequireOdysseyRequestPort, objectMapper, messageMapper);
+            MessageMapper messageMapper
+    ) {
+        return new StationRequireOdysseyInterModuleCommunicationService(
+                loadStationsByFilterPort,
+                loadAllStationRequireOdysseyRequestsPort,
+                loadOrCreateSystemByNamePort,
+                loadOrCreateBySystemAndStationNamePort,
+                existsStationRequireOdysseyRequestPort,
+                createStationRequireOdysseyRequestPort,
+                deleteStationRequireOdysseyRequestPort,
+                updateStationPort,
+                sendKafkaMessagePort,
+                retryTemplate,
+                executor,
+                objectMapper,
+                messageMapper
+        );
     }
 
     @Bean(name = "tradeRequestSystemEliteIdService")
@@ -268,19 +277,6 @@ public class ServiceConfig {
                 objectMapper,
                 messageMapper
         );
-    }
-
-    @Bean(name = "tradeRequestMissingStationRequireOdysseyUseCase")
-    public RequestMissingStationRequireOdysseyUseCase requestMissingStationRequireOdysseyUseCase(
-            LoadStationsByFilterPort loadStationsByFilterPort,
-            CreateStationRequireOdysseyRequestPort createStationRequireOdysseyRequestPort,
-            SendKafkaMessagePort sendKafkaMessagePort,
-            @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
-            @Qualifier("tradeForkJoinPool") Executor executor,
-            ObjectMapper objectMapper,
-            MessageMapper messageMapper
-    ) {
-        return new RequestMissingStationRequireOdysseyService(loadStationsByFilterPort, createStationRequireOdysseyRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
     }
 
     @Bean(name = "tradeRequestMissingStationLandingPadSizeUseCase")
@@ -323,13 +319,5 @@ public class ServiceConfig {
             LoadAllStationPlanetaryRequestsPort loadAllStationPlanetaryRequestsPort,
             DeleteStationPlanetaryRequestPort deleteStationPlanetaryRequestPort) {
         return new CleanUpObsoleteStationPlanetaryRequestsService(loadStationsByFilterPort, loadAllStationPlanetaryRequestsPort, deleteStationPlanetaryRequestPort);
-    }
-
-    @Bean(name = "tradeCleanUpObsoleteStationRequireOdysseyRequestsUseCase")
-    public CleanUpObsoleteStationRequireOdysseyRequestsUseCase cleanUpObsoleteStationRequireOdysseyRequestsUseCase(
-            LoadStationsByFilterPort loadStationsByFilterPort,
-            LoadAllStationRequireOdysseyRequestsPort loadAllStationRequireOdysseyRequestsPort,
-            DeleteStationRequireOdysseyRequestPort deleteStationRequireOdysseyRequestPort) {
-        return new CleanUpObsoleteStationRequireOdysseyRequestsService(loadStationsByFilterPort, loadAllStationRequireOdysseyRequestsPort, deleteStationRequireOdysseyRequestPort);
     }
 }

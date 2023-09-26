@@ -10,10 +10,18 @@ import io.edpn.backend.trade.application.dto.web.object.MessageDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
+import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
+import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
+import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateStationRequireOdysseyRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.ExistsStationRequireOdysseyRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.LoadAllStationRequireOdysseyRequestsPort;
+import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.util.Module;
 import io.edpn.backend.util.Topic;
+import java.util.concurrent.Executor;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,8 +31,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.stream.Stream;
+import org.springframework.retry.support.RetryTemplate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -42,15 +49,31 @@ import static org.mockito.Mockito.when;
 public class RequestStationRequireOdysseyServiceTest {
 
     @Mock
-    private ObjectMapper objectMapper;
+    private LoadStationsByFilterPort loadStationsByFilterPort;
     @Mock
-    private SendKafkaMessagePort sendKafkaMessagePort;
+    private LoadAllStationRequireOdysseyRequestsPort loadAllStationRequireOdysseyRequestsPort;
+    @Mock
+    private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
+    @Mock
+    private LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
     @Mock
     private ExistsStationRequireOdysseyRequestPort existsStationRequireOdysseyRequestPort;
     @Mock
     private CreateStationRequireOdysseyRequestPort createStationRequireOdysseyRequestPort;
     @Mock
+    private DeleteStationRequireOdysseyRequestPort deleteStationRequireOdysseyRequestPort;
+    @Mock
+    private UpdateStationPort updateStationPort;
+    @Mock
+    private SendKafkaMessagePort sendKafkaMessagePort;
+    @Mock
+    private RetryTemplate retryTemplate;
+    @Mock
+    private Executor executor;
+    @Mock
     private MessageMapper messageMapper;
+    @Mock
+    private ObjectMapper objectMapper;
 
     private RequestDataUseCase<Station> underTest;
 
@@ -64,7 +87,21 @@ public class RequestStationRequireOdysseyServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new RequestStationRequireOdysseyService(sendKafkaMessagePort, existsStationRequireOdysseyRequestPort, createStationRequireOdysseyRequestPort, objectMapper, messageMapper);
+        underTest = new StationRequireOdysseyInterModuleCommunicationService(
+                loadStationsByFilterPort,
+                loadAllStationRequireOdysseyRequestsPort,
+                loadOrCreateSystemByNamePort,
+                loadOrCreateBySystemAndStationNamePort,
+                existsStationRequireOdysseyRequestPort,
+                createStationRequireOdysseyRequestPort,
+                deleteStationRequireOdysseyRequestPort,
+                updateStationPort,
+                sendKafkaMessagePort,
+                retryTemplate,
+                executor,
+                objectMapper,
+                messageMapper
+        );
     }
 
     @ParameterizedTest

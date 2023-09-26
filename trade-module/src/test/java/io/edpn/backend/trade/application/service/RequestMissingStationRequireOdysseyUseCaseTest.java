@@ -9,9 +9,15 @@ import io.edpn.backend.trade.application.domain.filter.FindStationFilter;
 import io.edpn.backend.trade.application.dto.web.object.MessageDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
+import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
+import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateStationRequireOdysseyRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.ExistsStationRequireOdysseyRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.LoadAllStationRequireOdysseyRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.RequestMissingStationRequireOdysseyUseCase;
+import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.util.Module;
 import java.util.Collections;
 import java.util.List;
@@ -39,19 +45,26 @@ import static org.mockito.Mockito.when;
 public class RequestMissingStationRequireOdysseyUseCaseTest {
     @Mock
     private LoadStationsByFilterPort loadStationsByFilterPort;
-
+    @Mock
+    private LoadAllStationRequireOdysseyRequestsPort loadAllStationRequireOdysseyRequestsPort;
+    @Mock
+    private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
+    @Mock
+    private LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
+    @Mock
+    private ExistsStationRequireOdysseyRequestPort existsStationRequireOdysseyRequestPort;
     @Mock
     private CreateStationRequireOdysseyRequestPort createStationRequireOdysseyRequestPort;
-
+    @Mock
+    private DeleteStationRequireOdysseyRequestPort deleteStationRequireOdysseyRequestPort;
+    @Mock
+    private UpdateStationPort updateStationPort;
     @Mock
     private SendKafkaMessagePort sendKafkaMessagePort;
-
     @Mock
     private RetryTemplate retryTemplate;
-
     @Mock
     private ObjectMapper objectMapper;
-
     @Mock
     private MessageMapper messageMapper;
 
@@ -61,7 +74,21 @@ public class RequestMissingStationRequireOdysseyUseCaseTest {
 
     @BeforeEach
     public void setUp() {
-        underTest = new RequestMissingStationRequireOdysseyService(loadStationsByFilterPort, createStationRequireOdysseyRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
+        underTest = new StationRequireOdysseyInterModuleCommunicationService(
+                loadStationsByFilterPort,
+                loadAllStationRequireOdysseyRequestsPort,
+                loadOrCreateSystemByNamePort,
+                loadOrCreateBySystemAndStationNamePort,
+                existsStationRequireOdysseyRequestPort,
+                createStationRequireOdysseyRequestPort,
+                deleteStationRequireOdysseyRequestPort,
+                updateStationPort,
+                sendKafkaMessagePort,
+                retryTemplate,
+                executor,
+                objectMapper,
+                messageMapper
+        );
     }
 
     @Test
@@ -70,7 +97,7 @@ public class RequestMissingStationRequireOdysseyUseCaseTest {
                 .hasRequiredOdyssey(false)
                 .build();
 
-        assertThat(RequestMissingStationRequireOdysseyService.FIND_STATION_FILTER, equalTo(findStationFilter));
+        assertThat(StationRequireOdysseyInterModuleCommunicationService.FIND_STATION_FILTER, equalTo(findStationFilter));
     }
 
     @Test

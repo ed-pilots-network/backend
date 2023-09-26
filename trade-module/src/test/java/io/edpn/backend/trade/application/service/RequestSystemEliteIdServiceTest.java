@@ -66,7 +66,8 @@ public class RequestSystemEliteIdServiceTest {
     private RetryTemplate retryTemplate;
     @Mock
     private Executor executor;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    @Mock
+    private ObjectMapper objectMapper;
     @Mock
     private MessageMapper messageMapper;
 

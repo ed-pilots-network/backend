@@ -1,18 +1,27 @@
 package io.edpn.backend.trade.application.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationRequireOdysseyResponse;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
+import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
+import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
+import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.ExistsStationRequireOdysseyRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.LoadAllStationRequireOdysseyRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
+import java.util.concurrent.Executor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.retry.support.RetryTemplate;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.anyString;
@@ -25,22 +34,51 @@ import static org.mockito.Mockito.when;
 public class ReceiveStationRequireOdysseyResponseUseCaseTest {
 
     @Mock
+    private LoadStationsByFilterPort loadStationsByFilterPort;
+    @Mock
+    private LoadAllStationRequireOdysseyRequestsPort loadAllStationRequireOdysseyRequestsPort;
+    @Mock
     private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
-
     @Mock
     private LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
-
+    @Mock
+    private ExistsStationRequireOdysseyRequestPort existsStationRequireOdysseyRequestPort;
+    @Mock
+    private CreateStationRequireOdysseyRequestPort createStationRequireOdysseyRequestPort;
     @Mock
     private DeleteStationRequireOdysseyRequestPort deleteStationRequireOdysseyRequestPort;
-
     @Mock
     private UpdateStationPort updateStationPort;
+    @Mock
+    private SendKafkaMessagePort sendKafkaMessagePort;
+    @Mock
+    private RetryTemplate retryTemplate;
+    @Mock
+    private Executor executor;
+    @Mock
+    private ObjectMapper objectMapper;
+    @Mock
+    private MessageMapper messageMapper;
 
     private ReceiveKafkaMessageUseCase<StationRequireOdysseyResponse> underTest;
 
     @BeforeEach
     public void setUp() {
-        underTest = new ReceiveStationRequireOdysseyResponseService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, deleteStationRequireOdysseyRequestPort, updateStationPort);
+        underTest = new StationRequireOdysseyInterModuleCommunicationService(
+                loadStationsByFilterPort,
+                loadAllStationRequireOdysseyRequestsPort,
+                loadOrCreateSystemByNamePort,
+                loadOrCreateBySystemAndStationNamePort,
+                existsStationRequireOdysseyRequestPort,
+                createStationRequireOdysseyRequestPort,
+                deleteStationRequireOdysseyRequestPort,
+                updateStationPort,
+                sendKafkaMessagePort,
+                retryTemplate,
+                executor,
+                objectMapper,
+                messageMapper
+        );
     }
 
     @Test
