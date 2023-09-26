@@ -9,9 +9,15 @@ import io.edpn.backend.trade.application.domain.filter.FindStationFilter;
 import io.edpn.backend.trade.application.dto.web.object.MessageDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
+import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
+import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CreateStationLandingPadSizeRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.DeleteStationLandingPadSizeRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.ExistsStationLandingPadSizeRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.LoadAllStationLandingPadSizeRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.RequestMissingStationLandingPadSizeUseCase;
+import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.util.Module;
 import java.util.Collections;
 import java.util.List;
@@ -39,19 +45,26 @@ import static org.mockito.Mockito.when;
 public class RequestMissingStationLandingPadSizeUseCaseTest {
     @Mock
     private LoadStationsByFilterPort loadStationsByFilterPort;
-
+    @Mock
+    private LoadAllStationLandingPadSizeRequestsPort loadAllStationLandingPadSizeRequestsPort;
+    @Mock
+    private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
+    @Mock
+    private LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
+    @Mock
+    private ExistsStationLandingPadSizeRequestPort existsStationLandingPadSizeRequestPort;
     @Mock
     private CreateStationLandingPadSizeRequestPort createStationLandingPadSizeRequestPort;
-
+    @Mock
+    private DeleteStationLandingPadSizeRequestPort deleteStationLandingPadSizeRequestPort;
+    @Mock
+    private UpdateStationPort updateStationPort;
     @Mock
     private SendKafkaMessagePort sendKafkaMessagePort;
-
     @Mock
     private RetryTemplate retryTemplate;
-
     @Mock
     private ObjectMapper objectMapper;
-
     @Mock
     private MessageMapper messageMapper;
 
@@ -61,7 +74,21 @@ public class RequestMissingStationLandingPadSizeUseCaseTest {
 
     @BeforeEach
     public void setUp() {
-        underTest = new RequestMissingStationMaxLandingPadSizeService(loadStationsByFilterPort, createStationLandingPadSizeRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
+        underTest = new StationLandingPadSizeInterModuleCommunicationService(
+                loadStationsByFilterPort,
+                loadAllStationLandingPadSizeRequestsPort,
+                loadOrCreateSystemByNamePort,
+                loadOrCreateBySystemAndStationNamePort,
+                existsStationLandingPadSizeRequestPort,
+                createStationLandingPadSizeRequestPort,
+                deleteStationLandingPadSizeRequestPort,
+                updateStationPort,
+                sendKafkaMessagePort,
+                retryTemplate,
+                executor,
+                objectMapper,
+                messageMapper
+        );
     }
 
     @Test
@@ -70,7 +97,7 @@ public class RequestMissingStationLandingPadSizeUseCaseTest {
                 .hasLandingPadSize(false)
                 .build();
 
-        assertThat(RequestMissingStationMaxLandingPadSizeService.FIND_STATION_FILTER, equalTo(findSystemFilter));
+        assertThat(StationLandingPadSizeInterModuleCommunicationService.FIND_STATION_FILTER, equalTo(findSystemFilter));
     }
 
     @Test
