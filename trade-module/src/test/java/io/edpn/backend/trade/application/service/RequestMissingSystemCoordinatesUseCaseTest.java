@@ -65,13 +65,13 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
     @Mock
     private MessageMapper messageMapper;
 
-    private RequestMissingSystemCoordinatesUseCase undertest;
+    private RequestMissingSystemCoordinatesUseCase underTest;
 
     private final Executor executor = Runnable::run;
 
     @BeforeEach
     public void setUp() {
-        undertest = new SystemCoordinateInterModuleCommunicationService(
+        underTest = new SystemCoordinateInterModuleCommunicationService(
                 loadSystemsByFilterPort,
                 loadAllSystemCoordinateRequestsPort,
                 loadOrCreateSystemByNamePort,
@@ -100,7 +100,7 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
     public void testRequestMissingForZeroResults() {
         when(loadSystemsByFilterPort.loadByFilter(any())).thenReturn(Collections.emptyList());
 
-        undertest.requestMissing();
+        underTest.requestMissing();
 
         verify(sendKafkaMessagePort, never()).send(any());
         verify(createSystemCoordinateRequestPort, never()).create(any());
@@ -125,7 +125,7 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
-        undertest.requestMissing();
+        underTest.requestMissing();
 
         verify(sendKafkaMessagePort).send(any());
         verify(createSystemCoordinateRequestPort).create(any());
@@ -164,7 +164,7 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
         when(sendKafkaMessagePort.send(messageDto2)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
-        undertest.requestMissing();
+        underTest.requestMissing();
 
         verify(sendKafkaMessagePort, times(2)).send(any());
         verify(createSystemCoordinateRequestPort, times(2)).create(any());

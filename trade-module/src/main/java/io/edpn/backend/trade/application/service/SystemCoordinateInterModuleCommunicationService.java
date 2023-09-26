@@ -67,7 +67,7 @@ public class SystemCoordinateInterModuleCommunicationService implements RequestD
             JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
 
             Message message = Message.builder()
-                    .topic(Topic.Request.SYSTEM_ELITE_ID.getTopicName())
+                    .topic(Topic.Request.SYSTEM_COORDINATES.getTopicName())
                     .message(jsonNode.toString())
                     .build();
 
