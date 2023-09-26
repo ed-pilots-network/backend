@@ -8,10 +8,18 @@ import io.edpn.backend.trade.application.domain.filter.FindSystemFilter;
 import io.edpn.backend.trade.application.dto.web.object.MessageDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
+import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
+import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.ExistsSystemEliteIdRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.RequestMissingSystemEliteIdUseCase;
 import io.edpn.backend.util.Module;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Executor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,10 +27,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.RetryCallback;
 import org.springframework.retry.support.RetryTemplate;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Executor;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -39,29 +43,47 @@ import static org.mockito.Mockito.when;
 public class RequestMissingSystemEliteIdUseCaseTest {
     @Mock
     private LoadSystemsByFilterPort loadSystemsByFilterPort;
-
+    @Mock
+    private LoadAllSystemEliteIdRequestsPort loadAllSystemEliteIdRequestsPort;
+    @Mock
+    private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
+    @Mock
+    private ExistsSystemEliteIdRequestPort existsSystemEliteIdRequestPort;
     @Mock
     private CreateSystemEliteIdRequestPort createSystemEliteIdRequestPort;
-
+    @Mock
+    private DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort;
+    @Mock
+    private UpdateSystemPort updateSystemPort;
     @Mock
     private SendKafkaMessagePort sendKafkaMessagePort;
-
     @Mock
     private RetryTemplate retryTemplate;
-
     @Mock
     private ObjectMapper objectMapper;
-
     @Mock
     private MessageMapper messageMapper;
 
-    private RequestMissingSystemEliteIdUseCase undertest;
+    private RequestMissingSystemEliteIdUseCase underTest;
 
     private final Executor executor = Runnable::run;
 
     @BeforeEach
     public void setUp() {
-        undertest = new RequestMissingSystemEliteIdService(loadSystemsByFilterPort, createSystemEliteIdRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
+        underTest = new SystemEliteIdInterModuleCommunicationService(
+                loadSystemsByFilterPort,
+                loadAllSystemEliteIdRequestsPort,
+                loadOrCreateSystemByNamePort,
+                existsSystemEliteIdRequestPort,
+                createSystemEliteIdRequestPort,
+                deleteSystemEliteIdRequestPort,
+                updateSystemPort,
+                sendKafkaMessagePort,
+                retryTemplate,
+                executor,
+                objectMapper,
+                messageMapper
+        );
     }
 
     @Test
@@ -70,14 +92,14 @@ public class RequestMissingSystemEliteIdUseCaseTest {
                 .hasEliteId(false)
                 .build();
 
-        assertThat(RequestMissingSystemEliteIdService.FIND_SYSTEM_FILTER, equalTo(findSystemFilter));
+        assertThat(SystemEliteIdInterModuleCommunicationService.FIND_SYSTEM_FILTER, equalTo(findSystemFilter));
     }
 
     @Test
     public void testRequestMissingForZeroResults() {
         when(loadSystemsByFilterPort.loadByFilter(any())).thenReturn(Collections.emptyList());
 
-        undertest.requestMissing();
+        underTest.requestMissing();
 
         verify(sendKafkaMessagePort, never()).send(any());
         verify(createSystemEliteIdRequestPort, never()).create(any());
@@ -102,7 +124,7 @@ public class RequestMissingSystemEliteIdUseCaseTest {
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
-        undertest.requestMissing();
+        underTest.requestMissing();
 
         verify(sendKafkaMessagePort).send(any());
         verify(createSystemEliteIdRequestPort).create(any());
@@ -141,7 +163,7 @@ public class RequestMissingSystemEliteIdUseCaseTest {
         when(sendKafkaMessagePort.send(messageDto2)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
-        undertest.requestMissing();
+        underTest.requestMissing();
 
         verify(sendKafkaMessagePort, times(2)).send(any());
         verify(createSystemEliteIdRequestPort, times(2)).create(any());
