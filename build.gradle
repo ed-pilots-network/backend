@@ -25,6 +25,9 @@ allprojects {
     group = 'io.edpn.backend'
     version = '0.0.3-SNAPSHOT'
     compileJava.options.encoding = 'UTF-8'
+
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 subprojects {
