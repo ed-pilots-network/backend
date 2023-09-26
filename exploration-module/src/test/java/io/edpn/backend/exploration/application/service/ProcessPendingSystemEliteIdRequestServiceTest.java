@@ -11,6 +11,7 @@ import io.edpn.backend.exploration.application.dto.mapper.SystemEliteIdResponseM
 import io.edpn.backend.exploration.application.port.incomming.ProcessPendingDataRequestUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.CreateIfNotExistsSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
@@ -41,8 +42,11 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ProcessPendingSystemEliteIdRequestServiceTest {
 
+    private final Executor executor = Runnable::run;
     @Mock
     private LoadAllSystemEliteIdRequestPort loadAllSystemEliteIdRequestPort;
+    @Mock
+    private CreateIfNotExistsSystemEliteIdRequestPort createIfNotExistsSystemEliteIdRequestPort;
     @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
@@ -57,13 +61,23 @@ class ProcessPendingSystemEliteIdRequestServiceTest {
     private ObjectMapper objectMapper;
     @Mock
     private RetryTemplate retryTemplate;
-
     private ProcessPendingDataRequestUseCase<SystemEliteIdRequest> underTest;
 
     @BeforeEach
     void setUp() {
-        Executor executor = Runnable::run;
-        underTest = new ProcessPendingSystemEliteIdRequestService(loadAllSystemEliteIdRequestPort, loadSystemPort, sendMessagePort, deleteSystemEliteIdRequestPort, systemEliteIdResponseMapper, messageMapper, objectMapper, retryTemplate, executor);
+
+        underTest = new SystemEliteIdInterModuleCommunicationService(
+                loadAllSystemEliteIdRequestPort,
+                createIfNotExistsSystemEliteIdRequestPort,
+                deleteSystemEliteIdRequestPort,
+                loadSystemPort,
+                sendMessagePort,
+                systemEliteIdResponseMapper,
+                messageMapper,
+                objectMapper,
+                retryTemplate,
+                executor
+        );
     }
 
     @Test

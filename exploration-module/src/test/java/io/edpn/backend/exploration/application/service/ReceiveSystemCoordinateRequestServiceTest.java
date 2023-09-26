@@ -12,6 +12,8 @@ import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessag
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.util.Module;
@@ -25,6 +27,7 @@ import org.springframework.retry.RetryCallback;
 import org.springframework.retry.support.RetryTemplate;
 
 import java.util.Optional;
+import java.util.concurrent.Executor;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,11 +42,15 @@ import static org.mockito.Mockito.when;
 public class ReceiveSystemCoordinateRequestServiceTest {
 
     @Mock
+    private LoadAllSystemCoordinateRequestPort loadAllSystemCoordinateRequestPort;
+    @Mock
     private CreateIfNotExistsSystemCoordinateRequestPort createIfNotExistsSystemCoordinateRequestPort;
     @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
     private SendMessagePort sendMessagePort;
+    @Mock
+    private DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
     @Mock
     private SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
     @Mock
@@ -52,12 +59,25 @@ public class ReceiveSystemCoordinateRequestServiceTest {
     private ObjectMapper objectMapper;
     @Mock
     private RetryTemplate retryTemplate;
+    @Mock
+    private Executor executor;
 
     private ReceiveKafkaMessageUseCase<SystemDataRequest> underTest;
 
     @BeforeEach
     public void setup() {
-        underTest = new ReceiveSystemCoordinateRequestService(createIfNotExistsSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, systemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate);
+        underTest = new SystemCoordinateInterModuleCommunicationService(
+                loadAllSystemCoordinateRequestPort,
+                createIfNotExistsSystemCoordinateRequestPort,
+                deleteSystemCoordinateRequestPort,
+                loadSystemPort,
+                sendMessagePort,
+                systemCoordinatesResponseMapper,
+                messageMapper,
+                objectMapper,
+                retryTemplate,
+                executor
+        );
     }
 
     @SneakyThrows

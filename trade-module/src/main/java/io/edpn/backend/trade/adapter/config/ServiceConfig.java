@@ -106,8 +106,8 @@ public class ServiceConfig {
     }
 
 
-    @Bean(name = "tradeReceiveStationArrivalDistanceResponseService")
-    public StationArrivalDistanceInterModuleCommunicationService receiveStationArrivalDistanceResponseService(
+    @Bean(name = "tradeStationArrivalDistanceInterModuleCommunicationService")
+    public StationArrivalDistanceInterModuleCommunicationService stationArrivalDistanceInterModuleCommunicationService(
             LoadStationsByFilterPort loadStationsByFilterPort,
             LoadAllStationArrivalDistanceRequestsPort loadAllStationArrivalDistanceRequestsPort,
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
@@ -137,8 +137,8 @@ public class ServiceConfig {
                 messageMapper);
     }
 
-    @Bean(name = "tradeReceiveSystemCoordinatesResponseService")
-    public SystemCoordinateInterModuleCommunicationService receiveSystemCoordinatesResponseService(
+    @Bean(name = "tradeSystemCoordinateInterModuleCommunicationService")
+    public SystemCoordinateInterModuleCommunicationService systemCoordinateInterModuleCommunicationService(
             LoadSystemsByFilterPort loadSystemsByFilterPort,
             LoadAllSystemCoordinateRequestsPort loadAllSystemCoordinateRequestsPort,
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
@@ -168,8 +168,8 @@ public class ServiceConfig {
         );
     }
 
-    @Bean(name = "tradeRequestStationLandingPadSizeService")
-    public StationLandingPadSizeInterModuleCommunicationService requestStationLandingPadSizeService(
+    @Bean(name = "tradeStationLandingPadSizeInterModuleCommunicationService")
+    public StationLandingPadSizeInterModuleCommunicationService stationLandingPadSizeInterModuleCommunicationService(
             LoadStationsByFilterPort loadStationsByFilterPort,
             LoadAllStationLandingPadSizeRequestsPort loadAllStationLandingPadSizeRequestsPort,
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
@@ -201,8 +201,8 @@ public class ServiceConfig {
         );
     }
 
-    @Bean(name = "tradeRequestStationPlanetaryService")
-    public StationPlanetaryInterModuleCommunicationService requestStationPlanetaryService(
+    @Bean(name = "tradeStationPlanetaryInterModuleCommunicationService")
+    public StationPlanetaryInterModuleCommunicationService stationPlanetaryInterModuleCommunicationService(
             LoadStationsByFilterPort loadStationsByFilterPort,
             LoadAllStationPlanetaryRequestsPort loadAllStationPlanetaryRequestsPort,
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
@@ -234,8 +234,8 @@ public class ServiceConfig {
         );
     }
 
-    @Bean(name = "tradeRequestStationRequireOdysseyService")
-    public StationRequireOdysseyInterModuleCommunicationService requestStationRequireOdysseyService(
+    @Bean(name = "tradeStationRequireOdysseyInterModuleCommunicationService")
+    public StationRequireOdysseyInterModuleCommunicationService stationRequireOdysseyInterModuleCommunicationService(
             LoadStationsByFilterPort loadStationsByFilterPort,
             LoadAllStationRequireOdysseyRequestsPort loadAllStationRequireOdysseyRequestsPort,
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
@@ -267,8 +267,8 @@ public class ServiceConfig {
         );
     }
 
-    @Bean(name = "tradeRequestSystemEliteIdService")
-    public SystemEliteIdInterModuleCommunicationService requestSystemEliteIdService(
+    @Bean(name = "tradeSystemEliteIdInterModuleCommunicationService")
+    public SystemEliteIdInterModuleCommunicationService systemEliteIdInterModuleCommunicationService(
             LoadSystemsByFilterPort loadSystemsByFilterPort,
             LoadAllSystemEliteIdRequestsPort loadAllSystemEliteIdRequestsPort,
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
