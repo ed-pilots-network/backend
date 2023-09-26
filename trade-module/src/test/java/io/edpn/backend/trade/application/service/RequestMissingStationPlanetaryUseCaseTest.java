@@ -9,9 +9,15 @@ import io.edpn.backend.trade.application.domain.filter.FindStationFilter;
 import io.edpn.backend.trade.application.dto.web.object.MessageDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
+import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
+import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.LoadAllStationPlanetaryRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.RequestMissingStationPlanetaryUseCase;
+import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.util.Module;
 import java.util.Collections;
 import java.util.List;
@@ -39,19 +45,26 @@ import static org.mockito.Mockito.when;
 public class RequestMissingStationPlanetaryUseCaseTest {
     @Mock
     private LoadStationsByFilterPort loadStationsByFilterPort;
-
+    @Mock
+    private LoadAllStationPlanetaryRequestsPort loadAllStationPlanetaryRequestsPort;
+    @Mock
+    private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
+    @Mock
+    private LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
+    @Mock
+    private ExistsStationPlanetaryRequestPort existsStationPlanetaryRequestPort;
     @Mock
     private CreateStationPlanetaryRequestPort createStationPlanetaryRequestPort;
-
+    @Mock
+    private DeleteStationPlanetaryRequestPort deleteStationPlanetaryRequestPort;
+    @Mock
+    private UpdateStationPort updateStationPort;
     @Mock
     private SendKafkaMessagePort sendKafkaMessagePort;
-
     @Mock
     private RetryTemplate retryTemplate;
-
     @Mock
     private ObjectMapper objectMapper;
-
     @Mock
     private MessageMapper messageMapper;
 
@@ -61,7 +74,21 @@ public class RequestMissingStationPlanetaryUseCaseTest {
 
     @BeforeEach
     public void setUp() {
-        underTest = new RequestMissingStationPlanetaryService(loadStationsByFilterPort, createStationPlanetaryRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
+        underTest = new StationPlanetaryInterModuleCommunicationService(
+                loadStationsByFilterPort,
+                loadAllStationPlanetaryRequestsPort,
+                loadOrCreateSystemByNamePort,
+                loadOrCreateBySystemAndStationNamePort,
+                existsStationPlanetaryRequestPort,
+                createStationPlanetaryRequestPort,
+                deleteStationPlanetaryRequestPort,
+                updateStationPort,
+                sendKafkaMessagePort,
+                retryTemplate,
+                executor,
+                objectMapper,
+                messageMapper
+        );
     }
 
     @Test
@@ -70,7 +97,7 @@ public class RequestMissingStationPlanetaryUseCaseTest {
                 .hasPlanetary(false)
                 .build();
 
-        assertThat(RequestMissingStationPlanetaryService.FIND_STATION_FILTER, equalTo(findStationFilter));
+        assertThat(StationPlanetaryInterModuleCommunicationService.FIND_STATION_FILTER, equalTo(findStationFilter));
     }
 
     @Test
