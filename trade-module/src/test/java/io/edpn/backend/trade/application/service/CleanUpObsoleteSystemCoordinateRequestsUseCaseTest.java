@@ -1,19 +1,28 @@
 package io.edpn.backend.trade.application.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindSystemFilter;
+import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
+import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
+import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
+import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CleanUpObsoleteSystemCoordinateRequestsUseCase;
+import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.ExistsSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestsPort;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Executor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.retry.support.RetryTemplate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -28,18 +37,47 @@ public class CleanUpObsoleteSystemCoordinateRequestsUseCaseTest {
 
     @Mock
     private LoadSystemsByFilterPort loadSystemsByFilterPort;
-
     @Mock
     private LoadAllSystemCoordinateRequestsPort loadAllSystemCoordinateRequestsPort;
-
     @Mock
-    private DeleteSystemCoordinateRequestPort deleteSystemRequireOdysseyRequestPort;
+    private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
+    @Mock
+    private ExistsSystemCoordinateRequestPort existsSystemCoordinateRequestPort;
+    @Mock
+    private CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
+    @Mock
+    private DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
+    @Mock
+    private UpdateSystemPort updateSystemPort;
+    @Mock
+    private SendKafkaMessagePort sendKafkaMessagePort;
+    @Mock
+    private RetryTemplate retryTemplate;
+    @Mock
+    private Executor executor;
+    @Mock
+    private ObjectMapper objectMapper;
+    @Mock
+    private MessageMapper messageMapper;
 
     private CleanUpObsoleteSystemCoordinateRequestsUseCase underTest;
 
     @BeforeEach
     public void setUp() {
-        underTest = new CleanUpObsoleteSystemCoordinateRequestsService(loadSystemsByFilterPort, loadAllSystemCoordinateRequestsPort, deleteSystemRequireOdysseyRequestPort);
+        underTest = new SystemCoordinateInterModuleCommunicationService(
+                loadSystemsByFilterPort,
+                loadAllSystemCoordinateRequestsPort,
+                loadOrCreateSystemByNamePort,
+                existsSystemCoordinateRequestPort,
+                createSystemCoordinateRequestPort,
+                deleteSystemCoordinateRequestPort,
+                updateSystemPort,
+                sendKafkaMessagePort,
+                retryTemplate,
+                executor,
+                objectMapper,
+                messageMapper
+        );
     }
 
     @Test
@@ -48,7 +86,7 @@ public class CleanUpObsoleteSystemCoordinateRequestsUseCaseTest {
                 .hasCoordinates(false)
                 .build();
 
-        assertThat(CleanUpObsoleteSystemCoordinateRequestsService.FIND_SYSTEM_FILTER, equalTo(findSystemFilter));
+        assertThat(SystemCoordinateInterModuleCommunicationService.FIND_SYSTEM_FILTER, equalTo(findSystemFilter));
     }
 
     @Test
@@ -58,7 +96,7 @@ public class CleanUpObsoleteSystemCoordinateRequestsUseCaseTest {
 
         underTest.cleanUpObsolete();
 
-        verify(deleteSystemRequireOdysseyRequestPort, never()).delete(any());
+        verify(deleteSystemCoordinateRequestPort, never()).delete(any());
     }
 
     @Test
@@ -82,7 +120,7 @@ public class CleanUpObsoleteSystemCoordinateRequestsUseCaseTest {
 
         underTest.cleanUpObsolete();
 
-        verify(deleteSystemRequireOdysseyRequestPort, never()).delete(any());
+        verify(deleteSystemCoordinateRequestPort, never()).delete(any());
     }
 
     @Test
@@ -100,7 +138,7 @@ public class CleanUpObsoleteSystemCoordinateRequestsUseCaseTest {
 
         underTest.cleanUpObsolete();
 
-        verify(deleteSystemRequireOdysseyRequestPort).delete("Beta");
+        verify(deleteSystemCoordinateRequestPort).delete("Beta");
     }
 
     @Test
@@ -122,6 +160,6 @@ public class CleanUpObsoleteSystemCoordinateRequestsUseCaseTest {
 
         underTest.cleanUpObsolete();
 
-        verify(deleteSystemRequireOdysseyRequestPort, never()).delete(any());
+        verify(deleteSystemCoordinateRequestPort, never()).delete(any());
     }
 }

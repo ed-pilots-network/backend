@@ -43,7 +43,6 @@ import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequ
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
-import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CleanUpObsoleteSystemCoordinateRequestsUseCase;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.ExistsSystemCoordinateRequestPort;
@@ -58,7 +57,6 @@ import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadVa
 import io.edpn.backend.trade.application.service.CleanUpObsoleteStationLandingPadSizeRequestsService;
 import io.edpn.backend.trade.application.service.CleanUpObsoleteStationPlanetaryRequestsService;
 import io.edpn.backend.trade.application.service.CleanUpObsoleteStationRequireOdysseyRequestsService;
-import io.edpn.backend.trade.application.service.CleanUpObsoleteSystemCoordinateRequestsService;
 import io.edpn.backend.trade.application.service.FindCommodityMarketInfoService;
 import io.edpn.backend.trade.application.service.FindCommodityService;
 import io.edpn.backend.trade.application.service.LocateCommodityService;
@@ -66,16 +64,14 @@ import io.edpn.backend.trade.application.service.ReceiveCommodityMessageService;
 import io.edpn.backend.trade.application.service.ReceiveStationMaxLandingPadSizeResponseService;
 import io.edpn.backend.trade.application.service.ReceiveStationPlanetaryResponseService;
 import io.edpn.backend.trade.application.service.ReceiveStationRequireOdysseyResponseService;
-import io.edpn.backend.trade.application.service.ReceiveSystemCoordinatesResponseService;
 import io.edpn.backend.trade.application.service.RequestMissingStationMaxLandingPadSizeService;
 import io.edpn.backend.trade.application.service.RequestMissingStationPlanetaryService;
 import io.edpn.backend.trade.application.service.RequestMissingStationRequireOdysseyService;
-import io.edpn.backend.trade.application.service.RequestMissingSystemCoordinatesService;
 import io.edpn.backend.trade.application.service.RequestStationLandingPadSizeService;
 import io.edpn.backend.trade.application.service.RequestStationPlanetaryService;
 import io.edpn.backend.trade.application.service.RequestStationRequireOdysseyService;
-import io.edpn.backend.trade.application.service.RequestSystemCoordinatesService;
 import io.edpn.backend.trade.application.service.StationArrivalDistanceInterModuleCommunicationService;
+import io.edpn.backend.trade.application.service.SystemCoordinateInterModuleCommunicationService;
 import io.edpn.backend.trade.application.service.SystemEliteIdInterModuleCommunicationService;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -184,11 +180,34 @@ public class ServiceConfig {
     }
 
     @Bean(name = "tradeReceiveSystemCoordinatesResponseService")
-    public ReceiveSystemCoordinatesResponseService receiveSystemCoordinatesResponseService(
+    public SystemCoordinateInterModuleCommunicationService receiveSystemCoordinatesResponseService(
+            LoadSystemsByFilterPort loadSystemsByFilterPort,
+            LoadAllSystemCoordinateRequestsPort loadAllSystemCoordinateRequestsPort,
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
+            ExistsSystemCoordinateRequestPort existsSystemCoordinateRequestPort,
+            CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort,
             DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort,
-            UpdateSystemPort updateSystemPort) {
-        return new ReceiveSystemCoordinatesResponseService(loadOrCreateSystemByNamePort, deleteSystemCoordinateRequestPort, updateSystemPort);
+            UpdateSystemPort updateSystemPort,
+            SendKafkaMessagePort sendKafkaMessagePort,
+            @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
+            @Qualifier("tradeForkJoinPool") Executor executor,
+            ObjectMapper objectMapper,
+            MessageMapper messageMapper
+    ) {
+        return new SystemCoordinateInterModuleCommunicationService(
+                loadSystemsByFilterPort,
+                loadAllSystemCoordinateRequestsPort,
+                loadOrCreateSystemByNamePort,
+                existsSystemCoordinateRequestPort,
+                createSystemCoordinateRequestPort,
+                deleteSystemCoordinateRequestPort,
+                updateSystemPort,
+                sendKafkaMessagePort,
+                retryTemplate,
+                executor,
+                objectMapper,
+                messageMapper
+        );
     }
 
     @Bean(name = "tradeRequestStationLandingPadSizeService")
@@ -221,16 +240,6 @@ public class ServiceConfig {
         return new RequestStationRequireOdysseyService(sendKafkaMessagePort, existsStationRequireOdysseyRequestPort, createStationRequireOdysseyRequestPort, objectMapper, messageMapper);
     }
 
-    @Bean(name = "tradeRequestSystemCoordinateService")
-    public RequestSystemCoordinatesService requestSystemCoordinatesService(
-            SendKafkaMessagePort sendKafkaMessagePort,
-            ExistsSystemCoordinateRequestPort existsSystemCoordinateRequestPort,
-            CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort,
-            ObjectMapper objectMapper,
-            MessageMapper messageMapper) {
-        return new RequestSystemCoordinatesService(sendKafkaMessagePort, existsSystemCoordinateRequestPort, createSystemCoordinateRequestPort, objectMapper, messageMapper);
-    }
-
     @Bean(name = "tradeRequestSystemEliteIdService")
     public SystemEliteIdInterModuleCommunicationService requestSystemEliteIdService(
             LoadSystemsByFilterPort loadSystemsByFilterPort,
@@ -259,19 +268,6 @@ public class ServiceConfig {
                 objectMapper,
                 messageMapper
         );
-    }
-
-    @Bean(name = "tradeRequestMissingSystemCoordinatesService")
-    public RequestMissingSystemCoordinatesService requestMissingSystemCoordinatesUseCase(
-            LoadSystemsByFilterPort loadSystemsByFilterPort,
-            CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort,
-            SendKafkaMessagePort sendKafkaMessagePort,
-            @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
-            @Qualifier("tradeForkJoinPool") Executor executor,
-            ObjectMapper objectMapper,
-            MessageMapper messageMapper
-    ) {
-        return new RequestMissingSystemCoordinatesService(loadSystemsByFilterPort, createSystemCoordinateRequestPort, sendKafkaMessagePort, retryTemplate, executor, objectMapper, messageMapper);
     }
 
     @Bean(name = "tradeRequestMissingStationRequireOdysseyUseCase")
@@ -335,13 +331,5 @@ public class ServiceConfig {
             LoadAllStationRequireOdysseyRequestsPort loadAllStationRequireOdysseyRequestsPort,
             DeleteStationRequireOdysseyRequestPort deleteStationRequireOdysseyRequestPort) {
         return new CleanUpObsoleteStationRequireOdysseyRequestsService(loadStationsByFilterPort, loadAllStationRequireOdysseyRequestsPort, deleteStationRequireOdysseyRequestPort);
-    }
-
-    @Bean(name = "tradeCleanUpObsoleteSystemCoordinateRequestsUseCase")
-    public CleanUpObsoleteSystemCoordinateRequestsUseCase cleanUpObsoleteSystemCoordinateRequestsUseCase(
-            LoadSystemsByFilterPort loadSystemsByFilterPort,
-            LoadAllSystemCoordinateRequestsPort loadAllSystemCoordinateRequestsPort,
-            DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort) {
-        return new CleanUpObsoleteSystemCoordinateRequestsService(loadSystemsByFilterPort, loadAllSystemCoordinateRequestsPort, deleteSystemCoordinateRequestPort);
     }
 }
