@@ -2,8 +2,8 @@ package io.edpn.backend.trade.application.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.trade.application.domain.Message;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindSystemFilter;
@@ -58,12 +58,11 @@ public class SystemCoordinateInterModuleCommunicationService implements RequestD
 
     @Override
     public synchronized void request(System system) {
-        String systemName = system.getName();
+        final String systemName = system.getName();
         boolean shouldRequest = !existsSystemCoordinateRequestPort.exists(systemName);
         if (shouldRequest) {
-            SystemDataRequest systemDataRequest = new SystemDataRequest(
-                    Module.TRADE, systemName
-            );
+            SystemDataRequest systemDataRequest = new SystemDataRequest(Module.TRADE, systemName);
+
             JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
 
             Message message = Message.builder()
@@ -79,7 +78,13 @@ public class SystemCoordinateInterModuleCommunicationService implements RequestD
     @Override
     @Scheduled(cron = "0 0 0/12 * * *")
     public void requestMissing() {
-        loadSystemsByFilterPort.loadByFilter(FIND_SYSTEM_FILTER).parallelStream()
+        FindSystemFilter filter = FindSystemFilter.builder()
+                .hasCoordinates(false)
+                .hasEliteId(null)
+                .name(null)
+                .build();
+
+        loadSystemsByFilterPort.loadByFilter(filter).parallelStream()
                 .forEach(system ->
                         CompletableFuture.runAsync(() -> {
                             SystemDataRequest systemDataRequest = new SystemDataRequest(Module.TRADE, system.getName());
@@ -87,7 +92,7 @@ public class SystemCoordinateInterModuleCommunicationService implements RequestD
                             JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
 
                             Message message = Message.builder()
-                                    .topic("systemCoordinateRequest")
+                                    .topic("systemCoordinatesRequest")
                                     .message(jsonNode.toString())
                                     .build();
 
