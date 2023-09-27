@@ -8,13 +8,17 @@ import io.edpn.backend.exploration.application.dto.MessageDto;
 import io.edpn.backend.exploration.application.dto.mapper.MessageMapper;
 import io.edpn.backend.exploration.application.dto.mapper.SystemEliteIdResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ProcessPendingDataRequestUseCase;
+import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.CreateIfNotExistsSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestPort;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
+import io.edpn.backend.util.Module;
 import io.edpn.backend.util.Topic;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,19 +26,51 @@ import org.springframework.scheduling.annotation.Scheduled;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
-public class ProcessPendingSystemEliteIdRequestService implements ProcessPendingDataRequestUseCase<SystemEliteIdRequest> {
+public class SystemEliteIdInterModuleCommunicationService implements ReceiveKafkaMessageUseCase<SystemDataRequest>, ProcessPendingDataRequestUseCase<SystemEliteIdRequest> {
+
 
     private final LoadAllSystemEliteIdRequestPort loadAllSystemEliteIdRequestPort;
+    private final CreateIfNotExistsSystemEliteIdRequestPort createIfNotExistsSystemEliteIdRequestPort;
+    private final DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort;
     private final LoadSystemPort loadSystemPort;
     private final SendMessagePort sendMessagePort;
-    private final DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort;
-    private final SystemEliteIdResponseMapper systemEliteIdsResponseMapper;
+    private final SystemEliteIdResponseMapper systemEliteIdResponseMapper;
     private final MessageMapper messageMapper;
     private final ObjectMapper objectMapper;
     private final RetryTemplate retryTemplate;
     private final Executor executor;
+
+    @Override
+    public void receive(SystemDataRequest message) {
+        String systemName = message.systemName();
+        Module requestingModule = message.requestingModule();
+
+        loadSystemPort.load(systemName).ifPresentOrElse(
+                system -> {
+                    try {
+                        SystemEliteIdResponse systemEliteIdResponse = systemEliteIdResponseMapper.map(system);
+                        String stringJson = objectMapper.writeValueAsString(systemEliteIdResponse);
+                        String topic = Topic.Response.SYSTEM_ELITE_ID.getFormattedTopicName(requestingModule);
+                        Message kafkaMessage = new Message(topic, stringJson);
+                        MessageDto messageDto = messageMapper.map(kafkaMessage);
+
+                        boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
+                        if (!sendSuccessful) {
+                            saveRequest(systemName, requestingModule);
+                        }
+                    } catch (JsonProcessingException jpe) {
+                        throw new RuntimeException(jpe);
+                    }
+                },
+                () -> saveRequest(systemName, requestingModule));
+    }
+
+    private void saveRequest(String systemName, Module requestingModule) {
+        SystemEliteIdRequest systemEliteIdRequest = new SystemEliteIdRequest(systemName, requestingModule);
+        createIfNotExistsSystemEliteIdRequestPort.createIfNotExists(systemEliteIdRequest);
+    }
 
     @Override
     @Scheduled(cron = "0 0 0/12 * * *")
@@ -43,7 +79,7 @@ public class ProcessPendingSystemEliteIdRequestService implements ProcessPending
                 .forEach(systemEliteIdRequest -> CompletableFuture.runAsync(() -> loadSystemPort.load(systemEliteIdRequest.systemName())
                         .ifPresent(system -> {
                             try {
-                                SystemEliteIdResponse systemEliteIdsResponse = systemEliteIdsResponseMapper.map(system);
+                                SystemEliteIdResponse systemEliteIdsResponse = systemEliteIdResponseMapper.map(system);
                                 String stringJson = objectMapper.writeValueAsString(systemEliteIdsResponse);
                                 String topic = Topic.Response.SYSTEM_ELITE_ID.getFormattedTopicName(systemEliteIdRequest.requestingModule());
                                 Message message = new Message(topic, stringJson);

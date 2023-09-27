@@ -29,7 +29,7 @@ public class MessagingConfig {
 
     @Bean(name = "explorationSystemCoordinatesRequestMessageProcessor")
     public SystemCoordinatesRequestMessageProcessor systemCoordinatesRequestMessageProcessor(
-            ReceiveKafkaMessageUseCase<SystemDataRequest> receiveSystemDataRequestUseCase,
+            @Qualifier("explorationSystemCoordinateInterModuleCommunicationService") ReceiveKafkaMessageUseCase<SystemDataRequest> receiveSystemDataRequestUseCase,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper
     ) {
         return new SystemCoordinatesRequestMessageProcessor(receiveSystemDataRequestUseCase, objectMapper);
@@ -37,7 +37,7 @@ public class MessagingConfig {
 
     @Bean(name = "explorationSystemEliteIdRequestMessageProcessor")
     public SystemEliteIdRequestMessageProcessor systemEliteIdRequestMessageProcessor(
-            ReceiveKafkaMessageUseCase<SystemDataRequest> receiveSystemDataRequestUseCase,
+            @Qualifier("explorationSystemEliteIdInterModuleCommunicationService") ReceiveKafkaMessageUseCase<SystemDataRequest> receiveSystemDataRequestUseCase,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper
     ) {
         return new SystemEliteIdRequestMessageProcessor(receiveSystemDataRequestUseCase, objectMapper);
