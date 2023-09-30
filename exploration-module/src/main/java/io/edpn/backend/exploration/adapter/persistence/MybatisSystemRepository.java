@@ -24,8 +24,8 @@ public interface MybatisSystemRepository {
             "elite_id = COALESCE(system.elite_id, EXCLUDED.elite_id),",
             "x_coordinate = COALESCE(system.x_coordinate, EXCLUDED.x_coordinate),",
             "y_coordinate = COALESCE(system.y_coordinate, EXCLUDED.y_coordinate),",
-            "z_coordinate = COALESCE(system.z_coordinate, EXCLUDED.z_coordinate)",
-            "coordinates_geom = COALESCE(ST_MakePoint(system.x_coordinate, system.y_coordinate, system.z_coordinate), EXCLUDED.coordinates_geom)",
+            "z_coordinate = COALESCE(system.z_coordinate, EXCLUDED.z_coordinate),",
+            "coordinates_geom = COALESCE(system.coordinates_geom, ST_MakePoint(EXCLUDED.x_coordinate, EXCLUDED.y_coordinate, EXCLUDED.z_coordinate))",
             "RETURNING *"
     })
     @ResultMap("systemResultMap")

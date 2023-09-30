@@ -43,7 +43,7 @@ public interface MybatisSystemRepository {
             "elite_id = #{eliteId},",
             "x_coordinate = #{xCoordinate},",
             "y_coordinate = #{yCoordinate},",
-            "z_coordinate = #{zCoordinate}",
+            "z_coordinate = #{zCoordinate},",
             "coordinates_geom = ST_MakePoint(#{xCoordinate}, #{yCoordinate}, #{zCoordinate})",
             "WHERE id = #{id}"})
     void update(MybatisSystemEntity system);
