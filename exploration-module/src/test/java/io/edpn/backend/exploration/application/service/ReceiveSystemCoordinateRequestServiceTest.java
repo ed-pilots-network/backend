@@ -1,6 +1,6 @@
 package io.edpn.backend.exploration.application.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.domain.System;
@@ -9,13 +9,13 @@ import io.edpn.backend.exploration.application.dto.MessageDto;
 import io.edpn.backend.exploration.application.dto.mapper.MessageMapper;
 import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
-import io.edpn.backend.exploration.application.port.outgoing.CreateSystemCoordinateRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.LoadSystemCoordinateRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.util.Module;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,24 +26,24 @@ import org.springframework.retry.support.RetryTemplate;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ReceiveSystemCoordinateRequestServiceTest {
 
     @Mock
-    private CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
-    @Mock
-    private LoadSystemCoordinateRequestPort loadSystemCoordinateRequestPort;
+    private CreateIfNotExistsSystemCoordinateRequestPort createIfNotExistsSystemCoordinateRequestPort;
     @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
-    private SendKafkaMessagePort sendKafkaMessagePort;
+    private SendMessagePort sendMessagePort;
     @Mock
     private SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
     @Mock
@@ -57,9 +57,10 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
     @BeforeEach
     public void setup() {
-        underTest = new ReceiveSystemCoordinateRequestService(createSystemCoordinateRequestPort, loadSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, systemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate);
+        underTest = new ReceiveSystemCoordinateRequestService(createIfNotExistsSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, systemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate);
     }
 
+    @SneakyThrows
     @Test
     void testReceive_whenSystemExistsAndSendSuccessful_shouldNotSaveRequest() {
 
@@ -74,13 +75,11 @@ public class ReceiveSystemCoordinateRequestServiceTest {
         SystemCoordinatesResponse systemCoordinatesResponse = mock(SystemCoordinatesResponse.class);
         when(systemCoordinatesResponseMapper.map(system)).thenReturn(systemCoordinatesResponse);
         String jsonString = "{\"json\":\"response\"}";
-        JsonNode jsonNode = mock(JsonNode.class);
-        when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
-        when(jsonNode.toString()).thenReturn(jsonString);
+        when(objectMapper.writeValueAsString(systemCoordinatesResponse)).thenReturn(jsonString);
         Message kafkaMessage = new Message("module_systemCoordinatesResponse", jsonString);
         MessageDto messageDto = mock(MessageDto.class);
         when(messageMapper.map(kafkaMessage)).thenReturn(messageDto);
-        when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
+        when(sendMessagePort.send(messageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
 
@@ -88,10 +87,11 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
 
         verify(loadSystemPort).load(systemName);
-        verify(sendKafkaMessagePort).send(messageDto);
-        verify(createSystemCoordinateRequestPort, never()).create(any());
+        verify(sendMessagePort).send(messageDto);
+        verify(createIfNotExistsSystemCoordinateRequestPort, never()).createIfNotExists(any());
     }
 
+    @SneakyThrows
     @Test
     void testReceive_whenSystemExistsAndSendFails_shouldSaveRequest() {
 
@@ -106,13 +106,11 @@ public class ReceiveSystemCoordinateRequestServiceTest {
         SystemCoordinatesResponse systemCoordinatesResponse = mock(SystemCoordinatesResponse.class);
         when(systemCoordinatesResponseMapper.map(system)).thenReturn(systemCoordinatesResponse);
         String jsonString = "{\"json\":\"response\"}";
-        JsonNode jsonNode = mock(JsonNode.class);
-        when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
-        when(jsonNode.toString()).thenReturn(jsonString);
+        when(objectMapper.writeValueAsString(systemCoordinatesResponse)).thenReturn(jsonString);
         Message kafkaMessage = new Message("module_systemCoordinatesResponse", jsonString);
         MessageDto messageDto = mock(MessageDto.class);
         when(messageMapper.map(kafkaMessage)).thenReturn(messageDto);
-        when(sendKafkaMessagePort.send(messageDto)).thenReturn(false);
+        when(sendMessagePort.send(messageDto)).thenReturn(false);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
         SystemCoordinateRequest systemCoordinateDataRequest = new SystemCoordinateRequest(systemName, requestingModule);
 
@@ -121,8 +119,8 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
 
         verify(loadSystemPort).load(systemName);
-        verify(sendKafkaMessagePort).send(messageDto);
-        verify(createSystemCoordinateRequestPort).create(systemCoordinateDataRequest);
+        verify(sendMessagePort).send(messageDto);
+        verify(createIfNotExistsSystemCoordinateRequestPort).createIfNotExists(systemCoordinateDataRequest);
     }
 
     @Test
@@ -141,9 +139,29 @@ public class ReceiveSystemCoordinateRequestServiceTest {
 
 
         verify(loadSystemPort).load(systemName);
-        verify(sendKafkaMessagePort, never()).send(any());
-        verify(createSystemCoordinateRequestPort).create(systemCoordinateDataRequest);
+        verify(sendMessagePort, never()).send(any());
+        verify(createIfNotExistsSystemCoordinateRequestPort).createIfNotExists(systemCoordinateDataRequest);
     }
 
+    @SneakyThrows
+    @Test
+    void testReceive_writeValueAsStringThrowsJsonProcessingException() {
+        SystemDataRequest message = mock(SystemDataRequest.class);
+        String systemName = "system";
+        System system = mock(System.class);
+        Module requestingModule = mock(Module.class);
+        when(message.systemName()).thenReturn(systemName);
+        when(message.requestingModule()).thenReturn(requestingModule);
+        when(loadSystemPort.load(systemName)).thenReturn(Optional.of(system));
+        SystemCoordinatesResponse systemCoordinatesResponse = mock(SystemCoordinatesResponse.class);
+        when(systemCoordinatesResponseMapper.map(system)).thenReturn(systemCoordinatesResponse);
+        when(objectMapper.writeValueAsString(systemCoordinatesResponse)).thenThrow(new JsonProcessingException("Test exception") {
+        });
+
+        assertThrows(RuntimeException.class, () -> underTest.receive(message));
+
+        verify(loadSystemPort).load(systemName);
+        verifyNoInteractions(sendMessagePort, createIfNotExistsSystemCoordinateRequestPort);
+    }
 
 }

@@ -1,9 +1,15 @@
 trade:
-  óspring:
+  spring:
+    liquibase:
+      enabled: true
+      change-log: classpath:db/trademodule/changelog/trademodule-changelog.xml
+
     datasource:
       url: jdbc:postgresql://localhost:54321/trademodule
       username: edpn_trademodule
       password: MSDVq372rNk3AwRq
+      driver-class-name: org.postgresql.Driver
+
 
     kafka:
       bootstrap-servers: localhost:9092

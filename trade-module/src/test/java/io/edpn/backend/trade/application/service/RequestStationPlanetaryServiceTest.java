@@ -1,12 +1,27 @@
 package io.edpn.backend.trade.application.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
-import io.edpn.backend.trade.domain.model.RequestDataMessage;
-import io.edpn.backend.trade.domain.model.Station;
-import io.edpn.backend.trade.domain.model.System;
-import io.edpn.backend.trade.domain.repository.RequestDataMessageRepository;
-import io.edpn.backend.trade.domain.service.RequestDataService;
+import io.edpn.backend.trade.application.domain.Message;
+import io.edpn.backend.trade.application.domain.Station;
+import io.edpn.backend.trade.application.domain.System;
+import io.edpn.backend.trade.application.dto.web.object.MessageDto;
+import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
+import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
+import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
+import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
+import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
+import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.LoadAllStationPlanetaryRequestsPort;
+import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
+import io.edpn.backend.util.Module;
+import io.edpn.backend.util.Topic;
+import java.util.concurrent.Executor;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,12 +31,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.stream.Stream;
+import org.springframework.retry.support.RetryTemplate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -30,10 +45,35 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class RequestStationPlanetaryServiceTest {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
     @Mock
-    private RequestDataMessageRepository requestDataMessageRepository;
-    private RequestDataService<Station> underTest;
+    private LoadStationsByFilterPort loadStationsByFilterPort;
+    @Mock
+    private LoadAllStationPlanetaryRequestsPort loadAllStationPlanetaryRequestsPort;
+    @Mock
+    private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
+    @Mock
+    private LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
+    @Mock
+    private ExistsStationPlanetaryRequestPort existsStationPlanetaryRequestPort;
+    @Mock
+    private CreateStationPlanetaryRequestPort createStationPlanetaryRequestPort;
+    @Mock
+    private DeleteStationPlanetaryRequestPort deleteStationPlanetaryRequestPort;
+    @Mock
+    private UpdateStationPort updateStationPort;
+    @Mock
+    private SendKafkaMessagePort sendKafkaMessagePort;
+    @Mock
+    private RetryTemplate retryTemplate;
+    @Mock
+    private Executor executor;
+    @Mock
+    private ObjectMapper objectMapper;
+    @Mock
+    private MessageMapper messageMapper;
+
+    private RequestDataUseCase<Station> underTest;
+
 
     public static Stream<Arguments> provideBooleansForCheckApplicability() {
         return Stream.of(
@@ -45,7 +85,21 @@ public class RequestStationPlanetaryServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new RequestStationPlanetaryService(requestDataMessageRepository, objectMapper);
+        underTest = new StationPlanetaryInterModuleCommunicationService(
+                loadStationsByFilterPort,
+                loadAllStationPlanetaryRequestsPort,
+                loadOrCreateSystemByNamePort,
+                loadOrCreateBySystemAndStationNamePort,
+                existsStationPlanetaryRequestPort,
+                createStationPlanetaryRequestPort,
+                deleteStationPlanetaryRequestPort,
+                updateStationPort,
+                sendKafkaMessagePort,
+                retryTemplate,
+                executor,
+                objectMapper,
+                messageMapper
+        );
     }
 
     @ParameterizedTest
@@ -58,27 +112,46 @@ public class RequestStationPlanetaryServiceTest {
     }
 
     @Test
-    void shouldSendRequest() throws Exception {
+    public void testRequestWhenIdDoesNotExist() {
+        String systemName = "Test System";
+        String stationName = "Test Station";
+
         System system = System.builder()
-                .name("Test System")
+                .name(systemName)
                 .build();
         Station station = Station.builder()
-                .name("Test Station")
+                .name(stationName)
                 .system(system)
                 .build();
 
+        JsonNode mockJsonNode = mock(JsonNode.class);
+        String mockJsonString = "jsonString";
+        MessageDto mockMessageDto = mock(MessageDto.class);
+
+        when(existsStationPlanetaryRequestPort.exists(systemName, stationName)).thenReturn(false);
+        when(objectMapper.valueToTree(argThat(arg -> {
+            if (arg instanceof StationDataRequest stationDataRequest) {
+                return systemName.equals(stationDataRequest.systemName()) && stationName.equals(stationDataRequest.stationName()) && Module.TRADE.equals(stationDataRequest.requestingModule());
+            } else {
+                return false;
+            }
+        }))).thenReturn(mockJsonNode);
+        when(mockJsonNode.toString()).thenReturn(mockJsonString);
+        when(messageMapper.map(argThat(argument ->
+                argument.getMessage().equals(mockJsonString) && argument.getTopic().equals(Topic.Request.STATION_IS_PLANETARY.getTopicName())
+        ))).thenReturn(mockMessageDto);
+
+        ArgumentCaptor<Message> argumentCaptor = ArgumentCaptor.forClass(Message.class);
+
+
         underTest.request(station);
 
-        ArgumentCaptor<RequestDataMessage> argumentCaptor = ArgumentCaptor.forClass(RequestDataMessage.class);
-        verify(requestDataMessageRepository, times(1)).sendToKafka(argumentCaptor.capture());
-
-        RequestDataMessage message = argumentCaptor.getValue();
+        verify(sendKafkaMessagePort).send(mockMessageDto);
+        verify(createStationPlanetaryRequestPort).create(systemName, stationName);
+        verify(messageMapper, times(1)).map(argumentCaptor.capture());
+        Message message = argumentCaptor.getValue();
         assertThat(message, is(notNullValue()));
-        assertThat(message.getTopic(), is("stationIsPlanetaryRequest"));
-        assertThat(message.getMessage(), is(notNullValue()));
-
-        StationDataRequest actualStationDataRequest = objectMapper.treeToValue(message.getMessage(), StationDataRequest.class);
-        assertThat(actualStationDataRequest.stationName(), is(station.getName()));
-        assertThat(actualStationDataRequest.systemName(), is(system.getName()));
+        assertThat(message.getTopic(), is(Topic.Request.STATION_IS_PLANETARY.getTopicName()));
+        assertThat(message.getMessage(), is("jsonString"));
     }
 }

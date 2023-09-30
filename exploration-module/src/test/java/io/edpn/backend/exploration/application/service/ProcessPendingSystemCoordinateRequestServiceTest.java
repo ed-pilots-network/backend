@@ -1,6 +1,6 @@
 package io.edpn.backend.exploration.application.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.domain.System;
@@ -9,12 +9,13 @@ import io.edpn.backend.exploration.application.dto.MessageDto;
 import io.edpn.backend.exploration.application.dto.mapper.MessageMapper;
 import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ProcessPendingDataRequestUseCase;
-import io.edpn.backend.exploration.application.port.outgoing.DeleteSystemCoordinateRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.LoadAllSystemCoordinateRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.LoadSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.SendKafkaMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.util.Module;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,7 +46,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
     @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
-    private SendKafkaMessagePort sendKafkaMessagePort;
+    private SendMessagePort sendMessagePort;
     @Mock
     private DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
     @Mock
@@ -62,7 +63,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
     @BeforeEach
     void setUp() {
         Executor executor = Runnable::run;
-        underTest = new ProcessPendingSystemCoordinateRequestService(loadAllSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate, executor);
+        underTest = new ProcessPendingSystemCoordinateRequestService(loadAllSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate, executor);
     }
 
     @Test
@@ -76,7 +77,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
 
         verify(loadAllSystemCoordinateRequestPort, times(1)).loadAll();
         verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort);
-        verifyNoInteractions(loadSystemPort, sendKafkaMessagePort, deleteSystemCoordinateRequestPort);
+        verifyNoInteractions(loadSystemPort, sendMessagePort, deleteSystemCoordinateRequestPort);
     }
 
     @Test
@@ -95,9 +96,10 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
         verify(loadAllSystemCoordinateRequestPort, times(1)).loadAll();
         verify(loadSystemPort, times(1)).load("SystemName");
         verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort, loadSystemPort);
-        verifyNoInteractions(sendKafkaMessagePort, deleteSystemCoordinateRequestPort);
+        verifyNoInteractions(sendMessagePort, deleteSystemCoordinateRequestPort);
     }
 
+    @SneakyThrows
     @Test
     void processPending_nonEmptyRequestList_systemFound_sendFailed() {
 
@@ -110,15 +112,13 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
         System system = mock(System.class);
         SystemCoordinatesResponse systemCoordinatesResponse = mock(SystemCoordinatesResponse.class);
         when(systemCoordinatesResponseMapper.map(system)).thenReturn(systemCoordinatesResponse);
-        JsonNode jsonNode = mock(JsonNode.class);
-        when(jsonNode.toString()).thenReturn("JSON_STRING");
-        when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
+        when(objectMapper.writeValueAsString(systemCoordinatesResponse)).thenReturn("JSON_STRING");
         Message message = new Message("trade_systemCoordinatesResponse", "JSON_STRING");
         MessageDto messageDto = mock(MessageDto.class);
         when(messageMapper.map(message)).thenReturn(messageDto);
         when(loadAllSystemCoordinateRequestPort.loadAll()).thenReturn(systemCoordinateRequestList);
         when(loadSystemPort.load("SystemName")).thenReturn(Optional.of(system));
-        when(sendKafkaMessagePort.send(messageDto)).thenReturn(false);
+        when(sendMessagePort.send(messageDto)).thenReturn(false);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
 
@@ -127,11 +127,12 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
 
         verify(loadAllSystemCoordinateRequestPort, times(1)).loadAll();
         verify(loadSystemPort, times(1)).load("SystemName");
-        verify(sendKafkaMessagePort, times(1)).send(messageDto);
-        verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort);
+        verify(sendMessagePort, times(1)).send(messageDto);
+        verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort, loadSystemPort, sendMessagePort);
         verifyNoInteractions(deleteSystemCoordinateRequestPort);
     }
 
+    @SneakyThrows
     @Test
     void processPending_nonEmptyRequestList_systemFound_sendSucceeded() {
 
@@ -144,15 +145,13 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
         System system = mock(System.class);
         SystemCoordinatesResponse systemCoordinatesResponse = mock(SystemCoordinatesResponse.class);
         when(systemCoordinatesResponseMapper.map(system)).thenReturn(systemCoordinatesResponse);
-        JsonNode jsonNode = mock(JsonNode.class);
-        when(jsonNode.toString()).thenReturn("JSON_STRING");
-        when(objectMapper.valueToTree(systemCoordinatesResponse)).thenReturn(jsonNode);
+        when(objectMapper.writeValueAsString(systemCoordinatesResponse)).thenReturn("JSON_STRING");
         Message message = new Message("trade_systemCoordinatesResponse", "JSON_STRING");
         MessageDto messageDto = mock(MessageDto.class);
         when(messageMapper.map(message)).thenReturn(messageDto);
         when(loadAllSystemCoordinateRequestPort.loadAll()).thenReturn(systemCoordinateRequestList);
         when(loadSystemPort.load("SystemName")).thenReturn(Optional.of(system));
-        when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
+        when(sendMessagePort.send(messageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
 
@@ -161,8 +160,30 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
 
         verify(loadAllSystemCoordinateRequestPort, times(1)).loadAll();
         verify(loadSystemPort, times(1)).load("SystemName");
-        verify(sendKafkaMessagePort, times(1)).send(messageDto);
+        verify(sendMessagePort, times(1)).send(messageDto);
         verify(deleteSystemCoordinateRequestPort, times(1)).delete("SystemName", module);
-        verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort, loadSystemPort, sendKafkaMessagePort, deleteSystemCoordinateRequestPort);
+        verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, deleteSystemCoordinateRequestPort);
+    }
+
+    @Test
+    void processPending_nonEmptyRequestList_systemFound_writeValueAsStringThrowsJsonProcessingException() throws JsonProcessingException {
+
+        SystemCoordinateRequest systemCoordinateRequest = mock(SystemCoordinateRequest.class);
+        when(systemCoordinateRequest.systemName()).thenReturn("SystemName");
+        List<SystemCoordinateRequest> systemCoordinateRequestList = List.of(systemCoordinateRequest);
+        System system = mock(System.class);
+        SystemCoordinatesResponse systemCoordinatesResponse = mock(SystemCoordinatesResponse.class);
+        when(systemCoordinatesResponseMapper.map(system)).thenReturn(systemCoordinatesResponse);
+        when(objectMapper.writeValueAsString(systemCoordinatesResponse)).thenThrow(new JsonProcessingException("Test exception") {
+        });
+        when(loadAllSystemCoordinateRequestPort.loadAll()).thenReturn(systemCoordinateRequestList);
+        when(loadSystemPort.load("SystemName")).thenReturn(Optional.of(system));
+
+        // No exception as it is a NOOP in async
+        underTest.processPending();
+
+        verify(loadAllSystemCoordinateRequestPort, times(1)).loadAll();
+        verify(loadSystemPort, times(1)).load("SystemName");
+        verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, deleteSystemCoordinateRequestPort);
     }
 }
