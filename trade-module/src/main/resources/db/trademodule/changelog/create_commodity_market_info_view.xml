@@ -20,9 +20,7 @@
                                                   s.system_id,
                                                   md_1.buy_price,
                                                   md_1.sell_price,
-                                                  power(sys.x_coordinate, 2::double precision) +
-                                                  power(sys.y_coordinate, 2::double precision) +
-                                                  power(sys.z_coordinate, 2::double precision) AS distance_squared
+                                                  ST_3DDistance(sys.coordinates_geom, ST_MakePoint(0, 0, 0)) AS distance_from_sol
                                            FROM latest_market_data_view md_1
                                                     JOIN mean_prices mp ON mp.commodity_id = md_1.commodity_id
                                                     JOIN station s ON md_1.station_id = s.id
@@ -35,8 +33,8 @@
                                                  dc.buy_price,
                                                  dc.sell_price,
                                                  row_number()
-                                                     OVER (PARTITION BY dc.commodity_id, dc.sell_price ORDER BY dc.distance_squared) AS rn_sell, row_number()
-                             OVER (PARTITION BY dc.commodity_id, dc.buy_price ORDER BY dc.distance_squared) AS rn_buy
+                                                     OVER (PARTITION BY dc.commodity_id, dc.sell_price ORDER BY dc.distance_from_sol) AS rn_sell, row_number()
+                             OVER (PARTITION BY dc.commodity_id, dc.buy_price ORDER BY dc.distance_from_sol) AS rn_buy
                                           FROM distance_calculations dc),
                  highest_selling AS (SELECT commodity_id,
                                             station_id AS highest_selling_station

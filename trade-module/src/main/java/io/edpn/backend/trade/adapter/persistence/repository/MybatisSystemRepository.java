@@ -34,12 +34,18 @@ public interface MybatisSystemRepository {
     @ResultMap("systemResultMap")
     Optional<MybatisSystemEntity> findByName(@Param("name") String name);
 
-    @Insert("INSERT INTO system (id, name, elite_id, x_coordinate, y_coordinate, z_coordinate) " +
-            "VALUES (#{id}, #{name}, #{eliteId}, #{xCoordinate}, #{yCoordinate}, #{zCoordinate})")
+    @Insert({"INSERT INTO system (id, name, elite_id, x_coordinate, y_coordinate, z_coordinate, coordinates_geom) ",
+            "VALUES (#{id}, #{name}, #{eliteId}, #{xCoordinate}, #{yCoordinate}, #{zCoordinate}, ST_MakePoint(#{xCoordinate}, #{yCoordinate}, #{zCoordinate}))"})
     void insert(MybatisSystemEntity system);
 
-    @Update("UPDATE system SET name = #{name}, elite_id = #{eliteId}, x_coordinate = #{xCoordinate}, " +
-            "y_coordinate = #{yCoordinate}, z_coordinate = #{zCoordinate} WHERE id = #{id}")
+    @Update({"UPDATE system",
+            "SET name = #{name},",
+            "elite_id = #{eliteId},",
+            "x_coordinate = #{xCoordinate},",
+            "y_coordinate = #{yCoordinate},",
+            "z_coordinate = #{zCoordinate}",
+            "coordinates_geom = ST_MakePoint(#{xCoordinate}, #{yCoordinate}, #{zCoordinate})",
+            "WHERE id = #{id}"})
     void update(MybatisSystemEntity system);
 
     @Delete("DELETE FROM system WHERE id = #{id}")

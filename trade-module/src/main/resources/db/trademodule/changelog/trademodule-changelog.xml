@@ -22,6 +22,8 @@
     <include file="/db/trademodule/changelog/create_station_planetary_data_request_table.xml"/>
     <include file="/db/trademodule/changelog/create_station_landing_pad_size_data_request_table.xml"/>
     <include file="/db/trademodule/changelog/add_performance_indexes.xml"/>
+    <include file="/db/trademodule/changelog/add_geometry_point_for_system_coordinates.xml"/>
+    <include file="/db/trademodule/changelog/fill_geometry_point_for_system_coordinates.xml"/>
 
     <!-- views always last as they might depend on new columns -->
     <include file="/db/trademodule/changelog/create_validated_commodity_view.xml"/>

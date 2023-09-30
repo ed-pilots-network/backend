@@ -10,6 +10,8 @@
     <include file="db/explorationmodule/changelog/create_request_data_message_table.xml"/>
     <include file="db/explorationmodule/changelog/add_unique_system_indexes.xml"/>
     <include file="db/explorationmodule/changelog/create_system_eliteid_data_request_table.xml"/>
+    <include file="db/explorationmodule/changelog/add_geometry_point_for_system_coordinates.xml"/>
+    <include file="db/explorationmodule/changelog/fill_geometry_point_for_system_coordinates.xml"/>
 
 
     <!-- views always last as they might depend on new columns -->
