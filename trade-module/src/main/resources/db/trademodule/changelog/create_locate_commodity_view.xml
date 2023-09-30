@@ -7,23 +7,23 @@
         <createView viewName="locate_commodity_view" replaceIfExists="true">
             <![CDATA[
             SELECT md."timestamp",
-                    md.station_id,
-                    md.commodity_id,
-                    sys.id AS system_id,
-                    st.max_landing_pad_size,
-                    st.require_odyssey,
-                    st.planetary,
-                    st.fleet_carrier,
-                    md.stock,
-                    md.demand,
-                    md.buy_price,
-                    md.sell_price,
-                    sys.x_coordinate,
-                    sys.y_coordinate,
-                    sys.z_coordinate
-                    FROM latest_market_data_view md
-                    JOIN station st ON md.station_id = st.id
-                    JOIN system sys ON st.system_id = sys.id
+                   md.station_id,
+                   md.commodity_id,
+                   sys.id AS system_id,
+                   st.max_landing_pad_size,
+                   st.require_odyssey,
+                   st.planetary,
+                   st.fleet_carrier,
+                   md.stock,
+                   md.demand,
+                   md.buy_price,
+                   md.sell_price,
+                   sys.x_coordinate,
+                   sys.y_coordinate,
+                   sys.z_coordinate
+            FROM latest_market_datum md
+                     JOIN station st ON md.station_id = st.id
+                     JOIN system sys ON st.system_id = sys.id
             ]]>
         </createView>
     </changeSet>

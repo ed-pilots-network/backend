@@ -1,6 +1,7 @@
 package io.edpn.backend.trade.adapter.persistence;
 
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisLatestMarketDatumRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository;
 import io.edpn.backend.trade.application.domain.Station;
@@ -30,7 +31,6 @@ public class StationRepository implements CreateStationPort, LoadOrCreateBySyste
     private final IdGenerator idGenerator;
     private final StationEntityMapper<MybatisStationEntity> mybatisStationEntityMapper;
     private final MybatisStationRepository mybatisStationRepository;
-    private final MybatisMarketDatumRepository mybatisMarketDatumRepository;
     private final PersistenceFindStationFilterMapper mybatisPersistenceFindStationFilterMapper;
 
     @Override
@@ -40,21 +40,9 @@ public class StationRepository implements CreateStationPort, LoadOrCreateBySyste
             entity.setId(idGenerator.generateId());
         }
         mybatisStationRepository.insert(entity);
-        saveMarketData(entity);
 
         return loadById(entity.getId())
                 .orElseThrow(() -> new DatabaseEntityNotFoundException("station with id: " + entity.getId() + " could not be found after create"));
-    }
-
-    //TODO: refactor for skipping iteration
-    private void saveMarketData(MybatisStationEntity stationEntity) {
-        stationEntity.getMarketData().forEach(mybatisMarketDatumEntity -> {
-            if (mybatisMarketDatumRepository.findById(stationEntity.getId(), mybatisMarketDatumEntity.getCommodity().getId(), mybatisMarketDatumEntity.getTimestamp()).isEmpty()) {
-                mybatisMarketDatumRepository.insert(stationEntity.getId(), mybatisMarketDatumEntity);
-            } else {
-                log.warn("Did not save marketDatum because of record with identical key already exists");
-            }
-        });
     }
 
     @Override
@@ -80,8 +68,6 @@ public class StationRepository implements CreateStationPort, LoadOrCreateBySyste
     public Station update(Station station) {
         var entity = mybatisStationEntityMapper.map(station);
         mybatisStationRepository.update(entity);
-
-        saveMarketData(entity);
 
         return loadById(entity.getId())
                 .orElseThrow(() -> new DatabaseEntityNotFoundException("station with id: " + entity.getId() + " could not be found after update"));

@@ -1,20 +1,23 @@
 package io.edpn.backend.trade.adapter.persistence;
 
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisMarketDatumEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRepository;
-import io.edpn.backend.trade.application.port.outgoing.marketdatum.ExistsByStationNameAndSystemNameAndTimestampPort;
+import io.edpn.backend.trade.application.domain.MarketDatum;
+import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateMarketDatumPort;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.UUID;
 
 @RequiredArgsConstructor
-public class MarketDatumRepository implements ExistsByStationNameAndSystemNameAndTimestampPort {
-    
-    private final MybatisMarketDatumRepository mybatisMarketDatumRepository;
-    
+public class MarketDatumRepository implements CreateMarketDatumPort {
+
+    private final MybatisMarketDatumRepository marketDatumRepository;
+    private final MybatisMarketDatumEntityMapper marketDatumEntityMapper;
+
     @Override
-    public boolean exists(@NotBlank @NotNull String systemName,@NotBlank @NotNull String stationName, @NotNull LocalDateTime timestamp) {
-        return mybatisMarketDatumRepository.existsByStationNameAndSystemNameAndTimestamp(systemName, stationName, timestamp);
+    public void insertWhenNotExists(@NotBlank @NotNull UUID stationId, @NotNull MarketDatum marketDatum) {
+        marketDatumRepository.insertWhenNotExists(stationId, marketDatumEntityMapper.map(marketDatum));
     }
 }

@@ -10,7 +10,7 @@
                                         MAX(sell_price)           AS max_sell_price,
                                         MIN(nullif(buy_price, 0)) AS min_buy_price,
                                         AVG(mean_price)           AS avg_mean_price
-                            FROM latest_market_data_view
+                            FROM latest_market_datum
                                  GROUP BY commodity_id),
                  distance_calculations AS (SELECT md_1.commodity_id,
                                                   md_1.station_id,
@@ -18,7 +18,7 @@
                                                   md_1.buy_price,
                                                   md_1.sell_price,
                                                   ST_3DDistance(sys.coordinates_geom, ST_MakePoint(0, 0, 0)) AS distance_from_sol
-                                           FROM latest_market_data_view md_1
+                                           FROM latest_market_datum md_1
                                                     JOIN prices p ON p.commodity_id = md_1.commodity_id
                                                     JOIN station s ON md_1.station_id = s.id
                                                     JOIN system sys ON s.system_id = sys.id
@@ -50,7 +50,7 @@
                                             COUNT(DISTINCT CASE WHEN md.sell_price IS NOT NULL AND md.sell_price != 0 THEN md.station_id END) AS stations_with_sell_price,
                                             COUNT(DISTINCT CASE WHEN md.buy_price < p.avg_mean_price THEN md.station_id END)                  AS stations_with_buy_price_lower_than_average,
                                             COUNT(DISTINCT CASE WHEN md.sell_price > p.avg_mean_price THEN md.station_id END)                 AS stations_with_sell_price_higher_than_average
-                                     FROM latest_market_data_view md
+                                     FROM latest_market_datum md
                                               JOIN prices p ON p.commodity_id = md.commodity_id
                                      GROUP BY md.commodity_id)
             SELECT md.commodity_id,
@@ -72,7 +72,7 @@
                    bsc.stations_with_sell_price_higher_than_average,
                    MIN((CASE WHEN mms.highest_selling_station IS NOT NULL THEN mms.highest_selling_station END) ::text)::UUID AS highest_selling_to_station,
                    MAX((CASE WHEN mms.lowest_buying_station IS NOT NULL THEN mms.lowest_buying_station END)::text) ::UUID AS lowest_buying_from_station
-            FROM latest_market_data_view md
+            FROM latest_market_datum md
                      LEFT JOIN buy_sell_counts bsc ON md.commodity_id = bsc.commodity_id
                      LEFT JOIN min_max_stations mms ON md.commodity_id = mms.commodity_id
             GROUP BY md.commodity_id,

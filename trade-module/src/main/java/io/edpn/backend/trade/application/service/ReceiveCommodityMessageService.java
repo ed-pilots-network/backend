@@ -8,7 +8,8 @@ import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.commodity.LoadOrCreateCommodityByNamePort;
-import io.edpn.backend.trade.application.port.outgoing.marketdatum.ExistsByStationNameAndSystemNameAndTimestampPort;
+import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateLatestMarketDatumPort;
+import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateMarketDatumPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
@@ -21,16 +22,18 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 @Slf4j
 public class ReceiveCommodityMessageService implements ReceiveKafkaMessageUseCase<CommodityMessage.V3> {
-    
-    private final ExistsByStationNameAndSystemNameAndTimestampPort existsByStationNameAndSystemNameAndTimestamp;
+
     private final LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
     private final LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
     private final LoadOrCreateCommodityByNamePort loadOrCreateCommodityByNamePort;
+    private final CreateMarketDatumPort createMarketDatumPort;
+    private final CreateLatestMarketDatumPort createLatestMarketDatumPort;
     private final UpdateStationPort updateStationPort;
     private final List<RequestDataUseCase<Station>> stationRequestDataServices;
     private final List<RequestDataUseCase<System>> systemRequestDataServices;
@@ -53,15 +56,8 @@ public class ReceiveCommodityMessageService implements ReceiveKafkaMessageUseCas
         String stationName = payload.stationName();
         String[] prohibitedCommodities = payload.prohibited();
 
-        //do we have this data already?
-        if (existsByStationNameAndSystemNameAndTimestamp.exists(systemName, stationName, updateTimestamp)) {
-            log.debug("data with the same key as received message already present in database. SKIPPING");
-            return;
-        }
-
-
         // get system
-        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> loadOrCreateSystemByNamePort.loadOrCreateSystemByName(systemName))
+        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> loadOrCreateSystemByNamePort.loadOrCreateSystemByName(systemName)) // TODO rework to INSERT ON CONFLICT
                 .whenComplete((system, throwable) -> {
                     if (throwable != null) {
                         log.error("Exception occurred in retrieving system", throwable);
@@ -73,7 +69,7 @@ public class ReceiveCommodityMessageService implements ReceiveKafkaMessageUseCas
                 });
 
         // get station
-        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> loadOrCreateBySystemAndStationNamePort.loadOrCreateBySystemAndStationName(systemCompletableFuture.copy().join(), stationName));
+        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> loadOrCreateBySystemAndStationNamePort.loadOrCreateBySystemAndStationName(systemCompletableFuture.copy().join(), stationName)); // TODO rework to INSERT ON CONFLICT
         stationCompletableFuture.whenComplete((station, throwable) -> {
             if (throwable != null) {
                 log.error("Exception occurred in retrieving station", throwable);
@@ -98,7 +94,7 @@ public class ReceiveCommodityMessageService implements ReceiveKafkaMessageUseCas
         // get marketDataCollection
         List<CompletableFuture<MarketDatum>> completableFutureList = Arrays.stream(commodities).parallel().map(commodityFromMessage -> {
                     // get commodity
-                    CompletableFuture<Commodity> commodity = CompletableFuture.supplyAsync(() -> loadOrCreateCommodityByNamePort.loadOrCreate(commodityFromMessage.name()));
+                    CompletableFuture<Commodity> commodity = CompletableFuture.supplyAsync(() -> loadOrCreateCommodityByNamePort.loadOrCreate(commodityFromMessage.name())); // TODO rework to INSERT ON CONFLICT
                     // parse market data
                     CompletableFuture<MarketDatum> marketDatum = CompletableFuture.supplyAsync(() -> getMarketDatum(commodityFromMessage, prohibitedCommodities, updateTimestamp));
 
@@ -114,14 +110,15 @@ public class ReceiveCommodityMessageService implements ReceiveKafkaMessageUseCas
                         .map(CompletableFuture::join)
                         .toList());
 
+        stationCompletableFuture.thenCombine(combinedFuture, (station, marketDatumList) -> {
+                    marketDatumList.parallelStream().forEach(marketDatum -> {
+                        createMarketDatumPort.insertWhenNotExists(station.getId(), marketDatum);
+                        createLatestMarketDatumPort.insertOrUpdate(station.getId(), marketDatum);
+                    });
+                    return station;
+                });
 
-        // put market data map in station
-        stationCompletableFuture.thenCombine(combinedFuture, (station, marketDataMap) -> {
-            station.setMarketData(marketDataMap);
-            return station;
-        });
-
-        // save station
+        // save station changes
         updateStationPort.update(stationCompletableFuture.join());
 
         if (log.isTraceEnabled()) {
@@ -142,7 +139,7 @@ public class ReceiveCommodityMessageService implements ReceiveKafkaMessageUseCas
                 .demand(commodity.demand())
                 .demandBracket(commodity.demandBracket())
                 .statusFlags(CollectionUtil.toList(commodity.statusFlags()))
-                .prohibited(Arrays.stream(prohibitedCommodities).anyMatch(prohibitedCommodity -> prohibitedCommodity.equals(commodity.name())))
+                .prohibited(Optional.ofNullable(prohibitedCommodities).map(prohibited -> Arrays.stream(prohibited).anyMatch(prohibitedCommodity -> prohibitedCommodity.equals(commodity.name()))).orElse(false))
                 .build();
     }
 }

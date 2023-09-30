@@ -24,10 +24,13 @@
     <include file="/db/trademodule/changelog/add_performance_indexes.xml"/>
     <include file="/db/trademodule/changelog/add_geometry_point_for_system_coordinates.xml"/>
     <include file="/db/trademodule/changelog/fill_geometry_point_for_system_coordinates.xml"/>
+    <include file="/db/trademodule/changelog/create_latest_market_datum_table.xml"/>
+    <include file="/db/trademodule/changelog/fill_latest_market_datum.xml"/>
 
     <!-- views always last as they might depend on new columns -->
     <include file="/db/trademodule/changelog/create_validated_commodity_view.xml"/>
     <include file="/db/trademodule/changelog/create_validated_market_datum_view.xml"/>
+    <include file="/db/trademodule/changelog/create_validated_latest_market_datum_view.xml"/>
     <include file="/db/trademodule/changelog/create_latest_market_data_view.xml"/>
     <include file="/db/trademodule/changelog/create_commodity_market_info_view.xml"/>
     <include file="/db/trademodule/changelog/create_locate_commodity_view.xml"/>

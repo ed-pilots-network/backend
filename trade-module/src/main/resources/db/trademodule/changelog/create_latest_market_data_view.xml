@@ -6,29 +6,20 @@
     <changeSet id="latest_market_data_view" author="pveeckhout" runOnChange="true">
         <createView viewName="latest_market_data_view" replaceIfExists="true">
             <![CDATA[
-            SELECT DISTINCT
-            ON (md.station_id, md.commodity_id)
-                md.station_id,
-                md.commodity_id,
-                md.mean_price,
-                md.buy_price,
-                md.stock,
-                md.stock_bracket,
-                md.sell_price,
-                md.demand,
-                md.demand_bracket,
-                md.status_flags,
-                md.prohibited,
-                md.timestamp
-            FROM validated_market_datum_view md
-            WHERE (md.station_id, md.timestamp) IN (
-                SELECT DISTINCT ON (md2.station_id)
-                    md2.station_id,
-                    md2.timestamp
-                FROM validated_market_datum_view md2
-                ORDER BY md2.station_id,
-                    md2.timestamp DESC
-            );
+            SELECT md.station_id,
+                   md.commodity_id,
+                   md.mean_price,
+                   md.buy_price,
+                   md.stock,
+                   md.stock_bracket,
+                   md.sell_price,
+                   md.demand,
+                   md.demand_bracket,
+                   md.status_flags,
+                   md.prohibited,
+                   md.timestamp
+            FROM latest_market_datum md
+                     INNER JOIN validated_commodity_view vcv ON vcv.id = md.commodity_id
             ]]>
         </createView>
     </changeSet>

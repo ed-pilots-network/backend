@@ -14,7 +14,8 @@ import io.edpn.backend.trade.application.port.outgoing.commodity.LoadOrCreateCom
 import io.edpn.backend.trade.application.port.outgoing.commoditymarketinfo.GetFullCommodityMarketInfoPort;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.locatecommodity.LocateCommodityByFilterPort;
-import io.edpn.backend.trade.application.port.outgoing.marketdatum.ExistsByStationNameAndSystemNameAndTimestampPort;
+import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateLatestMarketDatumPort;
+import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateMarketDatumPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
@@ -58,12 +59,13 @@ import io.edpn.backend.trade.application.service.StationPlanetaryInterModuleComm
 import io.edpn.backend.trade.application.service.StationRequireOdysseyInterModuleCommunicationService;
 import io.edpn.backend.trade.application.service.SystemCoordinateInterModuleCommunicationService;
 import io.edpn.backend.trade.application.service.SystemEliteIdInterModuleCommunicationService;
-import java.util.List;
-import java.util.concurrent.Executor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.support.RetryTemplate;
+
+import java.util.List;
+import java.util.concurrent.Executor;
 
 @Configuration("TradeServiceConfig")
 public class ServiceConfig {
@@ -95,14 +97,15 @@ public class ServiceConfig {
 
     @Bean(name = "tradeRecieveCommodityMessageUsecase")
     public ReceiveCommodityMessageService receiveCommodityMessageService(
-            ExistsByStationNameAndSystemNameAndTimestampPort existsByStationNameAndSystemNameAndTimestamp,
             LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
             LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort,
             LoadOrCreateCommodityByNamePort loadOrCreateCommodityByNamePort,
+            CreateMarketDatumPort createMarketDatumPort,
+            CreateLatestMarketDatumPort createLatestMarketDatumPort,
             UpdateStationPort updateStationPort,
             List<RequestDataUseCase<Station>> stationRequestDataServices,
             List<RequestDataUseCase<System>> systemRequestDataService) {
-        return new ReceiveCommodityMessageService(existsByStationNameAndSystemNameAndTimestamp, loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, loadOrCreateCommodityByNamePort, updateStationPort, stationRequestDataServices, systemRequestDataService);
+        return new ReceiveCommodityMessageService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, loadOrCreateCommodityByNamePort, createMarketDatumPort, createLatestMarketDatumPort, updateStationPort, stationRequestDataServices, systemRequestDataService);
     }
 
 

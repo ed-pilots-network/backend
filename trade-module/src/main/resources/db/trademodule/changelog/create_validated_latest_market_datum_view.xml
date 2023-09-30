@@ -1,0 +1,29 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="create_validated_commodity_view" author="pveeckhout" runOnChange="true">
+        <createView viewName="validated_market_datum_view" replaceIfExists="true">
+            <![CDATA[
+            SELECT
+                md.station_id,
+                md.commodity_id,
+                md.mean_price,
+                md.buy_price,
+                md.stock,
+                md.stock_bracket,
+                md.sell_price,
+                md.demand,
+                md.demand_bracket,
+                md.status_flags,
+                md.prohibited,
+                md.timestamp
+            FROM latest_market_datum md
+            INNER JOIN validated_commodity_view vcv
+                ON vcv.id = md.commodity_id
+            ]]>
+        </createView>
+    </changeSet>
+
+</databaseChangeLog>
