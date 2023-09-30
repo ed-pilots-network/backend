@@ -11,6 +11,7 @@ import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesRespo
 import io.edpn.backend.exploration.application.port.incomming.ProcessPendingDataRequestUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
@@ -41,8 +42,11 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ProcessPendingSystemCoordinateRequestServiceTest {
 
+    private final Executor executor = Runnable::run;
     @Mock
     private LoadAllSystemCoordinateRequestPort loadAllSystemCoordinateRequestPort;
+    @Mock
+    private CreateIfNotExistsSystemCoordinateRequestPort createIfNotExistsSystemCoordinateRequestPort;
     @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
@@ -57,13 +61,22 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
     private ObjectMapper objectMapper;
     @Mock
     private RetryTemplate retryTemplate;
-
     private ProcessPendingDataRequestUseCase<SystemCoordinateRequest> underTest;
 
     @BeforeEach
     void setUp() {
-        Executor executor = Runnable::run;
-        underTest = new ProcessPendingSystemCoordinateRequestService(loadAllSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, messageMapper, objectMapper, retryTemplate, executor);
+        underTest = new SystemCoordinateInterModuleCommunicationService(
+                loadAllSystemCoordinateRequestPort,
+                createIfNotExistsSystemCoordinateRequestPort,
+                deleteSystemCoordinateRequestPort,
+                loadSystemPort,
+                sendMessagePort,
+                systemCoordinatesResponseMapper,
+                messageMapper,
+                objectMapper,
+                retryTemplate,
+                executor
+        );
     }
 
     @Test

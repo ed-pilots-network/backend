@@ -6,6 +6,8 @@ import io.edpn.backend.exploration.adapter.kafka.dto.mapper.KafkaSystemEliteIdRe
 import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
 import io.edpn.backend.exploration.adapter.web.dto.mapper.RestSystemDtoMapper;
 import io.edpn.backend.exploration.application.dto.mapper.MessageMapper;
+import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
+import io.edpn.backend.exploration.application.dto.mapper.SystemEliteIdResponseMapper;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
@@ -13,14 +15,14 @@ import io.edpn.backend.exploration.application.port.outgoing.systemcoordinatereq
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.CreateIfNotExistsSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestBySystemNamePort;
-import io.edpn.backend.exploration.application.service.ProcessPendingSystemCoordinateRequestService;
-import io.edpn.backend.exploration.application.service.ProcessPendingSystemEliteIdRequestService;
 import io.edpn.backend.exploration.application.service.ReceiveNavRouteService;
-import io.edpn.backend.exploration.application.service.ReceiveSystemCoordinateRequestService;
 import io.edpn.backend.exploration.application.service.SystemControllerService;
+import io.edpn.backend.exploration.application.service.SystemCoordinateInterModuleCommunicationService;
+import io.edpn.backend.exploration.application.service.SystemEliteIdInterModuleCommunicationService;
 import io.edpn.backend.exploration.application.validation.LoadByNameContainingValidator;
 import io.edpn.backend.util.IdGenerator;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -66,24 +68,58 @@ public class ServiceConfig {
                 executor);
     }
 
-    @Bean(name = "explorationReceiveSystemCoordinateRequestService")
-    public ReceiveSystemCoordinateRequestService receiveSystemCoordinateRequestService(
+    @Bean(name = "explorationSystemCoordinateInterModuleCommunicationService")
+    public SystemCoordinateInterModuleCommunicationService systemCoordinateInterModuleCommunicationService(
+            LoadAllSystemCoordinateRequestPort loadAllSystemCoordinateRequestPort,
             CreateIfNotExistsSystemCoordinateRequestPort createIfNotExistsSystemCoordinateRequestPort,
+            DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort,
             LoadSystemPort loadSystemPort,
             SendMessagePort sendMessagePort,
-            KafkaSystemCoordinatesResponseMapper kafkaSystemCoordinatesResponseMapper,
+            SystemCoordinatesResponseMapper systemCoordinatesResponseMapper,
             MessageMapper messageMapper,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper,
-            @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate
+            @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
+            @Qualifier("explorationForkJoinPool") Executor executor
     ) {
-        return new ReceiveSystemCoordinateRequestService(
+        return new SystemCoordinateInterModuleCommunicationService(
+                loadAllSystemCoordinateRequestPort,
                 createIfNotExistsSystemCoordinateRequestPort,
+                deleteSystemCoordinateRequestPort,
                 loadSystemPort,
                 sendMessagePort,
-                kafkaSystemCoordinatesResponseMapper,
+                systemCoordinatesResponseMapper,
                 messageMapper,
                 objectMapper,
-                retryTemplate);
+                retryTemplate,
+                executor
+        );
+    }
+
+    @Bean(name = "explorationSystemEliteIdInterModuleCommunicationService")
+    public SystemEliteIdInterModuleCommunicationService systemEliteIdInterModuleCommunicationService(
+            LoadAllSystemEliteIdRequestPort loadAllSystemEliteIdRequestPort,
+            CreateIfNotExistsSystemEliteIdRequestPort createIfNotExistsSystemEliteIdRequestPort,
+            DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort,
+            LoadSystemPort loadSystemPort,
+            SendMessagePort sendMessagePort,
+            SystemEliteIdResponseMapper systemEliteIdResponseMapper,
+            MessageMapper messageMapper,
+            @Qualifier("explorationObjectMapper") ObjectMapper objectMapper,
+            @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
+            @Qualifier("explorationForkJoinPool") Executor executor
+    ) {
+        return new SystemEliteIdInterModuleCommunicationService(
+                loadAllSystemEliteIdRequestPort,
+                createIfNotExistsSystemEliteIdRequestPort,
+                deleteSystemEliteIdRequestPort,
+                loadSystemPort,
+                sendMessagePort,
+                systemEliteIdResponseMapper,
+                messageMapper,
+                objectMapper,
+                retryTemplate,
+                executor
+        );
     }
 
     @Bean(name = "explorationLoadByNameContainingValidator")
@@ -108,53 +144,5 @@ public class ServiceConfig {
                 systemRepository,
                 loadByNameContainingValidator,
                 restSystemDtoMapper);
-    }
-
-    @Bean(name = "explorationProcessPendingSystemCoordinateRequestService")
-    public ProcessPendingSystemCoordinateRequestService processPendingSystemCoordinateRequestService(
-            LoadAllSystemCoordinateRequestPort loadAllSystemCoordinateRequestPort,
-            LoadSystemPort loadSystemPort,
-            SendMessagePort sendMessagePort,
-            DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort,
-            KafkaSystemCoordinatesResponseMapper kafkaSystemCoordinatesResponseMapper,
-            MessageMapper messageMapper,
-            @Qualifier("explorationObjectMapper") ObjectMapper objectMapper,
-            @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
-            @Qualifier("explorationForkJoinPool") Executor executor
-    ) {
-        return new ProcessPendingSystemCoordinateRequestService(
-                loadAllSystemCoordinateRequestPort,
-                loadSystemPort,
-                sendMessagePort,
-                deleteSystemCoordinateRequestPort,
-                kafkaSystemCoordinatesResponseMapper,
-                messageMapper,
-                objectMapper,
-                retryTemplate,
-                executor);
-    }
-
-    @Bean(name = "explorationProcessPendingSystemEliteIdRequestService")
-    public ProcessPendingSystemEliteIdRequestService processPendingSystemEliteIdRequestService(
-            LoadAllSystemEliteIdRequestPort loadAllSystemEliteIdRequestPort,
-            LoadSystemPort loadSystemPort,
-            SendMessagePort sendMessagePort,
-            DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort,
-            KafkaSystemEliteIdResponseMapper kafkaSystemEliteIdsResponseMapper,
-            MessageMapper messageMapper,
-            @Qualifier("explorationObjectMapper") ObjectMapper objectMapper,
-            @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
-            @Qualifier("explorationForkJoinPool") Executor executor
-    ) {
-        return new ProcessPendingSystemEliteIdRequestService(
-                loadAllSystemEliteIdRequestPort,
-                loadSystemPort,
-                sendMessagePort,
-                deleteSystemEliteIdRequestPort,
-                kafkaSystemEliteIdsResponseMapper,
-                messageMapper,
-                objectMapper,
-                retryTemplate,
-                executor);
     }
 }

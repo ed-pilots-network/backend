@@ -12,6 +12,8 @@ import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessag
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.CreateIfNotExistsSystemEliteIdRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
 import io.edpn.backend.util.Module;
@@ -25,6 +27,7 @@ import org.springframework.retry.RetryCallback;
 import org.springframework.retry.support.RetryTemplate;
 
 import java.util.Optional;
+import java.util.concurrent.Executor;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,11 +42,15 @@ import static org.mockito.Mockito.when;
 public class ReceiveSystemEliteIdRequestServiceTest {
 
     @Mock
+    private LoadAllSystemEliteIdRequestPort loadAllSystemEliteIdRequestPort;
+    @Mock
     private CreateIfNotExistsSystemEliteIdRequestPort createIfNotExistsSystemEliteIdRequestPort;
     @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
     private SendMessagePort sendMessagePort;
+    @Mock
+    private DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort;
     @Mock
     private SystemEliteIdResponseMapper systemEliteIdResponseMapper;
     @Mock
@@ -52,12 +59,25 @@ public class ReceiveSystemEliteIdRequestServiceTest {
     private ObjectMapper objectMapper;
     @Mock
     private RetryTemplate retryTemplate;
+    @Mock
+    private Executor executor;
 
     private ReceiveKafkaMessageUseCase<SystemDataRequest> underTest;
 
     @BeforeEach
     public void setup() {
-        underTest = new ReceiveSystemEliteIdRequestService(createIfNotExistsSystemEliteIdRequestPort, loadSystemPort, sendMessagePort, systemEliteIdResponseMapper, messageMapper, objectMapper, retryTemplate);
+        underTest = new SystemEliteIdInterModuleCommunicationService(
+                loadAllSystemEliteIdRequestPort,
+                createIfNotExistsSystemEliteIdRequestPort,
+                deleteSystemEliteIdRequestPort,
+                loadSystemPort,
+                sendMessagePort,
+                systemEliteIdResponseMapper,
+                messageMapper,
+                objectMapper,
+                retryTemplate,
+                executor
+        );
     }
 
     @SneakyThrows
