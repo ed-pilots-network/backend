@@ -16,8 +16,8 @@ import java.util.UUID;
 
 public interface MybatisSystemRepository {
 
-    @Select({"INSERT INTO system (id, name, star_class, elite_id, x_coordinate, y_coordinate, z_coordinate)",
-            "VALUES (#{id}, #{name}, #{starClass}, #{eliteId}, #{xCoordinate}, #{yCoordinate}, #{zCoordinate})",
+    @Select({"INSERT INTO system (id, name, star_class, elite_id, x_coordinate, y_coordinate, z_coordinate, coordinates_geom)",
+            "VALUES (#{id}, #{name}, #{starClass}, #{eliteId}, #{xCoordinate}, #{yCoordinate}, #{zCoordinate}, ST_MakePoint(#{xCoordinate}, #{yCoordinate}, #{zCoordinate}))",
             "ON CONFLICT (name)",
             "DO UPDATE SET",
             "star_class = COALESCE(system.star_class, EXCLUDED.star_class),",
@@ -25,6 +25,7 @@ public interface MybatisSystemRepository {
             "x_coordinate = COALESCE(system.x_coordinate, EXCLUDED.x_coordinate),",
             "y_coordinate = COALESCE(system.y_coordinate, EXCLUDED.y_coordinate),",
             "z_coordinate = COALESCE(system.z_coordinate, EXCLUDED.z_coordinate)",
+            "coordinates_geom = COALESCE(ST_MakePoint(system.x_coordinate, system.y_coordinate, system.z_coordinate), EXCLUDED.coordinates_geom)",
             "RETURNING *"
     })
     @ResultMap("systemResultMap")
