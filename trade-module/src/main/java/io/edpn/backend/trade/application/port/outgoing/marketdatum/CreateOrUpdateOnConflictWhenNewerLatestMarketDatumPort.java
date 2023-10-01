@@ -4,7 +4,7 @@ import io.edpn.backend.trade.application.domain.MarketDatum;
 
 import java.util.UUID;
 
-public interface CreateWhenNotExistsLatestMarketDatumPort {
+public interface CreateOrUpdateOnConflictWhenNewerLatestMarketDatumPort {
 
-    void createWhenNotExists(UUID stationId, MarketDatum marketDatum);
+    void createOrUpdateWhenNewer(UUID stationId, MarketDatum marketDatum);
 }

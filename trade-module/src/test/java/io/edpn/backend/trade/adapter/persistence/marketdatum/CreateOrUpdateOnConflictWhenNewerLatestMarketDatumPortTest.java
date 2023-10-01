@@ -5,7 +5,7 @@ import io.edpn.backend.trade.adapter.persistence.entity.MybatisMarketDatumEntity
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisMarketDatumEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisLatestMarketDatumRepository;
 import io.edpn.backend.trade.application.domain.MarketDatum;
-import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateWhenNotExistsLatestMarketDatumPort;
+import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateOrUpdateOnConflictWhenNewerLatestMarketDatumPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class CreateWhenNotExistsLatestMarketDatumPortTest {
+public class CreateOrUpdateOnConflictWhenNewerLatestMarketDatumPortTest {
 
     @Mock
     private MybatisLatestMarketDatumRepository mybatisLatestMarketDatumRepository;
@@ -28,7 +28,7 @@ public class CreateWhenNotExistsLatestMarketDatumPortTest {
     @Mock
     private MybatisMarketDatumEntityMapper marketDatumEntityMapper;
 
-    private CreateWhenNotExistsLatestMarketDatumPort underTest;
+    private CreateOrUpdateOnConflictWhenNewerLatestMarketDatumPort underTest;
 
     @BeforeEach
     public void setUp() {
@@ -43,9 +43,9 @@ public class CreateWhenNotExistsLatestMarketDatumPortTest {
 
         when(marketDatumEntityMapper.map(inputMarketDatum)).thenReturn(inputMarketDatumEntity);
 
-        underTest.createWhenNotExists(uuid, inputMarketDatum);
+        underTest.createOrUpdateWhenNewer(uuid, inputMarketDatum);
 
         verify(marketDatumEntityMapper, times(1)).map(inputMarketDatum);
-        verify(mybatisLatestMarketDatumRepository, times(1)).insertWhenNotExists(uuid, inputMarketDatumEntity);
+        verify(mybatisLatestMarketDatumRepository, times(1)).createOrUpdateOnConflictWhenNewer(uuid, inputMarketDatumEntity);
     }
 }

@@ -8,7 +8,7 @@ import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.commodity.CreateOrLoadCommodityPort;
-import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateWhenNotExistsLatestMarketDatumPort;
+import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateOrUpdateOnConflictWhenNewerLatestMarketDatumPort;
 import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateWhenNotExistsMarketDatumPort;
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
@@ -35,7 +35,7 @@ public class ReceiveCommodityMessageService implements ReceiveKafkaMessageUseCas
     private final CreateOrLoadStationPort createOrLoadStationPort;
     private final CreateOrLoadCommodityPort createOrLoadCommodityPort;
     private final CreateWhenNotExistsMarketDatumPort createWhenNotExistsMarketDatumPort;
-    private final CreateWhenNotExistsLatestMarketDatumPort createWhenNotExistsLatestMarketDatumPort;
+    private final CreateOrUpdateOnConflictWhenNewerLatestMarketDatumPort createOrUpdateOnConflictWhenNewerLatestMarketDatumPort;
     private final UpdateStationPort updateStationPort;
     private final List<RequestDataUseCase<Station>> stationRequestDataServices;
     private final List<RequestDataUseCase<System>> systemRequestDataServices;
@@ -123,7 +123,7 @@ public class ReceiveCommodityMessageService implements ReceiveKafkaMessageUseCas
         stationCompletableFuture.thenCombine(combinedFuture, (station, marketDatumList) -> {
             marketDatumList.parallelStream().forEach(marketDatum -> {
                 createWhenNotExistsMarketDatumPort.createWhenNotExists(station.getId(), marketDatum);
-                createWhenNotExistsLatestMarketDatumPort.createWhenNotExists(station.getId(), marketDatum);
+                createOrUpdateOnConflictWhenNewerLatestMarketDatumPort.createOrUpdateWhenNewer(station.getId(), marketDatum);
             });
             return station;
         });

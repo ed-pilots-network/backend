@@ -14,7 +14,7 @@ import io.edpn.backend.trade.application.port.outgoing.commodity.CreateOrLoadCom
 import io.edpn.backend.trade.application.port.outgoing.commoditymarketinfo.GetFullCommodityMarketInfoPort;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.locatecommodity.LocateCommodityByFilterPort;
-import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateWhenNotExistsLatestMarketDatumPort;
+import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateOrUpdateOnConflictWhenNewerLatestMarketDatumPort;
 import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateWhenNotExistsMarketDatumPort;
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
@@ -103,11 +103,11 @@ public class ServiceConfig {
             CreateOrLoadStationPort loadOrCreateBySystemAndStationNamePort,
             CreateOrLoadCommodityPort loadOrCreateCommodityByNamePort,
             CreateWhenNotExistsMarketDatumPort createWhenNotExistsMarketDatumPort,
-            CreateWhenNotExistsLatestMarketDatumPort createWhenNotExistsLatestMarketDatumPort,
+            CreateOrUpdateOnConflictWhenNewerLatestMarketDatumPort createOrUpdateOnConflictWhenNewerLatestMarketDatumPort,
             UpdateStationPort updateStationPort,
             List<RequestDataUseCase<Station>> stationRequestDataServices,
             List<RequestDataUseCase<System>> systemRequestDataService) {
-        return new ReceiveCommodityMessageService(idGenerator, loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, loadOrCreateCommodityByNamePort, createWhenNotExistsMarketDatumPort, createWhenNotExistsLatestMarketDatumPort, updateStationPort, stationRequestDataServices, systemRequestDataService);
+        return new ReceiveCommodityMessageService(idGenerator, loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, loadOrCreateCommodityByNamePort, createWhenNotExistsMarketDatumPort, createOrUpdateOnConflictWhenNewerLatestMarketDatumPort, updateStationPort, stationRequestDataServices, systemRequestDataService);
     }
 
 
