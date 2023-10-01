@@ -146,6 +146,7 @@ public class ServiceConfig {
 
     @Bean(name = "tradeSystemCoordinateInterModuleCommunicationService")
     public SystemCoordinateInterModuleCommunicationService systemCoordinateInterModuleCommunicationService(
+            @Qualifier("tradeIdGenerator") IdGenerator idGenerator,
             LoadSystemsByFilterPort loadSystemsByFilterPort,
             LoadAllSystemCoordinateRequestsPort loadAllSystemCoordinateRequestsPort,
             CreateOrLoadSystemPort createOrLoadSystemPort,
@@ -160,6 +161,7 @@ public class ServiceConfig {
             MessageMapper messageMapper
     ) {
         return new SystemCoordinateInterModuleCommunicationService(
+                idGenerator,
                 loadSystemsByFilterPort,
                 loadAllSystemCoordinateRequestsPort,
                 createOrLoadSystemPort,
@@ -282,6 +284,7 @@ public class ServiceConfig {
 
     @Bean(name = "tradeSystemEliteIdInterModuleCommunicationService")
     public SystemEliteIdInterModuleCommunicationService systemEliteIdInterModuleCommunicationService(
+            @Qualifier("tradeIdGenerator") IdGenerator idGenerator,
             LoadSystemsByFilterPort loadSystemsByFilterPort,
             LoadAllSystemEliteIdRequestsPort loadAllSystemEliteIdRequestsPort,
             CreateOrLoadSystemPort createOrLoadSystemPort,
@@ -295,6 +298,7 @@ public class ServiceConfig {
             ObjectMapper objectMapper,
             MessageMapper messageMapper) {
         return new SystemEliteIdInterModuleCommunicationService(
+                idGenerator,
                 loadSystemsByFilterPort,
                 loadAllSystemEliteIdRequestsPort,
                 createOrLoadSystemPort,
