@@ -64,10 +64,9 @@ public class RepositoryConfig {
 
     @Bean(name = "tradeCommodityRepository")
     public CommodityRepository commodityRepository(
-            @Qualifier("tradeIdGenerator") IdGenerator idGenerator,
             MybatisCommodityRepository mybatisCommodityRepository,
             CommodityEntityMapper<MybatisCommodityEntity> mybatisCommodityEntityMapper) {
-        return new CommodityRepository(idGenerator, mybatisCommodityEntityMapper, mybatisCommodityRepository);
+        return new CommodityRepository(mybatisCommodityEntityMapper, mybatisCommodityRepository);
     }
 
     @Bean(name = "tradeLocateCommodityRepository")
@@ -94,20 +93,18 @@ public class RepositoryConfig {
 
     @Bean(name = "tradeStationRepository")
     public StationRepository stationRepository(
-            @Qualifier("tradeIdGenerator") IdGenerator idGenerator,
             MybatisStationRepository mybatisStationRepository,
             StationEntityMapper<MybatisStationEntity> mybatisStationEntityMapper,
             PersistenceFindStationFilterMapper persistenceFindStationFilterMapper) {
-        return new StationRepository(idGenerator, mybatisStationEntityMapper, mybatisStationRepository, persistenceFindStationFilterMapper);
+        return new StationRepository(mybatisStationEntityMapper, mybatisStationRepository, persistenceFindStationFilterMapper);
     }
 
     @Bean(name = "tradeSystemRepository")
     public SystemRepository systemRepository(
-            @Qualifier("tradeIdGenerator") IdGenerator idGenerator,
             MybatisSystemRepository mybatisSystemRepository,
             PersistenceFindSystemFilterMapper mybatisPersistenceFindSystemFilterMapper,
             SystemEntityMapper<MybatisSystemEntity> mybatisSystemEntityMapper) {
-        return new SystemRepository(idGenerator, mybatisSystemEntityMapper, mybatisPersistenceFindSystemFilterMapper, mybatisSystemRepository);
+        return new SystemRepository(mybatisSystemEntityMapper, mybatisPersistenceFindSystemFilterMapper, mybatisSystemRepository);
     }
 
     @Bean(name = "tradeValidatedCommodityRepository")

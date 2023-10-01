@@ -12,7 +12,7 @@ import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
-import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
+import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CleanUpObsoleteStationPlanetaryRequestsUseCase;
@@ -21,17 +21,20 @@ import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.D
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.LoadAllStationPlanetaryRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.RequestMissingStationPlanetaryUseCase;
-import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
+import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
+import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Module;
 import io.edpn.backend.util.Topic;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -41,10 +44,11 @@ public class StationPlanetaryInterModuleCommunicationService implements RequestD
             .hasPlanetary(false)
             .build();
 
+    private final IdGenerator idGenerator;
     private final LoadStationsByFilterPort loadStationsByFilterPort;
     private final LoadAllStationPlanetaryRequestsPort loadAllStationPlanetaryRequestsPort;
-    private final LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
-    private final LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
+    private final CreateOrLoadSystemPort createOrLoadSystemPort;
+    private final CreateOrLoadStationPort createOrLoadStationPort;
     private final ExistsStationPlanetaryRequestPort existsStationPlanetaryRequestPort;
     private final CreateStationPlanetaryRequestPort createStationPlanetaryRequestPort;
     private final DeleteStationPlanetaryRequestPort deleteStationPlanetaryRequestPort;
@@ -103,10 +107,15 @@ public class StationPlanetaryInterModuleCommunicationService implements RequestD
         String stationName = message.stationName();
         boolean planetary = message.planetary();
 
-        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> loadOrCreateSystemByNamePort.loadOrCreateSystemByName(systemName));
+        //get system
+        System system = System.builder().id(UUID.randomUUID()).name(systemName).build();
+        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> createOrLoadSystemPort.createOrLoad(system));
 
         // get station
-        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> loadOrCreateBySystemAndStationNamePort.loadOrCreateBySystemAndStationName(systemCompletableFuture.join(), stationName));
+        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> {
+            Station station = Station.builder().id(idGenerator.generateId()).system(systemCompletableFuture.copy().join()).name(stationName).build();
+            return createOrLoadStationPort.createOrLoad(station);
+        });
         stationCompletableFuture.whenComplete((station, throwable) -> {
             if (throwable != null) {
                 log.error("Exception occurred in retrieving station", throwable);

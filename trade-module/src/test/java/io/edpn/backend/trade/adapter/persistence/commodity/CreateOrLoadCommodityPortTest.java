@@ -5,7 +5,7 @@ import io.edpn.backend.trade.adapter.persistence.entity.MybatisCommodityEntity;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityRepository;
 import io.edpn.backend.trade.application.domain.Commodity;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.CommodityEntityMapper;
-import io.edpn.backend.trade.application.port.outgoing.commodity.LoadOrCreateCommodityByNamePort;
+import io.edpn.backend.trade.application.port.outgoing.commodity.CreateOrLoadCommodityPort;
 import io.edpn.backend.util.IdGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class LoadOrCreateCommodityByNamePortTest {
+public class CreateOrLoadCommodityPortTest {
     
     @Mock
     private IdGenerator idGenerator;
@@ -37,11 +37,11 @@ public class LoadOrCreateCommodityByNamePortTest {
     @Mock
     private MybatisCommodityRepository mybatisCommodityRepository;
     
-    private LoadOrCreateCommodityByNamePort underTest;
+    private CreateOrLoadCommodityPort underTest;
     
     @BeforeEach
     public void setUp(){
-        underTest = new CommodityRepository(idGenerator, mybatisCommodityEntityMapper, mybatisCommodityRepository);
+        underTest = new CommodityRepository(mybatisCommodityEntityMapper, mybatisCommodityRepository);
     }
     
     @Test
@@ -60,7 +60,7 @@ public class LoadOrCreateCommodityByNamePortTest {
         when(mybatisCommodityRepository.findById(id)).thenReturn(Optional.ofNullable(mockSavedCommodityEntity));
         when(mybatisCommodityEntityMapper.map(mockSavedCommodityEntity)).thenReturn(expected);
         
-        Commodity result = underTest.loadOrCreate(name);
+        Commodity result = underTest.createOrLoad(name);
         
         verify(mybatisCommodityRepository).findByName(name);
         verify(mybatisCommodityEntityMapper).map(argThat((Commodity input) -> input.getId() == null && input.getName().equals(name)));
@@ -83,7 +83,7 @@ public class LoadOrCreateCommodityByNamePortTest {
         when(mybatisCommodityRepository.findByName(name)).thenReturn(Optional.of(mockSavedCommodityEntity));
         when(mybatisCommodityEntityMapper.map(mockSavedCommodityEntity)).thenReturn(expected);
         
-        Commodity result = underTest.loadOrCreate(name);
+        Commodity result = underTest.createOrLoad(name);
         
         verify(mybatisCommodityRepository).findByName(name);
         verify(mybatisCommodityEntityMapper).map(mockSavedCommodityEntity);

@@ -13,7 +13,7 @@ import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
-import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
+import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CleanUpObsoleteStationLandingPadSizeRequestsUseCase;
@@ -22,17 +22,19 @@ import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequ
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.ExistsStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.LoadAllStationLandingPadSizeRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.RequestMissingStationLandingPadSizeUseCase;
-import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
+import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
+import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Module;
 import io.edpn.backend.util.Topic;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -42,10 +44,11 @@ public class StationLandingPadSizeInterModuleCommunicationService implements Req
             .hasLandingPadSize(false)
             .build();
 
+    private final IdGenerator idGenerator;
     private final LoadStationsByFilterPort loadStationsByFilterPort;
     private final LoadAllStationLandingPadSizeRequestsPort loadAllStationLandingPadSizeRequestsPort;
-    private final LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
-    private final LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
+    private final CreateOrLoadSystemPort createOrLoadSystemPort;
+    private final CreateOrLoadStationPort createOrLoadStationPort;
     private final ExistsStationLandingPadSizeRequestPort existsStationLandingPadSizeRequestPort;
     private final CreateStationLandingPadSizeRequestPort createStationLandingPadSizeRequestPort;
     private final DeleteStationLandingPadSizeRequestPort deleteStationLandingPadSizeRequestPort;
@@ -103,10 +106,18 @@ public class StationLandingPadSizeInterModuleCommunicationService implements Req
         String stationName = message.stationName();
         LandingPadSize landingPadSize = LandingPadSize.valueOf(message.maxLandingPadSize());
 
-        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> loadOrCreateSystemByNamePort.loadOrCreateSystemByName(systemName));
+
+        //get system
+        System system = System.builder().id(idGenerator.generateId()).name(systemName).build();
+        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> createOrLoadSystemPort.createOrLoad(system));
 
         // get station
-        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> loadOrCreateBySystemAndStationNamePort.loadOrCreateBySystemAndStationName(systemCompletableFuture.join(), stationName));
+        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> {
+            Station station = Station.builder().id(idGenerator.generateId())
+                    .system(systemCompletableFuture.join())
+                    .name(stationName).build();
+            return createOrLoadStationPort.createOrLoad(station);
+        });
         stationCompletableFuture.whenComplete((station, throwable) -> {
             if (throwable != null) {
                 log.error("Exception occurred in retrieving station", throwable);

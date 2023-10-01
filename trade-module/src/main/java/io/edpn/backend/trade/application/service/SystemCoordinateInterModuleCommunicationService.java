@@ -11,7 +11,7 @@ import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
-import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
+import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CleanUpObsoleteSystemCoordinateRequestsUseCase;
@@ -22,14 +22,16 @@ import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.L
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.RequestMissingSystemCoordinatesUseCase;
 import io.edpn.backend.util.Module;
 import io.edpn.backend.util.Topic;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -40,7 +42,7 @@ public class SystemCoordinateInterModuleCommunicationService implements RequestD
 
     private final LoadSystemsByFilterPort loadSystemsByFilterPort;
     private final LoadAllSystemCoordinateRequestsPort loadAllSystemCoordinateRequestsPort;
-    private final LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
+    private final CreateOrLoadSystemPort createOrLoadSystemPort;
     private final ExistsSystemCoordinateRequestPort existsSystemCoordinateRequestPort;
     private final CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
     private final DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
@@ -127,16 +129,18 @@ public class SystemCoordinateInterModuleCommunicationService implements RequestD
         final double yCoordinate = message.yCoordinate();
         final double zCoordinate = message.zCoordinate();
 
-        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> loadOrCreateSystemByNamePort.loadOrCreateSystemByName(systemName))
-                .whenComplete((system, throwable) -> {
-                    if (throwable != null) {
-                        log.error("Exception occurred in retrieving system", throwable);
-                    } else {
-                        system.setXCoordinate(xCoordinate);
-                        system.setYCoordinate(yCoordinate);
-                        system.setZCoordinate(zCoordinate);
-                    }
-                });
+        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> {
+            System build = System.builder().id(UUID.randomUUID()).name(systemName).build();
+            return createOrLoadSystemPort.createOrLoad(build);
+        }).whenComplete((system, throwable) -> {
+            if (throwable != null) {
+                log.error("Exception occurred in retrieving system", throwable);
+            } else {
+                system.setXCoordinate(xCoordinate);
+                system.setYCoordinate(yCoordinate);
+                system.setZCoordinate(zCoordinate);
+            }
+        });
 
         updateSystemPort.update(systemCompletableFuture.join());
         deleteSystemCoordinateRequestPort.delete(systemName);

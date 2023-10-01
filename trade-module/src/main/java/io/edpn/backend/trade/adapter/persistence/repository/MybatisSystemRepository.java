@@ -62,4 +62,18 @@ public interface MybatisSystemRepository {
             """)
     @ResultMap("systemResultMap")
     List<MybatisSystemEntity> findByFilter(PersistenceFindSystemFilter map);
+
+    @Select({"INSERT INTO system (id, name, elite_id, x_coordinate, y_coordinate, z_coordinate, coordinates_geom)",
+            "VALUES (#{id}, #{name}, #{eliteId}, #{xCoordinate}, #{yCoordinate}, #{zCoordinate}, ST_MakePoint(#{xCoordinate}, #{yCoordinate}, #{zCoordinate}))",
+            "ON CONFLICT (name)",
+            "DO UPDATE SET",
+            "elite_id = COALESCE(system.elite_id, EXCLUDED.elite_id),",
+            "x_coordinate = COALESCE(system.x_coordinate, EXCLUDED.x_coordinate),",
+            "y_coordinate = COALESCE(system.y_coordinate, EXCLUDED.y_coordinate),",
+            "z_coordinate = COALESCE(system.z_coordinate, EXCLUDED.z_coordinate),",
+            "coordinates_geom = COALESCE(system.coordinates_geom, ST_MakePoint(EXCLUDED.x_coordinate, EXCLUDED.y_coordinate, EXCLUDED.z_coordinate))",
+            "RETURNING *"
+    })
+    @ResultMap("systemResultMap")
+    MybatisSystemEntity createOrUpdateOnConflict(MybatisSystemEntity map);
 }

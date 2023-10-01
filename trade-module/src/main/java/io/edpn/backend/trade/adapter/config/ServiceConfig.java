@@ -10,13 +10,13 @@ import io.edpn.backend.trade.application.dto.web.object.mapper.LocateCommodityDt
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.dto.web.object.mapper.ValidatedCommodityDtoMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
-import io.edpn.backend.trade.application.port.outgoing.commodity.LoadOrCreateCommodityByNamePort;
+import io.edpn.backend.trade.application.port.outgoing.commodity.CreateOrLoadCommodityPort;
 import io.edpn.backend.trade.application.port.outgoing.commoditymarketinfo.GetFullCommodityMarketInfoPort;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.locatecommodity.LocateCommodityByFilterPort;
-import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateLatestMarketDatumPort;
-import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateMarketDatumPort;
-import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
+import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateWhenNotExistsLatestMarketDatumPort;
+import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateWhenNotExistsMarketDatumPort;
+import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateStationArrivalDistanceRequestPort;
@@ -35,7 +35,7 @@ import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequ
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.ExistsStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.LoadAllStationRequireOdysseyRequestsPort;
-import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
+import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
@@ -59,6 +59,7 @@ import io.edpn.backend.trade.application.service.StationPlanetaryInterModuleComm
 import io.edpn.backend.trade.application.service.StationRequireOdysseyInterModuleCommunicationService;
 import io.edpn.backend.trade.application.service.SystemCoordinateInterModuleCommunicationService;
 import io.edpn.backend.trade.application.service.SystemEliteIdInterModuleCommunicationService;
+import io.edpn.backend.util.IdGenerator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -97,24 +98,26 @@ public class ServiceConfig {
 
     @Bean(name = "tradeRecieveCommodityMessageUsecase")
     public ReceiveCommodityMessageService receiveCommodityMessageService(
-            LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
-            LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort,
-            LoadOrCreateCommodityByNamePort loadOrCreateCommodityByNamePort,
-            CreateMarketDatumPort createMarketDatumPort,
-            CreateLatestMarketDatumPort createLatestMarketDatumPort,
+            @Qualifier("tradeIdGenerator") IdGenerator idGenerator,
+            CreateOrLoadSystemPort loadOrCreateSystemByNamePort,
+            CreateOrLoadStationPort loadOrCreateBySystemAndStationNamePort,
+            CreateOrLoadCommodityPort loadOrCreateCommodityByNamePort,
+            CreateWhenNotExistsMarketDatumPort createWhenNotExistsMarketDatumPort,
+            CreateWhenNotExistsLatestMarketDatumPort createWhenNotExistsLatestMarketDatumPort,
             UpdateStationPort updateStationPort,
             List<RequestDataUseCase<Station>> stationRequestDataServices,
             List<RequestDataUseCase<System>> systemRequestDataService) {
-        return new ReceiveCommodityMessageService(loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, loadOrCreateCommodityByNamePort, createMarketDatumPort, createLatestMarketDatumPort, updateStationPort, stationRequestDataServices, systemRequestDataService);
+        return new ReceiveCommodityMessageService(idGenerator, loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, loadOrCreateCommodityByNamePort, createWhenNotExistsMarketDatumPort, createWhenNotExistsLatestMarketDatumPort, updateStationPort, stationRequestDataServices, systemRequestDataService);
     }
 
 
     @Bean(name = "tradeStationArrivalDistanceInterModuleCommunicationService")
     public StationArrivalDistanceInterModuleCommunicationService stationArrivalDistanceInterModuleCommunicationService(
+            @Qualifier("tradeIdGenerator") IdGenerator idGenerator,
             LoadStationsByFilterPort loadStationsByFilterPort,
             LoadAllStationArrivalDistanceRequestsPort loadAllStationArrivalDistanceRequestsPort,
-            LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
-            LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort,
+            CreateOrLoadSystemPort createOrLoadSystemPort,
+            CreateOrLoadStationPort createOrLoadStationPort,
             ExistsStationArrivalDistanceRequestPort existsStationArrivalDistanceRequestPort,
             CreateStationArrivalDistanceRequestPort createStationArrivalDistanceRequestPort,
             DeleteStationArrivalDistanceRequestPort deleteStationArrivalDistanceRequestPort,
@@ -125,10 +128,11 @@ public class ServiceConfig {
             ObjectMapper objectMapper,
             MessageMapper messageMapper) {
         return new StationArrivalDistanceInterModuleCommunicationService(
+                idGenerator,
                 loadStationsByFilterPort,
                 loadAllStationArrivalDistanceRequestsPort,
-                loadOrCreateSystemByNamePort,
-                loadOrCreateBySystemAndStationNamePort,
+                createOrLoadSystemPort,
+                createOrLoadStationPort,
                 existsStationArrivalDistanceRequestPort,
                 createStationArrivalDistanceRequestPort,
                 deleteStationArrivalDistanceRequestPort,
@@ -144,7 +148,7 @@ public class ServiceConfig {
     public SystemCoordinateInterModuleCommunicationService systemCoordinateInterModuleCommunicationService(
             LoadSystemsByFilterPort loadSystemsByFilterPort,
             LoadAllSystemCoordinateRequestsPort loadAllSystemCoordinateRequestsPort,
-            LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
+            CreateOrLoadSystemPort createOrLoadSystemPort,
             ExistsSystemCoordinateRequestPort existsSystemCoordinateRequestPort,
             CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort,
             DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort,
@@ -158,7 +162,7 @@ public class ServiceConfig {
         return new SystemCoordinateInterModuleCommunicationService(
                 loadSystemsByFilterPort,
                 loadAllSystemCoordinateRequestsPort,
-                loadOrCreateSystemByNamePort,
+                createOrLoadSystemPort,
                 existsSystemCoordinateRequestPort,
                 createSystemCoordinateRequestPort,
                 deleteSystemCoordinateRequestPort,
@@ -173,10 +177,11 @@ public class ServiceConfig {
 
     @Bean(name = "tradeStationLandingPadSizeInterModuleCommunicationService")
     public StationLandingPadSizeInterModuleCommunicationService stationLandingPadSizeInterModuleCommunicationService(
+            @Qualifier("tradeIdGenerator") IdGenerator idGenerator,
             LoadStationsByFilterPort loadStationsByFilterPort,
             LoadAllStationLandingPadSizeRequestsPort loadAllStationLandingPadSizeRequestsPort,
-            LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
-            LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort,
+            CreateOrLoadSystemPort createOrLoadSystemPort,
+            CreateOrLoadStationPort createOrLoadStationPort,
             ExistsStationLandingPadSizeRequestPort existsStationLandingPadSizeRequestPort,
             CreateStationLandingPadSizeRequestPort createStationLandingPadSizeRequestPort,
             DeleteStationLandingPadSizeRequestPort deleteStationLandingPadSizeRequestPort,
@@ -188,10 +193,11 @@ public class ServiceConfig {
             MessageMapper messageMapper
     ) {
         return new StationLandingPadSizeInterModuleCommunicationService(
+                idGenerator,
                 loadStationsByFilterPort,
                 loadAllStationLandingPadSizeRequestsPort,
-                loadOrCreateSystemByNamePort,
-                loadOrCreateBySystemAndStationNamePort,
+                createOrLoadSystemPort,
+                createOrLoadStationPort,
                 existsStationLandingPadSizeRequestPort,
                 createStationLandingPadSizeRequestPort,
                 deleteStationLandingPadSizeRequestPort,
@@ -206,10 +212,11 @@ public class ServiceConfig {
 
     @Bean(name = "tradeStationPlanetaryInterModuleCommunicationService")
     public StationPlanetaryInterModuleCommunicationService stationPlanetaryInterModuleCommunicationService(
+            @Qualifier("tradeIdGenerator") IdGenerator idGenerator,
             LoadStationsByFilterPort loadStationsByFilterPort,
             LoadAllStationPlanetaryRequestsPort loadAllStationPlanetaryRequestsPort,
-            LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
-            LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort,
+            CreateOrLoadSystemPort createOrLoadSystemPort,
+            CreateOrLoadStationPort createOrLoadStationPort,
             ExistsStationPlanetaryRequestPort existsStationPlanetaryRequestPort,
             CreateStationPlanetaryRequestPort createStationPlanetaryRequestPort,
             DeleteStationPlanetaryRequestPort deleteStationPlanetaryRequestPort,
@@ -221,10 +228,11 @@ public class ServiceConfig {
             MessageMapper messageMapper
     ) {
         return new StationPlanetaryInterModuleCommunicationService(
+                idGenerator,
                 loadStationsByFilterPort,
                 loadAllStationPlanetaryRequestsPort,
-                loadOrCreateSystemByNamePort,
-                loadOrCreateBySystemAndStationNamePort,
+                createOrLoadSystemPort,
+                createOrLoadStationPort,
                 existsStationPlanetaryRequestPort,
                 createStationPlanetaryRequestPort,
                 deleteStationPlanetaryRequestPort,
@@ -239,10 +247,11 @@ public class ServiceConfig {
 
     @Bean(name = "tradeStationRequireOdysseyInterModuleCommunicationService")
     public StationRequireOdysseyInterModuleCommunicationService stationRequireOdysseyInterModuleCommunicationService(
+            @Qualifier("tradeIdGenerator") IdGenerator idGenerator,
             LoadStationsByFilterPort loadStationsByFilterPort,
             LoadAllStationRequireOdysseyRequestsPort loadAllStationRequireOdysseyRequestsPort,
-            LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
-            LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort,
+            CreateOrLoadSystemPort createOrLoadSystemPort,
+            CreateOrLoadStationPort createOrLoadStationPort,
             ExistsStationRequireOdysseyRequestPort existsStationRequireOdysseyRequestPort,
             CreateStationRequireOdysseyRequestPort createStationRequireOdysseyRequestPort,
             DeleteStationRequireOdysseyRequestPort deleteStationRequireOdysseyRequestPort,
@@ -254,10 +263,11 @@ public class ServiceConfig {
             MessageMapper messageMapper
     ) {
         return new StationRequireOdysseyInterModuleCommunicationService(
+                idGenerator,
                 loadStationsByFilterPort,
                 loadAllStationRequireOdysseyRequestsPort,
-                loadOrCreateSystemByNamePort,
-                loadOrCreateBySystemAndStationNamePort,
+                createOrLoadSystemPort,
+                createOrLoadStationPort,
                 existsStationRequireOdysseyRequestPort,
                 createStationRequireOdysseyRequestPort,
                 deleteStationRequireOdysseyRequestPort,
@@ -274,7 +284,7 @@ public class ServiceConfig {
     public SystemEliteIdInterModuleCommunicationService systemEliteIdInterModuleCommunicationService(
             LoadSystemsByFilterPort loadSystemsByFilterPort,
             LoadAllSystemEliteIdRequestsPort loadAllSystemEliteIdRequestsPort,
-            LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort,
+            CreateOrLoadSystemPort createOrLoadSystemPort,
             ExistsSystemEliteIdRequestPort existsSystemEliteIdRequestPort,
             CreateSystemEliteIdRequestPort createSystemEliteIdRequestPort,
             DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort,
@@ -287,7 +297,7 @@ public class ServiceConfig {
         return new SystemEliteIdInterModuleCommunicationService(
                 loadSystemsByFilterPort,
                 loadAllSystemEliteIdRequestsPort,
-                loadOrCreateSystemByNamePort,
+                createOrLoadSystemPort,
                 existsSystemEliteIdRequestPort,
                 createSystemEliteIdRequestPort,
                 deleteSystemEliteIdRequestPort,

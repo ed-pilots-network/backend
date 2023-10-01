@@ -8,7 +8,7 @@ import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindStationFilterMapper;
-import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
+import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.util.IdGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,11 +46,11 @@ public class LoadOrCreateBySystemAndStationNamePortTest {
     @Mock
     private PersistenceFindStationFilterMapper persistenceFindStationFilterMapper;
 
-    private LoadOrCreateBySystemAndStationNamePort underTest;
+    private CreateOrLoadStationPort underTest;
 
     @BeforeEach
     public void setUp() {
-        underTest = new StationRepository(idGenerator, mybatisStationEntityMapper, mybatisStationRepository, mybatisMarketDatumRepository, persistenceFindStationFilterMapper);
+        underTest = new StationRepository(mybatisStationEntityMapper, mybatisStationRepository, persistenceFindStationFilterMapper);
     }
 
     @Test
@@ -65,7 +65,7 @@ public class LoadOrCreateBySystemAndStationNamePortTest {
         Station expected = mock(Station.class);
 
         when(system.getId()).thenReturn(systemId);
-        when(mybatisStationRepository.findBySystemIdAndStationName(systemId, stationName)).thenReturn(Optional.empty());
+        when(mybatisStationRepository.createOrUpdateOnConflict(systemId, stationName)).thenReturn(Optional.empty());
         when(mybatisStationEntityMapper.map(argThat((Station input) -> input.getId() == null && input.getName().equals(stationName)))).thenReturn(mockStationEntityWithoutId);
         when(mockStationEntityWithoutId.getId()).thenReturn(null, id);
         when(idGenerator.generateId()).thenReturn(id);

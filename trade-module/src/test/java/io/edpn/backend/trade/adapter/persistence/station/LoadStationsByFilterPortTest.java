@@ -2,7 +2,6 @@ package io.edpn.backend.trade.adapter.persistence.station;
 
 import io.edpn.backend.trade.adapter.persistence.StationRepository;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
-import io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.filter.FindStationFilter;
@@ -10,7 +9,6 @@ import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationEn
 import io.edpn.backend.trade.application.dto.persistence.filter.PersistenceFindStationFilter;
 import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindStationFilterMapper;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
-import io.edpn.backend.util.IdGenerator;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,8 +24,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class LoadStationsByFilterPortTest {
-    @Mock
-    private IdGenerator idGenerator;
 
     @Mock
     private StationEntityMapper<MybatisStationEntity> mybatisStationEntityMapper;
@@ -36,16 +32,13 @@ public class LoadStationsByFilterPortTest {
     private MybatisStationRepository mybatisStationRepository;
 
     @Mock
-    private MybatisMarketDatumRepository mybatisMarketDatumRepository;
-
-    @Mock
     private PersistenceFindStationFilterMapper persistenceFindStationFilterMapper;
 
     private LoadStationsByFilterPort underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new StationRepository(idGenerator, mybatisStationEntityMapper, mybatisStationRepository, mybatisMarketDatumRepository, persistenceFindStationFilterMapper);
+        underTest = new StationRepository(mybatisStationEntityMapper, mybatisStationRepository, persistenceFindStationFilterMapper);
     }
 
     @Test

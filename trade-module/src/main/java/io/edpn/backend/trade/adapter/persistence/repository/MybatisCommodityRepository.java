@@ -2,14 +2,12 @@ package io.edpn.backend.trade.adapter.persistence.repository;
 
 import io.edpn.backend.mybatisutil.UuidTypeHandler;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisCommodityEntity;
-import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,9 +33,13 @@ public interface MybatisCommodityRepository {
     @Insert("INSERT INTO commodity (id, name) VALUES (#{id}, #{name})")
     void insert(MybatisCommodityEntity commodity);
 
-    @Update("UPDATE commodity SET name = #{name} WHERE id = #{id}")
-    void update(MybatisCommodityEntity commodity);
-
-    @Delete("DELETE FROM commodity WHERE id = #{id}")
-    void delete(@Param("id") UUID id);
+    @Select({
+            "INSERT INTO commodity (id, name)",
+            "VALUES (#{id}, #{name})",
+            "ON CONFLICT name",
+            "DO UPDATE SET",
+            "name = COALESCE(commodity.name, EXCLUDED.name)",
+            "RETURNING *"
+    })
+    MybatisCommodityEntity createOrUpdateOnConflict(MybatisCommodityEntity commodity);
 }
