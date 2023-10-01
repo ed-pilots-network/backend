@@ -32,7 +32,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
@@ -107,22 +106,22 @@ public class StationPlanetaryInterModuleCommunicationService implements RequestD
         String stationName = message.stationName();
         boolean planetary = message.planetary();
 
-        //get system
-        System system = System.builder().id(UUID.randomUUID()).name(systemName).build();
-        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> createOrLoadSystemPort.createOrLoad(system));
-
-        // get station
-        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> {
-            Station station = Station.builder().id(idGenerator.generateId()).system(systemCompletableFuture.copy().join()).name(stationName).build();
-            return createOrLoadStationPort.createOrLoad(station);
-        });
-        stationCompletableFuture.whenComplete((station, throwable) -> {
-            if (throwable != null) {
-                log.error("Exception occurred in retrieving station", throwable);
-            } else {
-                station.setPlanetary(planetary);
-            }
-        });
+        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> createOrLoadSystemPort.createOrLoad(System.builder()
+                        .id(idGenerator.generateId())
+                        .name(systemName)
+                        .build()))
+                .thenCompose(loadedSystem -> CompletableFuture.supplyAsync(() -> createOrLoadStationPort.createOrLoad(Station.builder()
+                        .id(idGenerator.generateId())
+                        .system(loadedSystem)
+                        .name(stationName)
+                        .build())))
+                .whenComplete((station, throwable) -> {
+                    if (throwable != null) {
+                        log.error("Exception occurred in retrieving station", throwable);
+                    } else {
+                        station.setPlanetary(planetary);
+                    }
+                });
 
         updateStationPort.update(stationCompletableFuture.join());
         deleteStationPlanetaryRequestPort.delete(systemName, stationName);

@@ -20,6 +20,7 @@ import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.D
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.ExistsSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.RequestMissingSystemCoordinatesUseCase;
+import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Module;
 import io.edpn.backend.util.Topic;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
@@ -40,6 +40,7 @@ public class SystemCoordinateInterModuleCommunicationService implements RequestD
             .hasCoordinates(false)
             .build();
 
+    private final IdGenerator idGenerator;
     private final LoadSystemsByFilterPort loadSystemsByFilterPort;
     private final LoadAllSystemCoordinateRequestsPort loadAllSystemCoordinateRequestsPort;
     private final CreateOrLoadSystemPort createOrLoadSystemPort;
@@ -129,18 +130,20 @@ public class SystemCoordinateInterModuleCommunicationService implements RequestD
         final double yCoordinate = message.yCoordinate();
         final double zCoordinate = message.zCoordinate();
 
-        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> {
-            System build = System.builder().id(UUID.randomUUID()).name(systemName).build();
-            return createOrLoadSystemPort.createOrLoad(build);
-        }).whenComplete((system, throwable) -> {
-            if (throwable != null) {
-                log.error("Exception occurred in retrieving system", throwable);
-            } else {
-                system.setXCoordinate(xCoordinate);
-                system.setYCoordinate(yCoordinate);
-                system.setZCoordinate(zCoordinate);
-            }
-        });
+        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() ->
+                        createOrLoadSystemPort.createOrLoad(System.builder()
+                                .id(idGenerator.generateId())
+                                .name(systemName)
+                                .build()))
+                .whenComplete((system, throwable) -> {
+                    if (throwable != null) {
+                        log.error("Exception occurred in retrieving system", throwable);
+                    } else {
+                        system.setXCoordinate(xCoordinate);
+                        system.setYCoordinate(yCoordinate);
+                        system.setZCoordinate(zCoordinate);
+                    }
+                });
 
         updateSystemPort.update(systemCompletableFuture.join());
         deleteSystemCoordinateRequestPort.delete(systemName);

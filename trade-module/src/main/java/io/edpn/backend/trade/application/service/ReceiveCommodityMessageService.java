@@ -58,11 +58,10 @@ public class ReceiveCommodityMessageService implements ReceiveKafkaMessageUseCas
         String stationName = payload.stationName();
         String[] prohibitedCommodities = payload.prohibited();
 
-        // get system
-        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> {
-                    System build = System.builder().id(idGenerator.generateId()).name(systemName).build();
-                    return createOrLoadSystemPort.createOrLoad(build);
-                })
+        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> createOrLoadSystemPort.createOrLoad(System.builder()
+                        .id(idGenerator.generateId())
+                        .name(systemName)
+                        .build()))
                 .whenComplete((system, throwable) -> {
                     if (throwable != null) {
                         log.error("Exception occurred in retrieving system", throwable);
@@ -71,36 +70,33 @@ public class ReceiveCommodityMessageService implements ReceiveKafkaMessageUseCas
                                 .filter(useCase -> useCase.isApplicable(system))
                                 .forEach(useCase -> useCase.request(system));
                     }
+                }).thenCompose(loadedSystem -> CompletableFuture.supplyAsync(() -> {
+                    Station station = Station.builder()
+                            .id(idGenerator.generateId())
+                            .system(loadedSystem)
+                            .name(stationName).build();
+                    return createOrLoadStationPort.createOrLoad(station);
+                }))
+                .whenComplete((station, throwable) -> {
+                    if (throwable != null) {
+                        log.error("Exception occurred in retrieving station", throwable);
+                    } else {
+                        //if we get the message here, it always is NOT a fleet carrier
+                        station.setFleetCarrier(false);
+
+                        if (Objects.isNull(station.getMarketId())) {
+                            station.setMarketId(marketId);
+                        }
+
+                        if (Objects.isNull(station.getMarketUpdatedAt()) || updateTimestamp.isAfter(station.getMarketUpdatedAt())) {
+                            station.setMarketUpdatedAt(updateTimestamp);
+                        }
+
+                        stationRequestDataServices.stream()
+                                .filter(useCase -> useCase.isApplicable(station))
+                                .forEach(useCase -> useCase.request(station));
+                    }
                 });
-
-        // get station
-        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> {
-            Station station = Station.builder()
-                    .id(idGenerator.generateId())
-                    .system(systemCompletableFuture.copy().join())
-                    .name(stationName).build();
-            return createOrLoadStationPort.createOrLoad(station);
-        });
-        stationCompletableFuture.whenComplete((station, throwable) -> {
-            if (throwable != null) {
-                log.error("Exception occurred in retrieving station", throwable);
-            } else {
-                //if we get the message here, it always is NOT a fleet carrier
-                station.setFleetCarrier(false);
-
-                if (Objects.isNull(station.getMarketId())) {
-                    station.setMarketId(marketId);
-                }
-
-                if (Objects.isNull(station.getMarketUpdatedAt()) || updateTimestamp.isAfter(station.getMarketUpdatedAt())) {
-                    station.setMarketUpdatedAt(updateTimestamp);
-                }
-
-                stationRequestDataServices.stream()
-                        .filter(useCase -> useCase.isApplicable(station))
-                        .forEach(useCase -> useCase.request(station));
-            }
-        });
 
         // get marketDataCollection
         List<CompletableFuture<MarketDatum>> completableFutureList = Arrays.stream(commodities).parallel().map(commodityFromMessage -> {

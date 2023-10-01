@@ -20,6 +20,7 @@ import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.Dele
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.ExistsSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.RequestMissingSystemEliteIdUseCase;
+import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Module;
 import io.edpn.backend.util.Topic;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
@@ -40,6 +40,7 @@ public class SystemEliteIdInterModuleCommunicationService implements RequestData
             .hasEliteId(false)
             .build();
 
+    private final IdGenerator idGenerator;
     private final LoadSystemsByFilterPort loadSystemsByFilterPort;
     private final LoadAllSystemEliteIdRequestsPort loadAllSystemEliteIdRequestsPort;
     private final CreateOrLoadSystemPort createOrLoadSystemPort;
@@ -122,16 +123,18 @@ public class SystemEliteIdInterModuleCommunicationService implements RequestData
         String systemName = message.systemName();
         long eliteId = message.eliteId();
 
-        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> {
-            System build = System.builder().id(UUID.randomUUID()).name(systemName).build();
-            return createOrLoadSystemPort.createOrLoad(build);
-        }).whenComplete((station, throwable) -> {
-            if (throwable != null) {
-                log.error("Exception occurred in retrieving system", throwable);
-            } else {
-                station.setEliteId(eliteId);
-            }
-        });
+        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() ->
+                        createOrLoadSystemPort.createOrLoad(System.builder()
+                                .id(idGenerator.generateId())
+                                .name(systemName)
+                                .build()))
+                .whenComplete((station, throwable) -> {
+                    if (throwable != null) {
+                        log.error("Exception occurred in retrieving system", throwable);
+                    } else {
+                        station.setEliteId(eliteId);
+                    }
+                });
 
         updateSystemPort.update(systemCompletableFuture.join());
         deleteSystemEliteIdRequestPort.delete(systemName);

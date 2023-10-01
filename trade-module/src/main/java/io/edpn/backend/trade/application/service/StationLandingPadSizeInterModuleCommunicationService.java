@@ -107,24 +107,24 @@ public class StationLandingPadSizeInterModuleCommunicationService implements Req
         LandingPadSize landingPadSize = LandingPadSize.valueOf(message.maxLandingPadSize());
 
 
-        //get system
-        System system = System.builder().id(idGenerator.generateId()).name(systemName).build();
-        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> createOrLoadSystemPort.createOrLoad(system));
-
         // get station
-        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> {
-            Station station = Station.builder().id(idGenerator.generateId())
-                    .system(systemCompletableFuture.join())
-                    .name(stationName).build();
-            return createOrLoadStationPort.createOrLoad(station);
-        });
-        stationCompletableFuture.whenComplete((station, throwable) -> {
-            if (throwable != null) {
-                log.error("Exception occurred in retrieving station", throwable);
-            } else {
-                station.setMaxLandingPadSize(landingPadSize);
-            }
-        });
+        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() ->
+                        createOrLoadSystemPort.createOrLoad(System.builder()
+                                .id(idGenerator.generateId())
+                                .name(systemName)
+                                .build())).thenCompose(loadedSystem -> CompletableFuture.supplyAsync(() -> {
+                    Station station = Station.builder().id(idGenerator.generateId())
+                            .system(loadedSystem)
+                            .name(stationName).build();
+                    return createOrLoadStationPort.createOrLoad(station);
+                }))
+                .whenComplete((station, throwable) -> {
+                    if (throwable != null) {
+                        log.error("Exception occurred in retrieving station", throwable);
+                    } else {
+                        station.setMaxLandingPadSize(landingPadSize);
+                    }
+                });
 
         updateStationPort.update(stationCompletableFuture.join());
         deleteStationLandingPadSizeRequestPort.delete(systemName, stationName);
