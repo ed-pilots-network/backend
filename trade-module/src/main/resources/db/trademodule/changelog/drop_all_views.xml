@@ -4,7 +4,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="drop_system_coordinate_columns" author="pveeckhout">
+    <changeSet id="drop_system_coordinate_columns" author="pveeckhout" runAlways="true">
         <sql splitStatements="false" endDelimiter="\nGO">
             DO $$
             BEGIN
