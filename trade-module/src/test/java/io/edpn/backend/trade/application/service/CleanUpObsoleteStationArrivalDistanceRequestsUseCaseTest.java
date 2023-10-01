@@ -7,6 +7,7 @@ import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindStationFilter;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
+import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CleanUpObsoleteStationArrivalDistanceRequestsUseCase;
@@ -18,6 +19,9 @@ import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancereq
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
+
+import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
+import io.edpn.backend.util.IdGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,15 +41,17 @@ import static org.mockito.Mockito.when;
 public class CleanUpObsoleteStationArrivalDistanceRequestsUseCaseTest {
 
     @Mock
+    private IdGenerator idGenerator;
+    @Mock
     private LoadStationsByFilterPort loadStationsByFilterPort;
     @Mock
     private LoadAllStationArrivalDistanceRequestsPort loadAllStationArrivalDistanceRequestsPort;
     @Mock
     private DeleteStationArrivalDistanceRequestPort deleteStationArrivalDistanceRequestPort;
     @Mock
-    private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
+    private CreateOrLoadSystemPort createOrLoadSystemPort;
     @Mock
-    private LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
+    private CreateOrLoadStationPort createOrLoadStationPort;
     @Mock
     private ExistsStationArrivalDistanceRequestPort existsStationArrivalDistanceRequestPort;
     @Mock
@@ -68,10 +74,11 @@ public class CleanUpObsoleteStationArrivalDistanceRequestsUseCaseTest {
     @BeforeEach
     public void setUp() {
         underTest = new StationArrivalDistanceInterModuleCommunicationService(
+                idGenerator,
                 loadStationsByFilterPort,
                 loadAllStationArrivalDistanceRequestsPort,
-                loadOrCreateSystemByNamePort,
-                loadOrCreateBySystemAndStationNamePort,
+                createOrLoadSystemPort,
+                createOrLoadStationPort,
                 existsStationArrivalDistanceRequestPort,
                 createStationArrivalDistanceRequestPort,
                 deleteStationArrivalDistanceRequestPort,

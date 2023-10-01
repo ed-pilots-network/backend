@@ -9,7 +9,6 @@ import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemEnt
 import io.edpn.backend.trade.application.dto.persistence.filter.PersistenceFindSystemFilter;
 import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindSystemFilterMapper;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
-import io.edpn.backend.util.IdGenerator;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,8 +24,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class LoadSystemsByFilterPortTest {
-    @Mock
-    private IdGenerator idGenerator;
 
     @Mock
     private SystemEntityMapper<MybatisSystemEntity> mybatisSystemEntityMapper;
@@ -41,7 +38,7 @@ public class LoadSystemsByFilterPortTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new SystemRepository(idGenerator, mybatisSystemEntityMapper, persistenceFindSystemFilterMapper, mybatisSystemRepository);
+        underTest = new SystemRepository(mybatisSystemEntityMapper, persistenceFindSystemFilterMapper, mybatisSystemRepository);
     }
 
     @Test

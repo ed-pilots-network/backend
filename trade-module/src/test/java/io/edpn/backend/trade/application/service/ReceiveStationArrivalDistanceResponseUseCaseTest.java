@@ -7,14 +7,15 @@ import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
+import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.DeleteStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.ExistsStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.LoadAllStationArrivalDistanceRequestsPort;
-
-import java.util.concurrent.Executor;
+import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
+import io.edpn.backend.util.IdGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,8 +23,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.support.RetryTemplate;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.anyString;
+import java.util.concurrent.Executor;
+
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -33,15 +35,17 @@ import static org.mockito.Mockito.when;
 public class ReceiveStationArrivalDistanceResponseUseCaseTest {
 
     @Mock
+    private IdGenerator idGenerator;
+    @Mock
     private LoadStationsByFilterPort loadStationsByFilterPort;
     @Mock
     private LoadAllStationArrivalDistanceRequestsPort loadAllStationArrivalDistanceRequestsPort;
     @Mock
     private DeleteStationArrivalDistanceRequestPort deleteStationArrivalDistanceRequestPort;
     @Mock
-    private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
+    private CreateOrLoadSystemPort createOrLoadSystemPort;
     @Mock
-    private LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
+    private CreateOrLoadStationPort createOrLoadStationPort;
     @Mock
     private ExistsStationArrivalDistanceRequestPort existsStationArrivalDistanceRequestPort;
     @Mock
@@ -64,10 +68,11 @@ public class ReceiveStationArrivalDistanceResponseUseCaseTest {
     @BeforeEach
     public void setUp() {
         underTest = new StationArrivalDistanceInterModuleCommunicationService(
+                idGenerator,
                 loadStationsByFilterPort,
                 loadAllStationArrivalDistanceRequestsPort,
-                loadOrCreateSystemByNamePort,
-                loadOrCreateBySystemAndStationNamePort,
+                createOrLoadSystemPort,
+                createOrLoadStationPort,
                 existsStationArrivalDistanceRequestPort,
                 createStationArrivalDistanceRequestPort,
                 deleteStationArrivalDistanceRequestPort,
@@ -84,19 +89,16 @@ public class ReceiveStationArrivalDistanceResponseUseCaseTest {
         StationArrivalDistanceResponse message =
                 new StationArrivalDistanceResponse("station", "system", 1.0);
 
-
         System system = mock(System.class);
-        when(loadOrCreateSystemByNamePort.loadOrCreateSystemByName("system")).thenReturn(system);
+        when(createOrLoadSystemPort.createOrLoad(argThat(argument -> argument.getName().equals("system")))).thenReturn(system);
 
         Station station = mock(Station.class);
-        when(loadOrCreateBySystemAndStationNamePort.loadOrCreateBySystemAndStationName(system, "station")).thenReturn(station);
+        when(createOrLoadStationPort.createOrLoad(argThat(argument -> argument.getSystem().equals(system) && argument.getName().equals("station")))).thenReturn(station);
 
         underTest.receive(message);
 
-        verify(loadOrCreateSystemByNamePort, times(1)).loadOrCreateSystemByName(anyString());
-        verify(loadOrCreateBySystemAndStationNamePort, times(1)).loadOrCreateBySystemAndStationName(any(), anyString());
-        verify(updateStationPort, times(1)).update(any());
+        verify(station).setArrivalDistance(1.0);
+        verify(updateStationPort, times(1)).update(station);
         verify(deleteStationArrivalDistanceRequestPort, times(1)).delete("system", "station");
-
     }
 }

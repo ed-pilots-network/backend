@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -101,17 +101,13 @@ class ReceiveCommodityMessageUseCaseTest {
         when(message.message()).thenReturn(payload);
 
         System system = mock(System.class);
-        when(createOrLoadSystemPort.loadOrCreateSystemByName("system")).thenReturn(system);
+        when(createOrLoadSystemPort.createOrLoad(argThat(argument -> argument.getName().equals("system")))).thenReturn(system);
 
         Station station = mock(Station.class);
-        when(createOrLoadStationPort.loadOrCreateBySystemAndStationName(system, "station")).thenReturn(station);
+        when(createOrLoadStationPort.createOrLoad(argThat(argument -> argument.getSystem().equals(system) && argument.getName().equals("station")))).thenReturn(station);
 
         underTest.receive(message);
 
-        verify(createOrLoadSystemPort, times(1)).loadOrCreateSystemByName(anyString());
-        verify(createOrLoadStationPort, times(1)).loadOrCreateBySystemAndStationName(any(), anyString());
-        verify(createOrLoadSystemPort, times(1)).loadOrCreateSystemByName(any());
         verify(updateStationPort, times(1)).update(any());
-
     }
 }

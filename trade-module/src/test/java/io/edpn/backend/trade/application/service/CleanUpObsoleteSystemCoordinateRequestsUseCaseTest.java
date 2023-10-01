@@ -6,6 +6,7 @@ import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindSystemFilter;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
+import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CleanUpObsoleteSystemCoordinateRequestsUseCase;
@@ -13,15 +14,17 @@ import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.C
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.ExistsSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestsPort;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Executor;
+import io.edpn.backend.util.IdGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.support.RetryTemplate;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Executor;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -35,11 +38,13 @@ import static org.mockito.Mockito.when;
 public class CleanUpObsoleteSystemCoordinateRequestsUseCaseTest {
 
     @Mock
+    private IdGenerator idGenerator;
+    @Mock
     private LoadSystemsByFilterPort loadSystemsByFilterPort;
     @Mock
     private LoadAllSystemCoordinateRequestsPort loadAllSystemCoordinateRequestsPort;
     @Mock
-    private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
+    private CreateOrLoadSystemPort createOrLoadSystemPort;
     @Mock
     private ExistsSystemCoordinateRequestPort existsSystemCoordinateRequestPort;
     @Mock
@@ -64,9 +69,10 @@ public class CleanUpObsoleteSystemCoordinateRequestsUseCaseTest {
     @BeforeEach
     public void setUp() {
         underTest = new SystemCoordinateInterModuleCommunicationService(
+                idGenerator,
                 loadSystemsByFilterPort,
                 loadAllSystemCoordinateRequestsPort,
-                loadOrCreateSystemByNamePort,
+                createOrLoadSystemPort,
                 existsSystemCoordinateRequestPort,
                 createSystemCoordinateRequestPort,
                 deleteSystemCoordinateRequestPort,

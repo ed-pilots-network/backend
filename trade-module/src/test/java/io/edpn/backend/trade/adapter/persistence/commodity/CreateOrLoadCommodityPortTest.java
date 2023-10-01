@@ -6,89 +6,47 @@ import io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityRepo
 import io.edpn.backend.trade.application.domain.Commodity;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.CommodityEntityMapper;
 import io.edpn.backend.trade.application.port.outgoing.commodity.CreateOrLoadCommodityPort;
-import io.edpn.backend.util.IdGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
-import java.util.UUID;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class CreateOrLoadCommodityPortTest {
-    
-    @Mock
-    private IdGenerator idGenerator;
-    
+
     @Mock
     private CommodityEntityMapper<MybatisCommodityEntity> mybatisCommodityEntityMapper;
-    
+
     @Mock
     private MybatisCommodityRepository mybatisCommodityRepository;
-    
+
     private CreateOrLoadCommodityPort underTest;
-    
+
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         underTest = new CommodityRepository(mybatisCommodityEntityMapper, mybatisCommodityRepository);
     }
-    
+
     @Test
     void findOrCreateByNameNew() {
-        String name = "Test Commodity";
-        UUID id = UUID.randomUUID();
-        MybatisCommodityEntity mockCommodityEntityWithoutId = mock(MybatisCommodityEntity.class);
-        MybatisCommodityEntity mockSavedCommodityEntity = mock(MybatisCommodityEntity.class);
-        
-        Commodity expected = mock(Commodity.class);
-        
-        when(mybatisCommodityRepository.findByName(name)).thenReturn(Optional.empty());
-        when(mybatisCommodityEntityMapper.map(argThat((Commodity input) -> input.getId() == null && input.getName().equals(name)))).thenReturn(mockCommodityEntityWithoutId);
-        when(mockCommodityEntityWithoutId.getId()).thenReturn(null, id);
-        when(idGenerator.generateId()).thenReturn(id);
-        when(mybatisCommodityRepository.findById(id)).thenReturn(Optional.ofNullable(mockSavedCommodityEntity));
-        when(mybatisCommodityEntityMapper.map(mockSavedCommodityEntity)).thenReturn(expected);
-        
-        Commodity result = underTest.createOrLoad(name);
-        
-        verify(mybatisCommodityRepository).findByName(name);
-        verify(mybatisCommodityEntityMapper).map(argThat((Commodity input) -> input.getId() == null && input.getName().equals(name)));
-        verify(idGenerator).generateId();
-        verify(mybatisCommodityRepository).insert(any());
-        verify(mybatisCommodityRepository).findById(id);
-        verify(mybatisCommodityEntityMapper).map(mockSavedCommodityEntity);
-        verifyNoMoreInteractions(mybatisCommodityRepository, mybatisCommodityEntityMapper, idGenerator);
-        
-        assertThat(result, is(expected));
-    }
-    
-    @Test
-    void findOrCreateByNameFound() {
-        String name = "Test Commodity";
-        MybatisCommodityEntity mockSavedCommodityEntity = mock(MybatisCommodityEntity.class);
-        
-        Commodity expected = mock(Commodity.class);
-        
-        when(mybatisCommodityRepository.findByName(name)).thenReturn(Optional.of(mockSavedCommodityEntity));
-        when(mybatisCommodityEntityMapper.map(mockSavedCommodityEntity)).thenReturn(expected);
-        
-        Commodity result = underTest.createOrLoad(name);
-        
-        verify(mybatisCommodityRepository).findByName(name);
-        verify(mybatisCommodityEntityMapper).map(mockSavedCommodityEntity);
-        verifyNoMoreInteractions(mybatisCommodityRepository, mybatisCommodityEntityMapper, idGenerator);
-        
-        assertThat(result, is(expected));
+        Commodity inputCommodity = mock(Commodity.class);
+        MybatisCommodityEntity inputCommodityEntity = mock(MybatisCommodityEntity.class);
+        when(mybatisCommodityEntityMapper.map(inputCommodity)).thenReturn(inputCommodityEntity);
+
+
+        MybatisCommodityEntity outputCommodityEntity = mock(MybatisCommodityEntity.class);
+        Commodity expectedCommodity = mock(Commodity.class);
+        when(mybatisCommodityEntityMapper.map(outputCommodityEntity)).thenReturn(expectedCommodity);
+
+        when(mybatisCommodityRepository.createOrUpdateOnConflict(inputCommodityEntity)).thenReturn(outputCommodityEntity);
+
+        Commodity result = underTest.createOrLoad(inputCommodity);
+        assertThat(result, is(expectedCommodity));
     }
 }

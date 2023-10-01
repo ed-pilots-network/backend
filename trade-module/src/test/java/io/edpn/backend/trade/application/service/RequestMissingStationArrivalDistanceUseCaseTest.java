@@ -9,6 +9,7 @@ import io.edpn.backend.trade.application.domain.filter.FindStationFilter;
 import io.edpn.backend.trade.application.dto.web.object.MessageDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
+import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateStationArrivalDistanceRequestPort;
@@ -16,6 +17,8 @@ import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancereq
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.ExistsStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.LoadAllStationArrivalDistanceRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.RequestMissingStationArrivalDistanceUseCase;
+import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
+import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Module;
 import java.util.Collections;
 import java.util.List;
@@ -41,6 +44,9 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class RequestMissingStationArrivalDistanceUseCaseTest {
+
+    @Mock
+    private IdGenerator idGenerator;
     @Mock
     private LoadStationsByFilterPort loadStationsByFilterPort;
     @Mock
@@ -48,9 +54,9 @@ public class RequestMissingStationArrivalDistanceUseCaseTest {
     @Mock
     private DeleteStationArrivalDistanceRequestPort deleteStationArrivalDistanceRequestPort;
     @Mock
-    private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
+    private CreateOrLoadSystemPort createOrLoadSystemPort;
     @Mock
-    private LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
+    private CreateOrLoadStationPort createOrLoadStationPort;
     @Mock
     private ExistsStationArrivalDistanceRequestPort existsStationArrivalDistanceRequestPort;
     @Mock
@@ -73,10 +79,11 @@ public class RequestMissingStationArrivalDistanceUseCaseTest {
     @BeforeEach
     public void setUp() {
         underTest = new StationArrivalDistanceInterModuleCommunicationService(
+                idGenerator,
                 loadStationsByFilterPort,
                 loadAllStationArrivalDistanceRequestsPort,
-                loadOrCreateSystemByNamePort,
-                loadOrCreateBySystemAndStationNamePort,
+                createOrLoadSystemPort,
+                createOrLoadStationPort,
                 existsStationArrivalDistanceRequestPort,
                 createStationArrivalDistanceRequestPort,
                 deleteStationArrivalDistanceRequestPort,
