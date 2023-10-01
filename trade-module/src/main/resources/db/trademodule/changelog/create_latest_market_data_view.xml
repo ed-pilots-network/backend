@@ -3,7 +3,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="latest_market_data_view" author="pveeckhout" runOnChange="true">
+    <changeSet id="latest_market_data_view" author="pveeckhout" runAlways="true">
         <createView viewName="latest_market_data_view" replaceIfExists="true">
             <![CDATA[
             SELECT md.station_id,

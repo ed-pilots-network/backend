@@ -36,7 +36,7 @@ public interface MybatisCommodityRepository {
     @Select({
             "INSERT INTO commodity (id, name)",
             "VALUES (#{id}, #{name})",
-            "ON CONFLICT name",
+            "ON CONFLICT (name)",
             "DO UPDATE SET",
             "name = COALESCE(commodity.name, EXCLUDED.name)",
             "RETURNING *"

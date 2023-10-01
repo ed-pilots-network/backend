@@ -3,7 +3,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="create_validated_commodity_view" author="pveeckhout" runOnChange="true">
+    <changeSet id="create_validated_commodity_view" author="pveeckhout" runAlways="true">
         <createView viewName="validated_market_datum_view" replaceIfExists="true">
             <![CDATA[
             SELECT

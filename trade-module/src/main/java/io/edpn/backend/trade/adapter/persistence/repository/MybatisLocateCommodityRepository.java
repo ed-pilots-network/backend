@@ -18,7 +18,7 @@ public interface MybatisLocateCommodityRepository {
             <script>
             SELECT
             timestamp, commodity_id, station_id, system_id, stock, demand, buy_price, sell_price,
-            ST_3DDistance(sys.coordinates_geom, ST_MakePoint(#{xCoordinate}, #{yCoordinate}, #{zCoordinate})) as distance,
+            ST_3DDistance(coordinates_geom, ST_MakePoint(#{xCoordinate}, #{yCoordinate}, #{zCoordinate})) as distance,
             planetary,
             require_odyssey,
             fleet_carrier
