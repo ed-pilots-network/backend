@@ -53,5 +53,5 @@ public interface MybatisLatestMarketDatumRepository {
             "timestamp = EXCLUDED.timestamp",
             "WHERE EXCLUDED.timestamp > latest_market_datum.timestamp"
     })
-    void createOrUpdateOnConflictWhenNewer(@Param("stationId") UUID stationId, @Param("marketDatum") MybatisMarketDatumEntity marketDatum);
+    void createOrUpdateExistingWhenNewer(@Param("stationId") UUID stationId, @Param("marketDatum") MybatisMarketDatumEntity marketDatum);
 }

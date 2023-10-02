@@ -5,7 +5,7 @@ import io.edpn.backend.trade.adapter.persistence.entity.MybatisMarketDatumEntity
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisMarketDatumEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisLatestMarketDatumRepository;
 import io.edpn.backend.trade.application.domain.MarketDatum;
-import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateOrUpdateOnConflictWhenNewerLatestMarketDatumPort;
+import io.edpn.backend.trade.application.port.outgoing.marketdatum.createOrUpdateExistingWhenNewerLatestMarketDatumPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +28,7 @@ public class CreateOrUpdateOnConflictWhenNewerLatestMarketDatumPortTest {
     @Mock
     private MybatisMarketDatumEntityMapper marketDatumEntityMapper;
 
-    private CreateOrUpdateOnConflictWhenNewerLatestMarketDatumPort underTest;
+    private createOrUpdateExistingWhenNewerLatestMarketDatumPort underTest;
 
     @BeforeEach
     public void setUp() {
@@ -46,6 +46,6 @@ public class CreateOrUpdateOnConflictWhenNewerLatestMarketDatumPortTest {
         underTest.createOrUpdateWhenNewer(uuid, inputMarketDatum);
 
         verify(marketDatumEntityMapper, times(1)).map(inputMarketDatum);
-        verify(mybatisLatestMarketDatumRepository, times(1)).createOrUpdateOnConflictWhenNewer(uuid, inputMarketDatumEntity);
+        verify(mybatisLatestMarketDatumRepository, times(1)).createOrUpdateExistingWhenNewer(uuid, inputMarketDatumEntity);
     }
 }

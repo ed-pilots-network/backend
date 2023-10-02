@@ -14,7 +14,7 @@ import io.edpn.backend.trade.application.port.outgoing.commodity.CreateOrLoadCom
 import io.edpn.backend.trade.application.port.outgoing.commoditymarketinfo.GetFullCommodityMarketInfoPort;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.locatecommodity.LocateCommodityByFilterPort;
-import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateOrUpdateOnConflictWhenNewerLatestMarketDatumPort;
+import io.edpn.backend.trade.application.port.outgoing.marketdatum.createOrUpdateExistingWhenNewerLatestMarketDatumPort;
 import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateWhenNotExistsMarketDatumPort;
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
@@ -99,15 +99,15 @@ public class ServiceConfig {
     @Bean(name = "tradeRecieveCommodityMessageUsecase")
     public ReceiveCommodityMessageService receiveCommodityMessageService(
             @Qualifier("tradeIdGenerator") IdGenerator idGenerator,
-            CreateOrLoadSystemPort loadOrCreateSystemByNamePort,
-            CreateOrLoadStationPort loadOrCreateBySystemAndStationNamePort,
-            CreateOrLoadCommodityPort loadOrCreateCommodityByNamePort,
+            CreateOrLoadSystemPort createOrLoadSystemPort,
+            CreateOrLoadStationPort createOrLoadStationPort,
+            CreateOrLoadCommodityPort createOrLoadCommodityPort,
             CreateWhenNotExistsMarketDatumPort createWhenNotExistsMarketDatumPort,
-            CreateOrUpdateOnConflictWhenNewerLatestMarketDatumPort createOrUpdateOnConflictWhenNewerLatestMarketDatumPort,
+            createOrUpdateExistingWhenNewerLatestMarketDatumPort createOrUpdateOnConflictWhenNewerLatestMarketDatumPort,
             UpdateStationPort updateStationPort,
             List<RequestDataUseCase<Station>> stationRequestDataServices,
             List<RequestDataUseCase<System>> systemRequestDataService) {
-        return new ReceiveCommodityMessageService(idGenerator, loadOrCreateSystemByNamePort, loadOrCreateBySystemAndStationNamePort, loadOrCreateCommodityByNamePort, createWhenNotExistsMarketDatumPort, createOrUpdateOnConflictWhenNewerLatestMarketDatumPort, updateStationPort, stationRequestDataServices, systemRequestDataService);
+        return new ReceiveCommodityMessageService(idGenerator, createOrLoadSystemPort, createOrLoadStationPort, createOrLoadCommodityPort, createWhenNotExistsMarketDatumPort, createOrUpdateOnConflictWhenNewerLatestMarketDatumPort, updateStationPort, stationRequestDataServices, systemRequestDataService);
     }
 
 

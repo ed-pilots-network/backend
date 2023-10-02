@@ -6,7 +6,7 @@ import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.commodity.CreateOrLoadCommodityPort;
-import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateOrUpdateOnConflictWhenNewerLatestMarketDatumPort;
+import io.edpn.backend.trade.application.port.outgoing.marketdatum.createOrUpdateExistingWhenNewerLatestMarketDatumPort;
 import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateWhenNotExistsMarketDatumPort;
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
@@ -50,7 +50,7 @@ class ReceiveCommodityMessageUseCaseTest {
     private CreateWhenNotExistsMarketDatumPort createWhenNotExistsMarketDatumPort;
 
     @Mock
-    private CreateOrUpdateOnConflictWhenNewerLatestMarketDatumPort createOrUpdateOnConflictWhenNewerLatestMarketDatumPort;
+    private createOrUpdateExistingWhenNewerLatestMarketDatumPort createOrUpdateOnConflictWhenNewerLatestMarketDatumPort;
 
     @Mock
     private List<RequestDataUseCase<Station>> stationRequestDataServices;
