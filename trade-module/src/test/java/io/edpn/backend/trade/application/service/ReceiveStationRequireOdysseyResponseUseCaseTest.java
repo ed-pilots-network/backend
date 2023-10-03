@@ -7,15 +7,15 @@ import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
-import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
+import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.ExistsStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.LoadAllStationRequireOdysseyRequestsPort;
-import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
-import java.util.concurrent.Executor;
+import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
+import io.edpn.backend.util.IdGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,8 +23,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.support.RetryTemplate;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.anyString;
+import java.util.concurrent.Executor;
+
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -34,13 +35,15 @@ import static org.mockito.Mockito.when;
 public class ReceiveStationRequireOdysseyResponseUseCaseTest {
 
     @Mock
+    private IdGenerator idGenerator;
+    @Mock
     private LoadStationsByFilterPort loadStationsByFilterPort;
     @Mock
     private LoadAllStationRequireOdysseyRequestsPort loadAllStationRequireOdysseyRequestsPort;
     @Mock
-    private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
+    private CreateOrLoadSystemPort createOrLoadSystemPort;
     @Mock
-    private LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
+    private CreateOrLoadStationPort createOrLoadStationPort;
     @Mock
     private ExistsStationRequireOdysseyRequestPort existsStationRequireOdysseyRequestPort;
     @Mock
@@ -65,10 +68,11 @@ public class ReceiveStationRequireOdysseyResponseUseCaseTest {
     @BeforeEach
     public void setUp() {
         underTest = new StationRequireOdysseyInterModuleCommunicationService(
+                idGenerator,
                 loadStationsByFilterPort,
                 loadAllStationRequireOdysseyRequestsPort,
-                loadOrCreateSystemByNamePort,
-                loadOrCreateBySystemAndStationNamePort,
+                createOrLoadSystemPort,
+                createOrLoadStationPort,
                 existsStationRequireOdysseyRequestPort,
                 createStationRequireOdysseyRequestPort,
                 deleteStationRequireOdysseyRequestPort,
@@ -87,20 +91,15 @@ public class ReceiveStationRequireOdysseyResponseUseCaseTest {
                 new StationRequireOdysseyResponse("station", "system", true);
 
         System system = mock(System.class);
-        when(loadOrCreateSystemByNamePort.loadOrCreateSystemByName("system")).thenReturn(system);
+        when(createOrLoadSystemPort.createOrLoad(argThat(argument -> argument.getName().equals("system")))).thenReturn(system);
 
-        Station station = Station.builder()
-                .name("station")
-                .build();
-        when(loadOrCreateBySystemAndStationNamePort.loadOrCreateBySystemAndStationName(system, "station")).thenReturn(station);
+        Station station = mock(Station.class);
+        when(createOrLoadStationPort.createOrLoad(argThat(argument -> argument.getSystem().equals(system) && argument.getName().equals("station")))).thenReturn(station);
 
         underTest.receive(message);
 
-        verify(loadOrCreateSystemByNamePort, times(1)).loadOrCreateSystemByName(anyString());
-        verify(loadOrCreateBySystemAndStationNamePort, times(1)).loadOrCreateBySystemAndStationName(any(), anyString());
-        verify(updateStationPort, times(1)).update(any());
+        verify(station).setRequireOdyssey(true);
+        verify(updateStationPort, times(1)).update(station);
         verify(deleteStationRequireOdysseyRequestPort, times(1)).delete("system", "station");
-
-        assert (station.getRequireOdyssey());
     }
 }

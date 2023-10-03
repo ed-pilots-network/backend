@@ -7,7 +7,6 @@ import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindSystemFilterMapper;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemByIdPort;
-import io.edpn.backend.util.IdGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,9 +30,6 @@ import static org.mockito.Mockito.when;
 public class LoadSystemByIdPortNameTest {
 
     @Mock
-    private IdGenerator idGenerator;
-
-    @Mock
     private SystemEntityMapper<MybatisSystemEntity> mybatisSystemEntityMapper;
 
     @Mock
@@ -46,7 +42,7 @@ public class LoadSystemByIdPortNameTest {
 
     @BeforeEach
     public void setUp() {
-        underTest = new SystemRepository(idGenerator, mybatisSystemEntityMapper, persistenceFindSystemFilterMapper, mybatisSystemRepository);
+        underTest = new SystemRepository(mybatisSystemEntityMapper, persistenceFindSystemFilterMapper, mybatisSystemRepository);
     }
 
     @Test
@@ -62,7 +58,7 @@ public class LoadSystemByIdPortNameTest {
 
         verify(mybatisSystemRepository).findById(id);
         verify(mybatisSystemEntityMapper).map(mockSystemEntity);
-        verifyNoMoreInteractions(mybatisSystemRepository, mybatisSystemEntityMapper, idGenerator);
+        verifyNoMoreInteractions(mybatisSystemRepository, mybatisSystemEntityMapper);
 
         assertThat(results.isPresent(), is(true));
         assertThat(results.get(), equalTo(mockSystem));
@@ -77,7 +73,7 @@ public class LoadSystemByIdPortNameTest {
 
         verify(mybatisSystemRepository).findById(id);
         verify(mybatisSystemEntityMapper, never()).map(any(MybatisSystemEntity.class));
-        verifyNoMoreInteractions(mybatisSystemRepository, mybatisSystemEntityMapper, idGenerator);
+        verifyNoMoreInteractions(mybatisSystemRepository, mybatisSystemEntityMapper);
 
         assertThat(result, equalTo(Optional.empty()));
     }

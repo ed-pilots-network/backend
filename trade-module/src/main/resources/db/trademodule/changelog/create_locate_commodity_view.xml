@@ -3,27 +3,25 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="locate_commodity_view" author="daniel-j-mason" runOnChange="true">
+    <changeSet id="locate_commodity_view" author="daniel-j-mason" runAlways="true">
         <createView viewName="locate_commodity_view" replaceIfExists="true">
             <![CDATA[
             SELECT md."timestamp",
-                    md.station_id,
-                    md.commodity_id,
-                    sys.id AS system_id,
-                    st.max_landing_pad_size,
-                    st.require_odyssey,
-                    st.planetary,
-                    st.fleet_carrier,
-                    md.stock,
-                    md.demand,
-                    md.buy_price,
-                    md.sell_price,
-                    sys.x_coordinate,
-                    sys.y_coordinate,
-                    sys.z_coordinate
-                    FROM latest_market_data_view md
-                    JOIN station st ON md.station_id = st.id
-                    JOIN system sys ON st.system_id = sys.id
+                   md.station_id,
+                   md.commodity_id,
+                   sys.id AS system_id,
+                   st.max_landing_pad_size,
+                   st.require_odyssey,
+                   st.planetary,
+                   st.fleet_carrier,
+                   md.stock,
+                   md.demand,
+                   md.buy_price,
+                   md.sell_price,
+                   sys.coordinates_geom
+            FROM latest_market_datum md
+                     JOIN station st ON md.station_id = st.id
+                     JOIN system sys ON st.system_id = sys.id
             ]]>
         </createView>
     </changeSet>

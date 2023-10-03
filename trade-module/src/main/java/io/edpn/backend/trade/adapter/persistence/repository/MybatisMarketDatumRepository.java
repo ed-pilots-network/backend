@@ -51,17 +51,12 @@ public interface MybatisMarketDatumRepository {
     })
     boolean existsByStationNameAndSystemNameAndTimestamp(@Param("systemName") String systemName, @Param("stationName") String stationName, @Param("timestamp") LocalDateTime timestamp);
 
-    @Select("SELECT * FROM market_datum WHERE station_id = #{stationId}")
-    @ResultMap("marketDatumResultMap")
-    List<MybatisMarketDatumEntity> findByStationId(@Param("stationId") UUID stationId);
+    @Insert({
+            "INSERT INTO market_datum (station_id, commodity_id, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, status_flags, prohibited, timestamp)",
+            "VALUES (#{stationId}, #{marketDatum.commodity.id}, #{marketDatum.meanPrice}, #{marketDatum.buyPrice}, #{marketDatum.stock}, #{marketDatum.stockBracket}, #{marketDatum.sellPrice}, #{marketDatum.demand}, #{marketDatum.demandBracket}, #{marketDatum.statusFlags, jdbcType=ARRAY, typeHandler=io.edpn.backend.mybatisutil.StringListToArrayTypeHandler}, #{marketDatum.prohibited}, #{marketDatum.timestamp})",
+            "ON CONFLICT (station_id, commodity_id, timestamp)",
+            "DO NOTHING"
+    })
+    void insertWhenNotExists(@Param("stationId") UUID stationId, @Param("marketDatum") MybatisMarketDatumEntity marketDatum);
 
-    @Insert("INSERT INTO market_datum (station_id, commodity_id, timestamp, mean_price, buy_price, stock, stock_bracket, sell_price, demand, demand_bracket, " +
-            "status_flags, prohibited) VALUES (#{stationId}, #{marketDatum.commodity.id}, #{marketDatum.timestamp}, #{marketDatum.meanPrice}, #{marketDatum.buyPrice}, #{marketDatum.stock}, #{marketDatum.stockBracket}, #{marketDatum.sellPrice}, " +
-            "#{marketDatum.demand}, #{marketDatum.demandBracket}, #{marketDatum.statusFlags, jdbcType=ARRAY, typeHandler=io.edpn.backend.mybatisutil.StringListToArrayTypeHandler}, #{marketDatum.prohibited})")
-    void insert(@Param("stationId") UUID stationId, @Param("marketDatum") MybatisMarketDatumEntity marketDatum);
-
-    @Update("UPDATE market_datum SET mean_price = #{meanPrice}, buy_price = #{buyPrice}, stock = #{stock}, stock_bracket = #{stockBracket}, " +
-            "sell_price = #{sellPrice}, demand = #{demand}, demand_bracket = #{demandBracket}, status_flags = #{statusFlags, jdbcType=ARRAY, typeHandler=io.edpn.backend.mybatisutil.StringListToArrayTypeHandler}, " +
-            "prohibited = #{prohibited} WHERE station_id = #{stationId} AND commodity_id = #{commodityId} AND timestamp = #{timestamp}")
-    void update(MybatisMarketDatumEntity marketDatum);
 }

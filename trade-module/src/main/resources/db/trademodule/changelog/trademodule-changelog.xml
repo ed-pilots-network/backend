@@ -5,6 +5,10 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
+    <!-- drop all views so we are not constraint -->
+    <include file="/db/trademodule/changelog/drop_all_views.xml"/>
+
+    <!-- tables changelog -->
     <include file="/db/trademodule/changelog/create_system_table.xml"/>
     <include file="/db/trademodule/changelog/create_commodity_table.xml"/>
     <include file="/db/trademodule/changelog/create_station_table.xml"/>
@@ -21,11 +25,18 @@
     <include file="/db/trademodule/changelog/create_station_arrival_distance_data_request_table.xml"/>
     <include file="/db/trademodule/changelog/create_station_planetary_data_request_table.xml"/>
     <include file="/db/trademodule/changelog/create_station_landing_pad_size_data_request_table.xml"/>
+    <include file="/db/trademodule/changelog/add_performance_indexes.xml"/>
+    <include file="/db/trademodule/changelog/add_geometry_point_for_system_coordinates.xml"/>
+    <include file="/db/trademodule/changelog/fill_geometry_point_for_system_coordinates.xml"/>
+    <include file="/db/trademodule/changelog/drop_system_coordinate_columns.xml"/>
+    <include file="/db/trademodule/changelog/create_latest_market_datum_table.xml"/>
+    <include file="/db/trademodule/changelog/fill_latest_market_datum.xml"/>
+    <include file="/db/trademodule/changelog/add_unique_index_commodity_name.xml"/>
 
     <!-- views always last as they might depend on new columns -->
     <include file="/db/trademodule/changelog/create_validated_commodity_view.xml"/>
     <include file="/db/trademodule/changelog/create_validated_market_datum_view.xml"/>
-    <include file="/db/trademodule/changelog/create_latest_market_data_view.xml"/>
+    <include file="/db/trademodule/changelog/create_validated_latest_market_datum_view.xml"/>
     <include file="/db/trademodule/changelog/create_commodity_market_info_view.xml"/>
     <include file="/db/trademodule/changelog/create_locate_commodity_view.xml"/>
 

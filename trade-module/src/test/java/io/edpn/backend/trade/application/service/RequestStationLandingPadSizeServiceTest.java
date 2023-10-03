@@ -11,17 +11,17 @@ import io.edpn.backend.trade.application.dto.web.object.MessageDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
-import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
+import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CreateStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.DeleteStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.ExistsStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.LoadAllStationLandingPadSizeRequestsPort;
-import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
+import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
+import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Module;
 import io.edpn.backend.util.Topic;
-import java.util.concurrent.Executor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,9 +31,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.stream.Stream;
 import org.springframework.retry.support.RetryTemplate;
+
+import java.util.concurrent.Executor;
+import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -51,13 +52,15 @@ import static org.mockito.Mockito.when;
 public class RequestStationLandingPadSizeServiceTest {
 
     @Mock
+    private IdGenerator idGenerator;
+    @Mock
     private LoadStationsByFilterPort loadStationsByFilterPort;
     @Mock
     private LoadAllStationLandingPadSizeRequestsPort loadAllStationLandingPadSizeRequestsPort;
     @Mock
-    private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
+    private CreateOrLoadSystemPort createOrLoadSystemPort;
     @Mock
-    private LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
+    private CreateOrLoadStationPort createOrLoadStationPort;
     @Mock
     private ExistsStationLandingPadSizeRequestPort existsStationLandingPadSizeRequestPort;
     @Mock
@@ -92,10 +95,11 @@ public class RequestStationLandingPadSizeServiceTest {
     @BeforeEach
     void setUp() {
         underTest = new StationLandingPadSizeInterModuleCommunicationService(
+                idGenerator,
                 loadStationsByFilterPort,
                 loadAllStationLandingPadSizeRequestsPort,
-                loadOrCreateSystemByNamePort,
-                loadOrCreateBySystemAndStationNamePort,
+                createOrLoadSystemPort,
+                createOrLoadStationPort,
                 existsStationLandingPadSizeRequestPort,
                 createStationLandingPadSizeRequestPort,
                 deleteStationLandingPadSizeRequestPort,

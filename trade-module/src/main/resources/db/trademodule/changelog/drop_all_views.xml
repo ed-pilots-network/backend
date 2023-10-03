@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="drop_system_coordinate_columns" author="pveeckhout" runAlways="true">
+        <sql splitStatements="false" endDelimiter="\nGO">
+            DO $$
+            BEGIN
+                DECLARE
+            drop_command TEXT;
+            BEGIN
+                    -- Create the DROP VIEW command for each view
+            SELECT STRING_AGG('DROP VIEW IF EXISTS ' || schemaname || '.' || viewname || ' CASCADE;', E'\n')
+            INTO drop_command
+            FROM pg_views
+            WHERE schemaname NOT IN ('pg_catalog', 'information_schema', 'public') -- Exclude system schemas
+               OR (schemaname = 'public' AND viewname NOT LIKE 'geometry%' AND viewname NOT LIKE 'geography%' AND viewname NOT LIKE 'raster%'); -- Exclude views related to PostGIS;
+
+            -- Execute the command
+            IF drop_command IS NOT NULL THEN
+                        EXECUTE drop_command;
+            END IF;
+            END;
+            END $$ LANGUAGE plpgsql;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

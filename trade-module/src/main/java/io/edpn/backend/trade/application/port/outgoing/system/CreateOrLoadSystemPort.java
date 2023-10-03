@@ -2,7 +2,7 @@ package io.edpn.backend.trade.application.port.outgoing.system;
 
 import io.edpn.backend.trade.application.domain.System;
 
-public interface LoadOrCreateSystemByNamePort {
+public interface CreateOrLoadSystemPort {
     
-    System loadOrCreateSystemByName(String systemName);
+    System createOrLoad(System system);
 }

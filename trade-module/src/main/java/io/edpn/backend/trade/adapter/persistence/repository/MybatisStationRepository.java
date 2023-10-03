@@ -4,8 +4,6 @@ import io.edpn.backend.mybatisutil.UuidTypeHandler;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.trade.application.dto.persistence.filter.PersistenceFindStationFilter;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
@@ -37,21 +35,10 @@ public interface MybatisStationRepository {
     })
     Optional<MybatisStationEntity> findById(@Param("id") UUID id);
 
-    @ResultMap("stationResultMap")
-    @Select("SELECT * FROM station WHERE system_id = #{systemId} and name = #{stationName}")
-    Optional<MybatisStationEntity> findBySystemIdAndStationName(@Param("systemId") UUID systemId, @Param("stationName") String stationName);
-
-    @Insert("INSERT INTO station (id, market_id, name, arrival_distance, system_id, planetary, require_odyssey, fleet_carrier, max_landing_pad_size, market_updated_at) " +
-            "VALUES (#{id}, #{marketId}, #{name}, #{arrivalDistance}, #{system.id}, #{planetary}, #{requireOdyssey}, #{fleetCarrier}, #{maxLandingPadSize}, #{marketUpdatedAt})")
-    void insert(MybatisStationEntity station);
-
     @Update("UPDATE station SET market_id = #{marketId}, name = #{name}, arrival_distance = #{arrivalDistance}, system_id = #{system.id}, planetary = #{planetary}, " +
             "require_odyssey = #{requireOdyssey}, fleet_carrier = #{fleetCarrier}, max_landing_pad_size = #{maxLandingPadSize}, " +
             "market_updated_at = #{marketUpdatedAt} WHERE id = #{id}")
     void update(MybatisStationEntity station);
-
-    @Delete("DELETE FROM station WHERE id = #{id}")
-    void delete(@Param("id") UUID id);
 
     @Select("""
             <script>
@@ -65,4 +52,21 @@ public interface MybatisStationRepository {
             """)
     @ResultMap("stationResultMap")
     List<MybatisStationEntity> findByFilter(PersistenceFindStationFilter filter);
+
+    @Select({
+            "INSERT INTO station (id, market_id, name, arrival_distance, system_id, planetary, require_odyssey, fleet_carrier, max_landing_pad_size, market_updated_at) ",
+            "VALUES (#{id}, #{marketId}, #{name}, #{arrivalDistance}, #{system.id}, #{planetary}, #{requireOdyssey}, #{fleetCarrier}, #{maxLandingPadSize}, #{marketUpdatedAt})",
+            "ON CONFLICT (name, system_id)",
+            "DO UPDATE SET",
+            "market_id = COALESCE(station.market_id, EXCLUDED.market_id),",
+            "arrival_distance = COALESCE(station.arrival_distance, EXCLUDED.arrival_distance),",
+            "planetary = COALESCE(station.planetary, EXCLUDED.planetary),",
+            "require_odyssey = COALESCE(station.require_odyssey, EXCLUDED.require_odyssey),",
+            "fleet_carrier = COALESCE(station.fleet_carrier, EXCLUDED.fleet_carrier),",
+            "max_landing_pad_size = COALESCE(station.max_landing_pad_size, EXCLUDED.max_landing_pad_size),",
+            "market_updated_at = COALESCE(station.market_updated_at, EXCLUDED.market_updated_at)",
+            "RETURNING *"
+    })
+    @ResultMap("stationResultMap")
+    MybatisStationEntity createOrUpdateOnConflict(MybatisStationEntity station);
 }
