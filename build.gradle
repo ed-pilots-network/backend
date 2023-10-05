@@ -26,6 +26,13 @@ allprojects {
     version = '0.0.3-SNAPSHOT'
     compileJava.options.encoding = 'UTF-8'
 
+    java {
+        toolchain {
+            languageVersion=JavaLanguageVersion.of(21)
+            vendor=JvmVendorSpec.AMAZON
+        }
+    }
+
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
 }
