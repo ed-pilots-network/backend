@@ -14,8 +14,7 @@ public class ScanBaryCentreV1MessageProcessor implements MessageProcessor<ScanBa
 
     private final ReceiveKafkaMessageUseCase<ScanBaryCentreMessage.V1> receiveScanBaryCentreMessageUseCase;
     private final ObjectMapper objectMapper;
-
-    //TODO: Change topic
+    
     @Override
     @KafkaListener(topics = "https___eddn.edcd.io_schemas_scanbarycentre_1", groupId = "explorationModule", containerFactory = "explorationModuleKafkaListenerContainerFactory")
     public void listen(JsonNode json) throws JsonProcessingException {
