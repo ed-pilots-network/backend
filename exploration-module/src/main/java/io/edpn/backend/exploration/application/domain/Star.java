@@ -17,6 +17,7 @@ public record Star(
         String starType,
         Long stellarMass, // in multiples of Sol
         Long surfaceTemperature,
+        System system,
         Boolean horizons,
         Boolean odyssey,
         Double estimatedScanValue) {
