@@ -5,9 +5,9 @@ import io.edpn.backend.exploration.adapter.kafka.dto.mapper.KafkaSystemCoordinat
 import io.edpn.backend.exploration.adapter.kafka.dto.mapper.KafkaSystemEliteIdResponseMapper;
 import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
 import io.edpn.backend.exploration.adapter.web.dto.mapper.RestSystemDtoMapper;
-import io.edpn.backend.exploration.application.dto.mapper.MessageMapper;
-import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
-import io.edpn.backend.exploration.application.dto.mapper.SystemEliteIdResponseMapper;
+import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoMapper;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemCoordinatesResponseMapper;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEliteIdResponseMapper;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
@@ -47,7 +47,7 @@ public class ServiceConfig {
             LoadSystemEliteIdRequestBySystemNamePort loadSystemEliteIdRequestBySystemNamePort,
             DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort,
             KafkaSystemEliteIdResponseMapper kafkaSystemEliteIdResponseMapper,
-            MessageMapper messageMapper,
+            MessageDtoMapper messageMapper,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("explorationForkJoinPool") Executor executor
@@ -76,7 +76,7 @@ public class ServiceConfig {
             LoadSystemPort loadSystemPort,
             SendMessagePort sendMessagePort,
             SystemCoordinatesResponseMapper systemCoordinatesResponseMapper,
-            MessageMapper messageMapper,
+            MessageDtoMapper messageMapper,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("explorationForkJoinPool") Executor executor
@@ -103,7 +103,7 @@ public class ServiceConfig {
             LoadSystemPort loadSystemPort,
             SendMessagePort sendMessagePort,
             SystemEliteIdResponseMapper systemEliteIdResponseMapper,
-            MessageMapper messageMapper,
+            MessageDtoMapper messageMapper,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("explorationForkJoinPool") Executor executor

@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.domain.SystemEliteIdRequest;
-import io.edpn.backend.exploration.application.dto.MessageDto;
-import io.edpn.backend.exploration.application.dto.mapper.MessageMapper;
-import io.edpn.backend.exploration.application.dto.mapper.SystemEliteIdResponseMapper;
+import io.edpn.backend.exploration.application.dto.web.object.MessageDto;
+import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoMapper;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEliteIdResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
@@ -54,7 +54,7 @@ public class ReceiveSystemEliteIdRequestServiceTest {
     @Mock
     private SystemEliteIdResponseMapper systemEliteIdResponseMapper;
     @Mock
-    private MessageMapper messageMapper;
+    private MessageDtoMapper messageMapper;
     @Mock
     private ObjectMapper objectMapper;
     @Mock

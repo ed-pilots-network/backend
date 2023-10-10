@@ -1,6 +1,6 @@
 package io.edpn.backend.exploration.adapter.persistence.entity;
 
-import io.edpn.backend.exploration.application.dto.SystemEntity;
+import io.edpn.backend.exploration.application.dto.persistence.entity.SystemEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

@@ -4,9 +4,9 @@ import io.edpn.backend.exploration.adapter.web.dto.RestCoordinateDto;
 import io.edpn.backend.exploration.adapter.web.dto.RestSystemDto;
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.dto.CoordinateDto;
-import io.edpn.backend.exploration.application.dto.SystemDto;
-import io.edpn.backend.exploration.application.dto.mapper.SystemDtoMapper;
+import io.edpn.backend.exploration.application.dto.web.object.CoordinateDto;
+import io.edpn.backend.exploration.application.dto.web.object.SystemDto;
+import io.edpn.backend.exploration.application.dto.web.object.mapper.SystemDtoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

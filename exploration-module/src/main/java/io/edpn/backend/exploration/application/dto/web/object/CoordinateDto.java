@@ -1,4 +1,4 @@
-package io.edpn.backend.exploration.application.dto;
+package io.edpn.backend.exploration.application.dto.web.object;
 
 public interface CoordinateDto {
     Double x();

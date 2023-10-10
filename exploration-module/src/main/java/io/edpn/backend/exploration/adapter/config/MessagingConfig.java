@@ -3,12 +3,14 @@ package io.edpn.backend.exploration.adapter.config;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.adapter.kafka.processor.NavRouteV1MessageProcessor;
+import io.edpn.backend.exploration.adapter.kafka.processor.ScanBaryCentreV1MessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.processor.SystemCoordinatesRequestMessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.processor.SystemEliteIdRequestMessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.sender.KafkaMessageSender;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.topic.CreateTopicPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.ScanBaryCentreMessage;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +27,14 @@ public class MessagingConfig {
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper
     ) {
         return new NavRouteV1MessageProcessor(receiveNavRouteMessageUseCase, objectMapper);
+    }
+    
+    @Bean(name = "explorationScanBaryCentreV1MessageProcessor")
+    public ScanBaryCentreV1MessageProcessor scanBaryCentreV1MessageProcessor(
+            ReceiveKafkaMessageUseCase<ScanBaryCentreMessage.V1> receiveScanBaryCentreMessageUseCase,
+            @Qualifier("explorationObjectMapper") ObjectMapper objectMapper
+    ) {
+        return new ScanBaryCentreV1MessageProcessor(receiveScanBaryCentreMessageUseCase, objectMapper);
     }
 
     @Bean(name = "explorationSystemCoordinatesRequestMessageProcessor")

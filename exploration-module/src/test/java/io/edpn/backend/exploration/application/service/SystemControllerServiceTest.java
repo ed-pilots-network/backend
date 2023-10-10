@@ -2,8 +2,8 @@ package io.edpn.backend.exploration.application.service;
 
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.domain.exception.ValidationException;
-import io.edpn.backend.exploration.application.dto.SystemDto;
-import io.edpn.backend.exploration.application.dto.mapper.SystemDtoMapper;
+import io.edpn.backend.exploration.application.dto.web.object.SystemDto;
+import io.edpn.backend.exploration.application.dto.web.object.mapper.SystemDtoMapper;
 import io.edpn.backend.exploration.application.port.incomming.FindSystemsByNameContainingUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemsByNameContainingPort;
 import io.edpn.backend.exploration.application.validation.LoadByNameContainingValidator;

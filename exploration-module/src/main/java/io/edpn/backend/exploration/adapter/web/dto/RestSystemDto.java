@@ -1,7 +1,10 @@
 package io.edpn.backend.exploration.adapter.web.dto;
 
+import io.edpn.backend.exploration.application.dto.web.object.CoordinateDto;
+import io.edpn.backend.exploration.application.dto.web.object.SystemDto;
+
 public record RestSystemDto(String name,
-                            io.edpn.backend.exploration.application.dto.CoordinateDto coordinate,
+                            CoordinateDto coordinate,
                             Long eliteId,
-                            String starClass) implements io.edpn.backend.exploration.application.dto.SystemDto {
+                            String starClass) implements SystemDto {
 }

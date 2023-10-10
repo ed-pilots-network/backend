@@ -1,7 +1,7 @@
-package io.edpn.backend.exploration.application.dto.mapper;
+package io.edpn.backend.exploration.application.dto.persistence.entity.mapper;
 
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
-import io.edpn.backend.exploration.application.dto.SystemCoordinateRequestEntity;
+import io.edpn.backend.exploration.application.dto.persistence.entity.SystemCoordinateRequestEntity;
 
 public interface SystemCoordinateRequestEntityMapper<T extends SystemCoordinateRequestEntity> {
     SystemCoordinateRequest map(SystemCoordinateRequestEntity systemCoordinateDataRequestEntity);

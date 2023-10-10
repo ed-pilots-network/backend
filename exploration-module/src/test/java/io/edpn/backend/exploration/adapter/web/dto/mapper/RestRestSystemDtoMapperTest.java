@@ -2,7 +2,8 @@ package io.edpn.backend.exploration.adapter.web.dto.mapper;
 
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.dto.SystemDto;
+import io.edpn.backend.exploration.application.dto.web.object.SystemDto;
+import io.edpn.backend.exploration.application.dto.web.object.mapper.SystemDtoMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +16,7 @@ import static org.hamcrest.Matchers.nullValue;
 
 class RestRestSystemDtoMapperTest {
 
-    private io.edpn.backend.exploration.application.dto.mapper.SystemDtoMapper underTest;
+    private SystemDtoMapper underTest;
 
     @BeforeEach
     void setUp() {

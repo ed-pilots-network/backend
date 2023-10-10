@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.adapter.kafka.dto.KafkaMessageDto;
-import io.edpn.backend.exploration.application.dto.MessageDto;
+import io.edpn.backend.exploration.application.dto.web.object.MessageDto;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.topic.CreateTopicPort;
 import org.junit.jupiter.api.BeforeEach;

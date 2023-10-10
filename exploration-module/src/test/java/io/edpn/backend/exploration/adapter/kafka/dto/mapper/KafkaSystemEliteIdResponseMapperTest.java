@@ -1,6 +1,7 @@
 package io.edpn.backend.exploration.adapter.kafka.dto.mapper;
 
 import io.edpn.backend.exploration.application.domain.System;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEliteIdResponseMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ import static org.hamcrest.Matchers.is;
 @ExtendWith(MockitoExtension.class)
 class KafkaSystemEliteIdResponseMapperTest {
 
-    private io.edpn.backend.exploration.application.dto.mapper.SystemEliteIdResponseMapper underTest;
+    private SystemEliteIdResponseMapper underTest;
 
     @BeforeEach
     void setUp() {

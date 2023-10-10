@@ -1,4 +1,4 @@
-package io.edpn.backend.exploration.application.dto;
+package io.edpn.backend.exploration.application.dto.persistence.entity;
 
 import java.util.UUID;
 
