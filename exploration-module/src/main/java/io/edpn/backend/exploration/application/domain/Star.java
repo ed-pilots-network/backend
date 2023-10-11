@@ -1,8 +1,10 @@
 package io.edpn.backend.exploration.application.domain;
 
 import java.util.List;
+import java.util.UUID;
 
 public record Star(
+        UUID id,
         Double absoluteMagnitude,
         Long age, // millions of years
         Double arrivalDistance,// LS

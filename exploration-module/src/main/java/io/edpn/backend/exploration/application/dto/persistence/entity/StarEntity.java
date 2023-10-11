@@ -1,6 +1,5 @@
 package io.edpn.backend.exploration.application.dto.persistence.entity;
 
-import io.edpn.backend.exploration.application.dto.web.object.RingDto;
 import io.edpn.backend.exploration.application.dto.web.object.SystemDto;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public interface StarEntity {
     
     Long getRadius();
     
-    List<RingDto> getRings();
+    List<RingEntity> getRings();
     
     Double getRotationalPeriod();
     

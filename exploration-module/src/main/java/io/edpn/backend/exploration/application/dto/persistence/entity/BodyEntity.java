@@ -1,8 +1,5 @@
 package io.edpn.backend.exploration.application.dto.persistence.entity;
 
-import io.edpn.backend.exploration.application.domain.Ring;
-import io.edpn.backend.exploration.application.dto.web.object.SystemDto;
-
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -50,7 +47,7 @@ public interface BodyEntity {
     
     Double getRadius();
     
-    List<Ring> getRings();
+    List<RingEntity> getRings();
     
     Double getRotationPeriod(); // seconds
     
@@ -62,7 +59,7 @@ public interface BodyEntity {
     
     Double getSurfaceTemperature();
     
-    SystemDto getSystemDto();
+    SystemEntity getSystem();
     
     String getTerraformState();
     

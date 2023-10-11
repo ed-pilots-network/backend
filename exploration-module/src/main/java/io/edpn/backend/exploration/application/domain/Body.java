@@ -2,9 +2,11 @@ package io.edpn.backend.exploration.application.domain;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 //Planet or Moon
 public record Body(
+        UUID id,
         Double arrivalDistance, // LS
         Double ascendingNode,
         String atmosphere,
