@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create_body_table" author="daniel-j-mason">
+        <createTable tableName="body">
+            <column name="id" type="uuid">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="arrival_distance" type="double"/>
+            <column name="ascending_node" type="double"/>
+            <column name="atmosphere" type="varchar(255)"/>
+            <column name="atmospheric_composition" type="hstore"/>
+            <column name="ascending_node" type="double"/>
+            <column name="axial_tilt" type="double"/>
+            <column name="body_composition" type="hstore"/>
+            <column name="discovered" type="boolean"/>
+            <column name="mapped" type="boolean"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="elite_id" type="bigint"/>
+            <column name="eccentricity" type="double"/>
+            <column name="landable" type="boolean"/>
+            <column name="mass" type="double"/>
+            <column name="mean_anomaly" type="double"/>
+            <column name="orbital_inclination" type="double"/>
+            <column name="orbital_period" type="double"/>
+            <column name="parents" type="hstore"/>
+            <column name="periapsis" type="double"/>
+            <column name="planet_class" type="varchar(255)"/>
+            <column name="radius" type="double"/>
+            <column name="rotation_period" type="double"/>
+            <column name="semi_major_axis" type="double"/>
+            <column name="surface_gravity" type="double"/>
+            <column name="surface_pressure" type="double"/>
+            <column name="surface_temperature" type="double"/>
+            <column name="system_id" type="uuid"/>
+            <column name="terraform_state" type="varchar(255)"/>
+            <column name="tidal_lock" type="boolean"/>
+            <column name="volcanism" type="varchar(255)"/>
+            <column name="horizon" type="boolean"/>
+            <column name="odyssey" type="boolean"/>
+            <column name="estimated_scan_value" type="double"/>
+        </createTable>
+    </changeSet>
+
+
+</databaseChangeLog>
