@@ -25,13 +25,15 @@ public interface BodyEntity {
     
     String getName();
     
-    Long getEliteID();
+    Long getLocalId();
     
     Double getEccentricity();
     
     Boolean getLandable();
     
     Double getMass();
+    
+    Map<String, Double> getMaterials();
     
     Double getMeanAnomaly();
     
@@ -60,6 +62,8 @@ public interface BodyEntity {
     Double getSurfaceTemperature();
     
     SystemEntity getSystem();
+    
+    Long getSystemAddress();
     
     String getTerraformState();
     

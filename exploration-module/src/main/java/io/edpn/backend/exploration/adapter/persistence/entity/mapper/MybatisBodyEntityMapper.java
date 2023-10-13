@@ -28,10 +28,11 @@ public class MybatisBodyEntityMapper implements BodyEntityMapper<MybatisBodyEnti
                 bodyEntity.getDiscovered(),
                 bodyEntity.getMapped(),
                 bodyEntity.getName(),
-                bodyEntity.getEliteID(),
+                bodyEntity.getLocalId(),
                 bodyEntity.getEccentricity(),
                 bodyEntity.getLandable(),
                 bodyEntity.getMass(),
+                bodyEntity.getMaterials(),
                 bodyEntity.getMeanAnomaly(),
                 bodyEntity.getOrbitalInclination(),
                 bodyEntity.getOrbitalPeriod(),
@@ -51,6 +52,7 @@ public class MybatisBodyEntityMapper implements BodyEntityMapper<MybatisBodyEnti
                 Optional.ofNullable(bodyEntity.getSystem())
                         .map(systemEntity -> systemEntityMapper.map(systemEntity))
                         .orElse(null),
+                bodyEntity.getSystemAddress(),
                 bodyEntity.getTerraformState(),
                 bodyEntity.getTidalLock(),
                 bodyEntity.getVolcanism(),
@@ -73,10 +75,11 @@ public class MybatisBodyEntityMapper implements BodyEntityMapper<MybatisBodyEnti
                 .discovered(body.discovered())
                 .mapped(body.mapped())
                 .name(body.name())
-                .eliteID(body.eliteID())
+                .localId(body.localId())
                 .eccentricity(body.eccentricity())
                 .landable(body.landable())
                 .mass(body.mass())
+                .materials(body.materials())
                 .meanAnomaly(body.meanAnomaly())
                 .orbitalInclination(body.orbitalInclination())
                 .orbitalPeriod(body.orbitalPeriod())
@@ -97,6 +100,7 @@ public class MybatisBodyEntityMapper implements BodyEntityMapper<MybatisBodyEnti
                 .system(Optional.ofNullable(body.system())
                         .map(system -> systemEntityMapper.map(system))
                         .orElse(null))
+                .systemAddress(body.systemAddress())
                 .terraformState(body.terraformState())
                 .tidalLock(body.tidalLock())
                 .volcanism(body.volcanism())

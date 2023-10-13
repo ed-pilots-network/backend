@@ -22,13 +22,15 @@ public interface BodyDto {
     
     String getName();
     
-    Long getEliteID();
+    Long getLocalId();
     
     Double getEccentricity();
     
     Boolean getLandable();
     
     Double getMass();
+    
+    Map<String, Double> getMaterials();
     
     Double getMeanAnomaly();
     
@@ -57,6 +59,8 @@ public interface BodyDto {
     Double getSurfaceTemperature();
     
     SystemDto getSystemDto();
+    
+    Long getSystemAddress();
     
     String getTerraformState();
     

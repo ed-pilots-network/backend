@@ -9,9 +9,11 @@ public interface StarDto {
     
     Double getArrivalDistance();// LS
     
+    Double getAxialTilt();
+    
     Boolean getDiscovered();
     
-    Long getEliteId();
+    Long getLocalId();
     
     String getLuminosity();
     
@@ -29,9 +31,13 @@ public interface StarDto {
     
     Long getStellarMass(); // in multiples of Sol
     
+    Long getSubclass();
+    
     Long getSurfaceTemperature();
     
     SystemDto getSystem();
+    
+    Long getSystemAddress();
     
     Boolean getHorizons();
     

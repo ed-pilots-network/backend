@@ -14,9 +14,11 @@ public interface StarEntity {
     
     Double getArrivalDistance();// LS
     
+    Double getAxialTilt();
+    
     Boolean getDiscovered();
     
-    Long getEliteId();
+    Long getLocalId();
     
     String getLuminosity();
     
@@ -34,9 +36,13 @@ public interface StarEntity {
     
     Long getStellarMass(); // in multiples of Sol
     
+    Long getSubclass();
+    
     Long getSurfaceTemperature();
     
     SystemDto getSystem();
+    
+    Long getSystemAddress();
     
     Boolean getHorizons();
     

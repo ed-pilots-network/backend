@@ -20,8 +20,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class MybatisBodyEntity implements BodyEntity {
-    private UUID id;
+public class MybatisBodyEntity implements BodyEntity {    private UUID id;
     private Double arrivalDistance;
     private Double ascendingNode;
     private String atmosphere;
@@ -31,10 +30,11 @@ public class MybatisBodyEntity implements BodyEntity {
     private Boolean discovered;
     private Boolean mapped;
     private String name;
-    private Long eliteID;
+    private Long localId;
     private Double eccentricity;
     private Boolean landable;
     private Double mass;
+    private Map<String, Double> materials;
     private Double meanAnomaly;
     private Double orbitalInclination;
     private Double orbitalPeriod;
@@ -49,6 +49,7 @@ public class MybatisBodyEntity implements BodyEntity {
     private Double surfacePressure;
     private Double surfaceTemperature;
     private MybatisSystemEntity system;
+    private Long systemAddress;
     private String terraformState;
     private Boolean tidalLock;
     private String volcanism;

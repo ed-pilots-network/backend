@@ -8,8 +8,9 @@ public record Star(
         Double absoluteMagnitude,
         Long age, // millions of years
         Double arrivalDistance,// LS
+        Double axialTilt,
         Boolean discovered,
-        Long eliteId,
+        Long localId,
         String luminosity,
         Boolean mapped,
         String name,
@@ -18,8 +19,10 @@ public record Star(
         Double rotationalPeriod,
         String starType,
         Long stellarMass, // in multiples of Sol
+        Integer subclass,
         Long surfaceTemperature,
         System system,
+        Long systemAddress,
         Boolean horizons,
         Boolean odyssey,
         Double estimatedScanValue) {

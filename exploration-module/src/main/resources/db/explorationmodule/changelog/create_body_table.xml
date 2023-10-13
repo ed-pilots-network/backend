@@ -13,16 +13,16 @@
             <column name="ascending_node" type="double"/>
             <column name="atmosphere" type="varchar(255)"/>
             <column name="atmospheric_composition" type="hstore"/>
-            <column name="ascending_node" type="double"/>
             <column name="axial_tilt" type="double"/>
             <column name="body_composition" type="hstore"/>
             <column name="discovered" type="boolean"/>
             <column name="mapped" type="boolean"/>
             <column name="name" type="varchar(255)"/>
-            <column name="elite_id" type="bigint"/>
+            <column name="local_id" type="bigint"/>
             <column name="eccentricity" type="double"/>
             <column name="landable" type="boolean"/>
             <column name="mass" type="double"/>
+            <column name="materials" type="hstore"/>
             <column name="mean_anomaly" type="double"/>
             <column name="orbital_inclination" type="double"/>
             <column name="orbital_period" type="double"/>
@@ -36,6 +36,7 @@
             <column name="surface_pressure" type="double"/>
             <column name="surface_temperature" type="double"/>
             <column name="system_id" type="uuid"/>
+            <column name="system_address" type="bigint"/>
             <column name="terraform_state" type="varchar(255)"/>
             <column name="tidal_lock" type="boolean"/>
             <column name="volcanism" type="varchar(255)"/>
