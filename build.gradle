@@ -82,7 +82,7 @@ subprojects {
         springBootVersion = '3.1.5'
         springIntegrationHttpVersion = '6.1.0'
         jacksonVersion = '2.14.2'
-        lombokVersion = '1.18.28'
+        lombokVersion = '1.18.30'
         mybatisSpringBootVersion = '3.0.2'
         liquibaseVersion = '4.22.0'
         postgresqlVersion = '42.6.0'
