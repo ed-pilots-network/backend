@@ -17,7 +17,7 @@ public class MybatisSystemCoordinateRequestEntityMapper implements SystemCoordin
     @Override
     public MybatisSystemCoordinateRequestEntity map(SystemCoordinateRequest systemCoordinateDataRequest) {
         return new MybatisSystemCoordinateRequestEntity(
-                systemCoordinateDataRequest.systemName(),
-                systemCoordinateDataRequest.requestingModule());
+                systemCoordinateDataRequest.getSystemName(),
+                systemCoordinateDataRequest.getRequestingModule());
     }
 }

@@ -17,7 +17,7 @@ public class MybatisSystemEliteIdRequestEntityMapper implements SystemEliteIdReq
     @Override
     public MybatisSystemEliteIdRequestEntity map(SystemEliteIdRequest systemEliteIdRequest) {
         return new MybatisSystemEliteIdRequestEntity(
-                systemEliteIdRequest.systemName(),
-                systemEliteIdRequest.requestingModule());
+                systemEliteIdRequest.getSystemName(),
+                systemEliteIdRequest.getRequestingModule());
     }
 }

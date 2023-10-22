@@ -76,18 +76,18 @@ public class SystemCoordinateInterModuleCommunicationService implements ReceiveK
     @Scheduled(cron = "0 0 0/12 * * *")
     public void processPending() {
         loadAllSystemCoordinateRequestPort.loadAll().parallelStream()
-                .forEach(systemCoordinateRequest -> CompletableFuture.runAsync(() -> loadSystemPort.load(systemCoordinateRequest.systemName())
+                .forEach(systemCoordinateRequest -> CompletableFuture.runAsync(() -> loadSystemPort.load(systemCoordinateRequest.getSystemName())
                         .ifPresent(system -> {
                             try {
                                 SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
                                 String stringJson = objectMapper.writeValueAsString(systemCoordinatesResponse);
-                                String topic = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(systemCoordinateRequest.requestingModule());
+                                String topic = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(systemCoordinateRequest.getRequestingModule());
                                 Message message = new Message(topic, stringJson);
                                 MessageDto messageDto = messageMapper.map(message);
 
                                 boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
                                 if (sendSuccessful) {
-                                    deleteSystemCoordinateRequestPort.delete(systemCoordinateRequest.systemName(), systemCoordinateRequest.requestingModule());
+                                    deleteSystemCoordinateRequestPort.delete(systemCoordinateRequest.getSystemName(), systemCoordinateRequest.getRequestingModule());
                                 }
                             } catch (JsonProcessingException jpe) {
                                 log.error("Error processing JSON", jpe);

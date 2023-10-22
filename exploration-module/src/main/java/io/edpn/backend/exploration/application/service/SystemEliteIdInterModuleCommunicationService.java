@@ -76,18 +76,18 @@ public class SystemEliteIdInterModuleCommunicationService implements ReceiveKafk
     @Scheduled(cron = "0 0 0/12 * * *")
     public void processPending() {
         loadAllSystemEliteIdRequestPort.loadAll().parallelStream()
-                .forEach(systemEliteIdRequest -> CompletableFuture.runAsync(() -> loadSystemPort.load(systemEliteIdRequest.systemName())
+                .forEach(systemEliteIdRequest -> CompletableFuture.runAsync(() -> loadSystemPort.load(systemEliteIdRequest.getSystemName())
                         .ifPresent(system -> {
                             try {
                                 SystemEliteIdResponse systemEliteIdsResponse = systemEliteIdResponseMapper.map(system);
                                 String stringJson = objectMapper.writeValueAsString(systemEliteIdsResponse);
-                                String topic = Topic.Response.SYSTEM_ELITE_ID.getFormattedTopicName(systemEliteIdRequest.requestingModule());
+                                String topic = Topic.Response.SYSTEM_ELITE_ID.getFormattedTopicName(systemEliteIdRequest.getRequestingModule());
                                 Message message = new Message(topic, stringJson);
                                 MessageDto messageDto = messageMapper.map(message);
 
                                 boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
                                 if (sendSuccessful) {
-                                    deleteSystemEliteIdRequestPort.delete(systemEliteIdRequest.systemName(), systemEliteIdRequest.requestingModule());
+                                    deleteSystemEliteIdRequestPort.delete(systemEliteIdRequest.getSystemName(), systemEliteIdRequest.getRequestingModule());
                                 }
                             } catch (JsonProcessingException jpe) {
                                 throw new RuntimeException(jpe);

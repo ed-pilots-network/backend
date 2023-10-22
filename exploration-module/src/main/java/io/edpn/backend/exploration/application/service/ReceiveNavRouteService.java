@@ -87,18 +87,18 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
     }
 
     private void sendCoordinateResponse(System system) {
-        loadSystemCoordinateRequestBySystemNamePort.loadByName(system.name()).parallelStream()
+        loadSystemCoordinateRequestBySystemNamePort.loadByName(system.getName()).parallelStream()
                 .forEach(systemCoordinateRequest -> CompletableFuture.runAsync(() -> {
                     try {
                         SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
                         String stringJson = objectMapper.writeValueAsString(systemCoordinatesResponse);
-                        String topic = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(systemCoordinateRequest.requestingModule());
+                        String topic = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(systemCoordinateRequest.getRequestingModule());
                         Message message = new Message(topic, stringJson);
                         MessageDto messageDto = messageMapper.map(message);
 
                         boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
                         if (sendSuccessful) {
-                            deleteSystemCoordinateRequestPort.delete(system.name(), systemCoordinateRequest.requestingModule());
+                            deleteSystemCoordinateRequestPort.delete(system.getName(), systemCoordinateRequest.getRequestingModule());
                         }
                     } catch (JsonProcessingException jpe) {
                         throw new RuntimeException(jpe);
@@ -107,18 +107,18 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
     }
 
     private void sendEliteIdResponse(System system) {
-        loadSystemEliteIdRequestBySystemNamePort.loadByName(system.name()).parallelStream()
+        loadSystemEliteIdRequestBySystemNamePort.loadByName(system.getName()).parallelStream()
                 .forEach(systemEliteIdRequest -> CompletableFuture.runAsync(() -> {
                     try {
                         SystemEliteIdResponse systemEliteIdsResponse = systemEliteIdResponseMapper.map(system);
                         String stringJson = objectMapper.writeValueAsString(systemEliteIdsResponse);
-                        String topic = Topic.Response.SYSTEM_ELITE_ID.getFormattedTopicName(systemEliteIdRequest.requestingModule());
+                        String topic = Topic.Response.SYSTEM_ELITE_ID.getFormattedTopicName(systemEliteIdRequest.getRequestingModule());
                         Message message = new Message(topic, stringJson);
                         MessageDto messageDto = messageMapper.map(message);
 
                         boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
                         if (sendSuccessful) {
-                            deleteSystemEliteIdRequestPort.delete(system.name(), systemEliteIdRequest.requestingModule());
+                            deleteSystemEliteIdRequestPort.delete(system.getName(), systemEliteIdRequest.getRequestingModule());
                         }
                     } catch (JsonProcessingException jpe) {
                         throw new RuntimeException(jpe);
