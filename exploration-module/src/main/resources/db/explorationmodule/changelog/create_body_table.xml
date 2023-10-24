@@ -40,8 +40,9 @@
             <column name="terraform_state" type="varchar(255)"/>
             <column name="tidal_lock" type="boolean"/>
             <column name="volcanism" type="varchar(255)"/>
-            <column name="horizon" type="boolean"/>
+            <column name="horizons" type="boolean"/>
             <column name="odyssey" type="boolean"/>
+            <!-- TODO converted to calculated column           -->
             <column name="estimated_scan_value" type="double"/>
         </createTable>
     </changeSet>
