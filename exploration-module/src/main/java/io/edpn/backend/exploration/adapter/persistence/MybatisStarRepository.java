@@ -3,7 +3,6 @@ package io.edpn.backend.exploration.adapter.persistence;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisRingEntity;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisStarEntity;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
-import io.edpn.backend.mybatisutil.UuidTypeHandler;
 import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Param;
