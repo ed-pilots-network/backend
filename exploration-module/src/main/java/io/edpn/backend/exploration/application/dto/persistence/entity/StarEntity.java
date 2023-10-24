@@ -1,7 +1,5 @@
 package io.edpn.backend.exploration.application.dto.persistence.entity;
 
-import io.edpn.backend.exploration.application.dto.web.object.SystemDto;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -26,9 +24,9 @@ public interface StarEntity {
     
     String getName();
     
-    Long getRadius();
+    Double getRadius();
     
-    List<RingEntity> getRings();
+    List<? extends RingEntity> getRings();
     
     Double getRotationalPeriod();
     
@@ -36,11 +34,11 @@ public interface StarEntity {
     
     Long getStellarMass(); // in multiples of Sol
     
-    Long getSubclass();
+    Integer getSubclass();
     
-    Long getSurfaceTemperature();
+    Double getSurfaceTemperature();
     
-    SystemDto getSystem();
+    SystemEntity getSystem();
     
     Long getSystemAddress();
     
@@ -50,3 +48,4 @@ public interface StarEntity {
     
     Double getEstimatedScanValue();
 }
+    

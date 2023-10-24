@@ -10,4 +10,8 @@ public interface RingDto{
     Long getOuterRadius();
     
     String getRingClass();
+    
+    BodyDto getBodyDto();
+    
+    StarDto getStarDto();
 }

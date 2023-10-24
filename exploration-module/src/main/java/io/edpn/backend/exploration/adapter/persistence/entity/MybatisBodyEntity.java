@@ -20,7 +20,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class MybatisBodyEntity implements BodyEntity {    private UUID id;
+public class MybatisBodyEntity implements BodyEntity {
+    private UUID id;
     private Double arrivalDistance;
     private Double ascendingNode;
     private String atmosphere;

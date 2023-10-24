@@ -25,10 +25,8 @@ module edpn.backend.exploration {
     requires spring.core;
 
     exports io.edpn.backend.exploration.application.port.incomming;
-    exports io.edpn.backend.exploration.application.dto;
+    exports io.edpn.backend.exploration.application.dto.persistence.entity;
     exports io.edpn.backend.exploration.adapter.web;
     exports io.edpn.backend.exploration.application.domain;
-    exports io.edpn.backend.exploration.application.dto.persistence.entity;
     exports io.edpn.backend.exploration.application.dto.web.object;
-    exports io.edpn.backend.exploration.application.dto.persistence.filter;
 }

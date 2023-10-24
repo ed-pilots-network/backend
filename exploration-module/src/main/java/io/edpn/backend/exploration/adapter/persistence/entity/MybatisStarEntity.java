@@ -1,8 +1,11 @@
-package io.edpn.backend.exploration.application.domain;
+package io.edpn.backend.exploration.adapter.persistence.entity;
 
+import io.edpn.backend.exploration.application.dto.persistence.entity.StarEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -13,12 +16,14 @@ import java.util.UUID;
 @Setter
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class Star{
+@EqualsAndHashCode
+public class MybatisStarEntity implements StarEntity {
     private UUID id;
     private Double absoluteMagnitude;
-    private Long age; // millions of years
-    private Double arrivalDistance;// LS
+    private Long age;
+    private Double arrivalDistance;
     private Double axialTilt;
     private Boolean discovered;
     private Long localId;
@@ -26,13 +31,13 @@ public class Star{
     private Boolean mapped;
     private String name;
     private Double radius;
-    private List<Ring> rings;
+    private List<MybatisRingEntity> rings;
     private Double rotationalPeriod;
     private String starType;
-    private Long stellarMass; // in multiples of Sol
+    private Long stellarMass;
     private Integer subclass;
     private Double surfaceTemperature;
-    private System system;
+    private MybatisSystemEntity system;
     private Long systemAddress;
     private Boolean horizons;
     private Boolean odyssey;

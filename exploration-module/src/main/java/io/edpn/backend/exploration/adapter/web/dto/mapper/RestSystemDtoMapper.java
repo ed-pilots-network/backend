@@ -17,16 +17,16 @@ import java.util.Optional;
 public class RestSystemDtoMapper implements SystemDtoMapper {
 
     public SystemDto map(System system) {
-        return new RestSystemDto(system.name(), coordinateFromSystem(system), system.eliteId(), system.starClass());
+        return new RestSystemDto(system.getName(), coordinateFromSystem(system), system.getEliteId(), system.getStarClass());
     }
 
     private CoordinateDto coordinateFromSystem(System system) {
-        boolean isFilled = Optional.ofNullable(system.coordinate())
-                .map(Coordinate::x)
+        boolean isFilled = Optional.ofNullable(system.getCoordinate())
+                .map(Coordinate::getX)
                 .isPresent();
 
         if (isFilled) {
-            return new RestCoordinateDto(system.coordinate().x(), system.coordinate().y(), system.coordinate().z());
+            return new RestCoordinateDto(system.getCoordinate().getX(), system.getCoordinate().getY(), system.getCoordinate().getZ());
         } else {
             return null;
         }

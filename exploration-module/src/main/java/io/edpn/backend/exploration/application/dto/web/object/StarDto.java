@@ -21,7 +21,7 @@ public interface StarDto {
     
     String getName();
     
-    Long getRadius();
+    Double getRadius();
     
     List<RingDto> getRings();
     
@@ -33,7 +33,7 @@ public interface StarDto {
     
     Long getSubclass();
     
-    Long getSurfaceTemperature();
+    Double getSurfaceTemperature();
     
     SystemDto getSystem();
     

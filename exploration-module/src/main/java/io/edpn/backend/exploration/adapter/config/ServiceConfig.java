@@ -8,7 +8,10 @@ import io.edpn.backend.exploration.adapter.web.dto.mapper.RestSystemDtoMapper;
 import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoMapper;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEliteIdResponseMapper;
+import io.edpn.backend.exploration.application.port.outgoing.body.SaveOrUpdateBodyPort;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.ring.SaveOrUpdateRingPort;
+import io.edpn.backend.exploration.application.port.outgoing.star.SaveOrUpdateStarPort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
@@ -19,6 +22,7 @@ import io.edpn.backend.exploration.application.port.outgoing.systemeliteidreques
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.service.ReceiveJournalScanService;
 import io.edpn.backend.exploration.application.service.ReceiveNavRouteService;
 import io.edpn.backend.exploration.application.service.SystemControllerService;
 import io.edpn.backend.exploration.application.service.SystemCoordinateInterModuleCommunicationService;
@@ -66,6 +70,22 @@ public class ServiceConfig {
                 objectMapper,
                 retryTemplate,
                 executor);
+    }
+    
+    @Bean(name = "explorationReceiveJournalScanService")
+    public ReceiveJournalScanService receiveJournalScanService(
+            @Qualifier("explorationIdGenerator") IdGenerator idGenerator,
+            SaveOrUpdateBodyPort saveOrUpdateBodyPort,
+            SaveOrUpdateRingPort saveOrUpdateRingPort,
+            SaveOrUpdateStarPort saveOrUpdateStarPort,
+            SaveOrUpdateSystemPort saveOrUpdateSystemPort
+    ) {
+        return new ReceiveJournalScanService(
+                idGenerator,
+                saveOrUpdateBodyPort,
+                saveOrUpdateRingPort,
+                saveOrUpdateStarPort,
+                saveOrUpdateSystemPort);
     }
 
     @Bean(name = "explorationSystemCoordinateInterModuleCommunicationService")

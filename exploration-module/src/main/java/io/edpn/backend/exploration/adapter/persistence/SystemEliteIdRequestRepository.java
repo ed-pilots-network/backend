@@ -48,7 +48,7 @@ public class SystemEliteIdRequestRepository implements CreateIfNotExistsSystemEl
 
     @Override
     public Optional<SystemEliteIdRequest> load(SystemEliteIdRequest systemEliteIdRequest) {
-        return mybatisSystemEliteIdRequestRepository.find(systemEliteIdRequest.requestingModule(), systemEliteIdRequest.systemName())
+        return mybatisSystemEliteIdRequestRepository.find(systemEliteIdRequest.getRequestingModule(), systemEliteIdRequest.getSystemName())
                 .map(mybatisSystemEliteIdRequestEntityMapper::map);
     }
 }

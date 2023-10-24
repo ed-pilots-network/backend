@@ -14,4 +14,8 @@ public interface RingEntity {
     Long getOuterRadius();
     
     String getRingClass();
+    
+    BodyEntity getBodyEntity();
+    
+    StarEntity getStarEntity();
 }

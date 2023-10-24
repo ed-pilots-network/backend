@@ -1,0 +1,187 @@
+package io.edpn.backend.exploration.application.service;
+
+import io.edpn.backend.exploration.application.domain.Body;
+import io.edpn.backend.exploration.application.domain.Ring;
+import io.edpn.backend.exploration.application.domain.Star;
+import io.edpn.backend.exploration.application.domain.System;
+import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
+import io.edpn.backend.exploration.application.port.outgoing.body.SaveOrUpdateBodyPort;
+import io.edpn.backend.exploration.application.port.outgoing.ring.SaveOrUpdateRingPort;
+import io.edpn.backend.exploration.application.port.outgoing.star.SaveOrUpdateStarPort;
+import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.journal.ScanMessage;
+import io.edpn.backend.util.IdGenerator;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+@RequiredArgsConstructor
+@Slf4j
+
+//TODO: Break into async for system and ring loading
+//TODO: Fragment logic for readability
+public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<ScanMessage.V1> {
+    
+    private final IdGenerator idGenerator;
+    private final SaveOrUpdateBodyPort saveOrUpdateBodyPort;
+    private final SaveOrUpdateRingPort saveOrUpdateRingPort;
+    private final SaveOrUpdateStarPort saveOrUpdateStarPort;
+    private final SaveOrUpdateSystemPort saveOrUpdateSystemPort;
+    
+    @Override
+    public void receive(ScanMessage.V1 message) {
+        java.lang.System.out.println("Buggin? ");
+        long start = java.lang.System.nanoTime();
+        log.debug("DefaultReceiveJournalScanMessageUseCase.receive -> BodyMessage: {}", message);
+        
+        ScanMessage.V1.Payload payload = message.message();
+        
+        createOrUpdateFromPayload(payload);
+        
+        
+    }
+    private void createOrUpdateFromPayload(ScanMessage.V1.Payload payload) {
+        
+        if (isStarPayload(payload)) {
+            UUID starId = idGenerator.generateId();
+            
+            Star payloadStar = new Star(
+                    starId,
+                    payload.absoluteMagnitude(),
+                    payload.age(),
+                    payload.arrivalDistance(),
+                    payload.axialTilt(),
+                    payload.discovered(),
+                    payload.localID(),
+                    payload.luminosity(),
+                    payload.mapped(),
+                    payload.name(),
+                    payload.radius(),
+                    Optional.ofNullable(payload.rings())
+                            .orElse(new ArrayList<>())
+                            .stream()
+                            .map(messageRing ->
+                                    new Ring(
+                                            idGenerator.generateId(),
+                                            messageRing.innerRadius(),
+                                            messageRing.mass(),
+                                            messageRing.name(),
+                                            messageRing.outerRadius(),
+                                            messageRing.ringClass(),
+                                            null,
+                                            null))
+                            .toList(),
+                    payload.rotationPeriod(),
+                    payload.starType(),
+                    payload.stellarMass(),
+                    payload.subclass(),
+                    payload.surfaceTemperature(),
+                    saveOrUpdateSystemPort.saveOrUpdate(
+                            System.builder()
+                                    .id(idGenerator.generateId())
+                                    .name(payload.name())
+                                    .build()
+                    ),
+                    payload.systemAddress(),
+                    payload.horizons(),
+                    payload.odyssey(),
+                    null);
+            
+            for (Ring ring : payloadStar.getRings()) {
+                ring.setStar(payloadStar);
+                saveOrUpdateRingPort.saveOrUpdate(ring);
+            }
+            
+            saveOrUpdateStarPort.saveOrUpdate(payloadStar);
+        } else if (isBodyPayload(payload)) {
+            UUID bodyId = idGenerator.generateId();
+            
+            Body payloadBody = new Body(
+                    bodyId,
+                    payload.arrivalDistance(),
+                    payload.ascendingNode(),
+                    payload.atmosphere(),
+                    Optional.ofNullable(payload.atmosphereComposition())
+                            .orElse(new ArrayList<>())
+                            .stream()
+                            .collect(Collectors.toMap(ScanMessage.V1.Payload.AtmosphericPercentage::name,
+                                    ScanMessage.V1.Payload.AtmosphericPercentage::percent)),
+                    
+                    payload.axialTilt(),
+                    payload.bodyComposition(),
+                    payload.discovered(),
+                    payload.mapped(),
+                    payload.name(),
+                    payload.localID(),
+                    payload.eccentricity(),
+                    payload.landable(),
+                    payload.mass(),
+                    Optional.ofNullable(payload.materials())
+                            .orElse(new ArrayList<>())
+                            .stream()
+                            .collect(Collectors.toMap(ScanMessage.V1.Payload.MaterialsPercentage::name,
+                                    ScanMessage.V1.Payload.MaterialsPercentage::percent)),
+                    payload.meanAnomaly(),
+                    payload.orbitalInclination(),
+                    payload.orbitalPeriod(),
+                    //payload.parents(),
+                    null,
+                    payload.periapsis(),
+                    payload.planetClass(),
+                    payload.radius(),
+                    Optional.ofNullable(payload.rings())
+                            .orElse(new ArrayList<>())
+                            .stream()
+                            .map(messageRing ->
+                                    new Ring(
+                                            idGenerator.generateId(),
+                                            messageRing.innerRadius(),
+                                            messageRing.mass(),
+                                            messageRing.name(),
+                                            messageRing.outerRadius(),
+                                            messageRing.ringClass(),
+                                            null,
+                                            null))
+                            .toList(),
+                    payload.rotationPeriod(),
+                    payload.semiMajorAxis(),
+                    payload.surfaceGravity(),
+                    payload.surfacePressure(),
+                    payload.surfaceTemperature(),
+                    saveOrUpdateSystemPort.saveOrUpdate(
+                            System.builder()
+                                    .id(idGenerator.generateId())
+                                    .name(payload.name())
+                                    .build()
+                    ),
+                    payload.systemAddress(),
+                    payload.terraformState(),
+                    payload.tidalLock(),
+                    payload.volcanism(),
+                    payload.horizons(),
+                    payload.odyssey(),
+                    null
+            );
+            
+            for (Ring ring : payloadBody.getRings()) {
+                ring.setBody(payloadBody);
+                saveOrUpdateRingPort.saveOrUpdate(ring);
+            }
+            
+            saveOrUpdateBodyPort.saveOrUpdate(payloadBody);
+        }
+    }
+    
+    private boolean isStarPayload(ScanMessage.V1.Payload payload) {
+        return payload.stellarMass() != null;
+    }
+    
+    private boolean isBodyPayload(ScanMessage.V1.Payload payload) {
+        return payload.planetClass() != null;
+    }
+    
+}

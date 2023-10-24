@@ -12,8 +12,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MybatisBodyEntityMapper implements BodyEntityMapper<MybatisBodyEntity> {
     
-    MybatisRingEntityMapper ringEntityMapper;
-    MybatisSystemEntityMapper systemEntityMapper;
+    private final MybatisRingEntityMapper ringEntityMapper;
+    private final MybatisSystemEntityMapper systemEntityMapper;
     
     @Override
     public Body map(BodyEntity bodyEntity) {
@@ -42,7 +42,7 @@ public class MybatisBodyEntityMapper implements BodyEntityMapper<MybatisBodyEnti
                 bodyEntity.getRadius(),
                 Optional.ofNullable(bodyEntity.getRings())
                         .orElse(new ArrayList<>())
-                        .stream().map(ring -> ringEntityMapper.map(ring))
+                        .stream().map(ringEntityMapper::map)
                         .toList(),
                 bodyEntity.getRotationPeriod(),
                 bodyEntity.getSemiMajorAxis(),
@@ -50,7 +50,7 @@ public class MybatisBodyEntityMapper implements BodyEntityMapper<MybatisBodyEnti
                 bodyEntity.getSurfacePressure(),
                 bodyEntity.getSurfaceTemperature(),
                 Optional.ofNullable(bodyEntity.getSystem())
-                        .map(systemEntity -> systemEntityMapper.map(systemEntity))
+                        .map(systemEntityMapper::map)
                         .orElse(null),
                 bodyEntity.getSystemAddress(),
                 bodyEntity.getTerraformState(),
@@ -90,7 +90,7 @@ public class MybatisBodyEntityMapper implements BodyEntityMapper<MybatisBodyEnti
                 .rings(Optional.ofNullable(body.getRings())
                         .orElse(new ArrayList<>())
                         .stream()
-                        .map(ring -> ringEntityMapper.map(ring))
+                        .map(ringEntityMapper::map)
                         .toList())
                 .rotationPeriod(body.getRotationPeriod())
                 .semiMajorAxis(body.getSemiMajorAxis())
@@ -98,7 +98,7 @@ public class MybatisBodyEntityMapper implements BodyEntityMapper<MybatisBodyEnti
                 .surfacePressure(body.getSurfacePressure())
                 .surfaceTemperature(body.getSurfaceTemperature())
                 .system(Optional.ofNullable(body.getSystem())
-                        .map(system -> systemEntityMapper.map(system))
+                        .map(systemEntityMapper::map)
                         .orElse(null))
                 .systemAddress(body.getSystemAddress())
                 .terraformState(body.getTerraformState())
