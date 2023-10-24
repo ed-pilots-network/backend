@@ -4,8 +4,8 @@ package io.edpn.backend.exploration.adapter.persistence;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisBodyEntity;
 import io.edpn.backend.exploration.application.domain.Body;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.BodyEntityMapper;
-import io.edpn.backend.exploration.application.port.body.LoadBodyPort;
-import io.edpn.backend.exploration.application.port.body.SaveOrUpdateBodyPort;
+import io.edpn.backend.exploration.application.port.outgoing.body.LoadBodyPort;
+import io.edpn.backend.exploration.application.port.outgoing.body.SaveOrUpdateBodyPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
