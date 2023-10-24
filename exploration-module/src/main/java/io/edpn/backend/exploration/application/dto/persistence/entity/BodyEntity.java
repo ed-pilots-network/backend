@@ -49,7 +49,7 @@ public interface BodyEntity {
     
     Double getRadius();
     
-    List<RingEntity> getRings();
+    List<? extends RingEntity> getRings();
     
     Double getRotationPeriod(); // seconds
     
