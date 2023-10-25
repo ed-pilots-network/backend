@@ -42,7 +42,7 @@ public class MybatisBodyEntityMapper implements BodyEntityMapper<MybatisBodyEnti
                 bodyEntity.getRadius(),
                 Optional.ofNullable(bodyEntity.getRings())
                         .orElse(new ArrayList<>())
-                        .stream().map(ringEntityMapper::map)
+                        .stream().map(ring -> ringEntityMapper.map(ring))
                         .toList(),
                 bodyEntity.getRotationPeriod(),
                 bodyEntity.getSemiMajorAxis(),
@@ -50,7 +50,7 @@ public class MybatisBodyEntityMapper implements BodyEntityMapper<MybatisBodyEnti
                 bodyEntity.getSurfacePressure(),
                 bodyEntity.getSurfaceTemperature(),
                 Optional.ofNullable(bodyEntity.getSystem())
-                        .map(systemEntityMapper::map)
+                        .map(systemEntity -> systemEntityMapper.map(systemEntity))
                         .orElse(null),
                 bodyEntity.getSystemAddress(),
                 bodyEntity.getTerraformState(),
@@ -98,7 +98,7 @@ public class MybatisBodyEntityMapper implements BodyEntityMapper<MybatisBodyEnti
                 .surfacePressure(body.getSurfacePressure())
                 .surfaceTemperature(body.getSurfaceTemperature())
                 .system(Optional.ofNullable(body.getSystem())
-                        .map(systemEntityMapper::map)
+                        .map(system -> systemEntityMapper.map(system))
                         .orElse(null))
                 .systemAddress(body.getSystemAddress())
                 .terraformState(body.getTerraformState())

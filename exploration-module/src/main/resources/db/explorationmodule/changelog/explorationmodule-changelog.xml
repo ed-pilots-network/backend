@@ -16,6 +16,9 @@
     <include file="db/explorationmodule/changelog/create_body_table.xml"/>
     <include file="db/explorationmodule/changelog/create_ring_table.xml"/>
     <include file="db/explorationmodule/changelog/create_star_table.xml"/>
+    <include file="db/explorationmodule/changelog/add_unique_body_constraint.xml"/>
+    <include file="db/explorationmodule/changelog/add_unique_ring_constraint.xml"/>
+    <include file="db/explorationmodule/changelog/add_unique_star_constraint.xml"/>
     <include file="db/explorationmodule/changelog/drop_system_coordinate_columns.xml"/>
 
     <!-- views always last as they might depend on new columns -->

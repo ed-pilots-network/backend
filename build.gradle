@@ -81,7 +81,7 @@ subprojects {
         springdocOpenapiVersion = '2.1.0'
         prometheusVersion = '1.11.1'
         backendUtilVersion = '0.0.3-SNAPSHOT'
-        backendMybatisUtilVersion = '0.0.1.8-SNAPSHOT'//TODO REMOVE DUBGGING VERSION AND BUMP
+        backendMybatisUtilVersion = '0.0.1.13-SNAPSHOT'//TODO REMOVE DUBGGING VERSION AND BUMP
         backendMessageProcessorLibVersion = '0.0.4.10-SNAPSHOT'//TODO REMOVE DUBGGING VERSION AND BUMP
         junitJupiterVersion = "5.9.3"
         mockitoVersion = "5.4.0"

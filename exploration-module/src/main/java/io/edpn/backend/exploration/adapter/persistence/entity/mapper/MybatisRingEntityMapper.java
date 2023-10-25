@@ -37,8 +37,8 @@ public class MybatisRingEntityMapper implements RingEntityMapper<MybatisRingEnti
                 .name(ring.getName())
                 .outerRadius(ring.getOuterRadius())
                 .ringClass(ring.getRingClass())
-                .bodyEntity(Optional.of(ring.getBody()).map(bodyEntityMapper::map).orElse(null))
-                .starEntity(Optional.of(ring.getStar()).map(starEntityMapper::map).orElse(null))
+                .bodyEntity(Optional.ofNullable(ring.getBody()).map(bodyEntityMapper::map).orElse(null))
+                .starEntity(Optional.ofNullable(ring.getStar()).map(starEntityMapper::map).orElse(null))
                 .build();
     }
 }

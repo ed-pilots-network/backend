@@ -22,8 +22,8 @@ public interface MybatisStarRepository {
             "VALUES (#{id}, #{absoluteMagnitude}, #{age}, #{arrivalDistance}, #{axialTilt}, #{discovered}, #{localId}, #{luminosity}, #{mapped}, " +
             "#{name}, #{radius}, #{rotationalPeriod}, #{starType}, #{stellarMass}, #{subclass}, #{surfaceTemperature}, #{system.id}, #{systemAddress}" +
             ", #{horizons}, #{odyssey})" +
-            "ON CONFLICT (name)" +
-            "DO UPDATE SET" +
+            "ON CONFLICT (name, system_id)" +
+            "DO UPDATE SET " +
             "absolute_magnitude = COALESCE(star.absolute_magnitude, EXCLUDED.absolute_magnitude)," +
             "age = COALESCE(star.age, EXCLUDED.age)," +
             "arrival_distance = COALESCE(star.arrival_distance, EXCLUDED.arrival_distance)," +
@@ -38,10 +38,10 @@ public interface MybatisStarRepository {
             "stellar_mass = COALESCE(star.stellar_mass, EXCLUDED.stellar_mass)," +
             "subclass = COALESCE(star.subclass, EXCLUDED.subclass)," +
             "surface_temperature = COALESCE(star.surface_temperature, EXCLUDED.surface_temperature)," +
-            "system = COALESCE(star.system, EXCLUDED.system)," +
+            "system_id = COALESCE(star.system_id, EXCLUDED.system_id)," +
             "system_address = COALESCE(star.system_address, EXCLUDED.system_address)," +
             "horizons = COALESCE(star.horizons, EXCLUDED.horizons)," +
-            "odyssey = COALESCE(star.odyssey, EXCLUDED.odyssey)," +
+            "odyssey = COALESCE(star.odyssey, EXCLUDED.odyssey) " +
             "RETURNING *"
     })
     @ResultMap("starResultMap")
@@ -65,7 +65,7 @@ public interface MybatisStarRepository {
             @Result(property = "name", column = "name", javaType = String.class),
             @Result(property = "radius", column = "radius", javaType = Double.class),
             @Result(property = "rings", column = "id", javaType = MybatisRingEntity.class,
-                    many = @Many(select = "io.edpn.backend.exploration.adapter.persistence.MybatisRingRepository.findRingsFromStarId")),
+                    many = @Many(select = "io.edpn.backend.exploration.adapter.persistence.MybatisRingRepository.findRingsByStarId")),
             @Result(property = "rotationalPeriod", column = "rotational_period", javaType = Double.class),
             @Result(property = "starType", column = "star_type", javaType = String.class),
             @Result(property = "stellarMass", column = "stellar_mass", javaType = Long.class),

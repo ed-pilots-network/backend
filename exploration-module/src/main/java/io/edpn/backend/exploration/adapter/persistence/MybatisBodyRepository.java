@@ -28,8 +28,8 @@ public interface MybatisBodyRepository {
                     "#{orbitalInclination}, #{orbitalPeriod}, #{periapsis}, #{planetClass}, #{radius}, #{rotationPeriod}," +
                     "#{semiMajorAxis}, #{surfaceGravity}, #{surfacePressure}, #{surfaceTemperature}, #{system.id}, #{systemAddress}," +
                     "#{terraformState}, #{tidalLock}, #{volcanism}, #{horizons}, #{odyssey}) ",
-            "ON CONFLICT (name)" +
-            "DO UPDATE SET" +
+            "ON CONFLICT (name, system_id) " +
+            "DO UPDATE SET " +
             "arrival_distance = COALESCE(body.arrival_distance, EXCLUDED.arrival_distance)," +
             "ascending_node = COALESCE(body.ascending_node, EXCLUDED.ascending_node)," +
             "atmosphere = COALESCE(body.atmosphere, EXCLUDED.atmosphere)," +
@@ -59,8 +59,8 @@ public interface MybatisBodyRepository {
             "terraform_state = COALESCE(body.terraform_state, EXCLUDED.terraform_state)," +
             "tidal_lock = COALESCE(body.tidal_lock, EXCLUDED.tidal_lock)," +
             "volcanism = COALESCE(body.volcanism, EXCLUDED.volcanism)," +
-            "horizon = COALESCE(body.horizon, EXCLUDED.horizon)," +
-            "odyssey = COALESCE(body.odyssey, EXCLUDED.odyssey)," +
+            "horizons = COALESCE(body.horizons, EXCLUDED.horizons)," +
+            "odyssey = COALESCE(body.odyssey, EXCLUDED.odyssey) " +
             "RETURNING *"
     })
     @ResultMap("bodyResultMap")
@@ -94,7 +94,7 @@ public interface MybatisBodyRepository {
             @Result(property = "planetClass", column = "planet_class", javaType = String.class),
             @Result(property = "radius", column = "radius", javaType = Double.class),
             @Result(property = "rings", column = "id", javaType = MybatisRingEntity.class,
-                    many = @Many(select = "io.edpn.backend.exploration.adapter.persistence.MybatisRingRepository.findRingsFromBodyId")), //TODO
+                    many = @Many(select = "io.edpn.backend.exploration.adapter.persistence.MybatisRingRepository.findRingsByBodyId")), //TODO
             @Result(property = "rotationPeriod", column = "rotation_period", javaType = Double.class),
             @Result(property = "semiMajorAxis", column = "semi_major_axis", javaType = Double.class),
             @Result(property = "surfaceGravity", column = "surface_gravity", javaType = Double.class),
