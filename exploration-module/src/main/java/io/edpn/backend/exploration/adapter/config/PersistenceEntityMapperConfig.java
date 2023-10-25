@@ -29,8 +29,8 @@ public class PersistenceEntityMapperConfig {
     }
     
     @Bean(name = "explorationRingEntityMapper")
-    public MybatisRingEntityMapper ringEntityMapper(MybatisBodyEntityMapper mybatisBodyEntityMapper, MybatisStarEntityMapper mybatisStarEntityMapper){
-        return new MybatisRingEntityMapper(mybatisBodyEntityMapper, mybatisStarEntityMapper);
+    public MybatisRingEntityMapper ringEntityMapper(){
+        return new MybatisRingEntityMapper();
     }
     
     @Bean(name = "explorationBodyEntityMapper")

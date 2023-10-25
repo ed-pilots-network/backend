@@ -1,5 +1,7 @@
 package io.edpn.backend.exploration.application.dto.web.object;
 
+import java.util.UUID;
+
 public interface RingDto{
     Long getInnerRadius();
     
@@ -11,7 +13,7 @@ public interface RingDto{
     
     String getRingClass();
     
-    BodyDto getBodyDto();
+    UUID getBodyId();
     
-    StarDto getStarDto();
+    UUID getStarId();
 }

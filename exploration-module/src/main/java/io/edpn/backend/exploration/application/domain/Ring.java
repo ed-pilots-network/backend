@@ -20,6 +20,6 @@ public class Ring{
     private String name;
     private Long outerRadius;
     private String ringClass;
-    private Body body;
-    private Star star;
+    private UUID bodyId;
+    private UUID starId;
 }

@@ -13,6 +13,7 @@ import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -93,7 +94,7 @@ public interface MybatisBodyRepository {
             @Result(property = "periapsis", column = "periapsis", javaType = Double.class),
             @Result(property = "planetClass", column = "planet_class", javaType = String.class),
             @Result(property = "radius", column = "radius", javaType = Double.class),
-            @Result(property = "rings", column = "id", javaType = MybatisRingEntity.class,
+            @Result(property = "rings", column = "id", javaType = List.class,
                     many = @Many(select = "io.edpn.backend.exploration.adapter.persistence.MybatisRingRepository.findRingsByBodyId")), //TODO
             @Result(property = "rotationPeriod", column = "rotation_period", javaType = Double.class),
             @Result(property = "semiMajorAxis", column = "semi_major_axis", javaType = Double.class),

@@ -25,6 +25,6 @@ public class MybatisRingEntity implements RingEntity {
     private String name;
     private Long outerRadius;
     private String ringClass;
-    private MybatisBodyEntity bodyEntity;
-    private MybatisStarEntity starEntity;
+    private UUID bodyId;
+    private UUID starId;
 }

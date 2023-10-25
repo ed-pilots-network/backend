@@ -15,7 +15,7 @@ public interface RingEntity {
     
     String getRingClass();
     
-    BodyEntity getBodyEntity();
+    UUID getBodyId();
     
-    StarEntity getStarEntity();
+    UUID getStarId();
 }

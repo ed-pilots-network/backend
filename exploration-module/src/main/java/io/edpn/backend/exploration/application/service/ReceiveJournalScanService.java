@@ -13,6 +13,7 @@ import io.edpn.backend.messageprocessorlib.application.dto.eddn.journal.ScanMess
 import io.edpn.backend.util.IdGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 //TODO: Break into async for system and ring loading
 //TODO: Fragment logic for readability
+//TODO: Need transactional annotations to account for cross insert
 public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<ScanMessage.V1> {
     
     private final IdGenerator idGenerator;
@@ -32,6 +34,7 @@ public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<Sca
     private final SaveOrUpdateStarPort saveOrUpdateStarPort;
     private final SaveOrUpdateSystemPort saveOrUpdateSystemPort;
     
+    @Transactional
     @Override
     public void receive(ScanMessage.V1 message) {
         java.lang.System.out.println("Buggin? ");
@@ -44,6 +47,8 @@ public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<Sca
         
         
     }
+    
+    
     private void createOrUpdateFromPayload(ScanMessage.V1.Payload payload) {
         
         if (isStarPayload(payload)) {
@@ -73,7 +78,7 @@ public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<Sca
                                             messageRing.outerRadius(),
                                             messageRing.ringClass(),
                                             null,
-                                            null))
+                                            starId))
                             .toList(),
                     payload.rotationPeriod(),
                     payload.starType(),
@@ -92,7 +97,6 @@ public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<Sca
                     null);
             
             for (Ring ring : payloadStar.getRings()) {
-                ring.setStar(payloadStar);
                 saveOrUpdateRingPort.saveOrUpdate(ring);
             }
             
@@ -144,7 +148,7 @@ public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<Sca
                                             messageRing.name(),
                                             messageRing.outerRadius(),
                                             messageRing.ringClass(),
-                                            null,
+                                            bodyId,
                                             null))
                             .toList(),
                     payload.rotationPeriod(),
@@ -168,7 +172,6 @@ public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<Sca
             );
             
             for (Ring ring : payloadBody.getRings()) {
-                ring.setBody(payloadBody);
                 saveOrUpdateRingPort.saveOrUpdate(ring);
             }
             

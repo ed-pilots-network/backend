@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -64,7 +65,7 @@ public interface MybatisStarRepository {
             @Result(property = "mapped", column = "mapped", javaType = Boolean.class),
             @Result(property = "name", column = "name", javaType = String.class),
             @Result(property = "radius", column = "radius", javaType = Double.class),
-            @Result(property = "rings", column = "id", javaType = MybatisRingEntity.class,
+            @Result(property = "rings", column = "id", javaType = List.class,
                     many = @Many(select = "io.edpn.backend.exploration.adapter.persistence.MybatisRingRepository.findRingsByStarId")),
             @Result(property = "rotationalPeriod", column = "rotational_period", javaType = Double.class),
             @Result(property = "starType", column = "star_type", javaType = String.class),

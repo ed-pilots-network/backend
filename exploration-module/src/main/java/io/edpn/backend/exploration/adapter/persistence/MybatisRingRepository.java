@@ -1,10 +1,7 @@
 package io.edpn.backend.exploration.adapter.persistence;
 
-import io.edpn.backend.exploration.adapter.persistence.entity.MybatisBodyEntity;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisRingEntity;
-import io.edpn.backend.exploration.adapter.persistence.entity.MybatisStarEntity;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.One;
+import io.edpn.backend.mybatisutil.UuidTypeHandler;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
@@ -15,8 +12,8 @@ import java.util.UUID;
 
 public interface MybatisRingRepository {
     
-    @Insert({"INSERT INTO ring (id, inner_radius, mass, name, outer_radius, ring_class, body_id, star_id) " +
-            "VALUES (#{id}, #{innerRadius}, #{mass}, #{name}, #{outerRadius}, #{ringClass}, #{bodyEntity.id}, #{starEntity.id}) " +
+    @Select({"INSERT INTO ring (id, inner_radius, mass, name, outer_radius, ring_class, body_id, star_id) " +
+            "VALUES (#{id}, #{innerRadius}, #{mass}, #{name}, #{outerRadius}, #{ringClass}, #{bodyId}, #{starId}) " +
             "ON CONFLICT (name, body_id, star_id) " +
             "DO UPDATE SET " +
             "inner_radius = COALESCE(ring.inner_radius, EXCLUDED.inner_radius)," +
@@ -37,10 +34,8 @@ public interface MybatisRingRepository {
             @Result(property = "name", column = "name", javaType = String.class),
             @Result(property = "outerRadius", column = "outer_radius", javaType = Long.class),
             @Result(property = "ringClass", column = "ring_class", javaType = String.class),
-            @Result(property = "bodyEntity", column = "body_id", javaType = MybatisBodyEntity.class,
-                    one = @One(select = "io.edpn.backend.exploration.adapter.persistence.MybatisBodyRepository.findById")),
-            @Result(property = "starEntity", column = "star_id", javaType = MybatisStarEntity.class,
-                    one = @One(select = "io.edpn.backend.exploration.adapter.persistence.MybatisStarRepository.findById")),
+            @Result(property = "bodyId", column = "body_id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
+            @Result(property = "starId", column = "star_id", javaType = UUID.class, typeHandler = UuidTypeHandler.class)
     })
     List<MybatisRingEntity> findRingsByBodyId(UUID id);
     
