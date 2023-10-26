@@ -94,7 +94,7 @@ class ReceiveNavRouteServiceTest {
         Module module = mock(Module.class);
         when(module.getName()).thenReturn("module");
         System system = mock(System.class);
-        when(system.name()).thenReturn(systemName);
+        when(system.getName()).thenReturn(systemName);
         NavRouteMessage.V1.Item item = mock(NavRouteMessage.V1.Item.class);
         NavRouteMessage.V1 message = mock(NavRouteMessage.V1.class);
         NavRouteMessage.V1.Payload payload = mock(NavRouteMessage.V1.Payload.class);
@@ -105,20 +105,20 @@ class ReceiveNavRouteServiceTest {
         when(item.starClass()).thenReturn(starClass);
         when(item.starPos()).thenReturn(new Double[]{xCoord, yCoord, zCoord});
         when(saveOrUpdateSystemPort.saveOrUpdate(argThat(argument ->
-                argument.id().equals(java.util.UUID.fromString(UUID)) &&
-                        argument.eliteId().equals(systemEliteId) &&
-                        argument.name().equals(systemName) &&
-                        argument.starClass().equals(starClass) &&
-                        argument.coordinate().x().equals(xCoord) &&
-                        argument.coordinate().y().equals(yCoord) &&
-                        argument.coordinate().z().equals(zCoord)
+                argument.getId().equals(java.util.UUID.fromString(UUID)) &&
+                        argument.getEliteId().equals(systemEliteId) &&
+                        argument.getName().equals(systemName) &&
+                        argument.getStarClass().equals(starClass) &&
+                        argument.getCoordinate().getX().equals(xCoord) &&
+                        argument.getCoordinate().getY().equals(yCoord) &&
+                        argument.getCoordinate().getZ().equals(zCoord)
         ))).thenReturn(system);
         SystemCoordinateRequest systemCoordinatesRequest = mock(SystemCoordinateRequest.class);
-        when(systemCoordinatesRequest.requestingModule()).thenReturn(module);
+        when(systemCoordinatesRequest.getRequestingModule()).thenReturn(module);
         List<SystemCoordinateRequest> systemCoordinatesRequestlist = List.of(systemCoordinatesRequest);
         when(loadSystemCoordinateRequestBySystemNamePort.loadByName(systemName)).thenReturn(systemCoordinatesRequestlist);
         SystemEliteIdRequest systemEliteIdRequest = mock(SystemEliteIdRequest.class);
-        when(systemEliteIdRequest.requestingModule()).thenReturn(module);
+        when(systemEliteIdRequest.getRequestingModule()).thenReturn(module);
         List<SystemEliteIdRequest> systemEliteIdRequestlist = List.of(systemEliteIdRequest);
         when(loadSystemEliteIdRequestBySystemNamePort.loadByName(systemName)).thenReturn(systemEliteIdRequestlist);
         SystemCoordinatesResponse systemCoordinatesResponse = mock(SystemCoordinatesResponse.class);
@@ -157,7 +157,7 @@ class ReceiveNavRouteServiceTest {
         double yCoord = 2.0;
         double zCoord = 3.0;
         System system = mock(System.class);
-        when(system.name()).thenReturn(systemName);
+        when(system.getName()).thenReturn(systemName);
         NavRouteMessage.V1.Item item = mock(NavRouteMessage.V1.Item.class);
         NavRouteMessage.V1 message = mock(NavRouteMessage.V1.class);
         NavRouteMessage.V1.Payload payload = mock(NavRouteMessage.V1.Payload.class);
@@ -168,13 +168,13 @@ class ReceiveNavRouteServiceTest {
         when(item.starClass()).thenReturn(starClass);
         when(item.starPos()).thenReturn(new Double[]{xCoord, yCoord, zCoord});
         when(saveOrUpdateSystemPort.saveOrUpdate(argThat(argument ->
-                argument.id().equals(java.util.UUID.fromString(UUID)) &&
-                        argument.eliteId().equals(systemEliteId) &&
-                        argument.name().equals(systemName) &&
-                        argument.starClass().equals(starClass) &&
-                        argument.coordinate().x().equals(xCoord) &&
-                        argument.coordinate().y().equals(yCoord) &&
-                        argument.coordinate().z().equals(zCoord)
+                argument.getId().equals(java.util.UUID.fromString(UUID)) &&
+                        argument.getEliteId().equals(systemEliteId) &&
+                        argument.getName().equals(systemName) &&
+                        argument.getStarClass().equals(starClass) &&
+                        argument.getCoordinate().getX().equals(xCoord) &&
+                        argument.getCoordinate().getY().equals(yCoord) &&
+                        argument.getCoordinate().getZ().equals(zCoord)
         ))).thenReturn(system);
         SystemCoordinateRequest systemCoordinatesRequest = mock(SystemCoordinateRequest.class);
         List<SystemCoordinateRequest> systemCoordinatesRequestlist = List.of(systemCoordinatesRequest);
@@ -206,7 +206,7 @@ class ReceiveNavRouteServiceTest {
         double yCoord = 2.0;
         double zCoord = 3.0;
         System system = mock(System.class);
-        when(system.name()).thenReturn(systemName);
+        when(system.getName()).thenReturn(systemName);
         NavRouteMessage.V1.Item item = mock(NavRouteMessage.V1.Item.class);
         NavRouteMessage.V1 message = mock(NavRouteMessage.V1.class);
         NavRouteMessage.V1.Payload payload = mock(NavRouteMessage.V1.Payload.class);
@@ -217,13 +217,13 @@ class ReceiveNavRouteServiceTest {
         when(item.starClass()).thenReturn(starClass);
         when(item.starPos()).thenReturn(new Double[]{xCoord, yCoord, zCoord});
         when(saveOrUpdateSystemPort.saveOrUpdate(argThat(argument ->
-                argument.id().equals(java.util.UUID.fromString(UUID)) &&
-                        argument.eliteId().equals(systemEliteId) &&
-                        argument.name().equals(systemName) &&
-                        argument.starClass().equals(starClass) &&
-                        argument.coordinate().x().equals(xCoord) &&
-                        argument.coordinate().y().equals(yCoord) &&
-                        argument.coordinate().z().equals(zCoord)
+                argument.getId().equals(java.util.UUID.fromString(UUID)) &&
+                        argument.getEliteId().equals(systemEliteId) &&
+                        argument.getName().equals(systemName) &&
+                        argument.getStarClass().equals(starClass) &&
+                        argument.getCoordinate().getX().equals(xCoord) &&
+                        argument.getCoordinate().getY().equals(yCoord) &&
+                        argument.getCoordinate().getZ().equals(zCoord)
         ))).thenReturn(system);
         when(loadSystemCoordinateRequestBySystemNamePort.loadByName(systemName)).thenReturn(Collections.emptyList());
         when(loadSystemEliteIdRequestBySystemNamePort.loadByName(systemName)).thenReturn(Collections.emptyList());

@@ -41,9 +41,9 @@ public class LoadSystemCoordinateRequestPortTest {
     @Test
     void create_shouldMapAndInsert() {
         SystemCoordinateRequest request = mock(SystemCoordinateRequest.class);
-        when(request.systemName()).thenReturn("system");
+        when(request.getSystemName()).thenReturn("system");
         Module module = Module.TRADE;
-        when(request.requestingModule()).thenReturn(module);
+        when(request.getRequestingModule()).thenReturn(module);
         MybatisSystemCoordinateRequestEntity entity = mock(MybatisSystemCoordinateRequestEntity.class);
         when(mybatisSystemCoordinateRequestRepository.find(module, "system")).thenReturn(Optional.of(entity));
         when(mybatisSystemCoordinateRequestEntityMapper.map(entity)).thenReturn(request);

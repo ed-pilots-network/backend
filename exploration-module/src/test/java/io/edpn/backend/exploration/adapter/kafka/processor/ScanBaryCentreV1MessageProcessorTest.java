@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.ScanBaryCentreMessage;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.journal.ScanMessage;
 import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.MessageProcessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,31 +22,31 @@ import static org.mockito.Mockito.verify;
 class ScanBaryCentreV1MessageProcessorTest {
 
     @Mock
-    private ReceiveKafkaMessageUseCase<ScanBaryCentreMessage.V1> receiveKafkaMessageUseCase;
+    private ReceiveKafkaMessageUseCase<ScanMessage.V1> receiveKafkaMessageUseCase;
 
     @Mock
     private ObjectMapper objectMapper;
 
-    private MessageProcessor<ScanBaryCentreMessage.V1> underTest;
+    private MessageProcessor<ScanMessage.V1> underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new ScanBaryCentreV1MessageProcessor(receiveKafkaMessageUseCase, objectMapper);
+        underTest = new JournalScanV1MessageProcessor(receiveKafkaMessageUseCase, objectMapper);
     }
 
     @Test
     void listen_shouldInvokeUseCaseWithCorrectScanBaryCentreMessage() throws JsonProcessingException {
 
         JsonNode jsonNode = mock(JsonNode.class);
-        ScanBaryCentreMessage.V1 scanBaryCentreMessage = mock(ScanBaryCentreMessage.V1.class);
+        ScanMessage.V1 journalScanMessage = mock(ScanMessage.V1.class);
 
-        Mockito.when(objectMapper.treeToValue(jsonNode, ScanBaryCentreMessage.V1.class)).thenReturn(scanBaryCentreMessage);
+        Mockito.when(objectMapper.treeToValue(jsonNode, ScanMessage.V1.class)).thenReturn(journalScanMessage);
 
 
         underTest.listen(jsonNode);
 
 
-        verify(receiveKafkaMessageUseCase, times(1)).receive(any(ScanBaryCentreMessage.V1.class));
+        verify(receiveKafkaMessageUseCase, times(1)).receive(any(ScanMessage.V1.class));
     }
 
 }

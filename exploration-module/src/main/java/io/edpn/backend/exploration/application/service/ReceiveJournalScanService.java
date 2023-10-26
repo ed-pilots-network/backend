@@ -22,10 +22,6 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
-
-//TODO: Break into async for system and ring loading
-//TODO: Fragment logic for readability
-//TODO: Need transactional annotations to account for cross insert
 public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<ScanMessage.V1> {
     
     private final IdGenerator idGenerator;
@@ -37,7 +33,6 @@ public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<Sca
     @Transactional
     @Override
     public void receive(ScanMessage.V1 message) {
-        java.lang.System.out.println("Buggin? ");
         long start = java.lang.System.nanoTime();
         log.debug("DefaultReceiveJournalScanMessageUseCase.receive -> BodyMessage: {}", message);
         
@@ -45,7 +40,8 @@ public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<Sca
         
         createOrUpdateFromPayload(payload);
         
-        
+        log.trace("DefaultReceiveJournalScanMessageUseCase.receive -> took {} nanosecond", java.lang.System.nanoTime() - start);
+        log.info("DefaultReceiveJournalScanMessageUseCase.receive -> the message has been processed");
     }
     
     

@@ -30,8 +30,8 @@ class MybatisMybatisSystemEliteIdRequestEntityMapperTest {
         SystemEliteIdRequest result = underTest.map(dto);
 
 
-        assertThat(result.systemName(), equalTo(dto.getSystemName()));
-        assertThat(result.requestingModule(), equalTo(dto.getRequestingModule()));
+        assertThat(result.getSystemName(), equalTo(dto.getSystemName()));
+        assertThat(result.getRequestingModule(), equalTo(dto.getRequestingModule()));
     }
 
     @Test
@@ -43,7 +43,7 @@ class MybatisMybatisSystemEliteIdRequestEntityMapperTest {
         SystemEliteIdRequestEntity result = underTest.map(domainObject);
 
 
-        assertThat(result.getSystemName(), equalTo(domainObject.systemName()));
-        assertThat(result.getRequestingModule(), equalTo(domainObject.requestingModule()));
+        assertThat(result.getSystemName(), equalTo(domainObject.getSystemName()));
+        assertThat(result.getRequestingModule(), equalTo(domainObject.getRequestingModule()));
     }
 }

@@ -1,9 +1,13 @@
 package io.edpn.backend.exploration.adapter.persistence.entity.mapper;
 
+import io.edpn.backend.exploration.adapter.persistence.entity.MybatisRingEntity;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisStarEntity;
+import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.exploration.application.domain.Star;
 import io.edpn.backend.exploration.application.dto.persistence.entity.StarEntity;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.RingEntityMapper;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.StarEntityMapper;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEntityMapper;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
@@ -12,8 +16,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MybatisStarEntityMapper implements StarEntityMapper<MybatisStarEntity> {
     
-    private final MybatisRingEntityMapper ringEntityMapper;
-    private final MybatisSystemEntityMapper systemEntityMapper;
+    private final RingEntityMapper<MybatisRingEntity> ringEntityMapper;
+    private final SystemEntityMapper<MybatisSystemEntity> systemEntityMapper;
     
     @Override
     public Star map(StarEntity starEntity) {

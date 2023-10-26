@@ -30,14 +30,14 @@ class MybatisMybatisSystemEntityMapperTest {
 
         System result = underTest.map(systemEntity);
 
-        assertThat(result.id(), equalTo(systemEntity.getId()));
-        assertThat(result.eliteId(), equalTo(systemEntity.getEliteId()));
-        assertThat(result.name(), equalTo(systemEntity.getName()));
-        assertThat(result.starClass(), equalTo(systemEntity.getStarClass()));
-        assertThat(result.coordinate(), notNullValue());
-        assertThat(result.coordinate().x(), equalTo(systemEntity.getXCoordinate()));
-        assertThat(result.coordinate().y(), equalTo(systemEntity.getYCoordinate()));
-        assertThat(result.coordinate().z(), equalTo(systemEntity.getZCoordinate()));
+        assertThat(result.getId(), equalTo(systemEntity.getId()));
+        assertThat(result.getEliteId(), equalTo(systemEntity.getEliteId()));
+        assertThat(result.getName(), equalTo(systemEntity.getName()));
+        assertThat(result.getStarClass(), equalTo(systemEntity.getStarClass()));
+        assertThat(result.getCoordinate(), notNullValue());
+        assertThat(result.getCoordinate().getX(), equalTo(systemEntity.getXCoordinate()));
+        assertThat(result.getCoordinate().getY(), equalTo(systemEntity.getYCoordinate()));
+        assertThat(result.getCoordinate().getZ(), equalTo(systemEntity.getZCoordinate()));
     }
 
     @Test
@@ -50,13 +50,13 @@ class MybatisMybatisSystemEntityMapperTest {
         SystemEntity result = underTest.map(system);
 
 
-        assertThat(result.getId(), equalTo(system.id()));
-        assertThat(result.getEliteId(), equalTo(system.eliteId()));
-        assertThat(result.getName(), equalTo(system.name()));
-        assertThat(result.getStarClass(), equalTo(system.starClass()));
-        assertThat(result.getXCoordinate(), equalTo(coordinate.x()));
-        assertThat(result.getYCoordinate(), equalTo(coordinate.y()));
-        assertThat(result.getZCoordinate(), equalTo(coordinate.z()));
+        assertThat(result.getId(), equalTo(system.getId()));
+        assertThat(result.getEliteId(), equalTo(system.getEliteId()));
+        assertThat(result.getName(), equalTo(system.getName()));
+        assertThat(result.getStarClass(), equalTo(system.getStarClass()));
+        assertThat(result.getXCoordinate(), equalTo(coordinate.getX()));
+        assertThat(result.getYCoordinate(), equalTo(coordinate.getY()));
+        assertThat(result.getZCoordinate(), equalTo(coordinate.getZ()));
     }
 
     @Test
@@ -68,10 +68,10 @@ class MybatisMybatisSystemEntityMapperTest {
         System result = underTest.map(systemEntity);
 
 
-        assertThat(result.coordinate(), notNullValue());
-        assertThat(result.coordinate().x(), nullValue());
-        assertThat(result.coordinate().y(), nullValue());
-        assertThat(result.coordinate().z(), nullValue());
+        assertThat(result.getCoordinate(), notNullValue());
+        assertThat(result.getCoordinate().getX(), nullValue());
+        assertThat(result.getCoordinate().getY(), nullValue());
+        assertThat(result.getCoordinate().getZ(), nullValue());
     }
 
     @Test
