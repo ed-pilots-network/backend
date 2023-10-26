@@ -44,3 +44,9 @@ extraJavaModuleInfo {
     automaticModule("simpleclient_tracer_otel_agent-0.16.0.jar","io.prometheus")
     automaticModule("simpleclient_tracer_common-0.16.0.jar","io.prometheus")
 }
+
+bootBuildImage {
+    environment = [
+            BP_JVM_VERSION: "21"
+    ]
+}
