@@ -46,7 +46,8 @@ public class MybatisBodyEntityMapper implements BodyEntityMapper<MybatisBodyEnti
                 bodyEntity.getRadius(),
                 Optional.ofNullable(bodyEntity.getRings())
                         .orElse(new ArrayList<>())
-                        .stream().map(ringEntityMapper::map)
+                        .stream()
+                        .map(ringEntityMapper::map)
                         .toList(),
                 bodyEntity.getRotationPeriod(),
                 bodyEntity.getSemiMajorAxis(),

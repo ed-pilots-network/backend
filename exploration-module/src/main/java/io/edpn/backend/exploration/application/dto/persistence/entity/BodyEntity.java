@@ -41,7 +41,7 @@ public interface BodyEntity {
     
     Double getOrbitalPeriod();
     
-    Map<String, Integer> getParents(); // ID's are system local
+    Map<Integer, String> getParents(); // ID's are system local
     
     Double getPeriapsis();
     

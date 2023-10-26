@@ -39,7 +39,7 @@ public class MybatisBodyEntity implements BodyEntity {
     private Double meanAnomaly;
     private Double orbitalInclination;
     private Double orbitalPeriod;
-    private Map<String, Integer> parents;
+    private Map<Integer, String> parents;
     private Double periapsis;
     private String planetClass;
     private Double radius;

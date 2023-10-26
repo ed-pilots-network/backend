@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -128,8 +129,11 @@ public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<Sca
                     payload.meanAnomaly(),
                     payload.orbitalInclination(),
                     payload.orbitalPeriod(),
-                    //payload.parents(),
-                    null,
+                    Optional.ofNullable(payload.parents())
+                            .orElse(new ArrayList<>())
+                            .stream()
+                            .flatMap(map -> map.entrySet().stream())
+                            .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey)),
                     payload.periapsis(),
                     payload.planetClass(),
                     payload.radius(),

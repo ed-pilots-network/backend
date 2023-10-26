@@ -35,7 +35,7 @@ public class Body {
     private Double meanAnomaly;
     private Double orbitalInclination;
     private Double orbitalPeriod;
-    private Map<String, Integer> parents; // ID's are system local
+    private Map<Integer, String> parents; // ID's are system local
     private Double periapsis;
     private String planetClass;
     private Double radius;
