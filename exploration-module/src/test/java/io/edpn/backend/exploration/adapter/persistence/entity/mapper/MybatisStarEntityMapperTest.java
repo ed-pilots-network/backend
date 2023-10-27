@@ -10,13 +10,16 @@ import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.Sta
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEntityMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
+@ExtendWith(MockitoExtension.class)
 class MybatisStarEntityMapperTest {
     
     private StarEntityMapper<MybatisStarEntity> underTest;
