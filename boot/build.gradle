@@ -46,6 +46,14 @@ extraJavaModuleInfo {
 }
 
 bootBuildImage {
+    buildpacks = [
+            "paketo-buildpacks/ca-certificates",
+            "gcr.io/paketo-buildpacks/amazon-corretto:latest",
+            "paketo-buildpacks/syft",
+            "paketo-buildpacks/executable-jar",
+            "paketo-buildpacks/dist-zip",
+            "paketo-buildpacks/spring-boot"
+    ]
     environment = [
             BP_JVM_VERSION: "21"
     ]
