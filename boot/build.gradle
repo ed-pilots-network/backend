@@ -47,7 +47,7 @@ extraJavaModuleInfo {
 
 bootBuildImage {
     builder = "paketobuildpacks/builder-jammy-base"
-       environment = [
+    environment = [
             BP_JVM_VERSION: "21"
     ]
 }
