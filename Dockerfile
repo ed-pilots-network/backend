@@ -1,5 +1,5 @@
 # The first stage of the Dockerfile executes the Gradle build
-FROM gradle:8.1.1-jdk17-alpine as builder
+FROM gradle:8.4-jdk21-alpine as builder
 
 # Copy your source code into the Docker image
 COPY --chown=gradle:gradle . /home/gradle/src
@@ -8,8 +8,8 @@ WORKDIR /home/gradle/src
 # Run the Gradle build
 RUN gradle clean bootJar --no-daemon
 
-# The second stage of the Dockerfile packages the application jar with OpenJDK JRE
-FROM openjdk:17-jdk-alpine
+# The second stage of the Dockerfile packages the application jar with Corretto jdk
+FROM amazoncorretto:21-alpine-jdk
 
 # Creating new nonroot user
 RUN adduser --disabled-password --gecos '' backend

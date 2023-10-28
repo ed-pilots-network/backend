@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'io.spring.dependency-management' version '1.1.0' apply false
+    id 'io.spring.dependency-management' version '1.1.3' apply false
     id 'org.javamodularity.moduleplugin' version '1.8.12' apply false
     id "org.gradlex.extra-java-module-info" version "1.4"
 }
@@ -23,8 +23,18 @@ repositories {
 
 allprojects {
     group = 'io.edpn.backend'
-    version = '0.0.3-SNAPSHOT'
+    version = '0.0.4-SNAPSHOT'
     compileJava.options.encoding = 'UTF-8'
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+
+        toolchain {
+            languageVersion=JavaLanguageVersion.of(21)
+            vendor=JvmVendorSpec.AMAZON
+        }
+    }
 }
 
 subprojects {
@@ -69,10 +79,10 @@ subprojects {
     }
 
     ext {
-        springBootVersion = '3.1.0'
+        springBootVersion = '3.1.5'
         springIntegrationHttpVersion = '6.1.0'
         jacksonVersion = '2.14.2'
-        lombokVersion = '1.18.28'
+        lombokVersion = '1.18.30'
         mybatisSpringBootVersion = '3.0.2'
         liquibaseVersion = '4.22.0'
         postgresqlVersion = '42.6.0'

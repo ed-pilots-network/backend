@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '3.1.0'
+    id 'org.springframework.boot' version '3.1.5'
 }
 
 repositories {
@@ -28,7 +28,7 @@ extraJavaModuleInfo {
     automaticModule("LatencyUtils-2.0.3.jar", "LatencyUtils")
     automaticModule("HdrHistogram-2.1.12.jar", "HdrHistogram")
     automaticModule("kafka-clients-3.3.2.jar", "kafka.clients")
-    automaticModule("spring-retry-2.0.2.jar","spring.retry")
+    automaticModule("spring-retry-2.0.4.jar","spring.retry")
     automaticModule("dependency-management-plugin-1.1.0.jar","dependency.management.plugin")
     automaticModule("tomlj-1.0.0.jar","tomlj")
     automaticModule("jsr305-3.0.2.jar","jsr305")
@@ -43,4 +43,11 @@ extraJavaModuleInfo {
     automaticModule("simpleclient_tracer_otel-0.16.0.jar","io.prometheus")
     automaticModule("simpleclient_tracer_otel_agent-0.16.0.jar","io.prometheus")
     automaticModule("simpleclient_tracer_common-0.16.0.jar","io.prometheus")
+}
+
+bootBuildImage {
+    builder = "paketobuildpacks/builder-jammy-base"
+    environment = [
+            BP_JVM_VERSION: "21"
+    ]
 }
