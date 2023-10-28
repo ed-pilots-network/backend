@@ -12,7 +12,7 @@ import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
-import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
+import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CleanUpObsoleteStationRequireOdysseyRequestsUseCase;
@@ -21,17 +21,19 @@ import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequ
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.ExistsStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.LoadAllStationRequireOdysseyRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.RequestMissingStationRequireOdysseyUseCase;
-import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
+import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
+import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Module;
 import io.edpn.backend.util.Topic;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -41,10 +43,11 @@ public class StationRequireOdysseyInterModuleCommunicationService implements Req
             .hasRequiredOdyssey(false)
             .build();
 
+    private final IdGenerator idGenerator;
     private final LoadStationsByFilterPort loadStationsByFilterPort;
     private final LoadAllStationRequireOdysseyRequestsPort loadAllStationRequireOdysseyRequestsPort;
-    private final LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
-    private final LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
+    private final CreateOrLoadSystemPort createOrLoadSystemPort;
+    private final CreateOrLoadStationPort createOrLoadStationPort;
     private final ExistsStationRequireOdysseyRequestPort existsStationRequireOdysseyRequestPort;
     private final CreateStationRequireOdysseyRequestPort createStationRequireOdysseyRequestPort;
     private final DeleteStationRequireOdysseyRequestPort deleteStationRequireOdysseyRequestPort;
@@ -126,17 +129,22 @@ public class StationRequireOdysseyInterModuleCommunicationService implements Req
         String stationName = message.stationName();
         boolean requireOdyssey = message.requireOdyssey();
 
-        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() -> loadOrCreateSystemByNamePort.loadOrCreateSystemByName(systemName));
-
-        // get station
-        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> loadOrCreateBySystemAndStationNamePort.loadOrCreateBySystemAndStationName(systemCompletableFuture.join(), stationName));
-        stationCompletableFuture.whenComplete((station, throwable) -> {
-            if (throwable != null) {
-                log.error("Exception occurred in retrieving station", throwable);
-            } else {
-                station.setRequireOdyssey(requireOdyssey);
-            }
-        });
+        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> createOrLoadSystemPort.createOrLoad(System.builder()
+                        .id(idGenerator.generateId())
+                        .name(systemName)
+                        .build()))
+                .thenCompose(loadedSystem -> CompletableFuture.supplyAsync(() -> createOrLoadStationPort.createOrLoad(Station.builder()
+                        .id(idGenerator.generateId())
+                        .system(loadedSystem)
+                        .name(stationName)
+                        .build())))
+                .whenComplete((station, throwable) -> {
+                    if (throwable != null) {
+                        log.error("Exception occurred in retrieving station", throwable);
+                    } else {
+                        station.setRequireOdyssey(requireOdyssey);
+                    }
+                });
 
         updateStationPort.update(stationCompletableFuture.join());
         deleteStationRequireOdysseyRequestPort.delete(systemName, stationName);

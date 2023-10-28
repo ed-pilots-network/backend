@@ -6,7 +6,7 @@ import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindSystemFilter;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
-import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
+import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CleanUpObsoleteSystemEliteIdRequestsUseCase;
@@ -17,6 +17,8 @@ import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.Load
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
+
+import io.edpn.backend.util.IdGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,11 +38,13 @@ import static org.mockito.Mockito.when;
 public class CleanUpObsoleteSystemEliteIdRequestsUseCaseTest {
 
     @Mock
+    private IdGenerator idGenerator;
+    @Mock
     private LoadSystemsByFilterPort loadSystemsByFilterPort;
     @Mock
     private LoadAllSystemEliteIdRequestsPort loadAllSystemEliteIdRequestsPort;
     @Mock
-    private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
+    private CreateOrLoadSystemPort createOrLoadSystemPort;
     @Mock
     private ExistsSystemEliteIdRequestPort existsSystemEliteIdRequestPort;
     @Mock
@@ -65,9 +69,10 @@ public class CleanUpObsoleteSystemEliteIdRequestsUseCaseTest {
     @BeforeEach
     public void setUp() {
         underTest = new SystemEliteIdInterModuleCommunicationService(
+                idGenerator,
                 loadSystemsByFilterPort,
                 loadAllSystemEliteIdRequestsPort,
-                loadOrCreateSystemByNamePort,
+                createOrLoadSystemPort,
                 existsSystemEliteIdRequestPort,
                 createSystemEliteIdRequestPort,
                 deleteSystemEliteIdRequestPort,

@@ -2,6 +2,7 @@ package io.edpn.backend.trade.adapter.config;
 
 import io.edpn.backend.trade.adapter.persistence.CommodityMarketInfoRepository;
 import io.edpn.backend.trade.adapter.persistence.CommodityRepository;
+import io.edpn.backend.trade.adapter.persistence.LatestMarketDatumRepository;
 import io.edpn.backend.trade.adapter.persistence.LocateCommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.MarketDatumRepository;
 import io.edpn.backend.trade.adapter.persistence.StationArrivalDistanceRequestRepository;
@@ -19,10 +20,12 @@ import io.edpn.backend.trade.adapter.persistence.entity.MybatisLocateCommodityEn
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisValidatedCommodityEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisMarketDatumEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceFindCommodityFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceLocateCommodityFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityMarketInfoRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisLatestMarketDatumRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisLocateCommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationArrivalDistanceRequestRepository;
@@ -44,8 +47,6 @@ import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemEnt
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.ValidatedCommodityEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindStationFilterMapper;
 import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindSystemFilterMapper;
-import io.edpn.backend.util.IdGenerator;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -61,10 +62,9 @@ public class RepositoryConfig {
 
     @Bean(name = "tradeCommodityRepository")
     public CommodityRepository commodityRepository(
-            @Qualifier("tradeIdGenerator") IdGenerator idGenerator,
             MybatisCommodityRepository mybatisCommodityRepository,
             CommodityEntityMapper<MybatisCommodityEntity> mybatisCommodityEntityMapper) {
-        return new CommodityRepository(idGenerator, mybatisCommodityEntityMapper, mybatisCommodityRepository);
+        return new CommodityRepository(mybatisCommodityEntityMapper, mybatisCommodityRepository);
     }
 
     @Bean(name = "tradeLocateCommodityRepository")
@@ -77,27 +77,32 @@ public class RepositoryConfig {
 
     @Bean(name = "tradeMarketDatumRepository")
     public MarketDatumRepository marketDatumRepository(
-            MybatisMarketDatumRepository mybatisMarketDatumRepository) {
-        return new MarketDatumRepository(mybatisMarketDatumRepository);
+            MybatisMarketDatumRepository mybatisMarketDatumRepository,
+            MybatisMarketDatumEntityMapper mybatisMarketDatumEntityMapper) {
+        return new MarketDatumRepository(mybatisMarketDatumRepository, mybatisMarketDatumEntityMapper);
+    }
+
+    @Bean(name = "tradeLatestMarketDatumRepository")
+    public LatestMarketDatumRepository latestMarketDatumRepository(
+            MybatisLatestMarketDatumRepository mybatisLatestMarketDatumRepository,
+            MybatisMarketDatumEntityMapper mybatisMarketDatumEntityMapper) {
+        return new LatestMarketDatumRepository(mybatisLatestMarketDatumRepository, mybatisMarketDatumEntityMapper);
     }
 
     @Bean(name = "tradeStationRepository")
     public StationRepository stationRepository(
-            @Qualifier("tradeIdGenerator") IdGenerator idGenerator,
             MybatisStationRepository mybatisStationRepository,
             StationEntityMapper<MybatisStationEntity> mybatisStationEntityMapper,
-            MybatisMarketDatumRepository mybatisMarketDatumRepository,
             PersistenceFindStationFilterMapper persistenceFindStationFilterMapper) {
-        return new StationRepository(idGenerator, mybatisStationEntityMapper, mybatisStationRepository, mybatisMarketDatumRepository, persistenceFindStationFilterMapper);
+        return new StationRepository(mybatisStationEntityMapper, mybatisStationRepository, persistenceFindStationFilterMapper);
     }
 
     @Bean(name = "tradeSystemRepository")
     public SystemRepository systemRepository(
-            @Qualifier("tradeIdGenerator") IdGenerator idGenerator,
             MybatisSystemRepository mybatisSystemRepository,
             PersistenceFindSystemFilterMapper mybatisPersistenceFindSystemFilterMapper,
             SystemEntityMapper<MybatisSystemEntity> mybatisSystemEntityMapper) {
-        return new SystemRepository(idGenerator, mybatisSystemEntityMapper, mybatisPersistenceFindSystemFilterMapper, mybatisSystemRepository);
+        return new SystemRepository(mybatisSystemEntityMapper, mybatisPersistenceFindSystemFilterMapper, mybatisSystemRepository);
     }
 
     @Bean(name = "tradeValidatedCommodityRepository")

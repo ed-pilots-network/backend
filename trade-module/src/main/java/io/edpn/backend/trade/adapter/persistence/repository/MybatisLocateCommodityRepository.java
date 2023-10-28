@@ -14,12 +14,11 @@ import java.util.List;
 
 public interface MybatisLocateCommodityRepository {
     
-    //TODO: update order by distance function for postgis
     @Select("""
             <script>
             SELECT
             timestamp, commodity_id, station_id, system_id, stock, demand, buy_price, sell_price,
-            sqrt(pow(#{xCoordinate} - x_coordinate, 2) + pow(#{yCoordinate} - y_coordinate, 2) + pow(#{zCoordinate} - z_coordinate, 2)) as distance,
+            ST_3DDistance(coordinates_geom, ST_MakePoint(#{xCoordinate}, #{yCoordinate}, #{zCoordinate})) as distance,
             planetary,
             require_odyssey,
             fleet_carrier

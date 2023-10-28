@@ -50,7 +50,7 @@ public class LoadStationByIdPortTest {
 
     @BeforeEach
     public void setUp() {
-        underTest = new StationRepository(idGenerator, mybatisStationEntityMapper, mybatisStationRepository, mybatisMarketDatumRepository, persistenceFindStationFilterMapper);
+        underTest = new StationRepository(mybatisStationEntityMapper, mybatisStationRepository, persistenceFindStationFilterMapper);
     }
 
     @Test

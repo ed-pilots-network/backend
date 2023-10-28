@@ -3,7 +3,6 @@ package io.edpn.backend.exploration.adapter.persistence;
 
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.mybatisutil.UuidTypeHandler;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
@@ -16,22 +15,23 @@ import java.util.UUID;
 
 public interface MybatisSystemRepository {
 
-    @Select({"INSERT INTO system (id, name, star_class, elite_id, x_coordinate, y_coordinate, z_coordinate)",
-            "VALUES (#{id}, #{name}, #{starClass}, #{eliteId}, #{xCoordinate}, #{yCoordinate}, #{zCoordinate})",
+    @Select({"INSERT INTO system (id, name, star_class, elite_id, coordinates_geom)",
+            "VALUES (#{id}, #{name}, #{starClass}, #{eliteId}, ST_MakePoint(#{xCoordinate}, #{yCoordinate}, #{zCoordinate}))",
             "ON CONFLICT (name)",
             "DO UPDATE SET",
             "star_class = COALESCE(system.star_class, EXCLUDED.star_class),",
             "elite_id = COALESCE(system.elite_id, EXCLUDED.elite_id),",
-            "x_coordinate = COALESCE(system.x_coordinate, EXCLUDED.x_coordinate),",
-            "y_coordinate = COALESCE(system.y_coordinate, EXCLUDED.y_coordinate),",
-            "z_coordinate = COALESCE(system.z_coordinate, EXCLUDED.z_coordinate)",
+            "coordinates_geom = COALESCE(system.coordinates_geom, EXCLUDED.coordinates_geom)",
             "RETURNING *"
     })
     @ResultMap("systemResultMap")
     MybatisSystemEntity insertOrUpdateOnConflict(MybatisSystemEntity system);
 
 
-    @Select("SELECT * FROM system WHERE name = #{name}")
+    @Select({"SELECT id, name, star_class, elite_id, ST_X(coordinates_geom) as x_coordinate, ST_Y(coordinates_geom) as y_coordinate, ST_Z(coordinates_geom) as z_coordinate",
+            "FROM system",
+            "WHERE name = #{name}"}
+    )
     @Results(id = "systemResultMap", value = {
             @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name", javaType = String.class),
@@ -43,7 +43,7 @@ public interface MybatisSystemRepository {
     })
     Optional<MybatisSystemEntity> findByName(@Param("name") String name);
 
-    @Select({"SELECT *",
+    @Select({"SELECT id, name, star_class, elite_id, ST_X(coordinates_geom) as x_coordinate, ST_Y(coordinates_geom) as y_coordinate, ST_Z(coordinates_geom) as z_coordinate",
             "FROM system",
             "WHERE name ILIKE CONCAT('%', #{name}, '%')",
             "ORDER BY CASE WHEN name ILIKE CONCAT(#{name}, '%') THEN 0 ELSE 1 END, name",

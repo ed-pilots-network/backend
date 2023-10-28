@@ -4,51 +4,17 @@ import io.edpn.backend.trade.adapter.persistence.entity.MybatisCommodityEntity;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityRepository;
 import io.edpn.backend.trade.application.domain.Commodity;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.CommodityEntityMapper;
-import io.edpn.backend.trade.application.port.outgoing.commodity.CreateCommodityPort;
-import io.edpn.backend.trade.application.port.outgoing.commodity.LoadCommodityByIdPort;
-import io.edpn.backend.trade.application.port.outgoing.commodity.LoadOrCreateCommodityByNamePort;
-import io.edpn.backend.util.IdGenerator;
-import io.edpn.backend.util.exception.DatabaseEntityNotFoundException;
+import io.edpn.backend.trade.application.port.outgoing.commodity.CreateOrLoadCommodityPort;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-
 @RequiredArgsConstructor
-public class CommodityRepository implements CreateCommodityPort, LoadCommodityByIdPort, LoadOrCreateCommodityByNamePort {
-    
-    private final IdGenerator idGenerator;
+public class CommodityRepository implements CreateOrLoadCommodityPort {
+
     private final CommodityEntityMapper<MybatisCommodityEntity> mybatisCommodityEntityMapper;
     private final MybatisCommodityRepository mybatisCommodityRepository;
-    
+
     @Override
-    public Commodity create(Commodity commodity) {
-        var entity = mybatisCommodityEntityMapper.map(commodity);
-        
-        if (Objects.isNull(entity.getId())) {
-            entity.setId(idGenerator.generateId());
-        }
-        mybatisCommodityRepository.insert(entity);
-        return loadById(entity.getId())
-                .orElseThrow(() -> new DatabaseEntityNotFoundException("commodity with id: " + commodity.getId() + " could not be found after create"));
-    }
-    
-    @Override
-    public Optional<Commodity> loadById(UUID id) {
-        return mybatisCommodityRepository.findById(id)
-                .map(mybatisCommodityEntityMapper::map);
-    }
-    
-    @Override
-    public Commodity loadOrCreate(String name) {
-        return mybatisCommodityRepository.findByName(name)
-                .map(mybatisCommodityEntityMapper::map)
-                .orElseGet(() -> {
-                    Commodity s = Commodity.builder()
-                            .name(name)
-                            .build();
-                    return create(s);
-                });
+    public Commodity createOrLoad(Commodity commodity) {
+        return mybatisCommodityEntityMapper.map(mybatisCommodityRepository.createOrUpdateOnConflict(mybatisCommodityEntityMapper.map(commodity)));
     }
 }

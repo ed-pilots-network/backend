@@ -10,18 +10,17 @@ import io.edpn.backend.trade.application.dto.web.object.MessageDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
-import io.edpn.backend.trade.application.port.outgoing.station.LoadOrCreateBySystemAndStationNamePort;
+import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.LoadAllStationPlanetaryRequestsPort;
-import io.edpn.backend.trade.application.port.outgoing.system.LoadOrCreateSystemByNamePort;
+import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
+import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Module;
 import io.edpn.backend.util.Topic;
-import java.util.concurrent.Executor;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +31,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.support.RetryTemplate;
+
+import java.util.concurrent.Executor;
+import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -46,13 +48,15 @@ import static org.mockito.Mockito.when;
 public class RequestStationPlanetaryServiceTest {
 
     @Mock
+    private IdGenerator idGenerator;
+    @Mock
     private LoadStationsByFilterPort loadStationsByFilterPort;
     @Mock
     private LoadAllStationPlanetaryRequestsPort loadAllStationPlanetaryRequestsPort;
     @Mock
-    private LoadOrCreateSystemByNamePort loadOrCreateSystemByNamePort;
+    private CreateOrLoadSystemPort createOrLoadSystemPort;
     @Mock
-    private LoadOrCreateBySystemAndStationNamePort loadOrCreateBySystemAndStationNamePort;
+    private CreateOrLoadStationPort createOrLoadStationPort;
     @Mock
     private ExistsStationPlanetaryRequestPort existsStationPlanetaryRequestPort;
     @Mock
@@ -86,10 +90,11 @@ public class RequestStationPlanetaryServiceTest {
     @BeforeEach
     void setUp() {
         underTest = new StationPlanetaryInterModuleCommunicationService(
+                idGenerator,
                 loadStationsByFilterPort,
                 loadAllStationPlanetaryRequestsPort,
-                loadOrCreateSystemByNamePort,
-                loadOrCreateBySystemAndStationNamePort,
+                createOrLoadSystemPort,
+                createOrLoadStationPort,
                 existsStationPlanetaryRequestPort,
                 createStationPlanetaryRequestPort,
                 deleteStationPlanetaryRequestPort,

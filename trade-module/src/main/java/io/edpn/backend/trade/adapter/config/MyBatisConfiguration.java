@@ -5,6 +5,7 @@ import io.edpn.backend.mybatisutil.StringTrimmingTypeHandler;
 import io.edpn.backend.mybatisutil.UuidTypeHandler;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityMarketInfoRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityRepository;
+import io.edpn.backend.trade.adapter.persistence.repository.MybatisLatestMarketDatumRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisLocateCommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisMessageRepository;
@@ -62,6 +63,13 @@ public class MyBatisConfiguration {
     @Bean(name = "tradeMybatisMarketDatumRepository")
     public MapperFactoryBean<MybatisMarketDatumRepository> mybatisMarketDatumRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<MybatisMarketDatumRepository> factoryBean = new MapperFactoryBean<>(MybatisMarketDatumRepository.class);
+        factoryBean.setSqlSessionFactory(sqlSessionFactory);
+        return factoryBean;
+    }
+
+    @Bean(name = "tradeMybatisLatestMarketDatumRepository")
+    public MapperFactoryBean<MybatisLatestMarketDatumRepository> mybatisLatestMarketDatumRepository(@Qualifier("tradeSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+        MapperFactoryBean<MybatisLatestMarketDatumRepository> factoryBean = new MapperFactoryBean<>(MybatisLatestMarketDatumRepository.class);
         factoryBean.setSqlSessionFactory(sqlSessionFactory);
         return factoryBean;
     }
