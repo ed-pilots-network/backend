@@ -22,6 +22,7 @@ repositories {
             gradleMetadata()
         }
     }
+    mavenLocal()
     maven {
         url 'https://nexus.edpn.io/repository/maven-releases/'
     }
@@ -54,6 +55,7 @@ subprojects {
 
     repositories {
         mavenCentral()
+        mavenLocal()
         maven {
             url 'https://nexus.edpn.io/repository/maven-releases/'
         }

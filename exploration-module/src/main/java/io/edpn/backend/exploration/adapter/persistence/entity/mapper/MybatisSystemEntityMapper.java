@@ -27,13 +27,13 @@ public class MybatisSystemEntityMapper implements SystemEntityMapper<MybatisSyst
     @Override
     public MybatisSystemEntity map(System system) {
         return new MybatisSystemEntity(
-                system.getId(),
-                system.getName(),
-                system.getEliteId(),
-                system.getStarClass(),
-                Optional.ofNullable(system.getCoordinate()).map(Coordinate::getX).orElse(null),
-                Optional.ofNullable(system.getCoordinate()).map(Coordinate::getY).orElse(null),
-                Optional.ofNullable(system.getCoordinate()).map(Coordinate::getZ).orElse(null));
+                system.id(),
+                system.name(),
+                system.eliteId(),
+                system.starClass(),
+                Optional.ofNullable(system.coordinate()).map(Coordinate::x).orElse(null),
+                Optional.ofNullable(system.coordinate()).map(Coordinate::y).orElse(null),
+                Optional.ofNullable(system.coordinate()).map(Coordinate::z).orElse(null));
     }
 
     private Coordinate coordinateFromCoordinateEntity(SystemEntity systemEntity) {

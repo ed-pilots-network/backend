@@ -97,7 +97,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
     void processPending_nonEmptyRequestList_systemNotFound() {
 
         SystemCoordinateRequest systemCoordinateRequest = mock(SystemCoordinateRequest.class);
-        when(systemCoordinateRequest.getSystemName()).thenReturn("SystemName");
+        when(systemCoordinateRequest.systemName()).thenReturn("SystemName");
         List<SystemCoordinateRequest> systemCoordinateRequestList = List.of(systemCoordinateRequest);
         when(loadAllSystemCoordinateRequestPort.loadAll()).thenReturn(systemCoordinateRequestList);
         when(loadSystemPort.load("SystemName")).thenReturn(Optional.empty());
@@ -117,10 +117,10 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
     void processPending_nonEmptyRequestList_systemFound_sendFailed() {
 
         SystemCoordinateRequest systemCoordinateRequest = mock(SystemCoordinateRequest.class);
-        when(systemCoordinateRequest.getSystemName()).thenReturn("SystemName");
+        when(systemCoordinateRequest.systemName()).thenReturn("SystemName");
         Module module = mock(Module.class);
         when(module.getName()).thenReturn("trade");
-        when(systemCoordinateRequest.getRequestingModule()).thenReturn(module);
+        when(systemCoordinateRequest.requestingModule()).thenReturn(module);
         List<SystemCoordinateRequest> systemCoordinateRequestList = List.of(systemCoordinateRequest);
         System system = mock(System.class);
         SystemCoordinatesResponse systemCoordinatesResponse = mock(SystemCoordinatesResponse.class);
@@ -150,10 +150,10 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
     void processPending_nonEmptyRequestList_systemFound_sendSucceeded() {
 
         SystemCoordinateRequest systemCoordinateRequest = mock(SystemCoordinateRequest.class);
-        when(systemCoordinateRequest.getSystemName()).thenReturn("SystemName");
+        when(systemCoordinateRequest.systemName()).thenReturn("SystemName");
         Module module = mock(Module.class);
         when(module.getName()).thenReturn("trade");
-        when(systemCoordinateRequest.getRequestingModule()).thenReturn(module);
+        when(systemCoordinateRequest.requestingModule()).thenReturn(module);
         List<SystemCoordinateRequest> systemCoordinateRequestList = List.of(systemCoordinateRequest);
         System system = mock(System.class);
         SystemCoordinatesResponse systemCoordinatesResponse = mock(SystemCoordinatesResponse.class);
@@ -182,7 +182,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
     void processPending_nonEmptyRequestList_systemFound_writeValueAsStringThrowsJsonProcessingException() throws JsonProcessingException {
 
         SystemCoordinateRequest systemCoordinateRequest = mock(SystemCoordinateRequest.class);
-        when(systemCoordinateRequest.getSystemName()).thenReturn("SystemName");
+        when(systemCoordinateRequest.systemName()).thenReturn("SystemName");
         List<SystemCoordinateRequest> systemCoordinateRequestList = List.of(systemCoordinateRequest);
         System system = mock(System.class);
         SystemCoordinatesResponse systemCoordinatesResponse = mock(SystemCoordinatesResponse.class);

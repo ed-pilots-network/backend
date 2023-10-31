@@ -98,7 +98,7 @@ class ProcessPendingSystemEliteIdRequestServiceTest {
     void processPending_nonEmptyRequestList_systemNotFound() {
 
         SystemEliteIdRequest systemEliteIdRequest = mock(SystemEliteIdRequest.class);
-        when(systemEliteIdRequest.getSystemName()).thenReturn("SystemName");
+        when(systemEliteIdRequest.systemName()).thenReturn("SystemName");
         List<SystemEliteIdRequest> systemEliteIdRequestList = List.of(systemEliteIdRequest);
         when(loadAllSystemEliteIdRequestPort.loadAll()).thenReturn(systemEliteIdRequestList);
         when(loadSystemPort.load("SystemName")).thenReturn(Optional.empty());
@@ -118,10 +118,10 @@ class ProcessPendingSystemEliteIdRequestServiceTest {
     void processPending_nonEmptyRequestList_systemFound_sendFailed() {
 
         SystemEliteIdRequest systemEliteIdRequest = mock(SystemEliteIdRequest.class);
-        when(systemEliteIdRequest.getSystemName()).thenReturn("SystemName");
+        when(systemEliteIdRequest.systemName()).thenReturn("SystemName");
         Module module = mock(Module.class);
         when(module.getName()).thenReturn("trade");
-        when(systemEliteIdRequest.getRequestingModule()).thenReturn(module);
+        when(systemEliteIdRequest.requestingModule()).thenReturn(module);
         List<SystemEliteIdRequest> systemEliteIdRequestList = List.of(systemEliteIdRequest);
         System system = mock(System.class);
         SystemEliteIdResponse systemEliteIdResponse = mock(SystemEliteIdResponse.class);
@@ -151,10 +151,10 @@ class ProcessPendingSystemEliteIdRequestServiceTest {
     void processPending_nonEmptyRequestList_systemFound_sendSucceeded() {
 
         SystemEliteIdRequest systemEliteIdRequest = mock(SystemEliteIdRequest.class);
-        when(systemEliteIdRequest.getSystemName()).thenReturn("SystemName");
+        when(systemEliteIdRequest.systemName()).thenReturn("SystemName");
         Module module = mock(Module.class);
         when(module.getName()).thenReturn("trade");
-        when(systemEliteIdRequest.getRequestingModule()).thenReturn(module);
+        when(systemEliteIdRequest.requestingModule()).thenReturn(module);
         List<SystemEliteIdRequest> systemEliteIdRequestList = List.of(systemEliteIdRequest);
         System system = mock(System.class);
         SystemEliteIdResponse systemEliteIdResponse = mock(SystemEliteIdResponse.class);
@@ -183,7 +183,7 @@ class ProcessPendingSystemEliteIdRequestServiceTest {
     @Test
     void processPending_nonEmptyRequestList_systemFound_writeValueAsStringThrowsJsonProcessingException() throws JsonProcessingException {
         SystemEliteIdRequest systemEliteIdRequest = mock(SystemEliteIdRequest.class);
-        when(systemEliteIdRequest.getSystemName()).thenReturn("SystemName");
+        when(systemEliteIdRequest.systemName()).thenReturn("SystemName");
         List<SystemEliteIdRequest> systemEliteIdRequestList = List.of(systemEliteIdRequest);
         System system = mock(System.class);
         SystemEliteIdResponse systemEliteIdResponse = mock(SystemEliteIdResponse.class);

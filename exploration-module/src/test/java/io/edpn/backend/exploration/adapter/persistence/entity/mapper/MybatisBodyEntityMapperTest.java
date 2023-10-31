@@ -8,15 +8,14 @@ import io.edpn.backend.exploration.application.dto.persistence.entity.BodyEntity
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.BodyEntityMapper;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.RingEntityMapper;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEntityMapper;
+import java.util.Map;
+import java.util.UUID;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Map;
-import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -80,42 +79,42 @@ class MybatisBodyEntityMapperTest {
                 .build();
         
         Body result = underTest.map(entity);
-        
-        
-        assertThat(result.getId(), equalTo(entity.getId()));
-        assertThat(result.getArrivalDistance(), equalTo(entity.getArrivalDistance()));
-        assertThat(result.getAscendingNode(), equalTo(entity.getAscendingNode()));
-        assertThat(result.getAtmosphere(), equalTo(entity.getAtmosphere()));
-        assertThat(result.getAtmosphericComposition(), equalTo(entity.getAtmosphericComposition()));
-        assertThat(result.getAxialTilt(), equalTo(entity.getAxialTilt()));
-        assertThat(result.getBodyComposition(), equalTo(entity.getBodyComposition()));
-        assertThat(result.getDiscovered(), equalTo(entity.getDiscovered()));
-        assertThat(result.getMapped(), equalTo(entity.getMapped()));
-        assertThat(result.getName(), equalTo(entity.getName()));
-        assertThat(result.getLocalId(), equalTo(entity.getLocalId()));
-        assertThat(result.getEccentricity(), equalTo(entity.getEccentricity()));
-        assertThat(result.getLandable(), equalTo(entity.getLandable()));
-        assertThat(result.getMass(), equalTo(entity.getMass()));
-        assertThat(result.getMaterials(), equalTo(entity.getMaterials()));
-        assertThat(result.getMeanAnomaly(), equalTo(entity.getMeanAnomaly()));
-        assertThat(result.getOrbitalInclination(), equalTo(entity.getOrbitalInclination()));
-        assertThat(result.getOrbitalPeriod(), equalTo(entity.getOrbitalPeriod()));
-        assertThat(result.getParents(), equalTo(entity.getParents()));
-        assertThat(result.getPeriapsis(), equalTo(entity.getPeriapsis()));
-        assertThat(result.getPlanetClass(), equalTo(entity.getPlanetClass()));
-        assertThat(result.getRadius(), equalTo(entity.getRadius()));
-        assertThat(result.getRotationPeriod(), equalTo(entity.getRotationPeriod()));
-        assertThat(result.getSemiMajorAxis(), equalTo(entity.getSemiMajorAxis()));
-        assertThat(result.getSurfaceGravity(), equalTo(entity.getSurfaceGravity()));
-        assertThat(result.getSurfacePressure(), equalTo(entity.getSurfacePressure()));
-        assertThat(result.getSurfaceTemperature(), equalTo(entity.getSurfaceTemperature()));
-        assertThat(result.getSystemAddress(), equalTo(entity.getSystemAddress()));
-        assertThat(result.getTerraformState(), equalTo(entity.getTerraformState()));
-        assertThat(result.getTidalLock(), equalTo(entity.getTidalLock()));
-        assertThat(result.getVolcanism(), equalTo(entity.getVolcanism()));
-        assertThat(result.getHorizons(), equalTo(entity.getHorizons()));
-        assertThat(result.getOdyssey(), equalTo(entity.getOdyssey()));
-        assertThat(result.getEstimatedScanValue(), equalTo(entity.getEstimatedScanValue()));
+
+
+        assertThat(result.id(), equalTo(entity.getId()));
+        assertThat(result.arrivalDistance(), equalTo(entity.getArrivalDistance()));
+        assertThat(result.ascendingNode(), equalTo(entity.getAscendingNode()));
+        assertThat(result.atmosphere(), equalTo(entity.getAtmosphere()));
+        assertThat(result.atmosphericComposition(), equalTo(entity.getAtmosphericComposition()));
+        assertThat(result.axialTilt(), equalTo(entity.getAxialTilt()));
+        assertThat(result.bodyComposition(), equalTo(entity.getBodyComposition()));
+        assertThat(result.discovered(), equalTo(entity.getDiscovered()));
+        assertThat(result.mapped(), equalTo(entity.getMapped()));
+        assertThat(result.name(), equalTo(entity.getName()));
+        assertThat(result.localId(), equalTo(entity.getLocalId()));
+        assertThat(result.eccentricity(), equalTo(entity.getEccentricity()));
+        assertThat(result.landable(), equalTo(entity.getLandable()));
+        assertThat(result.mass(), equalTo(entity.getMass()));
+        assertThat(result.materials(), equalTo(entity.getMaterials()));
+        assertThat(result.meanAnomaly(), equalTo(entity.getMeanAnomaly()));
+        assertThat(result.orbitalInclination(), equalTo(entity.getOrbitalInclination()));
+        assertThat(result.orbitalPeriod(), equalTo(entity.getOrbitalPeriod()));
+        assertThat(result.parents(), equalTo(entity.getParents()));
+        assertThat(result.periapsis(), equalTo(entity.getPeriapsis()));
+        assertThat(result.planetClass(), equalTo(entity.getPlanetClass()));
+        assertThat(result.radius(), equalTo(entity.getRadius()));
+        assertThat(result.rotationPeriod(), equalTo(entity.getRotationPeriod()));
+        assertThat(result.semiMajorAxis(), equalTo(entity.getSemiMajorAxis()));
+        assertThat(result.surfaceGravity(), equalTo(entity.getSurfaceGravity()));
+        assertThat(result.surfacePressure(), equalTo(entity.getSurfacePressure()));
+        assertThat(result.surfaceTemperature(), equalTo(entity.getSurfaceTemperature()));
+        assertThat(result.systemAddress(), equalTo(entity.getSystemAddress()));
+        assertThat(result.terraformState(), equalTo(entity.getTerraformState()));
+        assertThat(result.tidalLock(), equalTo(entity.getTidalLock()));
+        assertThat(result.volcanism(), equalTo(entity.getVolcanism()));
+        assertThat(result.horizons(), equalTo(entity.getHorizons()));
+        assertThat(result.odyssey(), equalTo(entity.getOdyssey()));
+        assertThat(result.estimatedScanValue(), equalTo(entity.getEstimatedScanValue()));
         
     }
     
@@ -159,42 +158,42 @@ class MybatisBodyEntityMapperTest {
                 .build();
         
         BodyEntity result = underTest.map(object);
-        
-        
-        assertThat(result.getId(), equalTo(object.getId()));
-        assertThat(result.getArrivalDistance(), equalTo(object.getArrivalDistance()));
-        assertThat(result.getAscendingNode(), equalTo(object.getAscendingNode()));
-        assertThat(result.getAtmosphere(), equalTo(object.getAtmosphere()));
-        assertThat(result.getAtmosphericComposition(), equalTo(object.getAtmosphericComposition()));
-        assertThat(result.getAxialTilt(), equalTo(object.getAxialTilt()));
-        assertThat(result.getBodyComposition(), equalTo(object.getBodyComposition()));
-        assertThat(result.getDiscovered(), equalTo(object.getDiscovered()));
-        assertThat(result.getMapped(), equalTo(object.getMapped()));
-        assertThat(result.getName(), equalTo(object.getName()));
-        assertThat(result.getLocalId(), equalTo(object.getLocalId()));
-        assertThat(result.getEccentricity(), equalTo(object.getEccentricity()));
-        assertThat(result.getLandable(), equalTo(object.getLandable()));
-        assertThat(result.getMass(), equalTo(object.getMass()));
-        assertThat(result.getMaterials(), equalTo(object.getMaterials()));
-        assertThat(result.getMeanAnomaly(), equalTo(object.getMeanAnomaly()));
-        assertThat(result.getOrbitalInclination(), equalTo(object.getOrbitalInclination()));
-        assertThat(result.getOrbitalPeriod(), equalTo(object.getOrbitalPeriod()));
-        assertThat(result.getParents(), equalTo(object.getParents()));
-        assertThat(result.getPeriapsis(), equalTo(object.getPeriapsis()));
-        assertThat(result.getPlanetClass(), equalTo(object.getPlanetClass()));
-        assertThat(result.getRadius(), equalTo(object.getRadius()));
-        assertThat(result.getRotationPeriod(), equalTo(object.getRotationPeriod()));
-        assertThat(result.getSemiMajorAxis(), equalTo(object.getSemiMajorAxis()));
-        assertThat(result.getSurfaceGravity(), equalTo(object.getSurfaceGravity()));
-        assertThat(result.getSurfacePressure(), equalTo(object.getSurfacePressure()));
-        assertThat(result.getSurfaceTemperature(), equalTo(object.getSurfaceTemperature()));
-        assertThat(result.getSystemAddress(), equalTo(object.getSystemAddress()));
-        assertThat(result.getTerraformState(), equalTo(object.getTerraformState()));
-        assertThat(result.getTidalLock(), equalTo(object.getTidalLock()));
-        assertThat(result.getVolcanism(), equalTo(object.getVolcanism()));
-        assertThat(result.getHorizons(), equalTo(object.getHorizons()));
-        assertThat(result.getOdyssey(), equalTo(object.getOdyssey()));
-        assertThat(result.getEstimatedScanValue(), equalTo(object.getEstimatedScanValue()));
+
+
+        assertThat(result.getId(), equalTo(object.id()));
+        assertThat(result.getArrivalDistance(), equalTo(object.arrivalDistance()));
+        assertThat(result.getAscendingNode(), equalTo(object.ascendingNode()));
+        assertThat(result.getAtmosphere(), equalTo(object.atmosphere()));
+        assertThat(result.getAtmosphericComposition(), equalTo(object.atmosphericComposition()));
+        assertThat(result.getAxialTilt(), equalTo(object.axialTilt()));
+        assertThat(result.getBodyComposition(), equalTo(object.bodyComposition()));
+        assertThat(result.getDiscovered(), equalTo(object.discovered()));
+        assertThat(result.getMapped(), equalTo(object.mapped()));
+        assertThat(result.getName(), equalTo(object.name()));
+        assertThat(result.getLocalId(), equalTo(object.localId()));
+        assertThat(result.getEccentricity(), equalTo(object.eccentricity()));
+        assertThat(result.getLandable(), equalTo(object.landable()));
+        assertThat(result.getMass(), equalTo(object.mass()));
+        assertThat(result.getMaterials(), equalTo(object.materials()));
+        assertThat(result.getMeanAnomaly(), equalTo(object.meanAnomaly()));
+        assertThat(result.getOrbitalInclination(), equalTo(object.orbitalInclination()));
+        assertThat(result.getOrbitalPeriod(), equalTo(object.orbitalPeriod()));
+        assertThat(result.getParents(), equalTo(object.parents()));
+        assertThat(result.getPeriapsis(), equalTo(object.periapsis()));
+        assertThat(result.getPlanetClass(), equalTo(object.planetClass()));
+        assertThat(result.getRadius(), equalTo(object.radius()));
+        assertThat(result.getRotationPeriod(), equalTo(object.rotationPeriod()));
+        assertThat(result.getSemiMajorAxis(), equalTo(object.semiMajorAxis()));
+        assertThat(result.getSurfaceGravity(), equalTo(object.surfaceGravity()));
+        assertThat(result.getSurfacePressure(), equalTo(object.surfacePressure()));
+        assertThat(result.getSurfaceTemperature(), equalTo(object.surfaceTemperature()));
+        assertThat(result.getSystemAddress(), equalTo(object.systemAddress()));
+        assertThat(result.getTerraformState(), equalTo(object.terraformState()));
+        assertThat(result.getTidalLock(), equalTo(object.tidalLock()));
+        assertThat(result.getVolcanism(), equalTo(object.volcanism()));
+        assertThat(result.getHorizons(), equalTo(object.horizons()));
+        assertThat(result.getOdyssey(), equalTo(object.odyssey()));
+        assertThat(result.getEstimatedScanValue(), equalTo(object.estimatedScanValue()));
     }
     
 }

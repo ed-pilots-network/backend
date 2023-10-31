@@ -12,9 +12,9 @@ public class KafkaSystemCoordinatesResponseMapper implements SystemCoordinatesRe
     public SystemCoordinatesResponse map(System system) {
 
         return new SystemCoordinatesResponse(
-                system.getName(),
-                system.getCoordinate().getX(),
-                system.getCoordinate().getY(),
-                system.getCoordinate().getZ());
+                system.name(),
+                system.coordinate().x(),
+                system.coordinate().y(),
+                system.coordinate().z());
     }
 }

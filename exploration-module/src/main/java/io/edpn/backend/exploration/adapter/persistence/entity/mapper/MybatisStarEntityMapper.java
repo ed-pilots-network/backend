@@ -8,10 +8,9 @@ import io.edpn.backend.exploration.application.dto.persistence.entity.StarEntity
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.RingEntityMapper;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.StarEntityMapper;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEntityMapper;
-import lombok.RequiredArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class MybatisStarEntityMapper implements StarEntityMapper<MybatisStarEntity> {
@@ -54,32 +53,32 @@ public class MybatisStarEntityMapper implements StarEntityMapper<MybatisStarEnti
     @Override
     public MybatisStarEntity map(Star star) {
         return MybatisStarEntity.builder()
-                .id(star.getId())
-                .absoluteMagnitude(star.getAbsoluteMagnitude())
-                .age(star.getAge())
-                .arrivalDistance(star.getArrivalDistance())
-                .axialTilt(star.getAxialTilt())
-                .discovered(star.getDiscovered())
-                .localId(star.getLocalId())
-                .luminosity(star.getLuminosity())
-                .mapped(star.getMapped())
-                .name(star.getName())
-                .radius(star.getRadius())
-                .rings(Optional.ofNullable(star.getRings())
+                .id(star.id())
+                .absoluteMagnitude(star.absoluteMagnitude())
+                .age(star.age())
+                .arrivalDistance(star.arrivalDistance())
+                .axialTilt(star.axialTilt())
+                .discovered(star.discovered())
+                .localId(star.localId())
+                .luminosity(star.luminosity())
+                .mapped(star.mapped())
+                .name(star.name())
+                .radius(star.radius())
+                .rings(Optional.ofNullable(star.rings())
                         .orElse(new ArrayList<>())
                         .stream()
                         .map(ringEntityMapper::map)
                         .toList())
-                .rotationalPeriod(star.getRotationalPeriod())
-                .starType(star.getStarType())
-                .stellarMass(star.getStellarMass())
-                .subclass(star.getSubclass())
-                .surfaceTemperature(star.getSurfaceTemperature())
-                .system(Optional.ofNullable(star.getSystem()).map(systemEntityMapper::map).orElse(null))
-                .systemAddress(star.getSystemAddress())
-                .horizons(star.getHorizons())
-                .odyssey(star.getOdyssey())
-                .estimatedScanValue(star.getEstimatedScanValue())
+                .rotationalPeriod(star.rotationalPeriod())
+                .starType(star.starType())
+                .stellarMass(star.stellarMass())
+                .subclass(star.subclass())
+                .surfaceTemperature(star.surfaceTemperature())
+                .system(Optional.ofNullable(star.system()).map(systemEntityMapper::map).orElse(null))
+                .systemAddress(star.systemAddress())
+                .horizons(star.horizons())
+                .odyssey(star.odyssey())
+                .estimatedScanValue(star.estimatedScanValue())
                 .build();
     }
 }

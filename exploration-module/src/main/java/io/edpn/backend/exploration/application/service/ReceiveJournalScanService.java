@@ -11,15 +11,14 @@ import io.edpn.backend.exploration.application.port.outgoing.star.SaveOrUpdateSt
 import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.journal.ScanMessage;
 import io.edpn.backend.util.IdGenerator;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -93,7 +92,7 @@ public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<Sca
                     payload.odyssey(),
                     null);
             
-            for (Ring ring : payloadStar.getRings()) {
+            for (Ring ring : payloadStar.rings()) {
                 saveOrUpdateRingPort.saveOrUpdate(ring);
             }
             
@@ -171,7 +170,7 @@ public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<Sca
                     null
             );
             
-            for (Ring ring : payloadBody.getRings()) {
+            for (Ring ring : payloadBody.rings()) {
                 saveOrUpdateRingPort.saveOrUpdate(ring);
             }
             

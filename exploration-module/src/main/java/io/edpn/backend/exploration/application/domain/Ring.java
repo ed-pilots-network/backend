@@ -1,25 +1,17 @@
 package io.edpn.backend.exploration.application.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 import java.util.UUID;
+import lombok.Builder;
 
-@Getter
-@Setter
-@ToString
-@AllArgsConstructor
 @Builder
-public class Ring{
-    private UUID id;
-    private Long innerRadius;
-    private Long mass; // MT MegaTonnes
-    private String name;
-    private Long outerRadius;
-    private String ringClass;
-    private UUID bodyId;
-    private UUID starId;
+public record Ring(
+        UUID id,
+        Long innerRadius,
+        Long mass, // MT MegaTonnes
+        String name,
+        Long outerRadius,
+        String ringClass,
+        UUID bodyId,
+        UUID starId
+) {
 }

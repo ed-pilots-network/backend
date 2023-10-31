@@ -12,7 +12,7 @@ public class KafkaSystemEliteIdResponseMapper implements SystemEliteIdResponseMa
     public SystemEliteIdResponse map(System system) {
 
         return new SystemEliteIdResponse(
-                system.getName(),
-                system.getEliteId());
+                system.name(),
+                system.eliteId());
     }
 }

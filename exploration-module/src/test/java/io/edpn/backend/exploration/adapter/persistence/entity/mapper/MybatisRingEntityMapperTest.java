@@ -4,10 +4,9 @@ import io.edpn.backend.exploration.adapter.persistence.entity.MybatisRingEntity;
 import io.edpn.backend.exploration.application.domain.Ring;
 import io.edpn.backend.exploration.application.dto.persistence.entity.RingEntity;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.RingEntityMapper;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -37,15 +36,15 @@ class MybatisRingEntityMapperTest {
                 .build();
         
         Ring result = underTest.map(entity);
-        
-        assertThat(result.getId(), equalTo(entity.getId()));
-        assertThat(result.getInnerRadius(), equalTo(entity.getInnerRadius()));
-        assertThat(result.getMass(), equalTo(entity.getMass()));
-        assertThat(result.getName(), equalTo(entity.getName()));
-        assertThat(result.getOuterRadius(), equalTo(entity.getOuterRadius()));
-        assertThat(result.getRingClass(), equalTo(entity.getRingClass()));
-        assertThat(result.getBodyId(), equalTo(entity.getBodyId()));
-        assertThat(result.getStarId(), equalTo(entity.getStarId()));
+
+        assertThat(result.id(), equalTo(entity.getId()));
+        assertThat(result.innerRadius(), equalTo(entity.getInnerRadius()));
+        assertThat(result.mass(), equalTo(entity.getMass()));
+        assertThat(result.name(), equalTo(entity.getName()));
+        assertThat(result.outerRadius(), equalTo(entity.getOuterRadius()));
+        assertThat(result.ringClass(), equalTo(entity.getRingClass()));
+        assertThat(result.bodyId(), equalTo(entity.getBodyId()));
+        assertThat(result.starId(), equalTo(entity.getStarId()));
     }
     
     @Test
@@ -62,14 +61,14 @@ class MybatisRingEntityMapperTest {
                 .build();
         
         RingEntity result = underTest.map(object);
-        
-        assertThat(result.getId(), equalTo(object.getId()));
-        assertThat(result.getInnerRadius(), equalTo(object.getInnerRadius()));
-        assertThat(result.getMass(), equalTo(object.getMass()));
-        assertThat(result.getName(), equalTo(object.getName()));
-        assertThat(result.getOuterRadius(), equalTo(object.getOuterRadius()));
-        assertThat(result.getRingClass(), equalTo(object.getRingClass()));
-        assertThat(result.getBodyId(), equalTo(object.getBodyId()));
-        assertThat(result.getStarId(), equalTo(object.getStarId()));
+
+        assertThat(result.getId(), equalTo(object.id()));
+        assertThat(result.getInnerRadius(), equalTo(object.innerRadius()));
+        assertThat(result.getMass(), equalTo(object.mass()));
+        assertThat(result.getName(), equalTo(object.name()));
+        assertThat(result.getOuterRadius(), equalTo(object.outerRadius()));
+        assertThat(result.getRingClass(), equalTo(object.ringClass()));
+        assertThat(result.getBodyId(), equalTo(object.bodyId()));
+        assertThat(result.getStarId(), equalTo(object.starId()));
     }
 }

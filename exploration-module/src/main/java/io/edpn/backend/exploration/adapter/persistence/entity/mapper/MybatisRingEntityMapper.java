@@ -25,14 +25,14 @@ public class MybatisRingEntityMapper implements RingEntityMapper<MybatisRingEnti
     @Override
     public MybatisRingEntity map(Ring ring) {
         return MybatisRingEntity.builder()
-                .id(ring.getId())
-                .innerRadius(ring.getInnerRadius())
-                .mass(ring.getMass())
-                .name(ring.getName())
-                .outerRadius(ring.getOuterRadius())
-                .ringClass(ring.getRingClass())
-                .bodyId(ring.getBodyId())
-                .starId(ring.getStarId())
+                .id(ring.id())
+                .innerRadius(ring.innerRadius())
+                .mass(ring.mass())
+                .name(ring.name())
+                .outerRadius(ring.outerRadius())
+                .ringClass(ring.ringClass())
+                .bodyId(ring.bodyId())
+                .starId(ring.starId())
                 .build();
     }
 }

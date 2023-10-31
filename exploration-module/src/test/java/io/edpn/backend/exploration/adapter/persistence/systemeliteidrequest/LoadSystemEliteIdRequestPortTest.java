@@ -41,9 +41,9 @@ public class LoadSystemEliteIdRequestPortTest {
     @Test
     void create_shouldMapAndInsert() {
         SystemEliteIdRequest request = mock(SystemEliteIdRequest.class);
-        when(request.getSystemName()).thenReturn("system");
+        when(request.systemName()).thenReturn("system");
         Module module = Module.TRADE;
-        when(request.getRequestingModule()).thenReturn(module);
+        when(request.requestingModule()).thenReturn(module);
         MybatisSystemEliteIdRequestEntity entity = mock(MybatisSystemEliteIdRequestEntity.class);
         when(mybatisSystemEliteIdRequestRepository.find(module, "system")).thenReturn(Optional.of(entity));
         when(mybatisSystemEliteIdRequestEntityMapper.map(entity)).thenReturn(request);
