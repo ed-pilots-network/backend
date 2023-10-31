@@ -5,6 +5,17 @@ plugins {
     id "org.gradlex.extra-java-module-info" version "1.4"
 }
 
+
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+
+    toolchain {
+        languageVersion=JavaLanguageVersion.of(21)
+    }
+}
+
 repositories {
     mavenCentral() {
         metadataSources {
@@ -25,6 +36,12 @@ allprojects {
     group = 'io.edpn.backend'
     version = '0.0.4-SNAPSHOT'
     compileJava.options.encoding = 'UTF-8'
+}
+
+subprojects {
+    apply plugin: "java"
+    apply plugin: "org.javamodularity.moduleplugin"
+    apply plugin: "org.gradlex.extra-java-module-info"
 
     java {
         sourceCompatibility = JavaVersion.VERSION_21
@@ -32,15 +49,8 @@ allprojects {
 
         toolchain {
             languageVersion=JavaLanguageVersion.of(21)
-            vendor=JvmVendorSpec.AMAZON
         }
     }
-}
-
-subprojects {
-    apply plugin: "java"
-    apply plugin: "org.javamodularity.moduleplugin"
-    apply plugin: "org.gradlex.extra-java-module-info"
 
     repositories {
         mavenCentral()
