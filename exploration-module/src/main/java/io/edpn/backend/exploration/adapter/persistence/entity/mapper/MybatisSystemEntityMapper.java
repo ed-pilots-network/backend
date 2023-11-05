@@ -20,7 +20,7 @@ public class MybatisSystemEntityMapper implements SystemEntityMapper<MybatisSyst
                 systemEntity.getId(),
                 systemEntity.getEliteId(),
                 systemEntity.getName(),
-                systemEntity.getStarClass(),
+                systemEntity.getPrimaryStarClass(),
                 coordinateFromCoordinateEntity(systemEntity));
     }
 
@@ -30,7 +30,7 @@ public class MybatisSystemEntityMapper implements SystemEntityMapper<MybatisSyst
                 system.id(),
                 system.name(),
                 system.eliteId(),
-                system.starClass(),
+                system.primaryStarClass(),
                 Optional.ofNullable(system.coordinate()).map(Coordinate::x).orElse(null),
                 Optional.ofNullable(system.coordinate()).map(Coordinate::y).orElse(null),
                 Optional.ofNullable(system.coordinate()).map(Coordinate::z).orElse(null));

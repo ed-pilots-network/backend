@@ -8,7 +8,6 @@ import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSyst
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemEntityMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 
 @Configuration("ExplorationModuleEntityMapperConfig")
 public class PersistenceEntityMapperConfig {
@@ -34,12 +33,12 @@ public class PersistenceEntityMapperConfig {
     }
     
     @Bean(name = "explorationBodyEntityMapper")
-    public MybatisBodyEntityMapper bodyEntityMapper(@Lazy MybatisRingEntityMapper ringEntityMapper, MybatisSystemEntityMapper systemEntityMapper) {
+    public MybatisBodyEntityMapper bodyEntityMapper(MybatisRingEntityMapper ringEntityMapper, MybatisSystemEntityMapper systemEntityMapper) {
         return new MybatisBodyEntityMapper(ringEntityMapper, systemEntityMapper);
     }
     
     @Bean(name = "explorationStarEntityMapper")
-    public MybatisStarEntityMapper starEntityMapper(@Lazy MybatisRingEntityMapper ringEntityMapper, MybatisSystemEntityMapper systemEntityMapper) {
+    public MybatisStarEntityMapper starEntityMapper(MybatisRingEntityMapper ringEntityMapper, MybatisSystemEntityMapper systemEntityMapper) {
         return new MybatisStarEntityMapper(ringEntityMapper, systemEntityMapper);
     }
 }

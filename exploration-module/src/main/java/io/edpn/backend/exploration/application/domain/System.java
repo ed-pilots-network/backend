@@ -1,14 +1,15 @@
 package io.edpn.backend.exploration.application.domain;
 
-import java.util.UUID;
 import lombok.Builder;
+
+import java.util.UUID;
 
 @Builder
 public record System(
         UUID id,
         Long eliteId,
         String name,
-        String starClass,
+        String primaryStarClass,
         Coordinate coordinate
 ) {
 }

@@ -42,7 +42,7 @@ class RestRestSystemDtoMapperTest {
 
         assertThat(result.name(), equalTo(name));
         assertThat(result.eliteId(), equalTo(eliteId));
-        assertThat(result.starClass(), equalTo(starClass));
+        assertThat(result.primaryStarClass(), equalTo(starClass));
         assertThat(result.coordinate(), notNullValue());
         assertThat(result.coordinate().x(), equalTo(x));
         assertThat(result.coordinate().y(), equalTo(y));
@@ -64,7 +64,7 @@ class RestRestSystemDtoMapperTest {
 
         assertThat(result.name(), equalTo(name));
         assertThat(result.eliteId(), equalTo(eliteId));
-        assertThat(result.starClass(), equalTo(starClass));
+        assertThat(result.primaryStarClass(), equalTo(starClass));
         assertThat(result.coordinate(), nullValue());
     }
 }

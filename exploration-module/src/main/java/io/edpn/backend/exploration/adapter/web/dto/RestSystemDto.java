@@ -6,5 +6,5 @@ import io.edpn.backend.exploration.application.dto.web.object.SystemDto;
 public record RestSystemDto(String name,
                             CoordinateDto coordinate,
                             Long eliteId,
-                            String starClass) implements SystemDto {
+                            String primaryStarClass) implements SystemDto {
 }

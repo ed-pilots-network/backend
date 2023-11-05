@@ -61,6 +61,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
     private ObjectMapper objectMapper;
     @Mock
     private RetryTemplate retryTemplate;
+
     private ProcessPendingDataRequestUseCase<SystemCoordinateRequest> underTest;
 
     @BeforeEach

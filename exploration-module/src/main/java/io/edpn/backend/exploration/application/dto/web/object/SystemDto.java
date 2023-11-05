@@ -7,5 +7,5 @@ public interface SystemDto {
 
     Long eliteId();
 
-    String starClass();
+    String primaryStarClass();
 }

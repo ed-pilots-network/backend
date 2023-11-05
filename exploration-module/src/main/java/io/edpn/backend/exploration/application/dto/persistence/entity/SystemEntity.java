@@ -10,7 +10,7 @@ public interface SystemEntity {
 
     Long getEliteId();
 
-    String getStarClass();
+    String getPrimaryStarClass();
 
     Double getXCoordinate();
 

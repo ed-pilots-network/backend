@@ -22,9 +22,6 @@ import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoord
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Module;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Executor;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +30,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.RetryCallback;
 import org.springframework.retry.support.RetryTemplate;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Executor;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -86,7 +87,7 @@ class ReceiveNavRouteServiceTest {
     void testReceiveAndSendResponses() {
         String systemName = "system";
         long systemEliteId = 1L;
-        String starClass = "K";
+        String primaryStarClass = "K";
         double xCoord = 1.0;
         double yCoord = 2.0;
         double zCoord = 3.0;
@@ -101,13 +102,13 @@ class ReceiveNavRouteServiceTest {
         when(payload.items()).thenReturn(new NavRouteMessage.V1.Item[]{item});
         when(item.systemAddress()).thenReturn(systemEliteId);
         when(item.starSystem()).thenReturn(systemName);
-        when(item.starClass()).thenReturn(starClass);
+        when(item.starClass()).thenReturn(primaryStarClass);
         when(item.starPos()).thenReturn(new Double[]{xCoord, yCoord, zCoord});
         when(saveOrUpdateSystemPort.saveOrUpdate(argThat(argument ->
                 argument.id().equals(java.util.UUID.fromString(UUID)) &&
                         argument.eliteId().equals(systemEliteId) &&
                         argument.name().equals(systemName) &&
-                        argument.starClass().equals(starClass) &&
+                        argument.primaryStarClass().equals(primaryStarClass) &&
                         argument.coordinate().x().equals(xCoord) &&
                         argument.coordinate().y().equals(yCoord) &&
                         argument.coordinate().z().equals(zCoord)
@@ -151,7 +152,7 @@ class ReceiveNavRouteServiceTest {
     void testReceive_writeValueAsStringThrowsJsonProcessingException() {
         String systemName = "system";
         long systemEliteId = 1L;
-        String starClass = "K";
+        String primaryStarClass = "K";
         double xCoord = 1.0;
         double yCoord = 2.0;
         double zCoord = 3.0;
@@ -164,13 +165,13 @@ class ReceiveNavRouteServiceTest {
         when(payload.items()).thenReturn(new NavRouteMessage.V1.Item[]{item});
         when(item.systemAddress()).thenReturn(systemEliteId);
         when(item.starSystem()).thenReturn(systemName);
-        when(item.starClass()).thenReturn(starClass);
+        when(item.starClass()).thenReturn(primaryStarClass);
         when(item.starPos()).thenReturn(new Double[]{xCoord, yCoord, zCoord});
         when(saveOrUpdateSystemPort.saveOrUpdate(argThat(argument ->
                 argument.id().equals(java.util.UUID.fromString(UUID)) &&
                         argument.eliteId().equals(systemEliteId) &&
                         argument.name().equals(systemName) &&
-                        argument.starClass().equals(starClass) &&
+                        argument.primaryStarClass().equals(primaryStarClass) &&
                         argument.coordinate().x().equals(xCoord) &&
                         argument.coordinate().y().equals(yCoord) &&
                         argument.coordinate().z().equals(zCoord)
@@ -200,7 +201,7 @@ class ReceiveNavRouteServiceTest {
     void testReceiveNoPendingRequests() {
         String systemName = "system";
         long systemEliteId = 1L;
-        String starClass = "K";
+        String primaryStarClass = "K";
         double xCoord = 1.0;
         double yCoord = 2.0;
         double zCoord = 3.0;
@@ -213,13 +214,13 @@ class ReceiveNavRouteServiceTest {
         when(payload.items()).thenReturn(new NavRouteMessage.V1.Item[]{item});
         when(item.systemAddress()).thenReturn(systemEliteId);
         when(item.starSystem()).thenReturn(systemName);
-        when(item.starClass()).thenReturn(starClass);
+        when(item.starClass()).thenReturn(primaryStarClass);
         when(item.starPos()).thenReturn(new Double[]{xCoord, yCoord, zCoord});
         when(saveOrUpdateSystemPort.saveOrUpdate(argThat(argument ->
                 argument.id().equals(java.util.UUID.fromString(UUID)) &&
                         argument.eliteId().equals(systemEliteId) &&
                         argument.name().equals(systemName) &&
-                        argument.starClass().equals(starClass) &&
+                        argument.primaryStarClass().equals(primaryStarClass) &&
                         argument.coordinate().x().equals(xCoord) &&
                         argument.coordinate().y().equals(yCoord) &&
                         argument.coordinate().z().equals(zCoord)

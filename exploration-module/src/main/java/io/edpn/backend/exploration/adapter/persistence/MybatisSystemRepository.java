@@ -35,7 +35,7 @@ public interface MybatisSystemRepository {
     @Results(id = "systemResultMap", value = {
             @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name", javaType = String.class),
-            @Result(property = "starClass", column = "star_class", javaType = String.class),
+            @Result(property = "primaryStarClass", column = "star_class", javaType = String.class),
             @Result(property = "eliteId", column = "elite_id", javaType = Long.class),
             @Result(property = "xCoordinate", column = "x_coordinate", javaType = Double.class),
             @Result(property = "yCoordinate", column = "y_coordinate", javaType = Double.class),

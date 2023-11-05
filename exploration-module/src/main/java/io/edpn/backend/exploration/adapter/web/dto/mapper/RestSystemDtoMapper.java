@@ -7,16 +7,17 @@ import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.dto.web.object.CoordinateDto;
 import io.edpn.backend.exploration.application.dto.web.object.SystemDto;
 import io.edpn.backend.exploration.application.dto.web.object.mapper.SystemDtoMapper;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
 public class RestSystemDtoMapper implements SystemDtoMapper {
 
     public SystemDto map(System system) {
-        return new RestSystemDto(system.name(), coordinateFromSystem(system), system.eliteId(), system.starClass());
+        return new RestSystemDto(system.name(), coordinateFromSystem(system), system.eliteId(), system.primaryStarClass());
     }
 
     private CoordinateDto coordinateFromSystem(System system) {

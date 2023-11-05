@@ -33,7 +33,7 @@ class MybatisMybatisSystemEntityMapperTest {
         assertThat(result.id(), equalTo(systemEntity.getId()));
         assertThat(result.eliteId(), equalTo(systemEntity.getEliteId()));
         assertThat(result.name(), equalTo(systemEntity.getName()));
-        assertThat(result.starClass(), equalTo(systemEntity.getStarClass()));
+        assertThat(result.primaryStarClass(), equalTo(systemEntity.getPrimaryStarClass()));
         assertThat(result.coordinate(), notNullValue());
         assertThat(result.coordinate().x(), equalTo(systemEntity.getXCoordinate()));
         assertThat(result.coordinate().y(), equalTo(systemEntity.getYCoordinate()));
@@ -53,7 +53,7 @@ class MybatisMybatisSystemEntityMapperTest {
         assertThat(result.getId(), equalTo(system.id()));
         assertThat(result.getEliteId(), equalTo(system.eliteId()));
         assertThat(result.getName(), equalTo(system.name()));
-        assertThat(result.getStarClass(), equalTo(system.starClass()));
+        assertThat(result.getPrimaryStarClass(), equalTo(system.primaryStarClass()));
         assertThat(result.getXCoordinate(), equalTo(coordinate.x()));
         assertThat(result.getYCoordinate(), equalTo(coordinate.y()));
         assertThat(result.getZCoordinate(), equalTo(coordinate.z()));

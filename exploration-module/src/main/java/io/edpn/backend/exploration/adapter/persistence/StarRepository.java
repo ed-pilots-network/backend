@@ -15,12 +15,6 @@ public class StarRepository implements SaveOrUpdateStarPort {
     private final MybatisStarRepository mybatisStarRepository;
     private final StarEntityMapper<MybatisStarEntity> starEntityMapper;
 
-//    @Override
-//    public Optional<Body> load(String name) {
-//        return mybatisBodyRepository.findByName(name)
-//                .map(bodyEntityMapper::map);
-//    }
-
     @Override
     public Star saveOrUpdate(Star star) {
         return starEntityMapper.map(mybatisStarRepository.insertOrUpdateOnConflict(starEntityMapper.map(star)));
