@@ -102,8 +102,8 @@ subprojects {
         springdocOpenapiVersion = '2.1.0'
         prometheusVersion = '1.11.1'
         backendUtilVersion = '0.0.3-SNAPSHOT'
-        backendMybatisUtilVersion = '0.0.2-SNAPSHOT'
-        backendMessageProcessorLibVersion = '0.0.5-SNAPSHOT'
+        backendMybatisUtilVersion = '0.0.3-SNAPSHOT'
+        backendMessageProcessorLibVersion = '0.0.6-SNAPSHOT'
         junitJupiterVersion = "5.9.3"
         mockitoVersion = "5.4.0"
         hamcrestVersion = "2.2"
