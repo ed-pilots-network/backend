@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
-import io.edpn.backend.exploration.application.dto.MessageDto;
-import io.edpn.backend.exploration.application.dto.mapper.MessageMapper;
-import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
+import io.edpn.backend.exploration.application.dto.web.object.MessageDto;
+import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoMapper;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ProcessPendingDataRequestUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
@@ -56,11 +56,12 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
     @Mock
     private SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
     @Mock
-    private MessageMapper messageMapper;
+    private MessageDtoMapper messageMapper;
     @Mock
     private ObjectMapper objectMapper;
     @Mock
     private RetryTemplate retryTemplate;
+
     private ProcessPendingDataRequestUseCase<SystemCoordinateRequest> underTest;
 
     @BeforeEach

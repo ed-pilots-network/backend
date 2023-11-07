@@ -2,8 +2,8 @@ package io.edpn.backend.exploration.adapter.persistence.entity.mapper;
 
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemCoordinateRequestEntity;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
-import io.edpn.backend.exploration.application.dto.SystemCoordinateRequestEntity;
-import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinateRequestEntityMapper;
+import io.edpn.backend.exploration.application.dto.persistence.entity.SystemCoordinateRequestEntity;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemCoordinateRequestEntityMapper;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

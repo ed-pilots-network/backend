@@ -3,8 +3,8 @@ package io.edpn.backend.exploration.adapter.persistence.entity.mapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.dto.SystemEntity;
-import io.edpn.backend.exploration.application.dto.mapper.SystemEntityMapper;
+import io.edpn.backend.exploration.application.dto.persistence.entity.SystemEntity;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEntityMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +33,7 @@ class MybatisMybatisSystemEntityMapperTest {
         assertThat(result.id(), equalTo(systemEntity.getId()));
         assertThat(result.eliteId(), equalTo(systemEntity.getEliteId()));
         assertThat(result.name(), equalTo(systemEntity.getName()));
-        assertThat(result.starClass(), equalTo(systemEntity.getStarClass()));
+        assertThat(result.primaryStarClass(), equalTo(systemEntity.getPrimaryStarClass()));
         assertThat(result.coordinate(), notNullValue());
         assertThat(result.coordinate().x(), equalTo(systemEntity.getXCoordinate()));
         assertThat(result.coordinate().y(), equalTo(systemEntity.getYCoordinate()));
@@ -53,7 +53,7 @@ class MybatisMybatisSystemEntityMapperTest {
         assertThat(result.getId(), equalTo(system.id()));
         assertThat(result.getEliteId(), equalTo(system.eliteId()));
         assertThat(result.getName(), equalTo(system.name()));
-        assertThat(result.getStarClass(), equalTo(system.starClass()));
+        assertThat(result.getPrimaryStarClass(), equalTo(system.primaryStarClass()));
         assertThat(result.getXCoordinate(), equalTo(coordinate.x()));
         assertThat(result.getYCoordinate(), equalTo(coordinate.y()));
         assertThat(result.getZCoordinate(), equalTo(coordinate.z()));

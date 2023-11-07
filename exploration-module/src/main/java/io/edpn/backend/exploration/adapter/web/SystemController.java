@@ -1,6 +1,6 @@
 package io.edpn.backend.exploration.adapter.web;
 
-import io.edpn.backend.exploration.application.dto.SystemDto;
+import io.edpn.backend.exploration.application.dto.web.object.SystemDto;
 import io.edpn.backend.exploration.application.port.incomming.FindSystemsByNameContainingUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

@@ -2,8 +2,8 @@ package io.edpn.backend.exploration.adapter.persistence.entity.mapper;
 
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEliteIdRequestEntity;
 import io.edpn.backend.exploration.application.domain.SystemEliteIdRequest;
-import io.edpn.backend.exploration.application.dto.SystemEliteIdRequestEntity;
-import io.edpn.backend.exploration.application.dto.mapper.SystemEliteIdRequestEntityMapper;
+import io.edpn.backend.exploration.application.dto.persistence.entity.SystemEliteIdRequestEntity;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEliteIdRequestEntityMapper;
 import io.edpn.backend.util.Module;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

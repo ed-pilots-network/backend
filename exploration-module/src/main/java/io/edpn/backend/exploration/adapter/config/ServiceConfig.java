@@ -5,10 +5,13 @@ import io.edpn.backend.exploration.adapter.kafka.dto.mapper.KafkaSystemCoordinat
 import io.edpn.backend.exploration.adapter.kafka.dto.mapper.KafkaSystemEliteIdResponseMapper;
 import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
 import io.edpn.backend.exploration.adapter.web.dto.mapper.RestSystemDtoMapper;
-import io.edpn.backend.exploration.application.dto.mapper.MessageMapper;
-import io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper;
-import io.edpn.backend.exploration.application.dto.mapper.SystemEliteIdResponseMapper;
+import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoMapper;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemCoordinatesResponseMapper;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEliteIdResponseMapper;
+import io.edpn.backend.exploration.application.port.outgoing.body.SaveOrUpdateBodyPort;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.ring.SaveOrUpdateRingPort;
+import io.edpn.backend.exploration.application.port.outgoing.star.SaveOrUpdateStarPort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
@@ -19,6 +22,7 @@ import io.edpn.backend.exploration.application.port.outgoing.systemeliteidreques
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.service.ReceiveJournalScanService;
 import io.edpn.backend.exploration.application.service.ReceiveNavRouteService;
 import io.edpn.backend.exploration.application.service.SystemControllerService;
 import io.edpn.backend.exploration.application.service.SystemCoordinateInterModuleCommunicationService;
@@ -47,7 +51,7 @@ public class ServiceConfig {
             LoadSystemEliteIdRequestBySystemNamePort loadSystemEliteIdRequestBySystemNamePort,
             DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort,
             KafkaSystemEliteIdResponseMapper kafkaSystemEliteIdResponseMapper,
-            MessageMapper messageMapper,
+            MessageDtoMapper messageMapper,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("explorationForkJoinPool") Executor executor
@@ -67,6 +71,22 @@ public class ServiceConfig {
                 retryTemplate,
                 executor);
     }
+    
+    @Bean(name = "explorationReceiveJournalScanService")
+    public ReceiveJournalScanService receiveJournalScanService(
+            @Qualifier("explorationIdGenerator") IdGenerator idGenerator,
+            SaveOrUpdateBodyPort saveOrUpdateBodyPort,
+            SaveOrUpdateRingPort saveOrUpdateRingPort,
+            SaveOrUpdateStarPort saveOrUpdateStarPort,
+            SaveOrUpdateSystemPort saveOrUpdateSystemPort
+    ) {
+        return new ReceiveJournalScanService(
+                idGenerator,
+                saveOrUpdateBodyPort,
+                saveOrUpdateRingPort,
+                saveOrUpdateStarPort,
+                saveOrUpdateSystemPort);
+    }
 
     @Bean(name = "explorationSystemCoordinateInterModuleCommunicationService")
     public SystemCoordinateInterModuleCommunicationService systemCoordinateInterModuleCommunicationService(
@@ -76,7 +96,7 @@ public class ServiceConfig {
             LoadSystemPort loadSystemPort,
             SendMessagePort sendMessagePort,
             SystemCoordinatesResponseMapper systemCoordinatesResponseMapper,
-            MessageMapper messageMapper,
+            MessageDtoMapper messageMapper,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("explorationForkJoinPool") Executor executor
@@ -103,7 +123,7 @@ public class ServiceConfig {
             LoadSystemPort loadSystemPort,
             SendMessagePort sendMessagePort,
             SystemEliteIdResponseMapper systemEliteIdResponseMapper,
-            MessageMapper messageMapper,
+            MessageDtoMapper messageMapper,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("explorationForkJoinPool") Executor executor

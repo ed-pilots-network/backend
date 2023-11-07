@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create_ring_table" author="daniel-j-mason">
+        <createTable tableName="ring">
+            <column name="id" type="uuid">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="inner_radius" type="bigint"/>
+            <column name="mass" type="bigint"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="outer_radius" type="bigint"/>
+            <column name="ring_class" type="varchar(255)"/>
+            <column name="body_id" type="uuid"/>
+            <column name="star_id" type="uuid"/>
+        </createTable>
+
+        <sql>
+            ALTER TABLE ring ADD CONSTRAINT dual_foreign_key CHECK ((star_id IS NOT NULL AND body_id IS NULL) OR (star_id IS NULL AND body_id IS NOT NULL))
+        </sql>
+
+    </changeSet>
+
+
+</databaseChangeLog>

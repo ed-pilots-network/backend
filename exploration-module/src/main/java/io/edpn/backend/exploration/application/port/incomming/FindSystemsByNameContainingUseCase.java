@@ -1,6 +1,6 @@
 package io.edpn.backend.exploration.application.port.incomming;
 
-import io.edpn.backend.exploration.application.dto.SystemDto;
+import io.edpn.backend.exploration.application.dto.web.object.SystemDto;
 
 import java.util.List;
 

@@ -2,6 +2,7 @@ package io.edpn.backend.exploration.adapter.kafka.dto.mapper;
 
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.System;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,7 @@ import static org.hamcrest.Matchers.is;
 @ExtendWith(MockitoExtension.class)
 class KafkaSystemCoordinatesResponseMapperTest {
 
-    private io.edpn.backend.exploration.application.dto.mapper.SystemCoordinatesResponseMapper underTest;
+    private SystemCoordinatesResponseMapper underTest;
 
     @BeforeEach
     void setUp() {

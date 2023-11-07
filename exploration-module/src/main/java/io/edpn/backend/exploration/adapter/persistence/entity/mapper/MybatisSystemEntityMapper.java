@@ -3,8 +3,8 @@ package io.edpn.backend.exploration.adapter.persistence.entity.mapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.dto.SystemEntity;
-import io.edpn.backend.exploration.application.dto.mapper.SystemEntityMapper;
+import io.edpn.backend.exploration.application.dto.persistence.entity.SystemEntity;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEntityMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,7 +20,7 @@ public class MybatisSystemEntityMapper implements SystemEntityMapper<MybatisSyst
                 systemEntity.getId(),
                 systemEntity.getEliteId(),
                 systemEntity.getName(),
-                systemEntity.getStarClass(),
+                systemEntity.getPrimaryStarClass(),
                 coordinateFromCoordinateEntity(systemEntity));
     }
 
@@ -30,7 +30,7 @@ public class MybatisSystemEntityMapper implements SystemEntityMapper<MybatisSyst
                 system.id(),
                 system.name(),
                 system.eliteId(),
-                system.starClass(),
+                system.primaryStarClass(),
                 Optional.ofNullable(system.coordinate()).map(Coordinate::x).orElse(null),
                 Optional.ofNullable(system.coordinate()).map(Coordinate::y).orElse(null),
                 Optional.ofNullable(system.coordinate()).map(Coordinate::z).orElse(null));

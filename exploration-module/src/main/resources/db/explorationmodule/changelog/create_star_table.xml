@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create_star_table" author="daniel-j-mason">
+        <createTable tableName="star">
+            <column name="id" type="uuid">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="absolute_magnitude" type="double"/>
+            <column name="age" type="bigint"/>
+            <column name="arrival_distance" type="double"/>
+            <column name="axial_tilt" type="double"/>
+            <column name="discovered" type="boolean"/>
+            <column name="local_id" type="bigint"/>
+            <column name="luminosity" type="varchar(255)"/>
+            <column name="mapped" type="boolean"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="radius" type="double"/>
+            <column name="rotational_period" type="double"/>
+            <column name="star_type" type="varchar(255)"/>
+            <column name="stellar_mass" type="bigint"/>
+            <column name="subclass" type="int"/>
+            <column name="surface_temperature" type="double"/>
+            <column name="system_id" type="uuid"/>
+            <column name="system_address" type="bigint"/>
+            <column name="horizons" type="boolean"/>
+            <column name="odyssey" type="boolean"/>
+            <!-- TODO converted to calculated column           -->
+            <column name="estimated_scan_value" type="double"/>
+        </createTable>
+    </changeSet>
+
+
+</databaseChangeLog>
+ 

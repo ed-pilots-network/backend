@@ -4,7 +4,7 @@ import io.edpn.backend.exploration.adapter.persistence.MybatisSystemRepository;
 import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.dto.mapper.SystemEntityMapper;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEntityMapper;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemsByNameContainingPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

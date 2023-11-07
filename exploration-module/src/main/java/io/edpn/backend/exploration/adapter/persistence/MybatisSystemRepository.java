@@ -35,13 +35,20 @@ public interface MybatisSystemRepository {
     @Results(id = "systemResultMap", value = {
             @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name", javaType = String.class),
-            @Result(property = "starClass", column = "star_class", javaType = String.class),
+            @Result(property = "primaryStarClass", column = "star_class", javaType = String.class),
             @Result(property = "eliteId", column = "elite_id", javaType = Long.class),
             @Result(property = "xCoordinate", column = "x_coordinate", javaType = Double.class),
             @Result(property = "yCoordinate", column = "y_coordinate", javaType = Double.class),
             @Result(property = "zCoordinate", column = "z_coordinate", javaType = Double.class)
     })
     Optional<MybatisSystemEntity> findByName(@Param("name") String name);
+    
+    @Select({"SELECT id, name, star_class, elite_id, ST_X(coordinates_geom) as x_coordinate, ST_Y(coordinates_geom) as y_coordinate, ST_Z(coordinates_geom) as z_coordinate",
+            "FROM system",
+            "WHERE id = #{id}"}
+    )
+    @ResultMap("systemResultMap")
+    Optional<MybatisSystemEntity> findById(@Param("id") UUID id);
 
     @Select({"SELECT id, name, star_class, elite_id, ST_X(coordinates_geom) as x_coordinate, ST_Y(coordinates_geom) as y_coordinate, ST_Z(coordinates_geom) as z_coordinate",
             "FROM system",

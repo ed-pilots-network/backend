@@ -1,14 +1,26 @@
 package io.edpn.backend.exploration.adapter.config;
 
+import io.edpn.backend.exploration.adapter.persistence.BodyRepository;
+import io.edpn.backend.exploration.adapter.persistence.MybatisBodyRepository;
+import io.edpn.backend.exploration.adapter.persistence.MybatisRingRepository;
+import io.edpn.backend.exploration.adapter.persistence.MybatisStarRepository;
 import io.edpn.backend.exploration.adapter.persistence.MybatisSystemCoordinateRequestRepository;
 import io.edpn.backend.exploration.adapter.persistence.MybatisSystemEliteIdRequestRepository;
 import io.edpn.backend.exploration.adapter.persistence.MybatisSystemRepository;
+import io.edpn.backend.exploration.adapter.persistence.RingRepository;
+import io.edpn.backend.exploration.adapter.persistence.StarRepository;
 import io.edpn.backend.exploration.adapter.persistence.SystemCoordinateRequestRepository;
 import io.edpn.backend.exploration.adapter.persistence.SystemEliteIdRequestRepository;
 import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
+import io.edpn.backend.exploration.adapter.persistence.entity.MybatisBodyEntity;
+import io.edpn.backend.exploration.adapter.persistence.entity.MybatisRingEntity;
+import io.edpn.backend.exploration.adapter.persistence.entity.MybatisStarEntity;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemCoordinateRequestEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemEliteIdRequestEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemEntityMapper;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.BodyEntityMapper;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.RingEntityMapper;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.StarEntityMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -37,5 +49,29 @@ public class RepositoryConfig {
             MybatisSystemEliteIdRequestEntityMapper mybatisSystemEliteIdRequestEntityMapper
     ) {
         return new SystemEliteIdRequestRepository(mybatisSystemEliteIdRequestRepository, mybatisSystemEliteIdRequestEntityMapper);
+    }
+    
+    @Bean(name = "explorationBodyRepository")
+    public BodyRepository bodyRepository(
+            MybatisBodyRepository mybatisBodyRepository,
+            BodyEntityMapper<MybatisBodyEntity> bodyEntityMapper
+    ) {
+        return new BodyRepository(mybatisBodyRepository, bodyEntityMapper);
+    }
+    
+    @Bean(name = "explorationStarRepository")
+    public StarRepository starRepository(
+            MybatisStarRepository mybatisStarRepository,
+            StarEntityMapper<MybatisStarEntity> starEntityMapper
+    ) {
+        return new StarRepository(mybatisStarRepository, starEntityMapper);
+    }
+    
+    @Bean(name = "explorationRingRepository")
+    public RingRepository ringRepository(
+            MybatisRingRepository mybatisRingRepository,
+            RingEntityMapper<MybatisRingEntity> ringEntityMapper
+    ) {
+        return new RingRepository(mybatisRingRepository, ringEntityMapper);
     }
 }

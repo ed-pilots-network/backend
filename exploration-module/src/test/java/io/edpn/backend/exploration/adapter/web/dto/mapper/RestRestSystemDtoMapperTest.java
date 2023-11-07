@@ -2,7 +2,8 @@ package io.edpn.backend.exploration.adapter.web.dto.mapper;
 
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.dto.SystemDto;
+import io.edpn.backend.exploration.application.dto.web.object.SystemDto;
+import io.edpn.backend.exploration.application.dto.web.object.mapper.SystemDtoMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +16,7 @@ import static org.hamcrest.Matchers.nullValue;
 
 class RestRestSystemDtoMapperTest {
 
-    private io.edpn.backend.exploration.application.dto.mapper.SystemDtoMapper underTest;
+    private SystemDtoMapper underTest;
 
     @BeforeEach
     void setUp() {
@@ -41,7 +42,7 @@ class RestRestSystemDtoMapperTest {
 
         assertThat(result.name(), equalTo(name));
         assertThat(result.eliteId(), equalTo(eliteId));
-        assertThat(result.starClass(), equalTo(starClass));
+        assertThat(result.primaryStarClass(), equalTo(starClass));
         assertThat(result.coordinate(), notNullValue());
         assertThat(result.coordinate().x(), equalTo(x));
         assertThat(result.coordinate().y(), equalTo(y));
@@ -63,7 +64,7 @@ class RestRestSystemDtoMapperTest {
 
         assertThat(result.name(), equalTo(name));
         assertThat(result.eliteId(), equalTo(eliteId));
-        assertThat(result.starClass(), equalTo(starClass));
+        assertThat(result.primaryStarClass(), equalTo(starClass));
         assertThat(result.coordinate(), nullValue());
     }
 }
