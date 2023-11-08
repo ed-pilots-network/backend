@@ -77,25 +77,25 @@ class MybatisCommodityMarketInfoEntityMapperTest {
         CommodityMarketInfo result = underTest.map(entity);
         
         // Verify that the result matches the expected values
-        assertThat(result.getValidatedCommodity(), is(mockCommodity));
-        assertThat(result.getMaxBuyPrice(), is(100.0));
-        assertThat(result.getMinBuyPrice(), is(50.0));
-        assertThat(result.getAvgBuyPrice(), is(75.0));
-        assertThat(result.getMaxSellPrice(), is(200.0));
-        assertThat(result.getMinSellPrice(), is(100.0));
-        assertThat(result.getAvgSellPrice(), is(150.0));
-        assertThat(result.getMinMeanPrice(), is(60.0));
-        assertThat(result.getMaxMeanPrice(), is(180.0));
-        assertThat(result.getAverageMeanPrice(), is(120.0));
-        assertThat(result.getTotalStock(), is(1000L));
-        assertThat(result.getTotalDemand(), is(500L));
-        assertThat(result.getTotalStations(), is(10));
-        assertThat(result.getStationsWithBuyPrice(), is(5));
-        assertThat(result.getStationsWithSellPrice(), is(4));
-        assertThat(result.getStationsWithBuyPriceLowerThanAverage(), is(2));
-        assertThat(result.getStationsWithSellPriceHigherThanAverage(), is(1));
-        assertThat(result.getHighestSellingToStation(), is(mockHighestSellingStation));
-        assertThat(result.getLowestBuyingFromStation(), is(mockLowestBuyingStation));
+        assertThat(result.validatedCommodity(), is(mockCommodity));
+        assertThat(result.maxBuyPrice(), is(100.0));
+        assertThat(result.minBuyPrice(), is(50.0));
+        assertThat(result.avgBuyPrice(), is(75.0));
+        assertThat(result.maxSellPrice(), is(200.0));
+        assertThat(result.minSellPrice(), is(100.0));
+        assertThat(result.avgSellPrice(), is(150.0));
+        assertThat(result.minMeanPrice(), is(60.0));
+        assertThat(result.maxMeanPrice(), is(180.0));
+        assertThat(result.averageMeanPrice(), is(120.0));
+        assertThat(result.totalStock(), is(1000L));
+        assertThat(result.totalDemand(), is(500L));
+        assertThat(result.totalStations(), is(10));
+        assertThat(result.stationsWithBuyPrice(), is(5));
+        assertThat(result.stationsWithSellPrice(), is(4));
+        assertThat(result.stationsWithBuyPriceLowerThanAverage(), is(2));
+        assertThat(result.stationsWithSellPriceHigherThanAverage(), is(1));
+        assertThat(result.highestSellingToStation(), is(mockHighestSellingStation));
+        assertThat(result.lowestBuyingFromStation(), is(mockLowestBuyingStation));
         
         verify(mybatisValidatedCommodityEntityMapper, times(1)).map(entity.getValidatedCommodity());
         verify(mybatisStationEntityMapper, times(1)).map(entity.getHighestSellingToStation());
@@ -110,31 +110,31 @@ class MybatisCommodityMarketInfoEntityMapperTest {
         MybatisStationEntity mockLowestBuyingStationEntity = mock(MybatisStationEntity.class);
         
         // Setup the CommodityMarketInfo with test data
-        CommodityMarketInfo domainObject = CommodityMarketInfo.builder()
-                .validatedCommodity(mock(ValidatedCommodity.class))
-                .maxBuyPrice(100.0)
-                .minBuyPrice(50.0)
-                .avgBuyPrice(75.0)
-                .maxSellPrice(200.0)
-                .minSellPrice(100.0)
-                .avgSellPrice(150.0)
-                .minMeanPrice(60.0)
-                .maxMeanPrice(180.0)
-                .averageMeanPrice(120.0)
-                .totalStock(1000L)
-                .totalDemand(500L)
-                .totalStations(10)
-                .stationsWithBuyPrice(5)
-                .stationsWithSellPrice(4)
-                .stationsWithBuyPriceLowerThanAverage(2)
-                .stationsWithSellPriceHigherThanAverage(1)
-                .highestSellingToStation(mock(Station.class))
-                .lowestBuyingFromStation(mock(Station.class))
-                .build();
-        
-        when(mybatisValidatedCommodityEntityMapper.map(domainObject.getValidatedCommodity())).thenReturn(mockCommodityEntity);
-        when(mybatisStationEntityMapper.map(domainObject.getHighestSellingToStation())).thenReturn(mockHighestSellingStationEntity);
-        when(mybatisStationEntityMapper.map(domainObject.getLowestBuyingFromStation())).thenReturn(mockLowestBuyingStationEntity);
+        CommodityMarketInfo domainObject = new CommodityMarketInfo(
+                mock(ValidatedCommodity.class),
+                100.0,
+                50.0,
+                75.0,
+                200.0,
+                100.0,
+                150.0,
+                60.0,
+                180.0,
+                120.0,
+                1000L,
+                500L,
+                10,
+                5,
+                4,
+                2,
+                1,
+                mock(Station.class),
+                mock(Station.class)
+        );
+
+        when(mybatisValidatedCommodityEntityMapper.map(domainObject.validatedCommodity())).thenReturn(mockCommodityEntity);
+        when(mybatisStationEntityMapper.map(domainObject.highestSellingToStation())).thenReturn(mockHighestSellingStationEntity);
+        when(mybatisStationEntityMapper.map(domainObject.lowestBuyingFromStation())).thenReturn(mockLowestBuyingStationEntity);
         
         // Map the domainObject to a CommodityMarketInfoEntity
         CommodityMarketInfoEntity result = underTest.map(domainObject);
@@ -159,10 +159,10 @@ class MybatisCommodityMarketInfoEntityMapperTest {
         assertThat(result.getStationsWithSellPriceHigherThanAverage(), is(1));
         assertThat(result.getHighestSellingToStation(), is(mockHighestSellingStationEntity));
         assertThat(result.getLowestBuyingFromStation(), is(mockLowestBuyingStationEntity));
-        
-        verify(mybatisValidatedCommodityEntityMapper, times(1)).map(domainObject.getValidatedCommodity());
-        verify(mybatisStationEntityMapper, times(1)).map(domainObject.getHighestSellingToStation());
-        verify(mybatisStationEntityMapper, times(1)).map(domainObject.getLowestBuyingFromStation());
+
+        verify(mybatisValidatedCommodityEntityMapper, times(1)).map(domainObject.validatedCommodity());
+        verify(mybatisStationEntityMapper, times(1)).map(domainObject.highestSellingToStation());
+        verify(mybatisStationEntityMapper, times(1)).map(domainObject.lowestBuyingFromStation());
     }
     
 }

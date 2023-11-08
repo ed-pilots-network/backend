@@ -9,10 +9,10 @@ public class RestValidatedCommodityDtoMapper implements ValidatedCommodityDtoMap
     @Override
     public ValidatedCommodityDto map(ValidatedCommodity validatedCommodity) {
         return new RestValidatedCommodityDto(
-                validatedCommodity.getCommodityName(),
-                validatedCommodity.getDisplayName(),
-                String.valueOf(validatedCommodity.getType()),
-                validatedCommodity.getIsRare()
+                validatedCommodity.commodityName(),
+                validatedCommodity.displayName(),
+                String.valueOf(validatedCommodity.type()),
+                validatedCommodity.isRare()
         );
     }
 }

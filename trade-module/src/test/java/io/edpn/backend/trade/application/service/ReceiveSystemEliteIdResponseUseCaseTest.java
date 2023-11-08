@@ -14,14 +14,13 @@ import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.Dele
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.ExistsSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestsPort;
 import io.edpn.backend.util.IdGenerator;
+import java.util.concurrent.Executor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.support.RetryTemplate;
-
-import java.util.concurrent.Executor;
 
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
@@ -82,14 +81,14 @@ public class ReceiveSystemEliteIdResponseUseCaseTest {
 
     @Test
     public void shouldReceiveSystemEliteIdResponse() {
-        SystemEliteIdResponse message = new SystemEliteIdResponse("system", 1234);
+        SystemEliteIdResponse message = new SystemEliteIdResponse("system", 1234L);
 
         System system = mock(System.class);
-        when(createOrLoadSystemPort.createOrLoad(argThat(argument -> argument.getName().equals("system")))).thenReturn(system);
+        when(createOrLoadSystemPort.createOrLoad(argThat(argument -> argument.name().equals("system")))).thenReturn(system);
+        when(system.withEliteId(1234L)).thenReturn(system);
 
         underTest.receive(message);
 
-        verify(system).setEliteId(1234L);
         verify(updateSystemPort, times(1)).update(system);
         verify(deleteSystemEliteIdRequestPort, times(1)).delete("system");
     }

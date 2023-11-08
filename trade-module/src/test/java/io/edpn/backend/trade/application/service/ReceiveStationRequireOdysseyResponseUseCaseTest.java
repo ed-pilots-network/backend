@@ -91,14 +91,14 @@ public class ReceiveStationRequireOdysseyResponseUseCaseTest {
                 new StationRequireOdysseyResponse("station", "system", true);
 
         System system = mock(System.class);
-        when(createOrLoadSystemPort.createOrLoad(argThat(argument -> argument.getName().equals("system")))).thenReturn(system);
+        when(createOrLoadSystemPort.createOrLoad(argThat(argument -> argument.name().equals("system")))).thenReturn(system);
 
         Station station = mock(Station.class);
-        when(createOrLoadStationPort.createOrLoad(argThat(argument -> argument.getSystem().equals(system) && argument.getName().equals("station")))).thenReturn(station);
+        when(createOrLoadStationPort.createOrLoad(argThat(argument -> argument.system().equals(system) && argument.name().equals("station")))).thenReturn(station);
+        when(station.withRequireOdyssey(true)).thenReturn(station);
 
         underTest.receive(message);
 
-        verify(station).setRequireOdyssey(true);
         verify(updateStationPort, times(1)).update(station);
         verify(deleteStationRequireOdysseyRequestPort, times(1)).delete("system", "station");
     }

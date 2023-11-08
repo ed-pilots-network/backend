@@ -8,21 +8,18 @@ import io.edpn.backend.trade.application.dto.persistence.entity.mapper.MessageEn
 public class MybatisMessageEntityMapper implements MessageEntityMapper<MybatisMessageEntity> {
     @Override
     public Message map(MessageEntity messageEntity) {
-        return Message.builder()
-                .message(messageEntity.getMessage())
-                .topic(messageEntity.getTopic())
-                .build();
+        return new Message(messageEntity.getTopic(), messageEntity.getMessage());
     }
-    
+
     @Override
     public MybatisMessageEntity map(Message message) {
-        String sanitizedTopicName = this.sanitizeTopicName(message.getTopic());
+        String sanitizedTopicName = this.sanitizeTopicName(message.topic());
         return MybatisMessageEntity.builder()
-                .message(message.getMessage())
+                .message(message.message())
                 .topic(sanitizedTopicName)
                 .build();
     }
-    
+
     private String sanitizeTopicName(String topicName) {
         return topicName.replaceAll("[^A-Za-z0-9._\\-]", "_");
     }

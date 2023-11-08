@@ -21,6 +21,8 @@ import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystem
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Module;
 import io.edpn.backend.util.Topic;
+import java.util.concurrent.Executor;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,9 +33,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.support.RetryTemplate;
-
-import java.util.concurrent.Executor;
-import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -112,7 +111,7 @@ public class RequestStationArrivalDistanceServiceTest {
     @MethodSource("provideDoublesForCheckApplicability")
     void shouldCheckApplicability(Double input, boolean expected) {
         Station stationWithArrivalDistance = mock(Station.class);
-        when(stationWithArrivalDistance.getArrivalDistance()).thenReturn(input);
+        when(stationWithArrivalDistance.arrivalDistance()).thenReturn(input);
 
         assertThat(underTest.isApplicable(stationWithArrivalDistance), is(expected));
     }
@@ -121,13 +120,26 @@ public class RequestStationArrivalDistanceServiceTest {
     public void testRequestWhenIdExists() {
         String systemName = "Test System";
         String stationName = "Test Station";
-        System system = System.builder()
-                .name(systemName)
-                .build();
-        Station station = Station.builder()
-                .name(stationName)
-                .system(system)
-                .build();
+
+        System system = new System(
+                null,
+                null,
+                systemName,
+                null
+        );
+        Station station = new Station(
+                null,
+                null,
+                stationName,
+                null,
+                system,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
 
         when(existsStationArrivalDistanceRequestPort.exists(systemName, stationName)).thenReturn(true);
 
@@ -142,13 +154,25 @@ public class RequestStationArrivalDistanceServiceTest {
         String systemName = "Test System";
         String stationName = "Test Station";
 
-        System system = System.builder()
-                .name(systemName)
-                .build();
-        Station station = Station.builder()
-                .name(stationName)
-                .system(system)
-                .build();
+        System system = new System(
+                null,
+                null,
+                systemName,
+                null
+        );
+        Station station = new Station(
+                null,
+                null,
+                stationName,
+                null,
+                system,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
 
         JsonNode mockJsonNode = mock(JsonNode.class);
         String mockJsonString = "jsonString";
@@ -164,7 +188,7 @@ public class RequestStationArrivalDistanceServiceTest {
         }))).thenReturn(mockJsonNode);
         when(mockJsonNode.toString()).thenReturn(mockJsonString);
         when(messageMapper.map(argThat(argument ->
-                argument.getMessage().equals(mockJsonString) && argument.getTopic().equals(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName())
+                argument.message().equals(mockJsonString) && argument.topic().equals(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName())
         ))).thenReturn(mockMessageDto);
 
         ArgumentCaptor<Message> argumentCaptor = ArgumentCaptor.forClass(Message.class);
@@ -177,7 +201,7 @@ public class RequestStationArrivalDistanceServiceTest {
         verify(messageMapper, times(1)).map(argumentCaptor.capture());
         Message message = argumentCaptor.getValue();
         assertThat(message, is(notNullValue()));
-        assertThat(message.getTopic(), is(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName()));
-        assertThat(message.getMessage(), is("jsonString"));
+        assertThat(message.topic(), is(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName()));
+        assertThat(message.message(), is("jsonString"));
     }
 }

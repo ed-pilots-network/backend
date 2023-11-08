@@ -1,5 +1,6 @@
 package io.edpn.backend.trade.adapter.web.dto.object.mapper;
 
+import io.edpn.backend.trade.application.domain.Coordinate;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.dto.web.object.SystemDto;
 import io.edpn.backend.trade.application.dto.web.object.mapper.SystemDtoMapper;
@@ -10,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 @ExtendWith(MockitoExtension.class)
 class RestSystemDtoMapperTest {
@@ -28,21 +30,22 @@ class RestSystemDtoMapperTest {
         Double xCoordinate = 123.45;
         Double yCoordinate = 678.90;
         Double zCoordinate = 234.56;
-        System domainObject = System.builder()
-                .eliteId(eliteId)
-                .name(name)
-                .xCoordinate(xCoordinate)
-                .yCoordinate(yCoordinate)
-                .zCoordinate(zCoordinate)
-                .build();
-        
+        Coordinate coordinate = new Coordinate(xCoordinate, yCoordinate, zCoordinate);
+        System domainObject = new System(
+                null,
+                eliteId,
+                name,
+                coordinate
+        );
+
         SystemDto dto = underTest.map(domainObject);
         
         assertThat(dto.eliteId(), is(eliteId));
         assertThat(dto.name(), is(name));
-        assertThat(dto.xCoordinate(), is(xCoordinate));
-        assertThat(dto.yCoordinate(), is(yCoordinate));
-        assertThat(dto.zCoordinate(), is(zCoordinate));
+        assertThat(dto.coordinates(), notNullValue());
+        assertThat(dto.coordinates().x(), is(xCoordinate));
+        assertThat(dto.coordinates().y(), is(yCoordinate));
+        assertThat(dto.coordinates().z(), is(zCoordinate));
     }
 
 }

@@ -16,14 +16,13 @@ import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.E
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.LoadAllStationPlanetaryRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
 import io.edpn.backend.util.IdGenerator;
+import java.util.concurrent.Executor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.support.RetryTemplate;
-
-import java.util.concurrent.Executor;
 
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
@@ -91,14 +90,14 @@ public class ReceiveStationPlanetaryResponseUseCaseTest {
                 new StationPlanetaryResponse("station", "system", true);
 
         System system = mock(System.class);
-        when(createOrLoadSystemPort.createOrLoad(argThat(argument -> argument.getName().equals("system")))).thenReturn(system);
+        when(createOrLoadSystemPort.createOrLoad(argThat(argument -> argument.name().equals("system")))).thenReturn(system);
 
         Station station = mock(Station.class);
-        when(createOrLoadStationPort.createOrLoad(argThat(argument -> argument.getSystem().equals(system) && argument.getName().equals("station")))).thenReturn(station);
+        when(createOrLoadStationPort.createOrLoad(argThat(argument -> argument.system().equals(system) && argument.name().equals("station")))).thenReturn(station);
+        when(station.withPlanetary(true)).thenReturn(station);
 
         underTest.receive(message);
 
-        verify(station).setPlanetary(true);
         verify(updateStationPort, times(1)).update(station);
         verify(deleteStationPlanetaryRequestPort, times(1)).delete("system", "station");
     }

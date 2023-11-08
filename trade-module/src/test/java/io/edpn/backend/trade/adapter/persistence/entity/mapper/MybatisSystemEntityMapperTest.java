@@ -1,17 +1,18 @@
 package io.edpn.backend.trade.adapter.persistence.entity.mapper;
 
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
+import io.edpn.backend.trade.application.domain.Coordinate;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemEntityMapper;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.UUID;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 @ExtendWith(MockitoExtension.class)
 class MybatisSystemEntityMapperTest {
@@ -41,13 +42,14 @@ class MybatisSystemEntityMapperTest {
                 .build();
         
         System domainObject = underTest.map(entity);
-        
-        assertThat(domainObject.getId(), is(id));
-        assertThat(domainObject.getEliteId(), is(eliteId));
-        assertThat(domainObject.getName(), is(name));
-        assertThat(domainObject.getXCoordinate(), is(xCoordinate));
-        assertThat(domainObject.getYCoordinate(), is(yCoordinate));
-        assertThat(domainObject.getZCoordinate(), is(zCoordinate));
+
+        assertThat(domainObject.id(), is(id));
+        assertThat(domainObject.eliteId(), is(eliteId));
+        assertThat(domainObject.name(), is(name));
+        assertThat(domainObject.coordinate(), notNullValue());
+        assertThat(domainObject.coordinate().x(), is(xCoordinate));
+        assertThat(domainObject.coordinate().y(), is(yCoordinate));
+        assertThat(domainObject.coordinate().z(), is(zCoordinate));
     }
     
     @Test
@@ -58,14 +60,9 @@ class MybatisSystemEntityMapperTest {
         Double xCoordinate = 123.45;
         Double yCoordinate = 678.90;
         Double zCoordinate = 234.56;
-        System domainObject = System.builder()
-                .id(id)
-                .eliteId(eliteId)
-                .name(name)
-                .xCoordinate(xCoordinate)
-                .yCoordinate(yCoordinate)
-                .zCoordinate(zCoordinate)
-                .build();
+        Coordinate coordinate = new Coordinate(xCoordinate, yCoordinate, zCoordinate);
+        System domainObject = new System(id, eliteId, name, coordinate);
+
         
         MybatisSystemEntity entity = underTest.map(domainObject);
         

@@ -52,21 +52,21 @@ class RestStationDtoMapperTest {
         String maxLandingPadSize = "LARGE";
         LocalDateTime marketUpdatedAt = LocalDateTime.now();
         
-        Station domainObject = Station.builder()
-                .id(id)
-                .marketId(marketId)
-                .name(name)
-                .arrivalDistance(arrivalDistance)
-                .system(mock(System.class))
-                .planetary(planetary)
-                .requireOdyssey(requireOdyssey)
-                .fleetCarrier(fleetCarrier)
-                .maxLandingPadSize(LandingPadSize.valueOf(maxLandingPadSize))
-                .marketUpdatedAt(marketUpdatedAt)
-                .marketData(List.of(mock(MarketDatum.class)))
-                .build();
-        
-        when(systemDtoMapper.map(domainObject.getSystem())).thenReturn(mockSystemDto);
+        Station domainObject = new Station(
+                id,
+                marketId,
+                name,
+                arrivalDistance,
+                mock(System.class),
+                planetary,
+                requireOdyssey,
+                fleetCarrier,
+                LandingPadSize.valueOf(maxLandingPadSize),
+                marketUpdatedAt,
+                List.of(mock(MarketDatum.class))
+        );
+
+        when(systemDtoMapper.map(domainObject.system())).thenReturn(mockSystemDto);
         
         StationDto dto = underTest.map(domainObject);
         
@@ -79,6 +79,6 @@ class RestStationDtoMapperTest {
         assertThat(dto.maxLandingPadSize(), is(maxLandingPadSize));
         assertThat(dto.marketUpdatedAt(), is(marketUpdatedAt));
         
-        verify(systemDtoMapper, times(1)).map(domainObject.getSystem());
+        verify(systemDtoMapper, times(1)).map(domainObject.system());
     }
 }

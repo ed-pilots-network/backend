@@ -18,6 +18,9 @@ import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.Load
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.RequestMissingSystemEliteIdUseCase;
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Module;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Executor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,10 +28,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.RetryCallback;
 import org.springframework.retry.support.RetryTemplate;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Executor;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -112,7 +111,7 @@ public class RequestMissingSystemEliteIdUseCaseTest {
     @Test
     public void testRequestMissingForOneResult() {
         System system = mock(System.class);
-        when(system.getName()).thenReturn("Alpha");
+        when(system.name()).thenReturn("Alpha");
         when(loadSystemsByFilterPort.loadByFilter(any())).thenReturn(List.of(system));
         JsonNode jsonNode = mock(JsonNode.class);
         when(objectMapper.valueToTree(argThat(argument -> {
@@ -124,7 +123,7 @@ public class RequestMissingSystemEliteIdUseCaseTest {
         }))).thenReturn(jsonNode);
         when(jsonNode.toString()).thenReturn("jsonNodeString");
         MessageDto messageDto = mock(MessageDto.class);
-        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("systemEliteIdRequest") && argument.getMessage().equals("jsonNodeString")))).thenReturn(messageDto);
+        when(messageMapper.map(argThat(argument -> argument != null && argument.topic().equals("systemEliteIdRequest") && argument.message().equals("jsonNodeString")))).thenReturn(messageDto);
         when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
@@ -137,9 +136,9 @@ public class RequestMissingSystemEliteIdUseCaseTest {
     @Test
     public void testRequestMissingForMultipleResult() {
         System system1 = mock(System.class);
-        when(system1.getName()).thenReturn("Alpha");
+        when(system1.name()).thenReturn("Alpha");
         System system2 = mock(System.class);
-        when(system2.getName()).thenReturn("Bravo");
+        when(system2.name()).thenReturn("Bravo");
         when(loadSystemsByFilterPort.loadByFilter(any())).thenReturn(List.of(system1, system2));
         JsonNode jsonNode1 = mock(JsonNode.class);
         JsonNode jsonNode2 = mock(JsonNode.class);
@@ -161,8 +160,8 @@ public class RequestMissingSystemEliteIdUseCaseTest {
         when(jsonNode2.toString()).thenReturn("jsonNodeString2");
         MessageDto messageDto1 = mock(MessageDto.class);
         MessageDto messageDto2 = mock(MessageDto.class);
-        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("systemEliteIdRequest") && argument.getMessage().equals("jsonNodeString1")))).thenReturn(messageDto1);
-        when(messageMapper.map(argThat(argument -> argument != null && argument.getTopic().equals("systemEliteIdRequest") && argument.getMessage().equals("jsonNodeString2")))).thenReturn(messageDto2);
+        when(messageMapper.map(argThat(argument -> argument != null && argument.topic().equals("systemEliteIdRequest") && argument.message().equals("jsonNodeString1")))).thenReturn(messageDto1);
+        when(messageMapper.map(argThat(argument -> argument != null && argument.topic().equals("systemEliteIdRequest") && argument.message().equals("jsonNodeString2")))).thenReturn(messageDto2);
         when(sendKafkaMessagePort.send(messageDto1)).thenReturn(true);
         when(sendKafkaMessagePort.send(messageDto2)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());

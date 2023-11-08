@@ -20,11 +20,11 @@ public class MybatisValidatedCommodityEntityMapper implements ValidatedCommodity
     @Override
     public MybatisValidatedCommodityEntity map(ValidatedCommodity validatedCommodity) {
         return MybatisValidatedCommodityEntity.builder()
-                .id(validatedCommodity.getId())
-                .commodityName(validatedCommodity.getCommodityName())
-                .displayName(validatedCommodity.getDisplayName())
-                .type(String.valueOf(validatedCommodity.getType()))
-                .isRare(validatedCommodity.getIsRare())
+                .id(validatedCommodity.id())
+                .commodityName(validatedCommodity.commodityName())
+                .displayName(validatedCommodity.displayName())
+                .type(String.valueOf(validatedCommodity.type()))
+                .isRare(validatedCommodity.isRare())
                 .build();
     }
 }

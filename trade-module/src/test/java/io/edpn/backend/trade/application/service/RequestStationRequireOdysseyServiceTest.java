@@ -21,6 +21,8 @@ import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystem
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Module;
 import io.edpn.backend.util.Topic;
+import java.util.concurrent.Executor;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,9 +33,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.support.RetryTemplate;
-
-import java.util.concurrent.Executor;
-import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -113,7 +112,7 @@ public class RequestStationRequireOdysseyServiceTest {
     @MethodSource("provideBooleansForCheckApplicability")
     void shouldCheckApplicability(Boolean input, boolean expected) {
         Station stationWithOdysseyRequirement = mock(Station.class);
-        when(stationWithOdysseyRequirement.getRequireOdyssey()).thenReturn(input);
+        when(stationWithOdysseyRequirement.requireOdyssey()).thenReturn(input);
 
         assertThat(underTest.isApplicable(stationWithOdysseyRequirement), is(expected));
     }
@@ -122,13 +121,25 @@ public class RequestStationRequireOdysseyServiceTest {
     public void testRequestWhenIdExists() {
         String systemName = "Test System";
         String stationName = "Test Station";
-        System system = System.builder()
-                .name(systemName)
-                .build();
-        Station station = Station.builder()
-                .name(stationName)
-                .system(system)
-                .build();
+        System system = new System(
+                null,
+                null,
+                systemName,
+                null
+        );
+        Station station = new Station(
+                null,
+                null,
+                stationName,
+                null,
+                system,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
 
         when(existsStationRequireOdysseyRequestPort.exists(systemName, stationName)).thenReturn(true);
 
@@ -143,13 +154,25 @@ public class RequestStationRequireOdysseyServiceTest {
         String systemName = "Test System";
         String stationName = "Test Station";
 
-        System system = System.builder()
-                .name(systemName)
-                .build();
-        Station station = Station.builder()
-                .name(stationName)
-                .system(system)
-                .build();
+        System system = new System(
+                null,
+                null,
+                systemName,
+                null
+        );
+        Station station = new Station(
+                null,
+                null,
+                stationName,
+                null,
+                system,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
 
         JsonNode mockJsonNode = mock(JsonNode.class);
         String mockJsonString = "jsonString";
@@ -165,7 +188,7 @@ public class RequestStationRequireOdysseyServiceTest {
         }))).thenReturn(mockJsonNode);
         when(mockJsonNode.toString()).thenReturn(mockJsonString);
         when(messageMapper.map(argThat(argument ->
-                argument.getMessage().equals(mockJsonString) && argument.getTopic().equals(Topic.Request.STATION_REQUIRE_ODYSSEY.getTopicName())
+                argument.message().equals(mockJsonString) && argument.topic().equals(Topic.Request.STATION_REQUIRE_ODYSSEY.getTopicName())
         ))).thenReturn(mockMessageDto);
 
         ArgumentCaptor<Message> argumentCaptor = ArgumentCaptor.forClass(Message.class);
@@ -178,7 +201,7 @@ public class RequestStationRequireOdysseyServiceTest {
         verify(messageMapper, times(1)).map(argumentCaptor.capture());
         Message message = argumentCaptor.getValue();
         assertThat(message, is(notNullValue()));
-        assertThat(message.getTopic(), is(Topic.Request.STATION_REQUIRE_ODYSSEY.getTopicName()));
-        assertThat(message.getMessage(), is("jsonString"));
+        assertThat(message.topic(), is(Topic.Request.STATION_REQUIRE_ODYSSEY.getTopicName()));
+        assertThat(message.message(), is("jsonString"));
     }
 }

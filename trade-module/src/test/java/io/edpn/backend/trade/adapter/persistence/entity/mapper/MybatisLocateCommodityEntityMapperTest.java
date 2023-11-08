@@ -10,13 +10,12 @@ import io.edpn.backend.trade.application.dto.persistence.entity.LocateCommodityE
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.LocateCommodityEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.ValidatedCommodityEntityMapper;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDateTime;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -67,14 +66,14 @@ class MybatisLocateCommodityEntityMapperTest {
         LocateCommodity result = underTest.map(entity);
         
         // Verify that the result matches the expected values
-        assertThat(result.getPriceUpdatedAt(), is(pricesUpdatedAt));
-        assertThat(result.getValidatedCommodity(), is(mockCommodity));
-        assertThat(result.getStation(), is(mockStation));
-        assertThat(result.getSupply(), is(100L));
-        assertThat(result.getDemand(), is(200L));
-        assertThat(result.getBuyPrice(), is(1234L));
-        assertThat(result.getSellPrice(), is(4321L));
-        assertThat(result.getDistance(), is(63.5));
+        assertThat(result.priceUpdatedAt(), is(pricesUpdatedAt));
+        assertThat(result.validatedCommodity(), is(mockCommodity));
+        assertThat(result.station(), is(mockStation));
+        assertThat(result.supply(), is(100L));
+        assertThat(result.demand(), is(200L));
+        assertThat(result.buyPrice(), is(1234L));
+        assertThat(result.sellPrice(), is(4321L));
+        assertThat(result.distance(), is(63.5));
         
         verify(mybatisValidatedCommodityEntityMapper, times(1)).map(entity.getValidatedCommodity());
         verify(mybatisStationEntityMapper, times(1)).map(entity.getStation());
@@ -90,19 +89,19 @@ class MybatisLocateCommodityEntityMapperTest {
         LocalDateTime pricesUpdatedAt = LocalDateTime.now();
         
         // Setup the LocateCommodity Object with test data
-        LocateCommodity domainObject = LocateCommodity.builder()
-                .priceUpdatedAt(pricesUpdatedAt)
-                .validatedCommodity(mock(ValidatedCommodity.class))
-                .station(mock(Station.class))
-                .supply(100L)
-                .demand(200L)
-                .buyPrice(1234L)
-                .sellPrice(4321L)
-                .distance(63.5)
-                .build();
+        LocateCommodity domainObject = new LocateCommodity(
+                pricesUpdatedAt,
+                mock(ValidatedCommodity.class),
+                mock(Station.class),
+                100L,
+                200L,
+                1234L,
+                4321L,
+                63.5
+        );
         
-        when(mybatisValidatedCommodityEntityMapper.map(domainObject.getValidatedCommodity())).thenReturn(mockCommodityEntity);
-        when(mybatisStationEntityMapper.map(domainObject.getStation())).thenReturn(mockStationEntity);
+        when(mybatisValidatedCommodityEntityMapper.map(domainObject.validatedCommodity())).thenReturn(mockCommodityEntity);
+        when(mybatisStationEntityMapper.map(domainObject.station())).thenReturn(mockStationEntity);
         
         // Map the entity to a CommodityMarketInfo object
         MybatisLocateCommodityEntity result = underTest.map(domainObject);
@@ -117,8 +116,8 @@ class MybatisLocateCommodityEntityMapperTest {
         assertThat(result.getSellPrice(), is(4321L));
         assertThat(result.getDistance(), is(63.5));
         
-        verify(mybatisValidatedCommodityEntityMapper, times(1)).map(domainObject.getValidatedCommodity());
-        verify(mybatisStationEntityMapper, times(1)).map(domainObject.getStation());
+        verify(mybatisValidatedCommodityEntityMapper, times(1)).map(domainObject.validatedCommodity());
+        verify(mybatisStationEntityMapper, times(1)).map(domainObject.station());
         
     }
     

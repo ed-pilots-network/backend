@@ -112,13 +112,13 @@ public class CleanUpObsoleteSystemCoordinateRequestsUseCaseTest {
         when(request2.systemName()).thenReturn("Beta");
 
         System system3 = mock(System.class);
-        when(system3.getName()).thenReturn("Alpha");
+        when(system3.name()).thenReturn("Alpha");
 
         System system2 = mock(System.class);
-        when(system2.getName()).thenReturn("Beta");
+        when(system2.name()).thenReturn("Beta");
 
         System system1 = mock(System.class);
-        when(system1.getName()).thenReturn("Gamma");
+        when(system1.name()).thenReturn("Gamma");
 
         when(loadAllSystemCoordinateRequestsPort.loadAll()).thenReturn(List.of(request1, request2));
         when(loadSystemsByFilterPort.loadByFilter(any())).thenReturn(List.of(system1, system2, system3));
@@ -136,7 +136,7 @@ public class CleanUpObsoleteSystemCoordinateRequestsUseCaseTest {
         when(request2.systemName()).thenReturn("Beta");
 
         System system1 = mock(System.class);
-        when(system1.getName()).thenReturn("Alpha");
+        when(system1.name()).thenReturn("Alpha");
 
         when(loadAllSystemCoordinateRequestsPort.loadAll()).thenReturn(List.of(request1, request2));
         when(loadSystemsByFilterPort.loadByFilter(any())).thenReturn(List.of(system1));
@@ -155,10 +155,10 @@ public class CleanUpObsoleteSystemCoordinateRequestsUseCaseTest {
         when(request2.systemName()).thenReturn("Beta");
 
         System system1 = mock(System.class);
-        when(system1.getName()).thenReturn("Alpha");
+        when(system1.name()).thenReturn("Alpha");
 
         System system2 = mock(System.class);
-        when(system2.getName()).thenReturn("Beta");
+        when(system2.name()).thenReturn("Beta");
 
         when(loadAllSystemCoordinateRequestsPort.loadAll()).thenReturn(List.of(request1, request2));
         when(loadSystemsByFilterPort.loadByFilter(any())).thenReturn(List.of(system1, system2));

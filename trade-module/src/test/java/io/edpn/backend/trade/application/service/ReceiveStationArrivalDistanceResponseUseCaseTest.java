@@ -16,14 +16,13 @@ import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancereq
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.LoadAllStationArrivalDistanceRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
 import io.edpn.backend.util.IdGenerator;
+import java.util.concurrent.Executor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.support.RetryTemplate;
-
-import java.util.concurrent.Executor;
 
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
@@ -90,14 +89,14 @@ public class ReceiveStationArrivalDistanceResponseUseCaseTest {
                 new StationArrivalDistanceResponse("station", "system", 1.0);
 
         System system = mock(System.class);
-        when(createOrLoadSystemPort.createOrLoad(argThat(argument -> argument.getName().equals("system")))).thenReturn(system);
+        when(createOrLoadSystemPort.createOrLoad(argThat(argument -> argument.name().equals("system")))).thenReturn(system);
 
         Station station = mock(Station.class);
-        when(createOrLoadStationPort.createOrLoad(argThat(argument -> argument.getSystem().equals(system) && argument.getName().equals("station")))).thenReturn(station);
+        when(createOrLoadStationPort.createOrLoad(argThat(argument -> argument.system().equals(system) && argument.name().equals("station")))).thenReturn(station);
+        when(station.withArrivalDistance(1.0)).thenReturn(station);
 
         underTest.receive(message);
 
-        verify(station).setArrivalDistance(1.0);
         verify(updateStationPort, times(1)).update(station);
         verify(deleteStationArrivalDistanceRequestPort, times(1)).delete("system", "station");
     }

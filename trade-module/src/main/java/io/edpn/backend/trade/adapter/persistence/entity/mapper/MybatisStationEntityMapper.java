@@ -9,9 +9,8 @@ import io.edpn.backend.trade.application.dto.persistence.entity.StationEntity;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.MarketDatumEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationEntityMapper;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemEntityMapper;
-import lombok.RequiredArgsConstructor;
-
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class MybatisStationEntityMapper implements StationEntityMapper<MybatisStationEntity> {
@@ -39,17 +38,17 @@ public class MybatisStationEntityMapper implements StationEntityMapper<MybatisSt
     @Override
     public MybatisStationEntity map(Station station) {
         return MybatisStationEntity.builder()
-                .id(station.getId())
-                .marketId(station.getMarketId())
-                .name(station.getName())
-                .arrivalDistance(station.getArrivalDistance())
-                .system(systemEntityMapper.map(station.getSystem()))
-                .planetary(station.getPlanetary())
-                .requireOdyssey(station.getRequireOdyssey())
-                .fleetCarrier(station.getFleetCarrier())
-                .maxLandingPadSize(Optional.ofNullable(station.getMaxLandingPadSize()).map(LandingPadSize::name).orElse(LandingPadSize.UNKNOWN.name()))
-                .marketUpdatedAt(station.getMarketUpdatedAt())
-                .marketData(station.getMarketData().stream().map(marketDatumEntityMapper::map).toList())
+                .id(station.id())
+                .marketId(station.marketId())
+                .name(station.name())
+                .arrivalDistance(station.arrivalDistance())
+                .system(systemEntityMapper.map(station.system()))
+                .planetary(station.planetary())
+                .requireOdyssey(station.requireOdyssey())
+                .fleetCarrier(station.fleetCarrier())
+                .maxLandingPadSize(Optional.ofNullable(station.maxLandingPadSize()).map(LandingPadSize::name).orElse(LandingPadSize.UNKNOWN.name()))
+                .marketUpdatedAt(station.marketUpdatedAt())
+                .marketData(station.marketData().stream().map(marketDatumEntityMapper::map).toList())
                 .build();
     }
 }
