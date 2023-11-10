@@ -29,8 +29,8 @@ public class MybatisSystemEntityMapper implements SystemEntityMapper<MybatisSyst
         return new MybatisSystemEntity(
                 system.id(),
                 system.name(),
-                system.eliteId(),
                 system.primaryStarClass(),
+                system.eliteId(),
                 Optional.ofNullable(system.coordinate()).map(Coordinate::x).orElse(null),
                 Optional.ofNullable(system.coordinate()).map(Coordinate::y).orElse(null),
                 Optional.ofNullable(system.coordinate()).map(Coordinate::z).orElse(null));

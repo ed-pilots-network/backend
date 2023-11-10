@@ -17,8 +17,8 @@ import java.util.UUID;
 public class MybatisSystemEntity implements SystemEntity {
     private UUID id;
     private String name;
-    private Long eliteId;
     private String primaryStarClass;
+    private Long eliteId;
     private Double xCoordinate;
     private Double yCoordinate;
     private Double zCoordinate;
