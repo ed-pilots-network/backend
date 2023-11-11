@@ -20,4 +20,9 @@ public record Station(
         LocalDateTime marketUpdatedAt,
         List<MarketDatum> marketData
 ) {
+    public Station {
+        if (maxLandingPadSize == null) {
+            maxLandingPadSize = LandingPadSize.UNKNOWN;
+        }
+    }
 }
