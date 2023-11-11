@@ -16,13 +16,13 @@ import java.util.UUID;
 public interface MybatisSystemRepository {
 
     @Select({"INSERT INTO system (id, name, star_class, elite_id, coordinates_geom)",
-            "VALUES (#{id}, #{name}, #{starClass}, #{eliteId}, ST_MakePoint(#{xCoordinate}, #{yCoordinate}, #{zCoordinate}))",
+            "VALUES (#{id}, #{name}, #{primaryStarClass}, #{eliteId}, ST_MakePoint(#{xCoordinate}, #{yCoordinate}, #{zCoordinate}))",
             "ON CONFLICT (name)",
             "DO UPDATE SET",
             "star_class = COALESCE(system.star_class, EXCLUDED.star_class),",
             "elite_id = COALESCE(system.elite_id, EXCLUDED.elite_id),",
             "coordinates_geom = COALESCE(system.coordinates_geom, EXCLUDED.coordinates_geom)",
-            "RETURNING *"
+            "RETURNING id, name, star_class, elite_id, ST_X(coordinates_geom) as x_coordinate, ST_Y(coordinates_geom) as y_coordinate, ST_Z(coordinates_geom) as z_coordinate"
     })
     @ResultMap("systemResultMap")
     MybatisSystemEntity insertOrUpdateOnConflict(MybatisSystemEntity system);
