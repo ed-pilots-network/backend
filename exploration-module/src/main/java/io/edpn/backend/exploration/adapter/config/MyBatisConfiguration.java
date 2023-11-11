@@ -6,6 +6,7 @@ import io.edpn.backend.exploration.adapter.persistence.MybatisStarRepository;
 import io.edpn.backend.exploration.adapter.persistence.MybatisSystemCoordinateRequestRepository;
 import io.edpn.backend.exploration.adapter.persistence.MybatisSystemEliteIdRequestRepository;
 import io.edpn.backend.exploration.adapter.persistence.MybatisSystemRepository;
+import io.edpn.backend.mybatisutil.IntegerStringMapTypeHandler;
 import io.edpn.backend.mybatisutil.StringDoubleMapTypeHandler;
 import io.edpn.backend.mybatisutil.StringListToArrayTypeHandler;
 import io.edpn.backend.mybatisutil.StringTrimmingTypeHandler;
@@ -26,7 +27,7 @@ public class MyBatisConfiguration {
     public SqlSessionFactory sqlSessionFactory(@Qualifier("explorationDataSource") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
         sessionFactoryBean.setDataSource(dataSource);
-        sessionFactoryBean.setTypeHandlers(new UuidTypeHandler(), new StringTrimmingTypeHandler(), new StringListToArrayTypeHandler(), new StringDoubleMapTypeHandler());
+        sessionFactoryBean.setTypeHandlers(new UuidTypeHandler(), new StringTrimmingTypeHandler(), new StringListToArrayTypeHandler(), new StringDoubleMapTypeHandler(), new IntegerStringMapTypeHandler());
 
         return sessionFactoryBean.getObject();
     }
