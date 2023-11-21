@@ -2,6 +2,14 @@ package io.edpn.backend.trade.adapter.config;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.edpn.backend.trade.adapter.kafka.KafkaTopicHandler;
+import io.edpn.backend.trade.adapter.kafka.processor.CommodityV3MessageProcessor;
+import io.edpn.backend.trade.adapter.kafka.processor.StationArrivalDistanceResponseMessageProcessor;
+import io.edpn.backend.trade.adapter.kafka.processor.StationMaxLandingPadSizeResponseMessageProcessor;
+import io.edpn.backend.trade.adapter.kafka.processor.StationRequireOdysseyResponseMessageProcessor;
+import io.edpn.backend.trade.adapter.kafka.processor.SystemCoordinatesResponseMessageProcessor;
+import io.edpn.backend.trade.adapter.kafka.processor.SystemEliteIdResponseMessageProcessor;
+import io.edpn.backend.util.Module;
+import io.edpn.backend.util.Topic;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
@@ -21,6 +29,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.listener.CommonErrorHandler;
+import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
@@ -62,7 +71,7 @@ public interface KafkaConfig {
         }
 
         @Bean(name = "tradeModuleKafkaListenerContainerFactory")
-        public ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory(EddnJsonKafkaConsumerConfig kafkaConfig, @Qualifier("tradeKafkaErrorHandler")CommonErrorHandler errorHandler) {
+        public ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory(EddnJsonKafkaConsumerConfig kafkaConfig, @Qualifier("tradeKafkaErrorHandler") CommonErrorHandler errorHandler) {
             return kafkaConfig.kafkaListenerContainerFactory("tradeModule", errorHandler);
         }
 
@@ -120,6 +129,137 @@ public interface KafkaConfig {
                                                    @Value(value = "${trade.spring.kafka.topic.partitions:1}") final int topicPartitions,
                                                    @Value(value = "${trade.spring.kafka.topic.replicationfactor:1}") final short topicReplicationFactor) {
             return new KafkaTopicHandler(adminClient, topicPartitions, topicReplicationFactor);
+        }
+    }
+
+    @Configuration("TradeModuleKafkaListenerConfig")
+    @Slf4j
+    class KafkaListenerConfig {
+
+        @Bean(name = "tradeSystemEliteIdResponseListener")
+        public ConcurrentMessageListenerContainer<String, JsonNode> systemEliteIdResponseListener(
+                @Qualifier("tradeModuleKafkaListenerContainerFactory") ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory,
+                @Qualifier("tradeSystemEliteIdResponseMessageProcessor") SystemEliteIdResponseMessageProcessor processor
+        ) {
+            String topicName = Topic.Response.SYSTEM_ELITE_ID.getFormattedTopicName(Module.TRADE);
+            ContainerProperties containerProps = new ContainerProperties(topicName);
+            containerProps.setMessageListener(processor);
+
+            ConcurrentMessageListenerContainer<String, JsonNode> container = new ConcurrentMessageListenerContainer<>(
+                    kafkaListenerContainerFactory.getConsumerFactory(),
+                    containerProps
+            );
+
+            container.setBeanName("systemEliteIdResponseListenerContainer");
+            return container;
+        }
+
+        @Bean(name = "tradeSystemCoordinatesResponseListener")
+        public ConcurrentMessageListenerContainer<String, JsonNode> systemCoordinatesResponseListener(
+                @Qualifier("tradeModuleKafkaListenerContainerFactory") ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory,
+                @Qualifier("tradeSystemCoordinatesResponseMessageProcessor") SystemCoordinatesResponseMessageProcessor processor
+        ) {
+            String topicName = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(Module.TRADE);
+            ContainerProperties containerProps = new ContainerProperties(topicName);
+            containerProps.setMessageListener(processor);
+
+            ConcurrentMessageListenerContainer<String, JsonNode> container = new ConcurrentMessageListenerContainer<>(
+                    kafkaListenerContainerFactory.getConsumerFactory(),
+                    containerProps
+            );
+
+            container.setBeanName("systemCoordinatesResponseListenerContainer");
+            return container;
+        }
+
+        @Bean(name = "tradeStationMaxLandingPadSizeResponseListener")
+        public ConcurrentMessageListenerContainer<String, JsonNode> stationMaxLandingPadSizeResponseListener(
+                @Qualifier("tradeModuleKafkaListenerContainerFactory") ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory,
+                @Qualifier("tradeStationMaxLandingPadSizeResponseMessageProcessor") StationMaxLandingPadSizeResponseMessageProcessor processor
+        ) {
+            String topicName = Topic.Response.STATION_MAX_LANDING_PAD_SIZE.getFormattedTopicName(Module.TRADE);
+            ContainerProperties containerProps = new ContainerProperties(topicName);
+            containerProps.setMessageListener(processor);
+
+            ConcurrentMessageListenerContainer<String, JsonNode> container = new ConcurrentMessageListenerContainer<>(
+                    kafkaListenerContainerFactory.getConsumerFactory(),
+                    containerProps
+            );
+
+            container.setBeanName("stationMaxLandingPadSizeResponseListenerContainer");
+            return container;
+        }
+
+        @Bean(name = "tradeStationRequireOdysseyResponseListener")
+        public ConcurrentMessageListenerContainer<String, JsonNode> stationRequireOdysseyResponseListener(
+                @Qualifier("tradeModuleKafkaListenerContainerFactory") ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory,
+                @Qualifier("tradeStationRequireOdysseyResponseMessageProcessor") StationRequireOdysseyResponseMessageProcessor processor
+        ) {
+            String topicName = Topic.Response.STATION_REQUIRE_ODYSSEY.getFormattedTopicName(Module.TRADE);
+            ContainerProperties containerProps = new ContainerProperties(topicName);
+            containerProps.setMessageListener(processor);
+
+            ConcurrentMessageListenerContainer<String, JsonNode> container = new ConcurrentMessageListenerContainer<>(
+                    kafkaListenerContainerFactory.getConsumerFactory(),
+                    containerProps
+            );
+
+            container.setBeanName("stationRequireOdysseyResponseListenerContainer");
+            return container;
+        }
+
+        @Bean(name = "tradeStationPlanetaryResponseListener")
+        public ConcurrentMessageListenerContainer<String, JsonNode> stationPlanetaryResponseListener(
+                @Qualifier("tradeModuleKafkaListenerContainerFactory") ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory,
+                @Qualifier("tradeStationPlanetaryResponseMessageProcessor") StationRequireOdysseyResponseMessageProcessor processor
+        ) {
+            String topicName = Topic.Response.STATION_IS_PLANETARY.getFormattedTopicName(Module.TRADE);
+            ContainerProperties containerProps = new ContainerProperties(topicName);
+            containerProps.setMessageListener(processor);
+
+            ConcurrentMessageListenerContainer<String, JsonNode> container = new ConcurrentMessageListenerContainer<>(
+                    kafkaListenerContainerFactory.getConsumerFactory(),
+                    containerProps
+            );
+
+            container.setBeanName("stationPlanetaryResponseListenerContainer");
+            return container;
+        }
+
+        @Bean(name = "tradeStationArrivalDistanceResponseListener")
+        public ConcurrentMessageListenerContainer<String, JsonNode> stationArrivalDistanceResponseListener(
+                @Qualifier("tradeModuleKafkaListenerContainerFactory") ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory,
+                @Qualifier("tradeStationArrivalDistanceResponseMessageProcessor") StationArrivalDistanceResponseMessageProcessor processor
+        ) {
+            String topicName = Topic.Response.STATION_ARRIVAL_DISTANCE.getFormattedTopicName(Module.TRADE);
+            ContainerProperties containerProps = new ContainerProperties(topicName);
+            containerProps.setMessageListener(processor);
+
+            ConcurrentMessageListenerContainer<String, JsonNode> container = new ConcurrentMessageListenerContainer<>(
+                    kafkaListenerContainerFactory.getConsumerFactory(),
+                    containerProps
+            );
+
+            container.setBeanName("stationArrivalDistanceResponseListenerContainer");
+            return container;
+        }
+
+        @Bean(name = "tradeCommodityV3MessageListener")
+        public ConcurrentMessageListenerContainer<String, JsonNode> commodityV3MessageListener(
+                @Qualifier("tradeModuleKafkaListenerContainerFactory") ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory,
+                @Qualifier("tradeCommodityV3MessageProcessor") CommodityV3MessageProcessor processor
+        ) {
+            String topicName = Topic.EDDN.COMMODITY_V3.getTopicName();
+            ContainerProperties containerProps = new ContainerProperties(topicName);
+            containerProps.setMessageListener(processor);
+
+            ConcurrentMessageListenerContainer<String, JsonNode> container = new ConcurrentMessageListenerContainer<>(
+                    kafkaListenerContainerFactory.getConsumerFactory(),
+                    containerProps
+            );
+
+            container.setBeanName("commodityV3MessageListenerContainer");
+            return container;
         }
     }
 }

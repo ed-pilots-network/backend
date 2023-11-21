@@ -2,6 +2,11 @@ package io.edpn.backend.exploration.adapter.config;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.edpn.backend.exploration.adapter.kafka.KafkaTopicHandler;
+import io.edpn.backend.exploration.adapter.kafka.processor.JournalScanV1MessageProcessor;
+import io.edpn.backend.exploration.adapter.kafka.processor.NavRouteV1MessageProcessor;
+import io.edpn.backend.exploration.adapter.kafka.processor.SystemCoordinatesRequestMessageProcessor;
+import io.edpn.backend.exploration.adapter.kafka.processor.SystemEliteIdRequestMessageProcessor;
+import io.edpn.backend.util.Topic;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
@@ -21,6 +26,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.listener.CommonErrorHandler;
+import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
@@ -40,7 +46,7 @@ public interface KafkaConfig {
 
         @Value(value = "${exploration.spring.kafka.bootstrap-servers}")
         private String bootstrapServers;
-        
+
         public ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory(String groupId, CommonErrorHandler errorHandler) {
             ConcurrentKafkaListenerContainerFactory<String, JsonNode> factory = new ConcurrentKafkaListenerContainerFactory<>();
             factory.setCommonErrorHandler(errorHandler);
@@ -120,6 +126,84 @@ public interface KafkaConfig {
                                                    @Value(value = "${exploration.spring.kafka.topic.partitions:1}") final int topicPartitions,
                                                    @Value(value = "${exploration.spring.kafka.topic.replicationfactor:1}") final short topicReplicationFactor) {
             return new KafkaTopicHandler(adminClient, topicPartitions, topicReplicationFactor);
+        }
+    }
+
+
+    @Configuration("ExplorationModuleKafkaListenerConfig")
+    @Slf4j
+    class KafkaListenerConfig {
+
+        @Bean(name = "explorationSystemEliteIdRequestListener")
+        public ConcurrentMessageListenerContainer<String, JsonNode> systemEliteIdRequestListener(
+                @Qualifier("explorationModuleKafkaListenerContainerFactory") ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory,
+                @Qualifier("explorationSystemEliteIdRequestMessageProcessor") SystemEliteIdRequestMessageProcessor processor
+        ) {
+            String topicName = Topic.Request.SYSTEM_ELITE_ID.getTopicName();
+            ContainerProperties containerProps = new ContainerProperties(topicName);
+            containerProps.setMessageListener(processor);
+
+            ConcurrentMessageListenerContainer<String, JsonNode> container = new ConcurrentMessageListenerContainer<>(
+                    kafkaListenerContainerFactory.getConsumerFactory(),
+                    containerProps
+            );
+
+            container.setBeanName("systemEliteIdRequestListenerContainer");
+            return container;
+        }
+
+        @Bean(name = "explorationSystemCoordinatesRequestListener")
+        public ConcurrentMessageListenerContainer<String, JsonNode> systemCoordinatesRequestListener(
+                @Qualifier("explorationModuleKafkaListenerContainerFactory") ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory,
+                @Qualifier("explorationSystemCoordinatesRequestMessageProcessor") SystemCoordinatesRequestMessageProcessor processor
+        ) {
+            String topicName = Topic.Request.SYSTEM_COORDINATES.getTopicName();
+            ContainerProperties containerProps = new ContainerProperties(topicName);
+            containerProps.setMessageListener(processor);
+
+            ConcurrentMessageListenerContainer<String, JsonNode> container = new ConcurrentMessageListenerContainer<>(
+                    kafkaListenerContainerFactory.getConsumerFactory(),
+                    containerProps
+            );
+
+            container.setBeanName("systemCoordinatesRequestListenerContainer");
+            return container;
+        }
+
+        @Bean(name = "explorationJournalV1ScanListener")
+        public ConcurrentMessageListenerContainer<String, JsonNode> journalV1ScanListener(
+                @Qualifier("explorationModuleKafkaListenerContainerFactory") ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory,
+                @Qualifier("explorationJournalScanV1MessageProcessor") JournalScanV1MessageProcessor processor
+        ) {
+            String topicName = Topic.EDDN.JOURNAL_V1_SCAN.getTopicName();
+            ContainerProperties containerProps = new ContainerProperties(topicName);
+            containerProps.setMessageListener(processor);
+
+            ConcurrentMessageListenerContainer<String, JsonNode> container = new ConcurrentMessageListenerContainer<>(
+                    kafkaListenerContainerFactory.getConsumerFactory(),
+                    containerProps
+            );
+
+            container.setBeanName("journalV1ScanListenerContainer");
+            return container;
+        }
+
+        @Bean(name = "explorationNavRouteV1Listener")
+        public ConcurrentMessageListenerContainer<String, JsonNode> navRouteV1Listener(
+                @Qualifier("explorationModuleKafkaListenerContainerFactory") ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory,
+                @Qualifier("explorationNavRouteV1MessageProcessor") NavRouteV1MessageProcessor processor
+        ) {
+            String topicName = Topic.EDDN.NAVROUTE_V1.getTopicName();
+            ContainerProperties containerProps = new ContainerProperties(topicName);
+            containerProps.setMessageListener(processor);
+
+            ConcurrentMessageListenerContainer<String, JsonNode> container = new ConcurrentMessageListenerContainer<>(
+                    kafkaListenerContainerFactory.getConsumerFactory(),
+                    containerProps
+            );
+
+            container.setBeanName("navRouteV1ListenerContainer");
+            return container;
         }
     }
 }

@@ -8,10 +8,13 @@ import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessag
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.MessageProcessor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.listener.MessageListener;
 
 @RequiredArgsConstructor
-public class SystemCoordinatesRequestMessageProcessor implements MessageProcessor<SystemDataRequest> {
+@Slf4j
+public class SystemCoordinatesRequestMessageProcessor implements MessageProcessor<SystemDataRequest>, MessageListener<String, JsonNode> {
 
     private final ReceiveKafkaMessageUseCase<SystemDataRequest> receiveSystemDataRequestUseCase;
     private final ObjectMapper objectMapper;
@@ -35,5 +38,15 @@ public class SystemCoordinatesRequestMessageProcessor implements MessageProcesso
         }
 
         return objectMapper.treeToValue(json, SystemDataRequest.class);
+    }
+
+    @Override
+    public void onMessage(org.apache.kafka.clients.consumer.ConsumerRecord<String, JsonNode> data) {
+        try {
+            this.listen(data.value());
+        } catch (JsonProcessingException e) {
+            log.error("Unable to process JSON", e);
+            throw new RuntimeException(e);
+        }
     }
 }
