@@ -4,10 +4,9 @@ import io.edpn.backend.trade.adapter.persistence.entity.MybatisValidatedCommodit
 import io.edpn.backend.trade.application.domain.CommodityType;
 import io.edpn.backend.trade.application.domain.ValidatedCommodity;
 import io.edpn.backend.trade.application.dto.persistence.entity.mapper.ValidatedCommodityEntityMapper;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -37,24 +36,24 @@ class MybatisValidatedCommodityEntityMapperTest {
         ValidatedCommodity domainObject = underTest.map(entity);
         
         assertThat(domainObject, is(notNullValue()));
-        assertThat(domainObject.getId(), is(id));
-        assertThat(domainObject.getCommodityName(), is("commodityName"));
-        assertThat(domainObject.getDisplayName(), is("Commodity Name"));
-        assertThat(domainObject.getType(), is(CommodityType.TECHNOLOGY));
-        assertThat(domainObject.getIsRare(), is(true));
+        assertThat(domainObject.id(), is(id));
+        assertThat(domainObject.commodityName(), is("commodityName"));
+        assertThat(domainObject.displayName(), is("Commodity Name"));
+        assertThat(domainObject.type(), is(CommodityType.TECHNOLOGY));
+        assertThat(domainObject.isRare(), is(true));
     }
     
     @Test
     public void testMap_givenDomainObject_shouldReturnEntity() {
         UUID id = UUID.randomUUID();
-        
-        ValidatedCommodity domainObject = ValidatedCommodity.builder()
-                .id(id)
-                .commodityName("commodityName")
-                .displayName("Commodity Name")
-                .type(CommodityType.TECHNOLOGY)
-                .isRare(true)
-                .build();
+
+        ValidatedCommodity domainObject = new ValidatedCommodity(
+                id,
+                "commodityName",
+                "Commodity Name",
+                CommodityType.TECHNOLOGY,
+                true
+        );
         
         MybatisValidatedCommodityEntity entity = underTest.map(domainObject);
         

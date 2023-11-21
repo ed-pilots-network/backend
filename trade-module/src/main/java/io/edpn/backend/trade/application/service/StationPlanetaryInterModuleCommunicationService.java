@@ -60,13 +60,13 @@ public class StationPlanetaryInterModuleCommunicationService implements RequestD
 
     @Override
     public boolean isApplicable(Station station) {
-        return Objects.isNull(station.getPlanetary());
+        return Objects.isNull(station.planetary());
     }
 
     @Override
     public synchronized void request(Station station) {
-        String stationName = station.getName();
-        String systemName = station.getSystem().getName();
+        String stationName = station.name();
+        String systemName = station.system().name();
         boolean shouldRequest = !existsStationPlanetaryRequestPort.exists(systemName, stationName);
         if (shouldRequest) {
             StationDataRequest stationDataRequest = new StationDataRequest(
@@ -74,11 +74,7 @@ public class StationPlanetaryInterModuleCommunicationService implements RequestD
             );
 
             JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
-
-            Message message = Message.builder()
-                    .topic(Topic.Request.STATION_IS_PLANETARY.getTopicName())
-                    .message(jsonNode.toString())
-                    .build();
+            Message message = new Message(Topic.Request.STATION_IS_PLANETARY.getTopicName(), jsonNode.toString());
 
             sendKafkaMessagePort.send(messageMapper.map(message));
             createStationPlanetaryRequestPort.create(systemName, stationName);
@@ -95,7 +91,7 @@ public class StationPlanetaryInterModuleCommunicationService implements RequestD
         // items that are in open requests, but not in items with missing info can be removed
         dataRequests.stream()
                 .filter(dataRequest -> missingItemsList.stream()
-                        .noneMatch(station -> station.getName().equals(dataRequest.stationName()) && station.getSystem().getName().equals(dataRequest.systemName())))
+                        .noneMatch(station -> station.name().equals(dataRequest.stationName()) && station.system().name().equals(dataRequest.systemName())))
                 .forEach(dataRequest -> deleteStationPlanetaryRequestPort.delete(dataRequest.systemName(), dataRequest.stationName()));
         log.info("cleaned obsolete StationPlanetaryRequests");
     }
@@ -106,25 +102,36 @@ public class StationPlanetaryInterModuleCommunicationService implements RequestD
         String stationName = message.stationName();
         boolean planetary = message.planetary();
 
-        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> createOrLoadSystemPort.createOrLoad(System.builder()
-                        .id(idGenerator.generateId())
-                        .name(systemName)
-                        .build()))
-                .thenCompose(loadedSystem -> CompletableFuture.supplyAsync(() -> createOrLoadStationPort.createOrLoad(Station.builder()
-                        .id(idGenerator.generateId())
-                        .system(loadedSystem)
-                        .name(stationName)
-                        .build())))
+        CompletableFuture.supplyAsync(() -> createOrLoadSystemPort.createOrLoad(
+                        new System(
+                                idGenerator.generateId(),
+                                null,
+                                systemName,
+                                null
+                        )))
+                .thenCompose(loadedSystem -> CompletableFuture.supplyAsync(() -> createOrLoadStationPort.createOrLoad(
+                        new Station(
+                                idGenerator.generateId(),
+                                null,
+                                stationName,
+                                null,
+                                loadedSystem,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                        ))))
                 .whenComplete((station, throwable) -> {
                     if (throwable != null) {
                         log.error("Exception occurred in retrieving station", throwable);
                     } else {
-                        station.setPlanetary(planetary);
+                        updateStationPort.update(station.withPlanetary(planetary));
+                        deleteStationPlanetaryRequestPort.delete(systemName, stationName);
                     }
-                });
-
-        updateStationPort.update(stationCompletableFuture.join());
-        deleteStationPlanetaryRequestPort.delete(systemName, stationName);
+                })
+                .join();
     }
 
     @Override
@@ -133,19 +140,15 @@ public class StationPlanetaryInterModuleCommunicationService implements RequestD
         loadStationsByFilterPort.loadByFilter(FIND_STATION_FILTER).parallelStream()
                 .forEach(station ->
                         CompletableFuture.runAsync(() -> {
-                            StationDataRequest stationDataRequest = new StationDataRequest(Module.TRADE, station.getName(), station.getSystem().getName());
+                            StationDataRequest stationDataRequest = new StationDataRequest(Module.TRADE, station.name(), station.system().name());
 
                             JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
-
-                            Message message = Message.builder()
-                                    .topic(Topic.Request.STATION_IS_PLANETARY.getTopicName())
-                                    .message(jsonNode.toString())
-                                    .build();
+                            Message message = new Message(Topic.Request.STATION_IS_PLANETARY.getTopicName(), jsonNode.toString());
 
                             boolean sendSuccessful = retryTemplate.execute(retryContext ->
                                     sendKafkaMessagePort.send(messageMapper.map(message)));
                             if (sendSuccessful) {
-                                createStationPlanetaryRequestPort.create(station.getSystem().getName(), station.getName());
+                                createStationPlanetaryRequestPort.create(station.system().name(), station.name());
                             }
                         }, executor));
         log.info("requested missing StationPlanetary");

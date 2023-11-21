@@ -13,22 +13,22 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public class RestStationDtoMapper implements StationDtoMapper {
-    
+
     private final SystemDtoMapper systemDtoMapper;
-    
+
     @Override
     public StationDto map(Station station) {
         return new RestStationDto(
-                station.getMarketId(),
-                station.getName(),
-                station.getArrivalDistance(),
-                (RestSystemDto)systemDtoMapper.map(station.getSystem()),
-                station.getPlanetary(),
-                station.getRequireOdyssey(),
-                station.getFleetCarrier(),
-                String.valueOf(Optional.ofNullable(station.getMaxLandingPadSize()).orElse(LandingPadSize.UNKNOWN)),
-                station.getMarketUpdatedAt()
-                
+                station.marketId(),
+                station.name(),
+                station.arrivalDistance(),
+                (RestSystemDto) systemDtoMapper.map(station.system()),
+                station.planetary(),
+                station.requireOdyssey(),
+                station.fleetCarrier(),
+                String.valueOf(Optional.ofNullable(station.maxLandingPadSize()).orElse(LandingPadSize.UNKNOWN)),
+                station.marketUpdatedAt()
+
         );
     }
 }

@@ -26,12 +26,13 @@ class RestValidatedCommodityDtoMapperTest {
     @Test
     public void testMap_givenDomainObject_shouldReturnDto() {
         
-        ValidatedCommodity domainObject = ValidatedCommodity.builder()
-                .commodityName("commodityName")
-                .displayName("Commodity Name")
-                .type(CommodityType.TECHNOLOGY)
-                .isRare(true)
-                .build();
+        ValidatedCommodity domainObject = new ValidatedCommodity(
+                null,
+                "commodityName",
+                "Commodity Name",
+                CommodityType.TECHNOLOGY,
+                true
+        );
         
         ValidatedCommodityDto entity = underTest.map(domainObject);
         

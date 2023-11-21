@@ -119,19 +119,19 @@ public class CleanUpObsoleteStationPlanetaryRequestsUseCaseTest {
         when(request2.systemName()).thenReturn("Beta");
 
         System system3 = mock(System.class);
-        when(system3.getName()).thenReturn("Alpha");
+        when(system3.name()).thenReturn("Alpha");
         Station station3 = mock(Station.class);
-        when(station3.getName()).thenReturn("home");
-        when(station3.getSystem()).thenReturn(system3);
+        when(station3.name()).thenReturn("home");
+        when(station3.system()).thenReturn(system3);
 
         System system2 = mock(System.class);
-        when(system2.getName()).thenReturn("Beta");
+        when(system2.name()).thenReturn("Beta");
         Station station2 = mock(Station.class);
-        when(station2.getName()).thenReturn("away");
-        when(station2.getSystem()).thenReturn(system2);
+        when(station2.name()).thenReturn("away");
+        when(station2.system()).thenReturn(system2);
 
         Station station1 = mock(Station.class);
-        when(station1.getName()).thenReturn("far");
+        when(station1.name()).thenReturn("far");
 
         when(loadAllStationPlanetaryRequestsPort.loadAll()).thenReturn(List.of(request1, request2));
         when(loadStationsByFilterPort.loadByFilter(any())).thenReturn(List.of(station1, station2, station3));
@@ -151,10 +151,10 @@ public class CleanUpObsoleteStationPlanetaryRequestsUseCaseTest {
         when(request2.systemName()).thenReturn("Beta");
 
         System system1 = mock(System.class);
-        when(system1.getName()).thenReturn("Alpha");
+        when(system1.name()).thenReturn("Alpha");
         Station station1 = mock(Station.class);
-        when(station1.getName()).thenReturn("home");
-        when(station1.getSystem()).thenReturn(system1);
+        when(station1.name()).thenReturn("home");
+        when(station1.system()).thenReturn(system1);
 
         when(loadAllStationPlanetaryRequestsPort.loadAll()).thenReturn(List.of(request1, request2));
         when(loadStationsByFilterPort.loadByFilter(any())).thenReturn(List.of(station1));
@@ -175,16 +175,16 @@ public class CleanUpObsoleteStationPlanetaryRequestsUseCaseTest {
         when(request2.systemName()).thenReturn("Beta");
 
         System system1 = mock(System.class);
-        when(system1.getName()).thenReturn("Alpha");
+        when(system1.name()).thenReturn("Alpha");
         Station station1 = mock(Station.class);
-        when(station1.getName()).thenReturn("home");
-        when(station1.getSystem()).thenReturn(system1);
+        when(station1.name()).thenReturn("home");
+        when(station1.system()).thenReturn(system1);
 
         System system2 = mock(System.class);
-        when(system2.getName()).thenReturn("Beta");
+        when(system2.name()).thenReturn("Beta");
         Station station2 = mock(Station.class);
-        when(station2.getName()).thenReturn("away");
-        when(station2.getSystem()).thenReturn(system2);
+        when(station2.name()).thenReturn("away");
+        when(station2.system()).thenReturn(system2);
 
         when(loadAllStationPlanetaryRequestsPort.loadAll()).thenReturn(List.of(request1, request2));
         when(loadStationsByFilterPort.loadByFilter(any())).thenReturn(List.of(station1, station2));

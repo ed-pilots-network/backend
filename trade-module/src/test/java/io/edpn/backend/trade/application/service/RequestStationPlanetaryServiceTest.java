@@ -111,7 +111,7 @@ public class RequestStationPlanetaryServiceTest {
     @MethodSource("provideBooleansForCheckApplicability")
     void shouldCheckApplicability(Boolean input, boolean expected) {
         Station stationWithPlanetary = mock(Station.class);
-        when(stationWithPlanetary.getPlanetary()).thenReturn(input);
+        when(stationWithPlanetary.planetary()).thenReturn(input);
 
         assertThat(underTest.isApplicable(stationWithPlanetary), is(expected));
     }
@@ -121,13 +121,25 @@ public class RequestStationPlanetaryServiceTest {
         String systemName = "Test System";
         String stationName = "Test Station";
 
-        System system = System.builder()
-                .name(systemName)
-                .build();
-        Station station = Station.builder()
-                .name(stationName)
-                .system(system)
-                .build();
+        System system = new System(
+                null,
+                null,
+                systemName,
+                null
+        );
+        Station station = new Station(
+                null,
+                null,
+                stationName,
+                null,
+                system,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
 
         JsonNode mockJsonNode = mock(JsonNode.class);
         String mockJsonString = "jsonString";
@@ -143,7 +155,7 @@ public class RequestStationPlanetaryServiceTest {
         }))).thenReturn(mockJsonNode);
         when(mockJsonNode.toString()).thenReturn(mockJsonString);
         when(messageMapper.map(argThat(argument ->
-                argument.getMessage().equals(mockJsonString) && argument.getTopic().equals(Topic.Request.STATION_IS_PLANETARY.getTopicName())
+                argument.message().equals(mockJsonString) && argument.topic().equals(Topic.Request.STATION_IS_PLANETARY.getTopicName())
         ))).thenReturn(mockMessageDto);
 
         ArgumentCaptor<Message> argumentCaptor = ArgumentCaptor.forClass(Message.class);
@@ -156,7 +168,7 @@ public class RequestStationPlanetaryServiceTest {
         verify(messageMapper, times(1)).map(argumentCaptor.capture());
         Message message = argumentCaptor.getValue();
         assertThat(message, is(notNullValue()));
-        assertThat(message.getTopic(), is(Topic.Request.STATION_IS_PLANETARY.getTopicName()));
-        assertThat(message.getMessage(), is("jsonString"));
+        assertThat(message.topic(), is(Topic.Request.STATION_IS_PLANETARY.getTopicName()));
+        assertThat(message.message(), is("jsonString"));
     }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.trade.application.domain.Coordinate;
 import io.edpn.backend.trade.application.domain.Message;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindSystemFilter;
@@ -56,22 +57,18 @@ public class SystemCoordinateInterModuleCommunicationService implements RequestD
 
     @Override
     public boolean isApplicable(System system) {
-        return Objects.isNull(system.getXCoordinate()) || Objects.isNull(system.getYCoordinate()) || Objects.isNull(system.getZCoordinate());
+        return Objects.isNull(system.coordinate().x()) || Objects.isNull(system.coordinate().y()) || Objects.isNull(system.coordinate().z());
     }
 
     @Override
     public synchronized void request(System system) {
-        final String systemName = system.getName();
+        final String systemName = system.name();
         boolean shouldRequest = !existsSystemCoordinateRequestPort.exists(systemName);
         if (shouldRequest) {
             SystemDataRequest systemDataRequest = new SystemDataRequest(Module.TRADE, systemName);
 
             JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
-
-            Message message = Message.builder()
-                    .topic(Topic.Request.SYSTEM_COORDINATES.getTopicName())
-                    .message(jsonNode.toString())
-                    .build();
+            Message message = new Message(Topic.Request.SYSTEM_COORDINATES.getTopicName(), jsonNode.toString());
 
             sendKafkaMessagePort.send(messageMapper.map(message));
             createSystemCoordinateRequestPort.create(systemName);
@@ -90,19 +87,15 @@ public class SystemCoordinateInterModuleCommunicationService implements RequestD
         loadSystemsByFilterPort.loadByFilter(filter).parallelStream()
                 .forEach(system ->
                         CompletableFuture.runAsync(() -> {
-                            SystemDataRequest systemDataRequest = new SystemDataRequest(Module.TRADE, system.getName());
+                            SystemDataRequest systemDataRequest = new SystemDataRequest(Module.TRADE, system.name());
 
                             JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
-
-                            Message message = Message.builder()
-                                    .topic("systemCoordinatesRequest")
-                                    .message(jsonNode.toString())
-                                    .build();
+                            Message message = new Message(Topic.Request.SYSTEM_COORDINATES.getTopicName(), jsonNode.toString());
 
                             boolean sendSuccessful = retryTemplate.execute(retryContext ->
                                     sendKafkaMessagePort.send(messageMapper.map(message)));
                             if (sendSuccessful) {
-                                createSystemCoordinateRequestPort.create(system.getName());
+                                createSystemCoordinateRequestPort.create(system.name());
                             }
                         }, executor));
         log.info("requested missing SystemCoordinate");
@@ -118,7 +111,7 @@ public class SystemCoordinateInterModuleCommunicationService implements RequestD
         // items that are in open requests, but not in items with missing info can be removed
         dataRequests.stream()
                 .filter(dataRequest -> missingItemsList.stream()
-                        .noneMatch(system -> system.getName().equals(dataRequest.systemName())))
+                        .noneMatch(system -> system.name().equals(dataRequest.systemName())))
                 .forEach(dataRequest -> deleteSystemCoordinateRequestPort.delete(dataRequest.systemName()));
         log.info("cleaned obsolete SystemCoordinateRequests");
     }
@@ -130,22 +123,21 @@ public class SystemCoordinateInterModuleCommunicationService implements RequestD
         final double yCoordinate = message.yCoordinate();
         final double zCoordinate = message.zCoordinate();
 
-        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() ->
-                        createOrLoadSystemPort.createOrLoad(System.builder()
-                                .id(idGenerator.generateId())
-                                .name(systemName)
-                                .build()))
+        CompletableFuture.supplyAsync(() ->
+                        createOrLoadSystemPort.createOrLoad(
+                                new System(
+                                        idGenerator.generateId(),
+                                        null,
+                                        systemName,
+                                        null)))
                 .whenComplete((system, throwable) -> {
                     if (throwable != null) {
                         log.error("Exception occurred in retrieving system", throwable);
                     } else {
-                        system.setXCoordinate(xCoordinate);
-                        system.setYCoordinate(yCoordinate);
-                        system.setZCoordinate(zCoordinate);
+                        updateSystemPort.update(system.withCoordinate(new Coordinate(xCoordinate, yCoordinate, zCoordinate)));
+                        deleteSystemCoordinateRequestPort.delete(systemName);
                     }
-                });
-
-        updateSystemPort.update(systemCompletableFuture.join());
-        deleteSystemCoordinateRequestPort.delete(systemName);
+                })
+                .join();
     }
 }

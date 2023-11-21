@@ -61,13 +61,13 @@ public class StationLandingPadSizeInterModuleCommunicationService implements Req
 
     @Override
     public boolean isApplicable(Station station) {
-        return Objects.isNull(station.getMaxLandingPadSize()) || LandingPadSize.UNKNOWN == station.getMaxLandingPadSize();
+        return Objects.isNull(station.maxLandingPadSize()) || LandingPadSize.UNKNOWN == station.maxLandingPadSize();
     }
 
     @Override
     public synchronized void request(Station station) {
-        String stationName = station.getName();
-        String systemName = station.getSystem().getName();
+        String stationName = station.name();
+        String systemName = station.system().name();
         boolean shouldRequest = !existsStationLandingPadSizeRequestPort.exists(systemName, stationName);
         if (shouldRequest) {
             StationDataRequest stationDataRequest = new StationDataRequest(
@@ -75,10 +75,7 @@ public class StationLandingPadSizeInterModuleCommunicationService implements Req
             );
             JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
 
-            Message message = Message.builder()
-                    .topic(Topic.Request.STATION_MAX_LANDING_PAD_SIZE.getTopicName())
-                    .message(jsonNode.toString())
-                    .build();
+            Message message = new Message(Topic.Request.STATION_MAX_LANDING_PAD_SIZE.getTopicName(), jsonNode.toString());
 
             sendKafkaMessagePort.send(messageMapper.map(message));
             createStationLandingPadSizeRequestPort.create(systemName, stationName);
@@ -95,7 +92,7 @@ public class StationLandingPadSizeInterModuleCommunicationService implements Req
         // items that are in open requests, but not in items with missing info can be removed
         dataRequests.stream()
                 .filter(dataRequest -> missingItemsList.stream()
-                        .noneMatch(station -> station.getName().equals(dataRequest.stationName()) && station.getSystem().getName().equals(dataRequest.systemName())))
+                        .noneMatch(station -> station.name().equals(dataRequest.stationName()) && station.system().name().equals(dataRequest.systemName())))
                 .forEach(dataRequest -> deleteStationLandingPadSizeRequestPort.delete(dataRequest.systemName(), dataRequest.stationName()));
         log.info("cleaned obsolete StationLandingPadSizeRequests");
     }
@@ -107,27 +104,35 @@ public class StationLandingPadSizeInterModuleCommunicationService implements Req
         LandingPadSize landingPadSize = LandingPadSize.valueOf(message.maxLandingPadSize());
 
 
-        // get station
-        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() ->
-                        createOrLoadSystemPort.createOrLoad(System.builder()
-                                .id(idGenerator.generateId())
-                                .name(systemName)
-                                .build())).thenCompose(loadedSystem -> CompletableFuture.supplyAsync(() -> {
-                    Station station = Station.builder().id(idGenerator.generateId())
-                            .system(loadedSystem)
-                            .name(stationName).build();
-                    return createOrLoadStationPort.createOrLoad(station);
-                }))
+        CompletableFuture.supplyAsync(() ->
+                        createOrLoadSystemPort.createOrLoad(new System(
+                                idGenerator.generateId(),
+                                null,
+                                systemName,
+                                null
+                        )))
+                .thenCompose(loadedSystem -> CompletableFuture.supplyAsync(() -> createOrLoadStationPort.createOrLoad(new Station(
+                        idGenerator.generateId(),
+                        null,
+                        stationName,
+                        null,
+                        loadedSystem,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                ))))
                 .whenComplete((station, throwable) -> {
                     if (throwable != null) {
                         log.error("Exception occurred in retrieving station", throwable);
                     } else {
-                        station.setMaxLandingPadSize(landingPadSize);
+                        updateStationPort.update(station.withMaxLandingPadSize(landingPadSize));
+                        deleteStationLandingPadSizeRequestPort.delete(systemName, stationName);
                     }
-                });
-
-        updateStationPort.update(stationCompletableFuture.join());
-        deleteStationLandingPadSizeRequestPort.delete(systemName, stationName);
+                })
+                .join();
     }
 
     @Override
@@ -136,19 +141,11 @@ public class StationLandingPadSizeInterModuleCommunicationService implements Req
         loadStationsByFilterPort.loadByFilter(FIND_STATION_FILTER).parallelStream()
                 .forEach(station ->
                         CompletableFuture.runAsync(() -> {
-                            StationDataRequest stationDataRequest = new StationDataRequest(Module.TRADE, station.getName(), station.getSystem().getName());
-
-                            JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
-
-                            Message message = Message.builder()
-                                    .topic(Topic.Request.STATION_MAX_LANDING_PAD_SIZE.getTopicName())
-                                    .message(jsonNode.toString())
-                                    .build();
-
-                            boolean sendSuccessful = retryTemplate.execute(retryContext ->
-                                    sendKafkaMessagePort.send(messageMapper.map(message)));
+                            StationDataRequest stationDataRequest = new StationDataRequest(Module.TRADE, station.name(), station.system().name());
+                            boolean sendSuccessful = retryTemplate.execute(
+                                    retryContext -> sendKafkaMessagePort.send(messageMapper.map(new Message(Topic.Request.STATION_MAX_LANDING_PAD_SIZE.getTopicName(), objectMapper.valueToTree(stationDataRequest).toString()))));
                             if (sendSuccessful) {
-                                createStationLandingPadSizeRequestPort.create(station.getSystem().getName(), station.getName());
+                                createStationLandingPadSizeRequestPort.create(station.system().name(), station.name());
                             }
                         }, executor));
         log.info("requested missing StationLandingPadSize");

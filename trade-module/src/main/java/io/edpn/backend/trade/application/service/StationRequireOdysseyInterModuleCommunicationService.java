@@ -60,24 +60,20 @@ public class StationRequireOdysseyInterModuleCommunicationService implements Req
 
     @Override
     public boolean isApplicable(Station station) {
-        return Objects.isNull(station.getRequireOdyssey());
+        return Objects.isNull(station.requireOdyssey());
     }
 
     @Override
     public synchronized void request(Station station) {
-        String stationName = station.getName();
-        String systemName = station.getSystem().getName();
+        String stationName = station.name();
+        String systemName = station.system().name();
         boolean shouldRequest = !existsStationRequireOdysseyRequestPort.exists(systemName, stationName);
         if (shouldRequest) {
             StationDataRequest stationDataRequest = new StationDataRequest(
                     Module.TRADE, stationName, systemName
             );
             JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
-
-            Message message = Message.builder()
-                    .topic(Topic.Request.STATION_REQUIRE_ODYSSEY.getTopicName())
-                    .message(jsonNode.toString())
-                    .build();
+            Message message = new Message(Topic.Request.STATION_REQUIRE_ODYSSEY.getTopicName(), jsonNode.toString());
 
             sendKafkaMessagePort.send(messageMapper.map(message));
             createStationRequireOdysseyRequestPort.create(systemName, stationName);
@@ -90,19 +86,15 @@ public class StationRequireOdysseyInterModuleCommunicationService implements Req
         loadStationsByFilterPort.loadByFilter(FIND_STATION_FILTER).parallelStream()
                 .forEach(station ->
                         CompletableFuture.runAsync(() -> {
-                            StationDataRequest stationDataRequest = new StationDataRequest(Module.TRADE, station.getName(), station.getSystem().getName());
+                            StationDataRequest stationDataRequest = new StationDataRequest(Module.TRADE, station.name(), station.system().name());
 
                             JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
-
-                            Message message = Message.builder()
-                                    .topic(Topic.Request.STATION_REQUIRE_ODYSSEY.getTopicName())
-                                    .message(jsonNode.toString())
-                                    .build();
+                            Message message = new Message(Topic.Request.STATION_REQUIRE_ODYSSEY.getTopicName(), jsonNode.toString());
 
                             boolean sendSuccessful = retryTemplate.execute(retryContext ->
                                     sendKafkaMessagePort.send(messageMapper.map(message)));
                             if (sendSuccessful) {
-                                createStationRequireOdysseyRequestPort.create(station.getSystem().getName(), station.getName());
+                                createStationRequireOdysseyRequestPort.create(station.system().name(), station.name());
                             }
                         }, executor));
         log.info("requested missing StationRequireOdyssey");
@@ -118,7 +110,7 @@ public class StationRequireOdysseyInterModuleCommunicationService implements Req
         // items that are in open requests, but not in items with missing info can be removed
         dataRequests.stream()
                 .filter(dataRequest -> missingItemsList.stream()
-                        .noneMatch(station -> station.getName().equals(dataRequest.stationName()) && station.getSystem().getName().equals(dataRequest.systemName())))
+                        .noneMatch(station -> station.name().equals(dataRequest.stationName()) && station.system().name().equals(dataRequest.systemName())))
                 .forEach(dataRequest -> deleteStationRequireOdysseyRequestPort.delete(dataRequest.systemName(), dataRequest.stationName()));
         log.info("cleaned obsolete StationRequireOdysseyRequests");
     }
@@ -129,24 +121,33 @@ public class StationRequireOdysseyInterModuleCommunicationService implements Req
         String stationName = message.stationName();
         boolean requireOdyssey = message.requireOdyssey();
 
-        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> createOrLoadSystemPort.createOrLoad(System.builder()
-                        .id(idGenerator.generateId())
-                        .name(systemName)
-                        .build()))
-                .thenCompose(loadedSystem -> CompletableFuture.supplyAsync(() -> createOrLoadStationPort.createOrLoad(Station.builder()
-                        .id(idGenerator.generateId())
-                        .system(loadedSystem)
-                        .name(stationName)
-                        .build())))
+        CompletableFuture.supplyAsync(() -> createOrLoadSystemPort.createOrLoad(
+                        new System(
+                                idGenerator.generateId(),
+                                null,
+                                systemName,
+                                null)))
+                .thenCompose(loadedSystem -> CompletableFuture.supplyAsync(() -> createOrLoadStationPort.createOrLoad(
+                        new Station(
+                                idGenerator.generateId(),
+                                null,
+                                stationName,
+                                null,
+                                loadedSystem,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null))))
                 .whenComplete((station, throwable) -> {
                     if (throwable != null) {
                         log.error("Exception occurred in retrieving station", throwable);
                     } else {
-                        station.setRequireOdyssey(requireOdyssey);
+                        updateStationPort.update(station.withRequireOdyssey(requireOdyssey));
+                        deleteStationRequireOdysseyRequestPort.delete(systemName, stationName);
                     }
-                });
-
-        updateStationPort.update(stationCompletableFuture.join());
-        deleteStationRequireOdysseyRequestPort.delete(systemName, stationName);
+                })
+                .join();
     }
 }

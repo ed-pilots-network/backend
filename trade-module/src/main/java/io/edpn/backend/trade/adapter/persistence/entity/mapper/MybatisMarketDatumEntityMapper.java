@@ -34,17 +34,17 @@ public class MybatisMarketDatumEntityMapper implements MarketDatumEntityMapper<M
     @Override
     public MybatisMarketDatumEntity map(MarketDatum marketDatum) {
         return MybatisMarketDatumEntity.builder()
-                .commodity(commodityEntityMapper.map(marketDatum.getCommodity()))
-                .timestamp(marketDatum.getTimestamp())
-                .meanPrice(marketDatum.getMeanPrice())
-                .buyPrice(marketDatum.getBuyPrice())
-                .stock(marketDatum.getStock())
-                .stockBracket(marketDatum.getStockBracket())
-                .sellPrice(marketDatum.getSellPrice())
-                .demand(marketDatum.getDemand())
-                .demandBracket(marketDatum.getDemandBracket())
-                .statusFlags(marketDatum.getStatusFlags())
-                .prohibited(marketDatum.isProhibited())
+                .commodity(commodityEntityMapper.map(marketDatum.commodity()))
+                .timestamp(marketDatum.timestamp())
+                .meanPrice(marketDatum.meanPrice())
+                .buyPrice(marketDatum.buyPrice())
+                .stock(marketDatum.stock())
+                .stockBracket(marketDatum.stockBracket())
+                .sellPrice(marketDatum.sellPrice())
+                .demand(marketDatum.demand())
+                .demandBracket(marketDatum.demandBracket())
+                .statusFlags(marketDatum.statusFlags())
+                .prohibited(marketDatum.prohibited())
                 .build();
     }
 }

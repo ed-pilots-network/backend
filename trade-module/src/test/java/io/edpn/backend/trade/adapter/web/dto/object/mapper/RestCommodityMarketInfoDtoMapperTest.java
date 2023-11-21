@@ -43,32 +43,32 @@ class RestCommodityMarketInfoDtoMapperTest {
         RestValidatedCommodityDto mockCommodityDto = mock(RestValidatedCommodityDto.class);
         RestStationDto mockHighestSellingStationDto = mock(RestStationDto.class);
         RestStationDto mockLowestBuyingStationDto = mock(RestStationDto.class);
-        
-        CommodityMarketInfo domainObject = CommodityMarketInfo.builder()
-                .validatedCommodity(mock(ValidatedCommodity.class))
-                .maxBuyPrice(100.0)
-                .minBuyPrice(50.0)
-                .avgBuyPrice(75.0)
-                .maxSellPrice(200.0)
-                .minSellPrice(100.0)
-                .avgSellPrice(150.0)
-                .minMeanPrice(60.0)
-                .maxMeanPrice(180.0)
-                .averageMeanPrice(120.0)
-                .totalStock(1000L)
-                .totalDemand(500L)
-                .totalStations(10)
-                .stationsWithBuyPrice(5)
-                .stationsWithSellPrice(4)
-                .stationsWithBuyPriceLowerThanAverage(2)
-                .stationsWithSellPriceHigherThanAverage(1)
-                .highestSellingToStation(mock(Station.class))
-                .lowestBuyingFromStation(mock(Station.class))
-                .build();
-        
-        when(commodityDtoMapper.map(domainObject.getValidatedCommodity())).thenReturn(mockCommodityDto);
-        when(stationDtoMapper.map(domainObject.getHighestSellingToStation())).thenReturn(mockHighestSellingStationDto);
-        when(stationDtoMapper.map(domainObject.getLowestBuyingFromStation())).thenReturn(mockLowestBuyingStationDto);
+
+        CommodityMarketInfo domainObject = new CommodityMarketInfo(
+                mock(ValidatedCommodity.class),
+                100.0,
+                50.0,
+                75.0,
+                200.0,
+                100.0,
+                150.0,
+                60.0,
+                180.0,
+                120.0,
+                1000L,
+                500L,
+                10,
+                5,
+                4,
+                2,
+                1,
+                mock(Station.class),
+                mock(Station.class)
+        );
+
+        when(commodityDtoMapper.map(domainObject.validatedCommodity())).thenReturn(mockCommodityDto);
+        when(stationDtoMapper.map(domainObject.highestSellingToStation())).thenReturn(mockHighestSellingStationDto);
+        when(stationDtoMapper.map(domainObject.lowestBuyingFromStation())).thenReturn(mockLowestBuyingStationDto);
         
         CommodityMarketInfoDto dto = underTest.map(domainObject);
         
@@ -91,9 +91,9 @@ class RestCommodityMarketInfoDtoMapperTest {
         assertThat(dto.stationsWithSellPriceHigherThanAverage(), is(1));
         assertThat(dto.highestSellingToStation(), is(mockHighestSellingStationDto));
         assertThat(dto.lowestBuyingFromStation(), is(mockLowestBuyingStationDto));
-        
-        verify(commodityDtoMapper, times(1)).map(domainObject.getValidatedCommodity());
-        verify(stationDtoMapper, times(1)).map(domainObject.getHighestSellingToStation());
-        verify(stationDtoMapper, times(1)).map(domainObject.getLowestBuyingFromStation());
+
+        verify(commodityDtoMapper, times(1)).map(domainObject.validatedCommodity());
+        verify(stationDtoMapper, times(1)).map(domainObject.highestSellingToStation());
+        verify(stationDtoMapper, times(1)).map(domainObject.lowestBuyingFromStation());
     }
 }

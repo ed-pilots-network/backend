@@ -56,23 +56,19 @@ public class SystemEliteIdInterModuleCommunicationService implements RequestData
 
     @Override
     public boolean isApplicable(System system) {
-        return Objects.isNull(system.getEliteId());
+        return Objects.isNull(system.eliteId());
     }
 
     @Override
     public synchronized void request(System system) {
-        String systemName = system.getName();
+        String systemName = system.name();
         boolean shouldRequest = !existsSystemEliteIdRequestPort.exists(systemName);
         if (shouldRequest) {
             SystemDataRequest systemDataRequest = new SystemDataRequest(
                     Module.TRADE, systemName
             );
             JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
-
-            Message message = Message.builder()
-                    .topic(Topic.Request.SYSTEM_ELITE_ID.getTopicName())
-                    .message(jsonNode.toString())
-                    .build();
+            Message message = new Message(Topic.Request.SYSTEM_ELITE_ID.getTopicName(), jsonNode.toString());
 
             sendKafkaMessagePort.send(messageMapper.map(message));
             createSystemEliteIdRequestPort.create(systemName);
@@ -85,19 +81,15 @@ public class SystemEliteIdInterModuleCommunicationService implements RequestData
         loadSystemsByFilterPort.loadByFilter(FIND_SYSTEM_FILTER).parallelStream()
                 .forEach(system ->
                         CompletableFuture.runAsync(() -> {
-                            SystemDataRequest systemDataRequest = new SystemDataRequest(Module.TRADE, system.getName());
+                            SystemDataRequest systemDataRequest = new SystemDataRequest(Module.TRADE, system.name());
 
                             JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
-
-                            Message message = Message.builder()
-                                    .topic("systemEliteIdRequest")
-                                    .message(jsonNode.toString())
-                                    .build();
+                            Message message = new Message(Topic.Request.SYSTEM_ELITE_ID.getTopicName(), jsonNode.toString());
 
                             boolean sendSuccessful = retryTemplate.execute(retryContext ->
                                     sendKafkaMessagePort.send(messageMapper.map(message)));
                             if (sendSuccessful) {
-                                createSystemEliteIdRequestPort.create(system.getName());
+                                createSystemEliteIdRequestPort.create(system.name());
                             }
                         }, executor));
         log.info("requested missing SystemEliteId");
@@ -113,7 +105,7 @@ public class SystemEliteIdInterModuleCommunicationService implements RequestData
         // items that are in open requests, but not in items with missing info can be removed
         dataRequests.stream()
                 .filter(dataRequest -> missingItemsList.stream()
-                        .noneMatch(system -> system.getName().equals(dataRequest.systemName())))
+                        .noneMatch(system -> system.name().equals(dataRequest.systemName())))
                 .forEach(dataRequest -> deleteSystemEliteIdRequestPort.delete(dataRequest.systemName()));
         log.info("cleaned obsolete SystemEliteIdRequests");
     }
@@ -123,20 +115,17 @@ public class SystemEliteIdInterModuleCommunicationService implements RequestData
         String systemName = message.systemName();
         long eliteId = message.eliteId();
 
-        CompletableFuture<System> systemCompletableFuture = CompletableFuture.supplyAsync(() ->
-                        createOrLoadSystemPort.createOrLoad(System.builder()
-                                .id(idGenerator.generateId())
-                                .name(systemName)
-                                .build()))
+        CompletableFuture.supplyAsync(() ->
+                        createOrLoadSystemPort.createOrLoad(
+                                new System(idGenerator.generateId(), null, systemName, null)))
                 .whenComplete((station, throwable) -> {
                     if (throwable != null) {
                         log.error("Exception occurred in retrieving system", throwable);
                     } else {
-                        station.setEliteId(eliteId);
+                        updateSystemPort.update(station.withEliteId(eliteId));
+                        deleteSystemEliteIdRequestPort.delete(systemName);
                     }
-                });
-
-        updateSystemPort.update(systemCompletableFuture.join());
-        deleteSystemEliteIdRequestPort.delete(systemName);
+                })
+                .join();
     }
 }

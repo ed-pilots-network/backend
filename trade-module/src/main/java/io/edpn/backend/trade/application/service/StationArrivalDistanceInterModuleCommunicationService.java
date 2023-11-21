@@ -64,27 +64,33 @@ public class StationArrivalDistanceInterModuleCommunicationService implements Re
         String stationName = message.stationName();
         double arrivalDistance = message.arrivalDistance();
 
-        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() ->
-                        createOrLoadSystemPort.createOrLoad(System.builder()
-                                .id(idGenerator.generateId())
-                                .name(systemName)
-                                .build()))
-                .thenCompose(loadedSystem -> CompletableFuture.supplyAsync(() -> {
-                    Station station = Station.builder().id(idGenerator.generateId()).name(stationName)
-                            .system(loadedSystem)
-                            .build();
-                    return createOrLoadStationPort.createOrLoad(station);
-                }))
+        CompletableFuture.supplyAsync(() ->
+                        createOrLoadSystemPort.createOrLoad(
+                                new System(idGenerator.generateId(), null, systemName, null)))
+                .thenCompose(loadedSystem -> CompletableFuture.supplyAsync(() ->
+                        createOrLoadStationPort.createOrLoad(
+                                new Station(
+                                        idGenerator.generateId(),
+                                        null,
+                                        stationName,
+                                        null,
+                                        loadedSystem,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null
+                                ))))
                 .whenComplete((station, throwable) -> {
                     if (throwable != null) {
                         log.error("Exception occurred in retrieving station", throwable);
                     } else {
-                        station.setArrivalDistance(arrivalDistance);
+                        updateStationPort.update(station.withArrivalDistance(arrivalDistance));
+                        deleteStationArrivalDistanceRequestPort.delete(systemName, stationName);
                     }
-                });
-
-        updateStationPort.update(stationCompletableFuture.join());
-        deleteStationArrivalDistanceRequestPort.delete(systemName, stationName);
+                })
+                .join();
     }
 
     @Override
@@ -97,7 +103,7 @@ public class StationArrivalDistanceInterModuleCommunicationService implements Re
         // items that are in open requests, but not in items with missing info can be removed
         dataRequests.stream()
                 .filter(dataRequest -> missingItemsList.stream()
-                        .noneMatch(station -> station.getName().equals(dataRequest.stationName()) && station.getSystem().getName().equals(dataRequest.systemName())))
+                        .noneMatch(station -> station.name().equals(dataRequest.stationName()) && station.system().name().equals(dataRequest.systemName())))
                 .forEach(dataRequest -> deleteStationArrivalDistanceRequestPort.delete(dataRequest.systemName(), dataRequest.stationName()));
         log.info("cleaned obsolete StationArrivalDistanceRequests");
     }
@@ -108,19 +114,15 @@ public class StationArrivalDistanceInterModuleCommunicationService implements Re
         loadStationsByFilterPort.loadByFilter(FIND_STATION_FILTER).parallelStream()
                 .forEach(station ->
                         CompletableFuture.runAsync(() -> {
-                            StationDataRequest stationDataRequest = new StationDataRequest(Module.TRADE, station.getName(), station.getSystem().getName());
+                            StationDataRequest stationDataRequest = new StationDataRequest(Module.TRADE, station.name(), station.system().name());
 
                             JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
-
-                            Message message = Message.builder()
-                                    .topic(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName())
-                                    .message(jsonNode.toString())
-                                    .build();
+                            Message message = new Message(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName(), jsonNode.toString());
 
                             boolean sendSuccessful = retryTemplate.execute(retryContext ->
                                     sendKafkaMessagePort.send(messageMapper.map(message)));
                             if (sendSuccessful) {
-                                createStationArrivalDistanceRequestPort.create(station.getSystem().getName(), station.getName());
+                                createStationArrivalDistanceRequestPort.create(station.system().name(), station.name());
                             }
                         }, executor));
         log.info("requested missing StationArrivalDistance");
@@ -128,25 +130,21 @@ public class StationArrivalDistanceInterModuleCommunicationService implements Re
 
     @Override
     public boolean isApplicable(Station station) {
-        return Objects.isNull(station.getArrivalDistance());
+        return Objects.isNull(station.arrivalDistance());
     }
 
     @Override
     public synchronized void request(Station station) {
-        String stationName = station.getName();
-        String systemName = station.getSystem().getName();
+        String stationName = station.name();
+        String systemName = station.system().name();
         boolean shouldRequest = !existsStationArrivalDistanceRequestPort.exists(systemName, stationName);
         if (shouldRequest) {
             StationDataRequest stationDataRequest = new StationDataRequest(
-                    Module.TRADE, station.getName(), station.getSystem().getName()
+                    Module.TRADE, station.name(), station.system().name()
             );
 
             JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
-
-            Message message = Message.builder()
-                    .topic(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName())
-                    .message(jsonNode.toString())
-                    .build();
+            Message message = new Message(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName(), jsonNode.toString());
 
             sendKafkaMessagePort.send(messageMapper.map(message));
             createStationArrivalDistanceRequestPort.create(systemName, stationName);

@@ -1,6 +1,7 @@
 package io.edpn.backend.trade.application.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.edpn.backend.trade.application.domain.Coordinate;
 import io.edpn.backend.trade.application.domain.Message;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
@@ -15,6 +16,8 @@ import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.E
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestsPort;
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Topic;
+import java.util.concurrent.Executor;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,9 +28,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.support.RetryTemplate;
-
-import java.util.concurrent.Executor;
-import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -99,20 +99,24 @@ public class RequestSystemCoordinatesServiceTest {
     @ParameterizedTest
     @MethodSource("provideDoublesForCheckApplicability")
     void shouldCheckApplicability(Double xCoordinate, Double yCoordinate, Double zCoordinate, boolean expected) {
-        System systemWithCoordinates = System.builder()
-                .xCoordinate(xCoordinate)
-                .yCoordinate(yCoordinate)
-                .zCoordinate(zCoordinate)
-                .build();
+        System systemWithCoordinates = new System(
+                null,
+                null,
+                null,
+                new Coordinate(xCoordinate, yCoordinate, zCoordinate)
+        );
 
         assertThat(underTest.isApplicable(systemWithCoordinates), is(expected));
     }
 
     @Test
     void shouldSendRequest() {
-        System system = System.builder()
-                .name("Test System")
-                .build();
+        System system = new System(
+                null,
+                null,
+                "Test System",
+                null
+        );
 
         underTest.request(system);
 
@@ -122,11 +126,11 @@ public class RequestSystemCoordinatesServiceTest {
 
         Message message = argumentCaptor.getValue();
         assertThat(message, is(notNullValue()));
-        assertThat(message.getTopic(), is(Topic.Request.SYSTEM_COORDINATES.getTopicName()));
-        assertThat(message.getMessage(), is(notNullValue()));
+        assertThat(message.topic(), is(Topic.Request.SYSTEM_COORDINATES.getTopicName()));
+        assertThat(message.message(), is(notNullValue()));
 
         //TODO: below
         //SystemDataRequest actualSystemDataRequest = objectMapper.treeToValue(message.getMessage(), SystemDataRequest.class);
-        assertThat(message.getMessage(), containsString(system.getName()));
+        assertThat(message.message(), containsString(system.name()));
     }
 }

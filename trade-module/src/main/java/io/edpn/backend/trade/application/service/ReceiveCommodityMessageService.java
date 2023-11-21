@@ -8,8 +8,8 @@ import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.commodity.CreateOrLoadCommodityPort;
-import io.edpn.backend.trade.application.port.outgoing.marketdatum.createOrUpdateExistingWhenNewerLatestMarketDatumPort;
 import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateWhenNotExistsMarketDatumPort;
+import io.edpn.backend.trade.application.port.outgoing.marketdatum.createOrUpdateExistingWhenNewerLatestMarketDatumPort;
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
@@ -58,10 +58,11 @@ public class ReceiveCommodityMessageService implements ReceiveKafkaMessageUseCas
         String stationName = payload.stationName();
         String[] prohibitedCommodities = payload.prohibited();
 
-        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> createOrLoadSystemPort.createOrLoad(System.builder()
-                        .id(idGenerator.generateId())
-                        .name(systemName)
-                        .build()))
+        CompletableFuture<Station> stationCompletableFuture = CompletableFuture.supplyAsync(() -> createOrLoadSystemPort.createOrLoad(new System(
+                        idGenerator.generateId(),
+                        null,
+                        systemName,
+                        null)))
                 .whenComplete((system, throwable) -> {
                     if (throwable != null) {
                         log.error("Exception occurred in retrieving system", throwable);
@@ -71,10 +72,19 @@ public class ReceiveCommodityMessageService implements ReceiveKafkaMessageUseCas
                                 .forEach(useCase -> useCase.request(system));
                     }
                 }).thenCompose(loadedSystem -> CompletableFuture.supplyAsync(() -> {
-                    Station station = Station.builder()
-                            .id(idGenerator.generateId())
-                            .system(loadedSystem)
-                            .name(stationName).build();
+                    Station station = new Station(
+                            idGenerator.generateId(),
+                            null,
+                            stationName,
+                            null,
+                            loadedSystem,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                    );
                     return createOrLoadStationPort.createOrLoad(station);
                 }))
                 .whenComplete((station, throwable) -> {
@@ -82,36 +92,30 @@ public class ReceiveCommodityMessageService implements ReceiveKafkaMessageUseCas
                         log.error("Exception occurred in retrieving station", throwable);
                     } else {
                         //if we get the message here, it always is NOT a fleet carrier
-                        station.setFleetCarrier(false);
+                        Station updatedStation = station.withFleetCarrier(false);
 
-                        if (Objects.isNull(station.getMarketId())) {
-                            station.setMarketId(marketId);
+                        if (Objects.isNull(updatedStation.marketId())) {
+                            updatedStation = updatedStation.withMarketId(marketId);
                         }
 
-                        if (Objects.isNull(station.getMarketUpdatedAt()) || updateTimestamp.isAfter(station.getMarketUpdatedAt())) {
-                            station.setMarketUpdatedAt(updateTimestamp);
+                        if (Objects.isNull(updatedStation.marketUpdatedAt()) || updateTimestamp.isAfter(station.marketUpdatedAt())) {
+                            updatedStation = updatedStation.withMarketUpdatedAt(updateTimestamp);
                         }
 
+                        final Station finalUpdatedStation = updatedStation;
                         stationRequestDataServices.stream()
-                                .filter(useCase -> useCase.isApplicable(station))
-                                .forEach(useCase -> useCase.request(station));
+                                .filter(useCase -> useCase.isApplicable(finalUpdatedStation))
+                                .forEach(useCase -> useCase.request(finalUpdatedStation));
                     }
                 });
 
         // get marketDataCollection
         List<CompletableFuture<MarketDatum>> completableFutureList = Arrays.stream(commodities).parallel().map(commodityFromMessage -> {
                     // get commodity
-                    CompletableFuture<Commodity> commodity = CompletableFuture.supplyAsync(() -> {
-                        Commodity commodity1 = Commodity.builder().id(idGenerator.generateId()).name(commodityFromMessage.name()).build();
+                    return CompletableFuture.supplyAsync(() -> {
+                        Commodity commodity1 = new Commodity(idGenerator.generateId(), commodityFromMessage.name());
                         return createOrLoadCommodityPort.createOrLoad(commodity1);
-                    });
-                    // parse market data
-                    CompletableFuture<MarketDatum> marketDatum = CompletableFuture.supplyAsync(() -> getMarketDatum(commodityFromMessage, prohibitedCommodities, updateTimestamp));
-
-                    return commodity.thenCombine(marketDatum, (c, md) -> {
-                        md.setCommodity(c);
-                        return md;
-                    });
+                    }).thenCompose(commodity -> CompletableFuture.supplyAsync(() -> getMarketDatum(commodity, commodityFromMessage, prohibitedCommodities, updateTimestamp)));
                 })
                 .toList();
 
@@ -122,8 +126,8 @@ public class ReceiveCommodityMessageService implements ReceiveKafkaMessageUseCas
 
         stationCompletableFuture.thenCombine(combinedFuture, (station, marketDatumList) -> {
             marketDatumList.parallelStream().forEach(marketDatum -> {
-                createWhenNotExistsMarketDatumPort.createWhenNotExists(station.getId(), marketDatum);
-                createOrUpdateOnConflictWhenNewerLatestMarketDatumPort.createOrUpdateWhenNewer(station.getId(), marketDatum);
+                createWhenNotExistsMarketDatumPort.createWhenNotExists(station.id(), marketDatum);
+                createOrUpdateOnConflictWhenNewerLatestMarketDatumPort.createOrUpdateWhenNewer(station.id(), marketDatum);
             });
             return station;
         });
@@ -138,18 +142,19 @@ public class ReceiveCommodityMessageService implements ReceiveKafkaMessageUseCas
         log.info("DefaultReceiveCommodityMessageUseCase.receive -> the message has been processed");
     }
 
-    private MarketDatum getMarketDatum(CommodityMessage.V3.Commodity commodity, String[] prohibitedCommodities, LocalDateTime timestamp) {
-        return MarketDatum.builder()
-                .timestamp(timestamp)
-                .meanPrice(commodity.meanPrice())
-                .buyPrice(commodity.buyPrice())
-                .sellPrice(commodity.sellPrice())
-                .stock(commodity.stock())
-                .stockBracket(commodity.stockBracket())
-                .demand(commodity.demand())
-                .demandBracket(commodity.demandBracket())
-                .statusFlags(CollectionUtil.toList(commodity.statusFlags()))
-                .prohibited(Optional.ofNullable(prohibitedCommodities).map(prohibited -> Arrays.stream(prohibited).anyMatch(prohibitedCommodity -> prohibitedCommodity.equals(commodity.name()))).orElse(false))
-                .build();
+    private MarketDatum getMarketDatum(Commodity commodity1, CommodityMessage.V3.Commodity commodity, String[] prohibitedCommodities, LocalDateTime timestamp) {
+        return new MarketDatum(
+                commodity1,
+                timestamp,
+                commodity.meanPrice(),
+                commodity.buyPrice(),
+                commodity.stock(),
+                commodity.stockBracket(),
+                commodity.sellPrice(),
+                commodity.demand(),
+                commodity.demandBracket(),
+                CollectionUtil.toList(commodity.statusFlags()),
+                Optional.ofNullable(prohibitedCommodities).map(prohibited -> Arrays.stream(prohibited).anyMatch(prohibitedCommodity -> prohibitedCommodity.equals(commodity.name()))).orElse(false)
+        );
     }
 }

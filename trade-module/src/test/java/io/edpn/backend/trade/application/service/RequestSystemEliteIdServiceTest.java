@@ -19,6 +19,8 @@ import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.Load
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Module;
 import io.edpn.backend.util.Topic;
+import java.util.concurrent.Executor;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,9 +31,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.support.RetryTemplate;
-
-import java.util.concurrent.Executor;
-import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -107,9 +106,12 @@ public class RequestSystemEliteIdServiceTest {
     @ParameterizedTest
     @MethodSource("provideLongForCheckApplicability")
     void shouldCheckApplicability(Long eliteId, boolean expected) {
-        System systemWithEliteId = System.builder()
-                .eliteId(eliteId)
-                .build();
+        System systemWithEliteId = new System(
+                null,
+                eliteId,
+                null,
+                null
+        );
 
         assertThat(underTest.isApplicable(systemWithEliteId), is(expected));
     }
@@ -139,9 +141,12 @@ public class RequestSystemEliteIdServiceTest {
     @Test
     public void testRequestWhenIdExists() {
         String systemName = "Test System";
-        System system = System.builder()
-                .name(systemName)
-                .build();
+        System system = new System(
+                null,
+                null,
+                systemName,
+                null
+        );
 
         when(existsSystemEliteIdRequestPort.exists(systemName)).thenReturn(true);
 
@@ -154,9 +159,12 @@ public class RequestSystemEliteIdServiceTest {
     @Test
     public void testRequestWhenIdDoesNotExist() {
         String systemName = "Test System";
-        System system = System.builder()
-                .name(systemName)
-                .build();
+        System system = new System(
+                null,
+                null,
+                systemName,
+                null
+        );
 
         JsonNode mockJsonNode = mock(JsonNode.class);
         String mockJsonString = "jsonString";
@@ -172,7 +180,7 @@ public class RequestSystemEliteIdServiceTest {
         }))).thenReturn(mockJsonNode);
         when(mockJsonNode.toString()).thenReturn(mockJsonString);
         when(messageMapper.map(argThat(argument ->
-                argument.getMessage().equals(mockJsonString) && argument.getTopic().equals(Topic.Request.SYSTEM_ELITE_ID.getTopicName())
+                argument.message().equals(mockJsonString) && argument.topic().equals(Topic.Request.SYSTEM_ELITE_ID.getTopicName())
         ))).thenReturn(mockMessageDto);
 
         ArgumentCaptor<Message> argumentCaptor = ArgumentCaptor.forClass(Message.class);
@@ -185,7 +193,7 @@ public class RequestSystemEliteIdServiceTest {
         verify(messageMapper, times(1)).map(argumentCaptor.capture());
         Message message = argumentCaptor.getValue();
         assertThat(message, is(notNullValue()));
-        assertThat(message.getTopic(), is(Topic.Request.SYSTEM_ELITE_ID.getTopicName()));
-        assertThat(message.getMessage(), is("jsonString"));
+        assertThat(message.topic(), is(Topic.Request.SYSTEM_ELITE_ID.getTopicName()));
+        assertThat(message.message(), is("jsonString"));
     }
 }
