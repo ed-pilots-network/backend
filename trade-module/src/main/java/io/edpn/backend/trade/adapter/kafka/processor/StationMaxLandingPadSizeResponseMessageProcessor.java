@@ -7,16 +7,18 @@ import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationMaxL
 import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.MessageProcessor;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.annotation.KafkaListener;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.kafka.listener.MessageListener;
 
 @RequiredArgsConstructor
-public class StationMaxLandingPadSizeResponseMessageProcessor implements MessageProcessor<StationMaxLandingPadSizeResponse> {
+@Slf4j
+public class StationMaxLandingPadSizeResponseMessageProcessor implements MessageProcessor<StationMaxLandingPadSizeResponse>, MessageListener<String, JsonNode> {
 
     private final ReceiveKafkaMessageUseCase<StationMaxLandingPadSizeResponse> receiveDataRequestResponseUseCase;
     private final ObjectMapper objectMapper;
 
     @Override
-    @KafkaListener(topics = "trade_stationMaxLandingPadSizeResponse", groupId = "tradeModule", containerFactory = "tradeModuleKafkaListenerContainerFactory")
     public void listen(JsonNode json) throws JsonProcessingException {
         handle(processJson(json));
     }
@@ -29,5 +31,15 @@ public class StationMaxLandingPadSizeResponseMessageProcessor implements Message
     @Override
     public StationMaxLandingPadSizeResponse processJson(JsonNode json) throws JsonProcessingException {
         return objectMapper.treeToValue(json, StationMaxLandingPadSizeResponse.class);
+    }
+
+    @Override
+    public void onMessage(ConsumerRecord<String, JsonNode> data) {
+        try {
+            this.listen(data.value());
+        } catch (JsonProcessingException e) {
+            log.error("Unable to process JSON", e);
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -7,16 +7,17 @@ import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessag
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
 import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.MessageProcessor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.annotation.KafkaListener;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.listener.MessageListener;
 
 @RequiredArgsConstructor
-public class NavRouteV1MessageProcessor implements MessageProcessor<NavRouteMessage.V1> {
+@Slf4j
+public class NavRouteV1MessageProcessor implements MessageProcessor<NavRouteMessage.V1>, MessageListener<String, JsonNode> {
 
     private final ReceiveKafkaMessageUseCase<NavRouteMessage.V1> receiveNavRouteMessageUseCase;
     private final ObjectMapper objectMapper;
 
     @Override
-    @KafkaListener(topics = "https___eddn.edcd.io_schemas_navroute_1", groupId = "explorationModule", containerFactory = "explorationModuleKafkaListenerContainerFactory")
     public void listen(JsonNode json) throws JsonProcessingException {
         handle(processJson(json));
     }
@@ -29,5 +30,15 @@ public class NavRouteV1MessageProcessor implements MessageProcessor<NavRouteMess
     @Override
     public NavRouteMessage.V1 processJson(JsonNode json) throws JsonProcessingException {
         return objectMapper.treeToValue(json, NavRouteMessage.V1.class);
+    }
+
+    @Override
+    public void onMessage(org.apache.kafka.clients.consumer.ConsumerRecord<String, JsonNode> data) {
+        try {
+            this.listen(data.value());
+        } catch (JsonProcessingException e) {
+            log.error("Unable to process JSON", e);
+            throw new RuntimeException(e);
+        }
     }
 }

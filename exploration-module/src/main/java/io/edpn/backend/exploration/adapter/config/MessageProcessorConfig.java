@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.KafkaTemplate;
 
 @Configuration("ExplorationModuleMessagingConfig")
-public class MessagingConfig {
+public class MessageProcessorConfig {
 
 
     @Bean(name = "explorationNavRouteV1MessageProcessor")

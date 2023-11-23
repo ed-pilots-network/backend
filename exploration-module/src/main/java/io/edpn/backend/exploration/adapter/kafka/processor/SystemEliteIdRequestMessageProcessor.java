@@ -8,16 +8,18 @@ import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessag
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.MessageProcessor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.annotation.KafkaListener;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.kafka.listener.MessageListener;
 
 @RequiredArgsConstructor
-public class SystemEliteIdRequestMessageProcessor implements MessageProcessor<SystemDataRequest> {
+@Slf4j
+public class SystemEliteIdRequestMessageProcessor implements MessageProcessor<SystemDataRequest>, MessageListener<String, JsonNode> {
 
     private final ReceiveKafkaMessageUseCase<SystemDataRequest> receiveSystemDataRequestUseCase;
     private final ObjectMapper objectMapper;
 
     @Override
-    @KafkaListener(topics = "systemEliteIdRequest", groupId = "explorationModule", containerFactory = "explorationModuleKafkaListenerContainerFactory")
     public void listen(JsonNode json) throws JsonProcessingException {
         handle(processJson(json));
     }
@@ -35,5 +37,15 @@ public class SystemEliteIdRequestMessageProcessor implements MessageProcessor<Sy
         }
 
         return objectMapper.treeToValue(json, SystemDataRequest.class);
+    }
+
+    @Override
+    public void onMessage(ConsumerRecord<String, JsonNode> data) {
+        try {
+            this.listen(data.value());
+        } catch (JsonProcessingException e) {
+            log.error("Unable to process JSON", e);
+            throw new RuntimeException(e);
+        }
     }
 }
