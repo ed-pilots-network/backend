@@ -1,0 +1,62 @@
+package io.edpn.backend.exploration.adapter.applicationevent;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.edpn.backend.exploration.application.domain.Message;
+import io.edpn.backend.exploration.application.domain.System;
+import io.edpn.backend.exploration.application.domain.SystemEliteIdUpdatedEvent;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEliteIdResponseMapper;
+import io.edpn.backend.exploration.application.dto.web.object.MessageDto;
+import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoMapper;
+import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.SystemEliteIdUpdatedEventListener;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
+import io.edpn.backend.util.Topic;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.support.RetryTemplate;
+
+import java.util.concurrent.ExecutorService;
+
+@RequiredArgsConstructor
+@Slf4j
+public class SystemEliteIdEventListener implements SystemEliteIdUpdatedEventListener {
+
+    private final LoadSystemPort loadSystemPort;
+    private final LoadSystemEliteIdRequestBySystemNamePort loadSystemEliteIdRequestBySystemNamePort;
+    private final DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort;
+    private final SendMessagePort sendMessagePort;
+    private final SystemEliteIdResponseMapper systemEliteIdResponseMapper;
+    private final MessageDtoMapper messageMapper;
+    private final ObjectMapper objectMapper;
+    private final RetryTemplate retryTemplate;
+    private final ExecutorService executorService;
+
+    @Override
+    public void onUpdatedEvent(SystemEliteIdUpdatedEvent systemEliteIdUpdatedEvent) {
+        String systemName = systemEliteIdUpdatedEvent.getSystemName();
+        loadSystemEliteIdRequestBySystemNamePort.loadByName(systemName).parallelStream()
+                .forEach(systemEliteIdRequest ->
+                        executorService.submit(() -> {
+                            try {
+                                System system = loadSystemPort.load(systemName).orElseThrow(() -> new IllegalStateException("System with name %s not found when application event for it was triggered".formatted(systemName)));
+                                SystemEliteIdResponse systemEliteIdResponse = systemEliteIdResponseMapper.map(system);
+                                String stringJson = objectMapper.writeValueAsString(systemEliteIdResponse);
+                                String topic = Topic.Response.SYSTEM_ELITE_ID.getFormattedTopicName(systemEliteIdRequest.requestingModule());
+                                Message message = new Message(topic, stringJson);
+                                MessageDto messageDto = messageMapper.map(message);
+
+                                boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
+                                if (sendSuccessful) {
+                                    deleteSystemEliteIdRequestPort.delete(systemName, systemEliteIdRequest.requestingModule());
+                                }
+                            } catch (JsonProcessingException jpe) {
+                                throw new RuntimeException(jpe);
+                            }
+                        })
+                );
+    }
+}

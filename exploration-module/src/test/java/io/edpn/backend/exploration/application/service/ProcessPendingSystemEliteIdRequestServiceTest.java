@@ -1,48 +1,32 @@
 package io.edpn.backend.exploration.application.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.domain.System;
+import io.edpn.backend.exploration.application.domain.SystemCoordinatesUpdatedEvent;
 import io.edpn.backend.exploration.application.domain.SystemEliteIdRequest;
-import io.edpn.backend.exploration.application.dto.web.object.MessageDto;
-import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoMapper;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEliteIdResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ProcessPendingDataRequestUseCase;
-import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.CreateIfNotExistsSystemEliteIdRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestPort;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
 import io.edpn.backend.util.Module;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.retry.RetryCallback;
-import org.springframework.retry.support.RetryTemplate;
+import org.springframework.context.ApplicationEventPublisher;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ProcessPendingSystemEliteIdRequestServiceTest {
 
-    private final Executor executor = Runnable::run;
     @Mock
     private LoadAllSystemEliteIdRequestPort loadAllSystemEliteIdRequestPort;
     @Mock
@@ -50,154 +34,41 @@ class ProcessPendingSystemEliteIdRequestServiceTest {
     @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
-    private SendMessagePort sendMessagePort;
+    private ApplicationEventPublisher applicationEventPublisher;
     @Mock
-    private DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort;
-    @Mock
-    private SystemEliteIdResponseMapper systemEliteIdResponseMapper;
-    @Mock
-    private MessageDtoMapper messageMapper;
-    @Mock
-    private ObjectMapper objectMapper;
-    @Mock
-    private RetryTemplate retryTemplate;
+    private ExecutorService executorService;
+
     private ProcessPendingDataRequestUseCase<SystemEliteIdRequest> underTest;
 
     @BeforeEach
-    void setUp() {
-
+    public void setup() {
         underTest = new SystemEliteIdInterModuleCommunicationService(
                 loadAllSystemEliteIdRequestPort,
                 createIfNotExistsSystemEliteIdRequestPort,
-                deleteSystemEliteIdRequestPort,
                 loadSystemPort,
-                sendMessagePort,
-                systemEliteIdResponseMapper,
-                messageMapper,
-                objectMapper,
-                retryTemplate,
-                executor
+                applicationEventPublisher,
+                executorService
         );
     }
 
     @Test
-    void processPending_emptyRequestList() {
+    void testProcessPending_withMixedSystemAvailability() {
+        // Setup
+        SystemEliteIdRequest existingSystemRequest = new SystemEliteIdRequest("ExistingSystem", mock(Module.class));
+        SystemEliteIdRequest nonExistingSystemRequest = new SystemEliteIdRequest("NonExistingSystem", mock(Module.class));
+        when(loadAllSystemEliteIdRequestPort.loadAll()).thenReturn(List.of(existingSystemRequest, nonExistingSystemRequest));
 
-        when(loadAllSystemEliteIdRequestPort.loadAll()).thenReturn(Collections.emptyList());
+        System existingSystem = mock(System.class);
+        when(loadSystemPort.load("ExistingSystem")).thenReturn(Optional.of(existingSystem));
+        when(loadSystemPort.load("NonExistingSystem")).thenReturn(Optional.empty());
 
-
+        // Execute
         underTest.processPending();
 
-
-        verify(loadAllSystemEliteIdRequestPort, times(1)).loadAll();
-        verifyNoMoreInteractions(loadAllSystemEliteIdRequestPort);
-        verifyNoInteractions(loadSystemPort, sendMessagePort, deleteSystemEliteIdRequestPort);
-    }
-
-    @Test
-    void processPending_nonEmptyRequestList_systemNotFound() {
-
-        SystemEliteIdRequest systemEliteIdRequest = mock(SystemEliteIdRequest.class);
-        when(systemEliteIdRequest.systemName()).thenReturn("SystemName");
-        List<SystemEliteIdRequest> systemEliteIdRequestList = List.of(systemEliteIdRequest);
-        when(loadAllSystemEliteIdRequestPort.loadAll()).thenReturn(systemEliteIdRequestList);
-        when(loadSystemPort.load("SystemName")).thenReturn(Optional.empty());
-
-
-        underTest.processPending();
-
-
-        verify(loadAllSystemEliteIdRequestPort, times(1)).loadAll();
-        verify(loadSystemPort, times(1)).load("SystemName");
-        verifyNoMoreInteractions(loadAllSystemEliteIdRequestPort, loadSystemPort);
-        verifyNoInteractions(sendMessagePort, deleteSystemEliteIdRequestPort);
-    }
-
-    @SneakyThrows
-    @Test
-    void processPending_nonEmptyRequestList_systemFound_sendFailed() {
-
-        SystemEliteIdRequest systemEliteIdRequest = mock(SystemEliteIdRequest.class);
-        when(systemEliteIdRequest.systemName()).thenReturn("SystemName");
-        Module module = mock(Module.class);
-        when(module.getName()).thenReturn("trade");
-        when(systemEliteIdRequest.requestingModule()).thenReturn(module);
-        List<SystemEliteIdRequest> systemEliteIdRequestList = List.of(systemEliteIdRequest);
-        System system = mock(System.class);
-        SystemEliteIdResponse systemEliteIdResponse = mock(SystemEliteIdResponse.class);
-        when(systemEliteIdResponseMapper.map(system)).thenReturn(systemEliteIdResponse);
-        when(objectMapper.writeValueAsString(systemEliteIdResponse)).thenReturn("JSON_STRING");
-        Message message = new Message("trade_systemEliteIdResponse", "JSON_STRING");
-        MessageDto messageDto = mock(MessageDto.class);
-        when(messageMapper.map(message)).thenReturn(messageDto);
-        when(loadAllSystemEliteIdRequestPort.loadAll()).thenReturn(systemEliteIdRequestList);
-        when(loadSystemPort.load("SystemName")).thenReturn(Optional.of(system));
-        when(sendMessagePort.send(messageDto)).thenReturn(false);
-        doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
-
-
-        underTest.processPending();
-
-
-        verify(loadAllSystemEliteIdRequestPort, times(1)).loadAll();
-        verify(loadSystemPort, times(1)).load("SystemName");
-        verify(sendMessagePort, times(1)).send(messageDto);
-        verifyNoMoreInteractions(loadAllSystemEliteIdRequestPort, loadSystemPort, sendMessagePort);
-        verifyNoInteractions(deleteSystemEliteIdRequestPort);
-    }
-
-    @SneakyThrows
-    @Test
-    void processPending_nonEmptyRequestList_systemFound_sendSucceeded() {
-
-        SystemEliteIdRequest systemEliteIdRequest = mock(SystemEliteIdRequest.class);
-        when(systemEliteIdRequest.systemName()).thenReturn("SystemName");
-        Module module = mock(Module.class);
-        when(module.getName()).thenReturn("trade");
-        when(systemEliteIdRequest.requestingModule()).thenReturn(module);
-        List<SystemEliteIdRequest> systemEliteIdRequestList = List.of(systemEliteIdRequest);
-        System system = mock(System.class);
-        SystemEliteIdResponse systemEliteIdResponse = mock(SystemEliteIdResponse.class);
-        when(systemEliteIdResponseMapper.map(system)).thenReturn(systemEliteIdResponse);
-        when(objectMapper.writeValueAsString(systemEliteIdResponse)).thenReturn("JSON_STRING");
-        Message message = new Message("trade_systemEliteIdResponse", "JSON_STRING");
-        MessageDto messageDto = mock(MessageDto.class);
-        when(messageMapper.map(message)).thenReturn(messageDto);
-        when(loadAllSystemEliteIdRequestPort.loadAll()).thenReturn(systemEliteIdRequestList);
-        when(loadSystemPort.load("SystemName")).thenReturn(Optional.of(system));
-        when(sendMessagePort.send(messageDto)).thenReturn(true);
-        doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
-
-
-        underTest.processPending();
-
-
-        verify(loadAllSystemEliteIdRequestPort, times(1)).loadAll();
-        verify(loadSystemPort, times(1)).load("SystemName");
-        verify(sendMessagePort, times(1)).send(messageDto);
-        verify(deleteSystemEliteIdRequestPort, times(1)).delete("SystemName", module);
-        verifyNoMoreInteractions(loadAllSystemEliteIdRequestPort, loadSystemPort, sendMessagePort, deleteSystemEliteIdRequestPort);
-    }
-
-
-    @Test
-    void processPending_nonEmptyRequestList_systemFound_writeValueAsStringThrowsJsonProcessingException() throws JsonProcessingException {
-        SystemEliteIdRequest systemEliteIdRequest = mock(SystemEliteIdRequest.class);
-        when(systemEliteIdRequest.systemName()).thenReturn("SystemName");
-        List<SystemEliteIdRequest> systemEliteIdRequestList = List.of(systemEliteIdRequest);
-        System system = mock(System.class);
-        SystemEliteIdResponse systemEliteIdResponse = mock(SystemEliteIdResponse.class);
-        when(systemEliteIdResponseMapper.map(system)).thenReturn(systemEliteIdResponse);
-        when(objectMapper.writeValueAsString(systemEliteIdResponse)).thenThrow(new JsonProcessingException("Test exception") {
-        });
-        when(loadAllSystemEliteIdRequestPort.loadAll()).thenReturn(systemEliteIdRequestList);
-        when(loadSystemPort.load("SystemName")).thenReturn(Optional.of(system));
-
-        // No exception as it is a NOOP in async
-        underTest.processPending();
-
-        verify(loadAllSystemEliteIdRequestPort, times(1)).loadAll();
-        verify(loadSystemPort, times(1)).load("SystemName");
-        verifyNoMoreInteractions(loadAllSystemEliteIdRequestPort, loadSystemPort, sendMessagePort, deleteSystemEliteIdRequestPort);
+        // Verify
+        verify(loadSystemPort).load("ExistingSystem");
+        verify(loadSystemPort).load("NonExistingSystem");
+        verify(applicationEventPublisher).publishEvent(new SystemCoordinatesUpdatedEvent(underTest, "ExistingSystem"));
+        verify(applicationEventPublisher, never()).publishEvent(new SystemCoordinatesUpdatedEvent(underTest, "NonExistingSystem"));
     }
 }

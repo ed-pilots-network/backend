@@ -1,48 +1,31 @@
 package io.edpn.backend.exploration.application.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
-import io.edpn.backend.exploration.application.dto.web.object.MessageDto;
-import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoMapper;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ProcessPendingDataRequestUseCase;
-import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestPort;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.util.Module;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.retry.RetryCallback;
-import org.springframework.retry.support.RetryTemplate;
+import org.springframework.context.ApplicationEventPublisher;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ProcessPendingSystemCoordinateRequestServiceTest {
 
-    private final Executor executor = Runnable::run;
     @Mock
     private LoadAllSystemCoordinateRequestPort loadAllSystemCoordinateRequestPort;
     @Mock
@@ -50,154 +33,42 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
     @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
-    private SendMessagePort sendMessagePort;
-    @Mock
-    private DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
-    @Mock
-    private SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
-    @Mock
-    private MessageDtoMapper messageMapper;
-    @Mock
-    private ObjectMapper objectMapper;
-    @Mock
-    private RetryTemplate retryTemplate;
+    private ApplicationEventPublisher applicationEventPublisher;
 
+    @Mock
+    private ExecutorService executorService;
     private ProcessPendingDataRequestUseCase<SystemCoordinateRequest> underTest;
 
     @BeforeEach
-    void setUp() {
+    public void setup() {
         underTest = new SystemCoordinateInterModuleCommunicationService(
                 loadAllSystemCoordinateRequestPort,
                 createIfNotExistsSystemCoordinateRequestPort,
-                deleteSystemCoordinateRequestPort,
                 loadSystemPort,
-                sendMessagePort,
-                systemCoordinatesResponseMapper,
-                messageMapper,
-                objectMapper,
-                retryTemplate,
-                executor
+                applicationEventPublisher,
+                executorService
         );
     }
 
     @Test
-    void processPending_emptyRequestList() {
+    void testProcessPending_withMixedSystemAvailability() {
+        // Setup
+        SystemCoordinateRequest existingSystemRequest = new SystemCoordinateRequest("ExistingSystem", mock(Module.class));
+        SystemCoordinateRequest nonExistingSystemRequest = new SystemCoordinateRequest("NonExistingSystem", mock(Module.class));
+        when(loadAllSystemCoordinateRequestPort.loadAll()).thenReturn(List.of(existingSystemRequest, nonExistingSystemRequest));
+        ArgumentCaptor<Runnable> taskCaptor = ArgumentCaptor.forClass(Runnable.class);
 
-        when(loadAllSystemCoordinateRequestPort.loadAll()).thenReturn(Collections.emptyList());
+        System existingSystem = mock(System.class);
+        when(loadSystemPort.load("ExistingSystem")).thenReturn(Optional.of(existingSystem));
+        when(loadSystemPort.load("NonExistingSystem")).thenReturn(Optional.empty());
 
-
+        // Execute
         underTest.processPending();
 
-
-        verify(loadAllSystemCoordinateRequestPort, times(1)).loadAll();
-        verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort);
-        verifyNoInteractions(loadSystemPort, sendMessagePort, deleteSystemCoordinateRequestPort);
-    }
-
-    @Test
-    void processPending_nonEmptyRequestList_systemNotFound() {
-
-        SystemCoordinateRequest systemCoordinateRequest = mock(SystemCoordinateRequest.class);
-        when(systemCoordinateRequest.systemName()).thenReturn("SystemName");
-        List<SystemCoordinateRequest> systemCoordinateRequestList = List.of(systemCoordinateRequest);
-        when(loadAllSystemCoordinateRequestPort.loadAll()).thenReturn(systemCoordinateRequestList);
-        when(loadSystemPort.load("SystemName")).thenReturn(Optional.empty());
-
-
-        underTest.processPending();
-
-
-        verify(loadAllSystemCoordinateRequestPort, times(1)).loadAll();
-        verify(loadSystemPort, times(1)).load("SystemName");
-        verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort, loadSystemPort);
-        verifyNoInteractions(sendMessagePort, deleteSystemCoordinateRequestPort);
-    }
-
-    @SneakyThrows
-    @Test
-    void processPending_nonEmptyRequestList_systemFound_sendFailed() {
-
-        SystemCoordinateRequest systemCoordinateRequest = mock(SystemCoordinateRequest.class);
-        when(systemCoordinateRequest.systemName()).thenReturn("SystemName");
-        Module module = mock(Module.class);
-        when(module.getName()).thenReturn("trade");
-        when(systemCoordinateRequest.requestingModule()).thenReturn(module);
-        List<SystemCoordinateRequest> systemCoordinateRequestList = List.of(systemCoordinateRequest);
-        System system = mock(System.class);
-        SystemCoordinatesResponse systemCoordinatesResponse = mock(SystemCoordinatesResponse.class);
-        when(systemCoordinatesResponseMapper.map(system)).thenReturn(systemCoordinatesResponse);
-        when(objectMapper.writeValueAsString(systemCoordinatesResponse)).thenReturn("JSON_STRING");
-        Message message = new Message("trade_systemCoordinatesResponse", "JSON_STRING");
-        MessageDto messageDto = mock(MessageDto.class);
-        when(messageMapper.map(message)).thenReturn(messageDto);
-        when(loadAllSystemCoordinateRequestPort.loadAll()).thenReturn(systemCoordinateRequestList);
-        when(loadSystemPort.load("SystemName")).thenReturn(Optional.of(system));
-        when(sendMessagePort.send(messageDto)).thenReturn(false);
-        doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
-
-
-        underTest.processPending();
-
-
-        verify(loadAllSystemCoordinateRequestPort, times(1)).loadAll();
-        verify(loadSystemPort, times(1)).load("SystemName");
-        verify(sendMessagePort, times(1)).send(messageDto);
-        verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort, loadSystemPort, sendMessagePort);
-        verifyNoInteractions(deleteSystemCoordinateRequestPort);
-    }
-
-    @SneakyThrows
-    @Test
-    void processPending_nonEmptyRequestList_systemFound_sendSucceeded() {
-
-        SystemCoordinateRequest systemCoordinateRequest = mock(SystemCoordinateRequest.class);
-        when(systemCoordinateRequest.systemName()).thenReturn("SystemName");
-        Module module = mock(Module.class);
-        when(module.getName()).thenReturn("trade");
-        when(systemCoordinateRequest.requestingModule()).thenReturn(module);
-        List<SystemCoordinateRequest> systemCoordinateRequestList = List.of(systemCoordinateRequest);
-        System system = mock(System.class);
-        SystemCoordinatesResponse systemCoordinatesResponse = mock(SystemCoordinatesResponse.class);
-        when(systemCoordinatesResponseMapper.map(system)).thenReturn(systemCoordinatesResponse);
-        when(objectMapper.writeValueAsString(systemCoordinatesResponse)).thenReturn("JSON_STRING");
-        Message message = new Message("trade_systemCoordinatesResponse", "JSON_STRING");
-        MessageDto messageDto = mock(MessageDto.class);
-        when(messageMapper.map(message)).thenReturn(messageDto);
-        when(loadAllSystemCoordinateRequestPort.loadAll()).thenReturn(systemCoordinateRequestList);
-        when(loadSystemPort.load("SystemName")).thenReturn(Optional.of(system));
-        when(sendMessagePort.send(messageDto)).thenReturn(true);
-        doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
-
-
-        underTest.processPending();
-
-
-        verify(loadAllSystemCoordinateRequestPort, times(1)).loadAll();
-        verify(loadSystemPort, times(1)).load("SystemName");
-        verify(sendMessagePort, times(1)).send(messageDto);
-        verify(deleteSystemCoordinateRequestPort, times(1)).delete("SystemName", module);
-        verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, deleteSystemCoordinateRequestPort);
-    }
-
-    @Test
-    void processPending_nonEmptyRequestList_systemFound_writeValueAsStringThrowsJsonProcessingException() throws JsonProcessingException {
-
-        SystemCoordinateRequest systemCoordinateRequest = mock(SystemCoordinateRequest.class);
-        when(systemCoordinateRequest.systemName()).thenReturn("SystemName");
-        List<SystemCoordinateRequest> systemCoordinateRequestList = List.of(systemCoordinateRequest);
-        System system = mock(System.class);
-        SystemCoordinatesResponse systemCoordinatesResponse = mock(SystemCoordinatesResponse.class);
-        when(systemCoordinatesResponseMapper.map(system)).thenReturn(systemCoordinatesResponse);
-        when(objectMapper.writeValueAsString(systemCoordinatesResponse)).thenThrow(new JsonProcessingException("Test exception") {
-        });
-        when(loadAllSystemCoordinateRequestPort.loadAll()).thenReturn(systemCoordinateRequestList);
-        when(loadSystemPort.load("SystemName")).thenReturn(Optional.of(system));
-
-        // No exception as it is a NOOP in async
-        underTest.processPending();
-
-        verify(loadAllSystemCoordinateRequestPort, times(1)).loadAll();
-        verify(loadSystemPort, times(1)).load("SystemName");
-        verifyNoMoreInteractions(loadAllSystemCoordinateRequestPort, loadSystemPort, sendMessagePort, deleteSystemCoordinateRequestPort);
+        // Verify
+        verify(loadSystemPort).load("ExistingSystem");
+        verify(loadSystemPort).load("NonExistingSystem");
+        verify(executorService).submit(taskCaptor.capture());
+        taskCaptor.getValue().run();
     }
 }

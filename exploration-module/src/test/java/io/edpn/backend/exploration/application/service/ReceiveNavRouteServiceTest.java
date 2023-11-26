@@ -28,12 +28,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.retry.RetryCallback;
 import org.springframework.retry.support.RetryTemplate;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -73,13 +75,16 @@ class ReceiveNavRouteServiceTest {
     @Mock
     private RetryTemplate retryTemplate;
 
+    @Mock
+    private ApplicationEventPublisher applicationEventPublisher;
+
     private ReceiveKafkaMessageUseCase<NavRouteMessage.V1> underTest;
 
     @BeforeEach
     void setUp() {
         when(idGenerator.generateId()).thenReturn(java.util.UUID.fromString(UUID));
-        Executor executor = Runnable::run;
-        underTest = new ReceiveNavRouteService(idGenerator, saveOrUpdateSystemPort, sendMessagePort, loadSystemCoordinateRequestBySystemNamePort, deleteSystemCoordinateRequestPort, systemCoordinatesResponseMapper, loadSystemEliteIdRequestBySystemNamePort, deleteSystemEliteIdRequestPort, systemEliteIdResponseMapper, messageMapper, objectMapper, retryTemplate, executor);
+        ExecutorService executor = Executors.newScheduledThreadPool(0, Thread.ofVirtual().factory());
+        underTest = new ReceiveNavRouteService(idGenerator, saveOrUpdateSystemPort, applicationEventPublisher, executor);
     }
 
     @SneakyThrows
@@ -227,7 +232,6 @@ class ReceiveNavRouteServiceTest {
         ))).thenReturn(system);
         when(loadSystemCoordinateRequestBySystemNamePort.loadByName(systemName)).thenReturn(Collections.emptyList());
         when(loadSystemEliteIdRequestBySystemNamePort.loadByName(systemName)).thenReturn(Collections.emptyList());
-
 
         underTest.receive(message);
 
