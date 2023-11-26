@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.domain.SystemCoordinatesUpdatedEvent;
+import io.edpn.backend.exploration.application.domain.SystemCoordinateUpdatedEvent;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.dto.web.object.MessageDto;
 import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoMapper;
@@ -37,8 +37,8 @@ public class SystemCoordinatesEventListener implements SystemCoordinatesUpdatedE
 
 
     @Override
-    public void onUpdatedEvent(SystemCoordinatesUpdatedEvent systemCoordinatesUpdatedEvent) {
-        String systemName = systemCoordinatesUpdatedEvent.getSystemName();
+    public void onUpdatedEvent(SystemCoordinateUpdatedEvent systemCoordinateUpdatedEvent) {
+        String systemName = systemCoordinateUpdatedEvent.getSystemName();
         loadSystemCoordinateRequestBySystemNamePort.loadByName(systemName).parallelStream()
                 .forEach(systemCoordinateRequest ->
                         executorService.submit(() -> {

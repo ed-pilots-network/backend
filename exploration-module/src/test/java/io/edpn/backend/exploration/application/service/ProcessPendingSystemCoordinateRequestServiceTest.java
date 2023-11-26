@@ -2,6 +2,7 @@ package io.edpn.backend.exploration.application.service;
 
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
+import io.edpn.backend.exploration.application.domain.SystemCoordinateUpdatedEvent;
 import io.edpn.backend.exploration.application.port.incomming.ProcessPendingDataRequestUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
@@ -19,7 +20,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -34,7 +38,6 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
     private LoadSystemPort loadSystemPort;
     @Mock
     private ApplicationEventPublisher applicationEventPublisher;
-
     @Mock
     private ExecutorService executorService;
     private ProcessPendingDataRequestUseCase<SystemCoordinateRequest> underTest;
@@ -56,19 +59,26 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
         SystemCoordinateRequest existingSystemRequest = new SystemCoordinateRequest("ExistingSystem", mock(Module.class));
         SystemCoordinateRequest nonExistingSystemRequest = new SystemCoordinateRequest("NonExistingSystem", mock(Module.class));
         when(loadAllSystemCoordinateRequestPort.loadAll()).thenReturn(List.of(existingSystemRequest, nonExistingSystemRequest));
-        ArgumentCaptor<Runnable> taskCaptor = ArgumentCaptor.forClass(Runnable.class);
 
         System existingSystem = mock(System.class);
+        when(existingSystem.name()).thenReturn("ExistingSystem");
         when(loadSystemPort.load("ExistingSystem")).thenReturn(Optional.of(existingSystem));
         when(loadSystemPort.load("NonExistingSystem")).thenReturn(Optional.empty());
 
-        // Execute
+        ArgumentCaptor<Runnable> runnableArgumentCaptor = ArgumentCaptor.forClass(Runnable.class);
+
         underTest.processPending();
 
-        // Verify
+        verify(executorService, times(2)).submit(runnableArgumentCaptor.capture());
+
+
+        // Verify first runnable call
+        runnableArgumentCaptor.getAllValues().forEach(Runnable::run);
         verify(loadSystemPort).load("ExistingSystem");
+        verify(applicationEventPublisher).publishEvent(argThat(argument -> argument instanceof SystemCoordinateUpdatedEvent systemCoordinateUpdatedEvent && systemCoordinateUpdatedEvent.getSource().equals(underTest) && systemCoordinateUpdatedEvent.getSystemName().equals("ExistingSystem")));
+
+        // verify second runnable call
         verify(loadSystemPort).load("NonExistingSystem");
-        verify(executorService).submit(taskCaptor.capture());
-        taskCaptor.getValue().run();
+        verify(applicationEventPublisher, never()).publishEvent(argThat(argument -> argument instanceof SystemCoordinateUpdatedEvent systemCoordinateUpdatedEvent && systemCoordinateUpdatedEvent.getSource().equals(underTest) && systemCoordinateUpdatedEvent.getSystemName().equals("NonExistingSystem")));
     }
 }

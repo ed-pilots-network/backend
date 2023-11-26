@@ -1,7 +1,7 @@
 package io.edpn.backend.exploration.application.service;
 
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
-import io.edpn.backend.exploration.application.domain.SystemCoordinatesUpdatedEvent;
+import io.edpn.backend.exploration.application.domain.SystemCoordinateUpdatedEvent;
 import io.edpn.backend.exploration.application.port.incomming.ProcessPendingDataRequestUseCase;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
@@ -54,6 +54,6 @@ public class SystemCoordinateInterModuleCommunicationService implements ReceiveK
 
     private Runnable sendEventIfDataExists(String systemName) {
         return () -> loadSystemPort.load(systemName)
-                .ifPresent(system -> eventPublisher.publishEvent(new SystemCoordinatesUpdatedEvent(this, system.name())));
+                .ifPresent(system -> eventPublisher.publishEvent(new SystemCoordinateUpdatedEvent(this, system.name())));
     }
 }

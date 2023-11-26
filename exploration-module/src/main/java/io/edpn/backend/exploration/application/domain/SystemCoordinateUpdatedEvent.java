@@ -6,11 +6,11 @@ import org.springframework.context.ApplicationEvent;
 
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public class SystemCoordinatesUpdatedEvent extends ApplicationEvent {
+public class SystemCoordinateUpdatedEvent extends ApplicationEvent {
 
     private final String systemName;
 
-    public SystemCoordinatesUpdatedEvent(Object source, String systemName) {
+    public SystemCoordinateUpdatedEvent(Object source, String systemName) {
         super(source);
         this.systemName = systemName;
     }

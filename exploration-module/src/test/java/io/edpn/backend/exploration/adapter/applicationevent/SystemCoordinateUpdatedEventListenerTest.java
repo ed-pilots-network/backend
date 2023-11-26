@@ -19,7 +19,7 @@ import java.util.concurrent.ExecutorService;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @ExtendWith(MockitoExtension.class)
-class SystemCoordinatesUpdatedEventListenerTest {
+class SystemCoordinateUpdatedEventListenerTest {
 
     private LoadSystemPort loadSystemPort;
     private LoadSystemCoordinateRequestBySystemNamePort loadSystemCoordinateRequestBySystemNamePort;

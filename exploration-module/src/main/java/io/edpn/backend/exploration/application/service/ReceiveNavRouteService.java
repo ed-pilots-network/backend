@@ -2,7 +2,7 @@ package io.edpn.backend.exploration.application.service;
 
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.domain.SystemCoordinatesUpdatedEvent;
+import io.edpn.backend.exploration.application.domain.SystemCoordinateUpdatedEvent;
 import io.edpn.backend.exploration.application.domain.SystemEliteIdUpdatedEvent;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
@@ -42,7 +42,7 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
     private void process(NavRouteMessage.V1.Item item) {
         System system = createOrUpdateFromItem(item);
 
-        eventPublisher.publishEvent(new SystemCoordinatesUpdatedEvent(this, system.name()));
+        eventPublisher.publishEvent(new SystemCoordinateUpdatedEvent(this, system.name()));
         eventPublisher.publishEvent(new SystemEliteIdUpdatedEvent(this, system.name()));
     }
 

@@ -12,6 +12,7 @@ import io.edpn.backend.util.Module;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
@@ -20,6 +21,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -60,17 +62,19 @@ public class ReceiveSystemEliteIdRequestMessageServiceTest {
         System system = mock(System.class);
         when(system.name()).thenReturn(systemName);
         Module requestingModule = mock(Module.class);
-        when(requestingModule.getName()).thenReturn("module");
         when(message.systemName()).thenReturn(systemName);
         when(message.requestingModule()).thenReturn(requestingModule);
-
         when(loadSystemPort.load(systemName)).thenReturn(Optional.of(system));
+        ArgumentCaptor<Runnable> runnableArgumentCaptor = ArgumentCaptor.forClass(Runnable.class);
 
         underTest.receive(message);
 
         verify(createIfNotExistsSystemEliteIdRequestPort).createIfNotExists(new SystemEliteIdRequest(systemName, requestingModule));
+        verify(executorService).submit(runnableArgumentCaptor.capture());
+
+        runnableArgumentCaptor.getValue().run();
         verify(loadSystemPort).load(systemName);
-        verify(applicationEventPublisher).publishEvent(new SystemEliteIdUpdatedEvent(underTest, systemName));
+        verify(applicationEventPublisher).publishEvent(argThat(argument -> argument instanceof SystemEliteIdUpdatedEvent systemEliteIdUpdatedEvent && systemEliteIdUpdatedEvent.getSource().equals(underTest) && systemEliteIdUpdatedEvent.getSystemName().equals(systemName)));
     }
 
     @Test
@@ -80,12 +84,17 @@ public class ReceiveSystemEliteIdRequestMessageServiceTest {
         Module requestingModule = mock(Module.class);
         when(message.systemName()).thenReturn(systemName);
         when(message.requestingModule()).thenReturn(requestingModule);
+        ArgumentCaptor<Runnable> runnableArgumentCaptor = ArgumentCaptor.forClass(Runnable.class);
 
         when(loadSystemPort.load(systemName)).thenReturn(Optional.empty());
 
         underTest.receive(message);
 
         verify(createIfNotExistsSystemEliteIdRequestPort).createIfNotExists(new SystemEliteIdRequest(systemName, requestingModule));
+        verify(executorService).submit(runnableArgumentCaptor.capture());
+
+        // execute the runnable
+        runnableArgumentCaptor.getValue().run();
         verify(loadSystemPort).load(systemName);
         verify(applicationEventPublisher, never()).publishEvent(any());
     }
