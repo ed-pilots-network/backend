@@ -2,11 +2,11 @@ package io.edpn.backend.exploration.application.service;
 
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.domain.SystemEliteIdRequest;
-import io.edpn.backend.exploration.application.domain.SystemEliteIdUpdatedEvent;
 import io.edpn.backend.exploration.application.port.incomming.ProcessPendingDataRequestUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.CreateIfNotExistsSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.SystemEliteIdResponseSender;
 import io.edpn.backend.util.Module;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,13 +14,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -37,7 +35,7 @@ class ProcessPendingSystemEliteIdRequestServiceTest {
     @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
-    private ApplicationEventPublisher applicationEventPublisher;
+    private SystemEliteIdResponseSender systemEliteIdResponseSender;
     @Mock
     private ExecutorService executorService;
 
@@ -49,7 +47,7 @@ class ProcessPendingSystemEliteIdRequestServiceTest {
                 loadAllSystemEliteIdRequestPort,
                 createIfNotExistsSystemEliteIdRequestPort,
                 loadSystemPort,
-                applicationEventPublisher,
+                systemEliteIdResponseSender,
                 executorService
         );
     }
@@ -75,8 +73,8 @@ class ProcessPendingSystemEliteIdRequestServiceTest {
         // Verify runnable
         runnableArgumentCaptor.getAllValues().forEach(Runnable::run);
         verify(loadSystemPort).load("ExistingSystem");
-        verify(applicationEventPublisher).publishEvent(argThat(argument -> argument instanceof SystemEliteIdUpdatedEvent systemEliteIdUpdatedEvent && systemEliteIdUpdatedEvent.getSource().equals(underTest) && systemEliteIdUpdatedEvent.getSystemName().equals("ExistingSystem")));
+        verify(systemEliteIdResponseSender).sendResponsesForSystem("ExistingSystem");
         verify(loadSystemPort).load("NonExistingSystem");
-        verify(applicationEventPublisher, never()).publishEvent(argThat(argument -> argument instanceof SystemEliteIdUpdatedEvent systemEliteIdUpdatedEvent && systemEliteIdUpdatedEvent.getSource().equals(underTest) && systemEliteIdUpdatedEvent.getSystemName().equals("NonExistingSystem")));
+        verify(systemEliteIdResponseSender, never()).sendResponsesForSystem("NonExistingSystem");
     }
 }

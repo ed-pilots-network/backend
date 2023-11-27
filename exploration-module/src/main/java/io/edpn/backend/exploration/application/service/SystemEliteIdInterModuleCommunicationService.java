@@ -1,17 +1,16 @@
 package io.edpn.backend.exploration.application.service;
 
 import io.edpn.backend.exploration.application.domain.SystemEliteIdRequest;
-import io.edpn.backend.exploration.application.domain.SystemEliteIdUpdatedEvent;
 import io.edpn.backend.exploration.application.port.incomming.ProcessPendingDataRequestUseCase;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.CreateIfNotExistsSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.SystemEliteIdResponseSender;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.util.Module;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.concurrent.ExecutorService;
@@ -24,7 +23,7 @@ public class SystemEliteIdInterModuleCommunicationService implements ReceiveKafk
     private final LoadAllSystemEliteIdRequestPort loadAllSystemEliteIdRequestPort;
     private final CreateIfNotExistsSystemEliteIdRequestPort createIfNotExistsSystemEliteIdRequestPort;
     private final LoadSystemPort loadSystemPort;
-    private final ApplicationEventPublisher eventPublisher;
+    private final SystemEliteIdResponseSender systemEliteIdResponseSender;
     private final ExecutorService executorService;
 
 
@@ -54,6 +53,6 @@ public class SystemEliteIdInterModuleCommunicationService implements ReceiveKafk
 
     private Runnable sendEventIfDataExists(String systemName) {
         return () -> loadSystemPort.load(systemName)
-                .ifPresent(system -> eventPublisher.publishEvent(new SystemEliteIdUpdatedEvent(this, system.name())));
+                .ifPresent(system -> systemEliteIdResponseSender.sendResponsesForSystem(system.name()));
     }
 }

@@ -33,7 +33,6 @@ import io.edpn.backend.exploration.application.validation.LoadByNameContainingVa
 import io.edpn.backend.util.IdGenerator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.support.RetryTemplate;
@@ -97,14 +96,14 @@ public class ServiceConfig {
             LoadAllSystemEliteIdRequestPort loadAllSystemEliteIdRequestPort,
             CreateIfNotExistsSystemEliteIdRequestPort createIfNotExistsSystemEliteIdRequestPort,
             LoadSystemPort loadSystemPort,
-            ApplicationEventPublisher eventPublisher,
+            SystemEliteIdResponseSender systemEliteIdResponseSender,
             @Qualifier("virtualThreadPerTaskExecutor") ExecutorService executorService
     ) {
         return new SystemEliteIdInterModuleCommunicationService(
                 loadAllSystemEliteIdRequestPort,
                 createIfNotExistsSystemEliteIdRequestPort,
                 loadSystemPort,
-                eventPublisher,
+                systemEliteIdResponseSender,
                 executorService
         );
     }
