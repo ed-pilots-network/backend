@@ -65,7 +65,6 @@ class ProcessPendingSystemEliteIdRequestServiceTest {
         when(existingSystem.name()).thenReturn("ExistingSystem");
         when(loadSystemPort.load("ExistingSystem")).thenReturn(Optional.of(existingSystem));
         when(loadSystemPort.load("NonExistingSystem")).thenReturn(Optional.empty());
-
         ArgumentCaptor<Runnable> runnableArgumentCaptor = ArgumentCaptor.forClass(Runnable.class);
 
         underTest.processPending();
@@ -77,8 +76,6 @@ class ProcessPendingSystemEliteIdRequestServiceTest {
         runnableArgumentCaptor.getAllValues().forEach(Runnable::run);
         verify(loadSystemPort).load("ExistingSystem");
         verify(applicationEventPublisher).publishEvent(argThat(argument -> argument instanceof SystemEliteIdUpdatedEvent systemEliteIdUpdatedEvent && systemEliteIdUpdatedEvent.getSource().equals(underTest) && systemEliteIdUpdatedEvent.getSystemName().equals("ExistingSystem")));
-
-        // verify second runnable call
         verify(loadSystemPort).load("NonExistingSystem");
         verify(applicationEventPublisher, never()).publishEvent(argThat(argument -> argument instanceof SystemEliteIdUpdatedEvent systemEliteIdUpdatedEvent && systemEliteIdUpdatedEvent.getSource().equals(underTest) && systemEliteIdUpdatedEvent.getSystemName().equals("NonExistingSystem")));
     }
