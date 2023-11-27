@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.domain.SystemEliteIdUpdatedEvent;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEliteIdResponseMapper;
 import io.edpn.backend.exploration.application.dto.web.object.MessageDto;
 import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoMapper;
@@ -12,7 +11,7 @@ import io.edpn.backend.exploration.application.port.outgoing.message.SendMessage
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestBySystemNamePort;
-import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.SystemEliteIdUpdatedEventListener;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.SystemEliteIdResponseSender;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
 import io.edpn.backend.util.Topic;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,7 @@ import java.util.concurrent.ExecutorService;
 
 @RequiredArgsConstructor
 @Slf4j
-public class SystemEliteIdEventListenerService implements SystemEliteIdUpdatedEventListener {
+public class SystemEliteIdResponseSenderService implements SystemEliteIdResponseSender {
 
     private final LoadSystemPort loadSystemPort;
     private final LoadSystemEliteIdRequestBySystemNamePort loadSystemEliteIdRequestBySystemNamePort;
@@ -36,8 +35,7 @@ public class SystemEliteIdEventListenerService implements SystemEliteIdUpdatedEv
     private final ExecutorService executorService;
 
     @Override
-    public void onUpdatedEvent(SystemEliteIdUpdatedEvent systemEliteIdUpdatedEvent) {
-        String systemName = systemEliteIdUpdatedEvent.getSystemName();
+    public void sendResponsesForSystem(String systemName) {
         loadSystemEliteIdRequestBySystemNamePort.loadByName(systemName).parallelStream()
                 .forEach(systemEliteIdRequest ->
                         executorService.submit(() -> {

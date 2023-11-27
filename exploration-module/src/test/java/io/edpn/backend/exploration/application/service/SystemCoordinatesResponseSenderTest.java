@@ -3,16 +3,16 @@ package io.edpn.backend.exploration.application.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.domain.SystemEliteIdRequest;
-import io.edpn.backend.exploration.application.domain.SystemEliteIdUpdatedEvent;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEliteIdResponseMapper;
+import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.dto.web.object.MessageDto;
 import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoMapper;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestBySystemNamePort;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.SystemCoordinatesResponseSender;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.util.Module;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,18 +39,18 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class SystemEliteIdUpdateEventListenerTest {
+class SystemCoordinatesResponseSenderTest {
 
     @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
-    private LoadSystemEliteIdRequestBySystemNamePort loadSystemEliteIdRequestBySystemNamePort;
+    private LoadSystemCoordinateRequestBySystemNamePort loadSystemCoordinateRequestBySystemNamePort;
     @Mock
-    private DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort;
+    private DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
     @Mock
     private SendMessagePort sendMessagePort;
     @Mock
-    private SystemEliteIdResponseMapper systemEliteIdResponseMapper;
+    private SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
     @Mock
     private MessageDtoMapper messageMapper;
     @Mock
@@ -60,16 +60,16 @@ class SystemEliteIdUpdateEventListenerTest {
     @Mock
     private ExecutorService executorService;
 
-    private SystemEliteIdEventListenerService underTest;
+    private SystemCoordinatesResponseSender underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new SystemEliteIdEventListenerService(
+        underTest = new SystemCoordinatesResponseSenderService(
                 loadSystemPort,
-                loadSystemEliteIdRequestBySystemNamePort,
-                deleteSystemEliteIdRequestPort,
+                loadSystemCoordinateRequestBySystemNamePort,
+                deleteSystemCoordinateRequestPort,
                 sendMessagePort,
-                systemEliteIdResponseMapper,
+                systemCoordinatesResponseMapper,
                 messageMapper,
                 objectMapper,
                 retryTemplate,
@@ -80,46 +80,44 @@ class SystemEliteIdUpdateEventListenerTest {
     @Test
     void onEvent_shouldProcessPendingRequest() {
         String systemName = "systemName";
-        SystemEliteIdUpdatedEvent systemEliteIdUpdatedEvent = new SystemEliteIdUpdatedEvent(mock(SystemEliteIdInterModuleCommunicationService.class), systemName);
         Module module = mock(Module.class);
         when(module.getName()).thenReturn("module");
-        SystemEliteIdRequest request1 = mock(SystemEliteIdRequest.class);
+        SystemCoordinateRequest request1 = mock(SystemCoordinateRequest.class);
         when(request1.requestingModule()).thenReturn(module);
-        when(loadSystemEliteIdRequestBySystemNamePort.loadByName(systemEliteIdUpdatedEvent.getSystemName())).thenReturn(List.of(request1));
+        when(loadSystemCoordinateRequestBySystemNamePort.loadByName(systemName)).thenReturn(List.of(request1));
         ArgumentCaptor<Runnable> runnableArgumentCaptor = ArgumentCaptor.forClass(Runnable.class);
         System mockSystem = mock(System.class);
         when(loadSystemPort.load(systemName)).thenReturn(Optional.of(mockSystem));
-        SystemEliteIdResponse mockSystemEliteIdResponse = mock(SystemEliteIdResponse.class);
-        when(systemEliteIdResponseMapper.map(mockSystem)).thenReturn(mockSystemEliteIdResponse);
-        when(objectMapper.writeValueAsString(mockSystemEliteIdResponse)).thenReturn("JSON_STRING");
-        Message coordinateKafkaMessage = new Message("module_systemEliteIdResponse", "JSON_STRING");
+        SystemCoordinatesResponse mockSystemCoordinatesResponse = mock(SystemCoordinatesResponse.class);
+        when(systemCoordinatesResponseMapper.map(mockSystem)).thenReturn(mockSystemCoordinatesResponse);
+        when(objectMapper.writeValueAsString(mockSystemCoordinatesResponse)).thenReturn("JSON_STRING");
+        Message coordinateKafkaMessage = new Message("module_systemCoordinatesResponse", "JSON_STRING");
         MessageDto coordinateMessageDto = mock(MessageDto.class);
         when(messageMapper.map(coordinateKafkaMessage)).thenReturn(coordinateMessageDto);
         when(sendMessagePort.send(coordinateMessageDto)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
-        underTest.onUpdatedEvent(systemEliteIdUpdatedEvent);
+        underTest.sendResponsesForSystem(systemName);
 
         verify(executorService).submit(runnableArgumentCaptor.capture());
 
         // Verify runnable
         runnableArgumentCaptor.getAllValues().forEach(Runnable::run);
         verify(sendMessagePort).send(coordinateMessageDto);
-        verify(deleteSystemEliteIdRequestPort).delete(systemName, module);
+        verify(deleteSystemCoordinateRequestPort).delete(systemName, module);
     }
 
     @SneakyThrows
     @Test
     void onEvent_shouldThrowErrorWhenSystemNotFound() {
         String systemName = "systemName";
-        SystemEliteIdRequest request = mock(SystemEliteIdRequest.class);
-        SystemEliteIdUpdatedEvent event = new SystemEliteIdUpdatedEvent(mock(SystemEliteIdInterModuleCommunicationService.class), systemName);
-        when(loadSystemEliteIdRequestBySystemNamePort.loadByName(systemName)).thenReturn(List.of(request));
+        SystemCoordinateRequest request = mock(SystemCoordinateRequest.class);
+        when(loadSystemCoordinateRequestBySystemNamePort.loadByName(systemName)).thenReturn(List.of(request));
         when(loadSystemPort.load(systemName)).thenReturn(Optional.empty());
         ArgumentCaptor<Runnable> runnableArgumentCaptor = ArgumentCaptor.forClass(Runnable.class);
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
-            underTest.onUpdatedEvent(event);
+            underTest.sendResponsesForSystem(systemName);
             verify(executorService).submit(runnableArgumentCaptor.capture());
             runnableArgumentCaptor.getAllValues().forEach(Runnable::run);
         });
@@ -131,31 +129,30 @@ class SystemEliteIdUpdateEventListenerTest {
     @Test
     void onEvent_shouldNotDeleteRequestWhenSendFails() {
         String systemName = "systemName";
-        SystemEliteIdUpdatedEvent systemEliteIdUpdatedEvent = new SystemEliteIdUpdatedEvent(mock(SystemEliteIdInterModuleCommunicationService.class), systemName);
-        SystemEliteIdRequest request1 = mock(SystemEliteIdRequest.class);
+        SystemCoordinateRequest request1 = mock(SystemCoordinateRequest.class);
         Module module = mock(Module.class);
         when(module.getName()).thenReturn("module");
         when(request1.requestingModule()).thenReturn(module);
-        when(loadSystemEliteIdRequestBySystemNamePort.loadByName(systemEliteIdUpdatedEvent.getSystemName())).thenReturn(List.of(request1));
+        when(loadSystemCoordinateRequestBySystemNamePort.loadByName(systemName)).thenReturn(List.of(request1));
         ArgumentCaptor<Runnable> runnableArgumentCaptor = ArgumentCaptor.forClass(Runnable.class);
         System mockSystem = mock(System.class);
         when(loadSystemPort.load(systemName)).thenReturn(Optional.of(mockSystem));
-        SystemEliteIdResponse mockSystemEliteIdResponse = mock(SystemEliteIdResponse.class);
-        when(systemEliteIdResponseMapper.map(mockSystem)).thenReturn(mockSystemEliteIdResponse);
-        when(objectMapper.writeValueAsString(mockSystemEliteIdResponse)).thenReturn("JSON_STRING");
-        Message coordinateKafkaMessage = new Message("module_systemEliteIdResponse", "JSON_STRING");
+        SystemCoordinatesResponse mockSystemCoordinatesResponse = mock(SystemCoordinatesResponse.class);
+        when(systemCoordinatesResponseMapper.map(mockSystem)).thenReturn(mockSystemCoordinatesResponse);
+        when(objectMapper.writeValueAsString(mockSystemCoordinatesResponse)).thenReturn("JSON_STRING");
+        Message coordinateKafkaMessage = new Message("module_systemCoordinatesResponse", "JSON_STRING");
         MessageDto coordinateMessageDto = mock(MessageDto.class);
         when(messageMapper.map(coordinateKafkaMessage)).thenReturn(coordinateMessageDto);
         when(sendMessagePort.send(coordinateMessageDto)).thenReturn(false);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
-        underTest.onUpdatedEvent(systemEliteIdUpdatedEvent);
+        underTest.sendResponsesForSystem(systemName);
 
         verify(executorService).submit(runnableArgumentCaptor.capture());
 
         // Verify runnable
         runnableArgumentCaptor.getAllValues().forEach(Runnable::run);
         verify(sendMessagePort).send(coordinateMessageDto);
-        verify(deleteSystemEliteIdRequestPort, never()).delete(systemName, module);
+        verify(deleteSystemCoordinateRequestPort, never()).delete(systemName, module);
     }
 }

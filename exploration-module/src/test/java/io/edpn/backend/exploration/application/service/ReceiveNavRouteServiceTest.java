@@ -1,10 +1,10 @@
 package io.edpn.backend.exploration.application.service;
 
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.domain.SystemCoordinateUpdatedEvent;
-import io.edpn.backend.exploration.application.domain.SystemEliteIdUpdatedEvent;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.SystemCoordinatesResponseSender;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.SystemEliteIdResponseSender;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
 import io.edpn.backend.util.IdGenerator;
 import lombok.SneakyThrows;
@@ -14,12 +14,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.concurrent.ExecutorService;
 
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -31,9 +31,10 @@ class ReceiveNavRouteServiceTest {
     private IdGenerator idGenerator;
     @Mock
     private SaveOrUpdateSystemPort saveOrUpdateSystemPort;
-
     @Mock
-    private ApplicationEventPublisher applicationEventPublisher;
+    private SystemCoordinatesResponseSender systemCoordinatesResponseSender;
+    @Mock
+    private SystemEliteIdResponseSender systemEliteIdResponseSender;
     @Mock
     private ExecutorService executorService;
 
@@ -42,7 +43,13 @@ class ReceiveNavRouteServiceTest {
     @BeforeEach
     void setUp() {
         when(idGenerator.generateId()).thenReturn(java.util.UUID.fromString(UUID));
-        underTest = new ReceiveNavRouteService(idGenerator, saveOrUpdateSystemPort, applicationEventPublisher, executorService);
+        underTest = new ReceiveNavRouteService(
+                idGenerator,
+                saveOrUpdateSystemPort,
+                systemCoordinatesResponseSender,
+                systemEliteIdResponseSender,
+                executorService
+        );
     }
 
     @SneakyThrows
@@ -78,12 +85,16 @@ class ReceiveNavRouteServiceTest {
 
         underTest.receive(message);
 
-        verify(executorService).submit(runnableArgumentCaptor.capture());
-
         // Verify runnable
+        verify(executorService).submit(runnableArgumentCaptor.capture());
         runnableArgumentCaptor.getAllValues().forEach(Runnable::run);
 
-        verify(applicationEventPublisher).publishEvent(argThat(argument -> argument instanceof SystemCoordinateUpdatedEvent systemCoordinateUpdatedEvent && systemCoordinateUpdatedEvent.getSource().equals(underTest) && systemCoordinateUpdatedEvent.getSystemName().equals(systemName)));
-        verify(applicationEventPublisher).publishEvent(argThat(argument -> argument instanceof SystemEliteIdUpdatedEvent systemEliteIdUpdatedEvent && systemEliteIdUpdatedEvent.getSource().equals(underTest) && systemEliteIdUpdatedEvent.getSystemName().equals(systemName)));
+        // nested runnable
+        verify(executorService, times(3)).submit(runnableArgumentCaptor.capture());
+        runnableArgumentCaptor.getAllValues().forEach(Runnable::run);
+
+
+        verify(systemCoordinatesResponseSender).sendResponsesForSystem(systemName);
+        verify(systemEliteIdResponseSender).sendResponsesForSystem(systemName);
     }
 }

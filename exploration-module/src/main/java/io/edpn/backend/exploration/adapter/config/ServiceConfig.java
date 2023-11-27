@@ -1,21 +1,34 @@
 package io.edpn.backend.exploration.adapter.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
 import io.edpn.backend.exploration.adapter.web.dto.mapper.RestSystemDtoMapper;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemCoordinatesResponseMapper;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEliteIdResponseMapper;
+import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoMapper;
 import io.edpn.backend.exploration.application.port.outgoing.body.SaveOrUpdateBodyPort;
+import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.ring.SaveOrUpdateRingPort;
 import io.edpn.backend.exploration.application.port.outgoing.star.SaveOrUpdateStarPort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.SystemCoordinatesResponseSender;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.CreateIfNotExistsSystemEliteIdRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.SystemEliteIdResponseSender;
 import io.edpn.backend.exploration.application.service.ReceiveJournalScanService;
 import io.edpn.backend.exploration.application.service.ReceiveNavRouteService;
 import io.edpn.backend.exploration.application.service.SystemControllerService;
 import io.edpn.backend.exploration.application.service.SystemCoordinateInterModuleCommunicationService;
+import io.edpn.backend.exploration.application.service.SystemCoordinatesResponseSenderService;
 import io.edpn.backend.exploration.application.service.SystemEliteIdInterModuleCommunicationService;
+import io.edpn.backend.exploration.application.service.SystemEliteIdResponseSenderService;
 import io.edpn.backend.exploration.application.validation.LoadByNameContainingValidator;
 import io.edpn.backend.util.IdGenerator;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,6 +36,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.retry.support.RetryTemplate;
 
 import java.util.concurrent.ExecutorService;
 
@@ -33,13 +47,15 @@ public class ServiceConfig {
     public ReceiveNavRouteService receiveNavRouteService(
             @Qualifier("explorationIdGenerator") IdGenerator idGenerator,
             SaveOrUpdateSystemPort saveOrUpdateSystemPort,
-            ApplicationEventPublisher eventPublisher,
+            SystemCoordinatesResponseSender systemCoordinatesResponseSender,
+            SystemEliteIdResponseSender systemEliteIdResponseSender,
             @Qualifier("virtualThreadPerTaskExecutor") ExecutorService executorService
     ) {
         return new ReceiveNavRouteService(
                 idGenerator,
                 saveOrUpdateSystemPort,
-                eventPublisher,
+                systemCoordinatesResponseSender,
+                systemEliteIdResponseSender,
                 executorService);
     }
 
@@ -64,14 +80,14 @@ public class ServiceConfig {
             LoadAllSystemCoordinateRequestPort loadAllSystemCoordinateRequestPort,
             CreateIfNotExistsSystemCoordinateRequestPort createIfNotExistsSystemCoordinateRequestPort,
             LoadSystemPort loadSystemPort,
-            ApplicationEventPublisher eventPublisher,
+            SystemCoordinatesResponseSender systemCoordinatesResponseSender,
             @Qualifier("virtualThreadPerTaskExecutor") ExecutorService executorService
     ) {
         return new SystemCoordinateInterModuleCommunicationService(
                 loadAllSystemCoordinateRequestPort,
                 createIfNotExistsSystemCoordinateRequestPort,
                 loadSystemPort,
-                eventPublisher,
+                systemCoordinatesResponseSender,
                 executorService
         );
     }
@@ -115,5 +131,55 @@ public class ServiceConfig {
                 systemRepository,
                 loadByNameContainingValidator,
                 restSystemDtoMapper);
+    }
+
+    @Bean("explorationSystemCoordinatesResponseSender")
+    public SystemCoordinatesResponseSender systemCoordinatesResponseSender(
+            LoadSystemPort loadSystemPort,
+            LoadSystemCoordinateRequestBySystemNamePort loadSystemCoordinateRequestBySystemNamePort,
+            DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort,
+            SendMessagePort sendMessagePort,
+            SystemCoordinatesResponseMapper systemCoordinatesResponseMapper,
+            MessageDtoMapper messageMapper,
+            ObjectMapper objectMapper,
+            @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
+            @Qualifier("virtualThreadPerTaskExecutor") ExecutorService executorService
+    ) {
+        return new SystemCoordinatesResponseSenderService(
+                loadSystemPort,
+                loadSystemCoordinateRequestBySystemNamePort,
+                deleteSystemCoordinateRequestPort,
+                sendMessagePort,
+                systemCoordinatesResponseMapper,
+                messageMapper,
+                objectMapper,
+                retryTemplate,
+                executorService
+        );
+    }
+
+    @Bean("explorationSystemEliteIdResponseSender")
+    public SystemEliteIdResponseSender systemEliteIdResponseSender(
+            LoadSystemPort loadSystemPort,
+            LoadSystemEliteIdRequestBySystemNamePort loadSystemEliteIdRequestBySystemNamePort,
+            DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort,
+            SendMessagePort sendMessagePort,
+            SystemEliteIdResponseMapper systemEliteIdResponseMapper,
+            MessageDtoMapper messageMapper,
+            ObjectMapper objectMapper,
+            @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
+            @Qualifier("virtualThreadPerTaskExecutor") ExecutorService executorService
+    ) {
+        return new SystemEliteIdResponseSenderService(
+                loadSystemPort,
+                loadSystemEliteIdRequestBySystemNamePort,
+                deleteSystemEliteIdRequestPort,
+                sendMessagePort,
+                systemEliteIdResponseMapper,
+                messageMapper,
+                objectMapper,
+                retryTemplate,
+                executorService
+        );
     }
 }

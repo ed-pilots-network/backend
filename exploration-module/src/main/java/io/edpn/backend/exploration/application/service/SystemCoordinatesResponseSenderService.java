@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.domain.SystemCoordinateUpdatedEvent;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.dto.web.object.MessageDto;
 import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoMapper;
@@ -12,7 +11,7 @@ import io.edpn.backend.exploration.application.port.outgoing.message.SendMessage
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestBySystemNamePort;
-import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.SystemCoordinatesUpdatedEventListener;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.SystemCoordinatesResponseSender;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.util.Topic;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,7 @@ import java.util.concurrent.ExecutorService;
 
 @RequiredArgsConstructor
 @Slf4j
-public class SystemCoordinatesEventListenerService implements SystemCoordinatesUpdatedEventListener {
+public class SystemCoordinatesResponseSenderService implements SystemCoordinatesResponseSender {
 
     private final LoadSystemPort loadSystemPort;
     private final LoadSystemCoordinateRequestBySystemNamePort loadSystemCoordinateRequestBySystemNamePort;
@@ -37,8 +36,7 @@ public class SystemCoordinatesEventListenerService implements SystemCoordinatesU
 
 
     @Override
-    public void onUpdatedEvent(SystemCoordinateUpdatedEvent systemCoordinateUpdatedEvent) {
-        String systemName = systemCoordinateUpdatedEvent.getSystemName();
+    public void sendResponsesForSystem(String systemName) {
         loadSystemCoordinateRequestBySystemNamePort.loadByName(systemName).parallelStream()
                 .forEach(systemCoordinateRequest ->
                         executorService.submit(() -> {
@@ -59,6 +57,5 @@ public class SystemCoordinatesEventListenerService implements SystemCoordinatesU
                             }
                         })
                 );
-
     }
 }

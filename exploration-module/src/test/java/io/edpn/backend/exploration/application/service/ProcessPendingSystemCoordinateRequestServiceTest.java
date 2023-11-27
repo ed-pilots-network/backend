@@ -2,11 +2,11 @@ package io.edpn.backend.exploration.application.service;
 
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
-import io.edpn.backend.exploration.application.domain.SystemCoordinateUpdatedEvent;
 import io.edpn.backend.exploration.application.port.incomming.ProcessPendingDataRequestUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.SystemCoordinatesResponseSender;
 import io.edpn.backend.util.Module;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,13 +14,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -37,7 +35,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
     @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
-    private ApplicationEventPublisher applicationEventPublisher;
+    private SystemCoordinatesResponseSender systemCoordinatesResponseSender;
     @Mock
     private ExecutorService executorService;
     private ProcessPendingDataRequestUseCase<SystemCoordinateRequest> underTest;
@@ -48,7 +46,7 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
                 loadAllSystemCoordinateRequestPort,
                 createIfNotExistsSystemCoordinateRequestPort,
                 loadSystemPort,
-                applicationEventPublisher,
+                systemCoordinatesResponseSender,
                 executorService
         );
     }
@@ -75,10 +73,10 @@ class ProcessPendingSystemCoordinateRequestServiceTest {
         // Verify first runnable call
         runnableArgumentCaptor.getAllValues().forEach(Runnable::run);
         verify(loadSystemPort).load("ExistingSystem");
-        verify(applicationEventPublisher).publishEvent(argThat(argument -> argument instanceof SystemCoordinateUpdatedEvent systemCoordinateUpdatedEvent && systemCoordinateUpdatedEvent.getSource().equals(underTest) && systemCoordinateUpdatedEvent.getSystemName().equals("ExistingSystem")));
+        verify(systemCoordinatesResponseSender).sendResponsesForSystem("ExistingSystem");
 
         // verify second runnable call
         verify(loadSystemPort).load("NonExistingSystem");
-        verify(applicationEventPublisher, never()).publishEvent(argThat(argument -> argument instanceof SystemCoordinateUpdatedEvent systemCoordinateUpdatedEvent && systemCoordinateUpdatedEvent.getSource().equals(underTest) && systemCoordinateUpdatedEvent.getSystemName().equals("NonExistingSystem")));
+        verify(systemCoordinatesResponseSender, never()).sendResponsesForSystem("NonExistingSystem");
     }
 }

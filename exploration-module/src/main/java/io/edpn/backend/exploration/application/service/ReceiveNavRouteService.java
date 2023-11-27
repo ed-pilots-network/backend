@@ -2,15 +2,14 @@ package io.edpn.backend.exploration.application.service;
 
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.domain.SystemCoordinateUpdatedEvent;
-import io.edpn.backend.exploration.application.domain.SystemEliteIdUpdatedEvent;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.SystemCoordinatesResponseSender;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.SystemEliteIdResponseSender;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
 import io.edpn.backend.util.IdGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
@@ -21,7 +20,8 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
 
     private final IdGenerator idGenerator;
     private final SaveOrUpdateSystemPort saveOrUpdateSystemPort;
-    private final ApplicationEventPublisher eventPublisher;
+    private final SystemCoordinatesResponseSender systemCoordinatesResponseSender;
+    private final SystemEliteIdResponseSender systemEliteIdResponseSender;
     private final ExecutorService executorService;
 
     @Override
@@ -42,8 +42,8 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
     private void process(NavRouteMessage.V1.Item item) {
         System system = createOrUpdateFromItem(item);
 
-        eventPublisher.publishEvent(new SystemCoordinateUpdatedEvent(this, system.name()));
-        eventPublisher.publishEvent(new SystemEliteIdUpdatedEvent(this, system.name()));
+        executorService.submit(() -> systemCoordinatesResponseSender.sendResponsesForSystem(system.name()));
+        executorService.submit(() -> systemEliteIdResponseSender.sendResponsesForSystem(system.name()));
     }
 
     private System createOrUpdateFromItem(NavRouteMessage.V1.Item item) {
