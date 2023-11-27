@@ -35,7 +35,7 @@ repositories {
 
 allprojects {
     group = 'io.edpn.backend'
-    version = '0.0.5-SNAPSHOT'
+    version = '0.0.6-SNAPSHOT'
     compileJava.options.encoding = 'UTF-8'
 }
 
