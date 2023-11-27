@@ -1,4 +1,4 @@
-package io.edpn.backend.exploration.adapter.applicationevent;
+package io.edpn.backend.exploration.application.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,7 +23,7 @@ import java.util.concurrent.ExecutorService;
 
 @RequiredArgsConstructor
 @Slf4j
-public class SystemEliteIdEventListener implements SystemEliteIdUpdatedEventListener {
+public class SystemEliteIdEventListenerService implements SystemEliteIdUpdatedEventListener {
 
     private final LoadSystemPort loadSystemPort;
     private final LoadSystemEliteIdRequestBySystemNamePort loadSystemEliteIdRequestBySystemNamePort;
