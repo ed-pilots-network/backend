@@ -13,6 +13,7 @@ import io.edpn.backend.exploration.application.port.outgoing.systemcoordinatereq
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestBySystemNamePort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.SystemCoordinatesResponseSender;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
+import io.edpn.backend.util.ConcurrencyUtil;
 import io.edpn.backend.util.Topic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,24 +39,24 @@ public class SystemCoordinatesResponseSenderService implements SystemCoordinates
     @Override
     public void sendResponsesForSystem(String systemName) {
         loadSystemCoordinateRequestBySystemNamePort.loadByName(systemName).parallelStream()
-                .forEach(systemCoordinateRequest ->
-                        executorService.submit(() -> {
-                            try {
-                                System system = loadSystemPort.load(systemName).orElseThrow(() -> new IllegalStateException("System with name %s not found when application event for it was triggered".formatted(systemName)));
-                                SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
-                                String stringJson = objectMapper.writeValueAsString(systemCoordinatesResponse);
-                                String topic = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(systemCoordinateRequest.requestingModule());
-                                Message message = new Message(topic, stringJson);
-                                MessageDto messageDto = messageMapper.map(message);
+                .forEach(systemCoordinateRequest -> executorService.submit(ConcurrencyUtil.errorHandlingWrapper(() -> {
+                                    try {
+                                        System system = loadSystemPort.load(systemName).orElseThrow(() -> new IllegalStateException("System with name %s not found when application event for it was triggered".formatted(systemName)));
+                                        SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
+                                        String stringJson = objectMapper.writeValueAsString(systemCoordinatesResponse);
+                                        String topic = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(systemCoordinateRequest.requestingModule());
+                                        Message message = new Message(topic, stringJson);
+                                        MessageDto messageDto = messageMapper.map(message);
 
-                                boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
-                                if (sendSuccessful) {
-                                    deleteSystemCoordinateRequestPort.delete(systemName, systemCoordinateRequest.requestingModule());
-                                }
-                            } catch (JsonProcessingException jpe) {
-                                throw new RuntimeException(jpe);
-                            }
-                        })
-                );
+                                        boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
+                                        if (sendSuccessful) {
+                                            deleteSystemCoordinateRequestPort.delete(systemName, systemCoordinateRequest.requestingModule());
+                                        }
+                                    } catch (JsonProcessingException jpe) {
+                                        throw new RuntimeException(jpe);
+                                    }
+                                },
+                                throwable -> log.error("Error while processing systemCoordinatesResponse for system: {}", systemName, throwable))
+                ));
     }
 }

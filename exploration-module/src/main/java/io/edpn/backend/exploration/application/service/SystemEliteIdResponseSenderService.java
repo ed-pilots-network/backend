@@ -13,6 +13,7 @@ import io.edpn.backend.exploration.application.port.outgoing.systemeliteidreques
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestBySystemNamePort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.SystemEliteIdResponseSender;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
+import io.edpn.backend.util.ConcurrencyUtil;
 import io.edpn.backend.util.Topic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,23 +39,23 @@ public class SystemEliteIdResponseSenderService implements SystemEliteIdResponse
     public void sendResponsesForSystem(String systemName) {
         loadSystemEliteIdRequestBySystemNamePort.loadByName(systemName).parallelStream()
                 .forEach(systemEliteIdRequest ->
-                        executorService.submit(() -> {
-                            try {
-                                System system = loadSystemPort.load(systemName).orElseThrow(() -> new IllegalStateException("System with name %s not found when application event for it was triggered".formatted(systemName)));
-                                SystemEliteIdResponse systemEliteIdResponse = systemEliteIdResponseMapper.map(system);
-                                String stringJson = objectMapper.writeValueAsString(systemEliteIdResponse);
-                                String topic = Topic.Response.SYSTEM_ELITE_ID.getFormattedTopicName(systemEliteIdRequest.requestingModule());
-                                Message message = new Message(topic, stringJson);
-                                MessageDto messageDto = messageMapper.map(message);
+                        executorService.submit(ConcurrencyUtil.errorHandlingWrapper(() -> {
+                                    try {
+                                        System system = loadSystemPort.load(systemName).orElseThrow(() -> new IllegalStateException("System with name %s not found when application event for it was triggered".formatted(systemName)));
+                                        SystemEliteIdResponse systemEliteIdResponse = systemEliteIdResponseMapper.map(system);
+                                        String stringJson = objectMapper.writeValueAsString(systemEliteIdResponse);
+                                        String topic = Topic.Response.SYSTEM_ELITE_ID.getFormattedTopicName(systemEliteIdRequest.requestingModule());
+                                        Message message = new Message(topic, stringJson);
+                                        MessageDto messageDto = messageMapper.map(message);
 
-                                boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
-                                if (sendSuccessful) {
-                                    deleteSystemEliteIdRequestPort.delete(systemName, systemEliteIdRequest.requestingModule());
-                                }
-                            } catch (JsonProcessingException jpe) {
-                                throw new RuntimeException(jpe);
-                            }
-                        })
-                );
+                                        boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
+                                        if (sendSuccessful) {
+                                            deleteSystemEliteIdRequestPort.delete(systemName, systemEliteIdRequest.requestingModule());
+                                        }
+                                    } catch (JsonProcessingException jpe) {
+                                        throw new RuntimeException(jpe);
+                                    }
+                                },
+                                throwable -> log.error("Error while processing systemEliteIdResponse for system: {}", systemName, throwable))));
     }
 }

@@ -8,6 +8,7 @@ import io.edpn.backend.exploration.application.port.outgoing.systemcoordinatereq
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.SystemCoordinatesResponseSender;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.util.ConcurrencyUtil;
 import io.edpn.backend.util.Module;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,9 @@ public class SystemCoordinateInterModuleCommunicationService implements ReceiveK
         Module requestingModule = message.requestingModule();
 
         saveRequest(systemName, requestingModule);
-        executorService.submit(sendEventIfDataExists(systemName));
+        executorService.submit(ConcurrencyUtil.errorHandlingWrapper(
+                sendEventIfDataExists(systemName),
+                throwable -> log.error("Error while sending systemCoordinatesResponse for system: {}", systemName, throwable)));
     }
 
     @Override
@@ -43,6 +46,9 @@ public class SystemCoordinateInterModuleCommunicationService implements ReceiveK
                 .parallelStream()
                 .map(SystemCoordinateRequest::systemName)
                 .map(this::sendEventIfDataExists)
+                .map(runnable -> ConcurrencyUtil.errorHandlingWrapper(
+                        runnable,
+                        throwable -> log.error("Error while sending systemCoordinatesResponse for system while processing all pending requests", throwable)))
                 .forEach(executorService::submit);
     }
 

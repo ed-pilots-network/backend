@@ -28,9 +28,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
@@ -109,20 +106,19 @@ class SystemCoordinatesResponseSenderTest {
 
     @SneakyThrows
     @Test
-    void onEvent_shouldThrowErrorWhenSystemNotFound() {
+    void onEvent_shouldDoNothingWhenSystemNotFound() {
         String systemName = "systemName";
         SystemCoordinateRequest request = mock(SystemCoordinateRequest.class);
         when(loadSystemCoordinateRequestBySystemNamePort.loadByName(systemName)).thenReturn(List.of(request));
         when(loadSystemPort.load(systemName)).thenReturn(Optional.empty());
         ArgumentCaptor<Runnable> runnableArgumentCaptor = ArgumentCaptor.forClass(Runnable.class);
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
-            underTest.sendResponsesForSystem(systemName);
-            verify(executorService).submit(runnableArgumentCaptor.capture());
-            runnableArgumentCaptor.getAllValues().forEach(Runnable::run);
-        });
+        underTest.sendResponsesForSystem(systemName);
+        verify(executorService).submit(runnableArgumentCaptor.capture());
+        runnableArgumentCaptor.getAllValues().forEach(Runnable::run);
 
-        assertThat(exception.getMessage(), is("System with name systemName not found when application event for it was triggered"));
+        verify(sendMessagePort, never()).send(any());
+        verify(deleteSystemCoordinateRequestPort, never()).delete(any(), any());
     }
 
     @SneakyThrows

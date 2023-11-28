@@ -8,6 +8,7 @@ import io.edpn.backend.exploration.application.port.outgoing.systemeliteidreques
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.SystemEliteIdResponseSender;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.util.ConcurrencyUtil;
 import io.edpn.backend.util.Module;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,9 @@ public class SystemEliteIdInterModuleCommunicationService implements ReceiveKafk
         Module requestingModule = message.requestingModule();
 
         saveRequest(systemName, requestingModule);
-        executorService.submit(sendEventIfDataExists(systemName));
+        executorService.submit(ConcurrencyUtil.errorHandlingWrapper(
+                sendEventIfDataExists(systemName),
+                throwable -> log.error("Error while sending systemEliteIdResponse for system: {}", systemName, throwable)));
     }
 
     @Override
@@ -43,6 +46,9 @@ public class SystemEliteIdInterModuleCommunicationService implements ReceiveKafk
                 .parallelStream()
                 .map(SystemEliteIdRequest::systemName)
                 .map(this::sendEventIfDataExists)
+                .map(runnable -> ConcurrencyUtil.errorHandlingWrapper(
+                        runnable,
+                        throwable -> log.error("Error while sending systemEliteIdResponse for system while processing all pending requests", throwable)))
                 .forEach(executorService::submit);
     }
 

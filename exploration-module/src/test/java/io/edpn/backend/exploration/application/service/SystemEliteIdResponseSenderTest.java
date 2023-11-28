@@ -28,9 +28,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
@@ -116,13 +113,13 @@ class SystemEliteIdResponseSenderTest {
         when(loadSystemPort.load(systemName)).thenReturn(Optional.empty());
         ArgumentCaptor<Runnable> runnableArgumentCaptor = ArgumentCaptor.forClass(Runnable.class);
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
-            underTest.sendResponsesForSystem(systemName);
-            verify(executorService).submit(runnableArgumentCaptor.capture());
-            runnableArgumentCaptor.getAllValues().forEach(Runnable::run);
-        });
 
-        assertThat(exception.getMessage(), is("System with name systemName not found when application event for it was triggered"));
+        underTest.sendResponsesForSystem(systemName);
+        verify(executorService).submit(runnableArgumentCaptor.capture());
+        runnableArgumentCaptor.getAllValues().forEach(Runnable::run);
+
+        verify(sendMessagePort, never()).send(any());
+        verify(deleteSystemEliteIdRequestPort, never()).delete(any(), any());
     }
 
     @SneakyThrows

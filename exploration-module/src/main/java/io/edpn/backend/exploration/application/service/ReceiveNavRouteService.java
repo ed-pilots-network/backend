@@ -7,6 +7,7 @@ import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdate
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.SystemCoordinatesResponseSender;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.SystemEliteIdResponseSender;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
+import io.edpn.backend.util.ConcurrencyUtil;
 import io.edpn.backend.util.IdGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,9 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
         NavRouteMessage.V1.Item[] routeItems = payload.items();
 
         Arrays.stream(routeItems).parallel()
-                .forEach(item -> executorService.submit(() -> process(item)));
+                .forEach(item -> executorService.submit(ConcurrencyUtil.errorHandlingWrapper(
+                        () -> process(item),
+                        throwable -> log.error("Error while processing NavRouteMessage: {}", message, throwable))));
 
         log.trace("DefaultReceiveNavRouteMessageUseCase.receive -> took {} nanosecond", java.lang.System.nanoTime() - start);
         log.info("DefaultReceiveNavRouteMessageUseCase.receive -> the message has been processed");
@@ -42,8 +45,12 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
     private void process(NavRouteMessage.V1.Item item) {
         System system = createOrUpdateFromItem(item);
 
-        executorService.submit(() -> systemCoordinatesResponseSender.sendResponsesForSystem(system.name()));
-        executorService.submit(() -> systemEliteIdResponseSender.sendResponsesForSystem(system.name()));
+        executorService.submit(ConcurrencyUtil.errorHandlingWrapper(
+                () -> systemCoordinatesResponseSender.sendResponsesForSystem(system.name()),
+                throwable -> log.error("Error while sending systemCoordinatesResponse for system: {}", system.name(), throwable)));
+        executorService.submit(ConcurrencyUtil.errorHandlingWrapper(
+                () -> systemEliteIdResponseSender.sendResponsesForSystem(system.name()),
+                throwable -> log.error("Error while sending systemEliteIdResponse for system: {}", system.name(), throwable)));
     }
 
     private System createOrUpdateFromItem(NavRouteMessage.V1.Item item) {
