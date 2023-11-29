@@ -1,12 +1,10 @@
 package io.edpn.backend.exploration.application.service;
 
 import io.edpn.backend.exploration.application.domain.Coordinate;
-import io.edpn.backend.exploration.application.domain.Faction;
 import io.edpn.backend.exploration.application.domain.LandingPadSize;
 import io.edpn.backend.exploration.application.domain.Station;
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
-import io.edpn.backend.exploration.application.port.outgoing.faction.SaveOrUpdateFactionPort;
 import io.edpn.backend.exploration.application.port.outgoing.station.SaveOrUpdateStationPort;
 import io.edpn.backend.exploration.application.port.outgoing.stationmaxlandingpadsizerequest.StationMaxLandingPadSizeResponseSender;
 import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
@@ -31,7 +29,6 @@ public class ReceiveJournalDockedService implements ReceiveKafkaMessageUseCase<D
     private final SystemCoordinatesResponseSender systemCoordinatesResponseSender;
     private final SystemEliteIdResponseSender systemEliteIdResponseSender;
     private final StationMaxLandingPadSizeResponseSender stationMaxLandingPadSizeResponseSender;
-    private final SaveOrUpdateFactionPort saveOrUpdateFactionPort;
     private final SaveOrUpdateStationPort saveOrUpdateStationPort;
     private final SaveOrUpdateSystemPort saveOrUpdateSystemPort;
     private final ExecutorService executorService;
@@ -67,22 +64,6 @@ public class ReceiveJournalDockedService implements ReceiveKafkaMessageUseCase<D
                 exception -> log.error("Error while sending stationMaxLandingPadSizeResponse for station: {}", station.name(), exception)));
     }
 
-    private Faction saveOrUpdateFactionFromPayload(DockedMessage.V1.Payload payload, LocalDateTime messageTimeStamp) {
-        // TODO: fill in extra info if available
-        return saveOrUpdateFactionPort.saveOrUpdate(
-                new Faction(
-                        idGenerator.generateId(),
-                        payload.stationFaction().name(),
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        messageTimeStamp
-                )
-        );
-    }
-
     private Map<LandingPadSize, Integer> landingPadSizeFromPayload(DockedMessage.V1.Payload payload) {
         return Map.of(
                 LandingPadSize.LARGE, payload.landingPads().large(),
@@ -105,12 +86,12 @@ public class ReceiveJournalDockedService implements ReceiveKafkaMessageUseCase<D
                         idGenerator.generateId(),
                         payload.marketId(),
                         payload.stationName(),
+                        payload.stationType(),
                         payload.distanceFromStar(),
                         saveOrUpdateSystemFromPayload(payload),
                         landingPadSizeFromPayload(payload),
                         stationEconomiesFromPayload(payload),
                         payload.stationEconomy(),
-                        saveOrUpdateFactionFromPayload(payload, messageTimeStamp),
                         payload.stationGovernment(),
                         payload.odyssey(),
                         messageTimeStamp));

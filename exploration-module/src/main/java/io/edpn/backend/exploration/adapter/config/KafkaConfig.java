@@ -4,9 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.edpn.backend.exploration.adapter.kafka.KafkaTopicHandler;
 import io.edpn.backend.exploration.adapter.kafka.processor.JournalScanV1MessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.processor.NavRouteV1MessageProcessor;
-import io.edpn.backend.exploration.adapter.kafka.processor.SystemCoordinatesRequestMessageProcessor;
-import io.edpn.backend.exploration.adapter.kafka.processor.SystemEliteIdRequestMessageProcessor;
+import io.edpn.backend.exploration.adapter.kafka.processor.SystemDataRequestMessageProcessor;
 import io.edpn.backend.util.Topic;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
@@ -32,9 +33,6 @@ import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.util.backoff.ExponentialBackOff;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Configuration("ExplorationModuleKafkaConfig")
 public interface KafkaConfig {
@@ -137,7 +135,7 @@ public interface KafkaConfig {
         @Bean(name = "explorationSystemEliteIdRequestListener")
         public ConcurrentMessageListenerContainer<String, JsonNode> systemEliteIdRequestListener(
                 @Qualifier("explorationModuleKafkaListenerContainerFactory") ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory,
-                @Qualifier("explorationSystemEliteIdRequestMessageProcessor") SystemEliteIdRequestMessageProcessor processor
+                @Qualifier("explorationSystemEliteIdRequestMessageProcessor") SystemDataRequestMessageProcessor processor
         ) {
             String topicName = Topic.Request.SYSTEM_ELITE_ID.getTopicName();
             ContainerProperties containerProps = new ContainerProperties(topicName);
@@ -155,7 +153,7 @@ public interface KafkaConfig {
         @Bean(name = "explorationSystemCoordinatesRequestListener")
         public ConcurrentMessageListenerContainer<String, JsonNode> systemCoordinatesRequestListener(
                 @Qualifier("explorationModuleKafkaListenerContainerFactory") ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory,
-                @Qualifier("explorationSystemCoordinatesRequestMessageProcessor") SystemCoordinatesRequestMessageProcessor processor
+                @Qualifier("explorationSystemCoordinatesRequestMessageProcessor") SystemDataRequestMessageProcessor processor
         ) {
             String topicName = Topic.Request.SYSTEM_COORDINATES.getTopicName();
             ContainerProperties containerProps = new ContainerProperties(topicName);

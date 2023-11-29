@@ -34,7 +34,7 @@ public class SystemEliteIdRequestRepository implements CreateIfNotExistsSystemEl
 
     @Override
     public List<SystemEliteIdRequest> loadByIdentifier(String systemName) {
-        return mybatisSystemEliteIdRequestRepository.findBySystemName(systemName).stream()
+        return mybatisSystemEliteIdRequestRepository.findByIdentifier(systemName).stream()
                 .map(mybatisSystemEliteIdRequestEntityMapper::map)
                 .toList();
     }

@@ -34,7 +34,7 @@ public class SystemCoordinateRequestRepository implements CreateIfNotExistsSyste
 
     @Override
     public List<SystemCoordinateRequest> loadByIdentifier(String systemName) {
-        return mybatisSystemCoordinateRequestRepository.findBySystemName(systemName).stream()
+        return mybatisSystemCoordinateRequestRepository.findByIdentifier(systemName).stream()
                 .map(mybatisSystemCoordinateRequestEntityMapper::map)
                 .toList();
     }

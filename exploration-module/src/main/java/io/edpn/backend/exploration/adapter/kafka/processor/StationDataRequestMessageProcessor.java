@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
 import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.MessageProcessor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,9 +14,9 @@ import org.springframework.kafka.listener.MessageListener;
 
 @RequiredArgsConstructor
 @Slf4j
-public class SystemEliteIdRequestMessageProcessor implements MessageProcessor<SystemDataRequest>, MessageListener<String, JsonNode> {
+public class StationDataRequestMessageProcessor implements MessageProcessor<StationDataRequest>, MessageListener<String, JsonNode> {
 
-    private final ReceiveKafkaMessageUseCase<SystemDataRequest> receiveSystemDataRequestUseCase;
+    private final ReceiveKafkaMessageUseCase<StationDataRequest> receiveStationDataRequestUseCase;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -25,18 +25,18 @@ public class SystemEliteIdRequestMessageProcessor implements MessageProcessor<Sy
     }
 
     @Override
-    public void handle(SystemDataRequest message) {
-        receiveSystemDataRequestUseCase.receive(message);
+    public void handle(StationDataRequest message) {
+        receiveStationDataRequestUseCase.receive(message);
     }
 
     @Override
-    public SystemDataRequest processJson(JsonNode json) throws JsonProcessingException {
+    public StationDataRequest processJson(JsonNode json) throws JsonProcessingException {
         if (json.isObject() && json.has("requestingModule")) {
             var requestingModule = json.get("requestingModule").asText().toUpperCase();
             ((ObjectNode) json).put("requestingModule", requestingModule);
         }
 
-        return objectMapper.treeToValue(json, SystemDataRequest.class);
+        return objectMapper.treeToValue(json, StationDataRequest.class);
     }
 
     @Override

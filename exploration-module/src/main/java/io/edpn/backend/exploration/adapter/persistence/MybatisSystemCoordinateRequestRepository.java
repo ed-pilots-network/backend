@@ -35,7 +35,7 @@ public interface MybatisSystemCoordinateRequestRepository {
             @Result(property = "systemName", column = "system_name"),
             @Result(property = "requestingModule", column = "requesting_module")
     })
-    List<MybatisSystemCoordinateRequestEntity> findBySystemName(String requestDataMessageEntity);
+    List<MybatisSystemCoordinateRequestEntity> findByIdentifier(@Param("systemName") String systemName);
 
     @Select("SELECT * FROM system_coordinate_data_request WHERE requesting_module = #{requestingModule} AND system_name = #{systemName}")
     @ResultMap("commodityMarketInfoResultMap")

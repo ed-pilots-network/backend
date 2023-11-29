@@ -4,12 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.adapter.kafka.processor.JournalScanV1MessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.processor.NavRouteV1MessageProcessor;
-import io.edpn.backend.exploration.adapter.kafka.processor.SystemCoordinatesRequestMessageProcessor;
-import io.edpn.backend.exploration.adapter.kafka.processor.SystemEliteIdRequestMessageProcessor;
+import io.edpn.backend.exploration.adapter.kafka.processor.StationDataRequestMessageProcessor;
+import io.edpn.backend.exploration.adapter.kafka.processor.SystemDataRequestMessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.sender.KafkaMessageSender;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.topic.CreateTopicPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.journal.ScanMessage;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,19 +39,27 @@ public class MessageProcessorConfig {
     }
 
     @Bean(name = "explorationSystemCoordinatesRequestMessageProcessor")
-    public SystemCoordinatesRequestMessageProcessor systemCoordinatesRequestMessageProcessor(
+    public SystemDataRequestMessageProcessor systemCoordinatesRequestMessageProcessor(
             @Qualifier("explorationSystemCoordinateInterModuleCommunicationService") ReceiveKafkaMessageUseCase<SystemDataRequest> receiveSystemDataRequestUseCase,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper
     ) {
-        return new SystemCoordinatesRequestMessageProcessor(receiveSystemDataRequestUseCase, objectMapper);
+        return new SystemDataRequestMessageProcessor(receiveSystemDataRequestUseCase, objectMapper);
     }
 
     @Bean(name = "explorationSystemEliteIdRequestMessageProcessor")
-    public SystemEliteIdRequestMessageProcessor systemEliteIdRequestMessageProcessor(
+    public SystemDataRequestMessageProcessor systemEliteIdRequestMessageProcessor(
             @Qualifier("explorationSystemEliteIdInterModuleCommunicationService") ReceiveKafkaMessageUseCase<SystemDataRequest> receiveSystemDataRequestUseCase,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper
     ) {
-        return new SystemEliteIdRequestMessageProcessor(receiveSystemDataRequestUseCase, objectMapper);
+        return new SystemDataRequestMessageProcessor(receiveSystemDataRequestUseCase, objectMapper);
+    }
+
+    @Bean(name = "explorationStationMaxLandingPadSizerRequestMessageProcessor")
+    public StationDataRequestMessageProcessor stationMaxLandingPadSizerRequestMessageProcessor(
+            @Qualifier("explorationStationMaxLandingPadSizeInterModuleCommunicationService") ReceiveKafkaMessageUseCase<StationDataRequest> receiveStationDataRequestUseCase,
+            @Qualifier("explorationObjectMapper") ObjectMapper objectMapper
+    ) {
+        return new StationDataRequestMessageProcessor(receiveStationDataRequestUseCase, objectMapper);
     }
 
     @Bean(name = "explorationKafkaMessageSender")

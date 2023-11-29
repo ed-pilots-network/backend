@@ -43,7 +43,7 @@ class LoadSystemCoordinateRequestBySystemNamePortTest {
         MybatisSystemCoordinateRequestEntity mybatisSystemCoordinateRequestEntity = mock(MybatisSystemCoordinateRequestEntity.class);
         List<MybatisSystemCoordinateRequestEntity> entities = List.of(mybatisSystemCoordinateRequestEntity);
         SystemCoordinateRequest mapped = mock(SystemCoordinateRequest.class);
-        when(mybatisSystemCoordinateRequestRepository.findBySystemName(systemName)).thenReturn(entities);
+        when(mybatisSystemCoordinateRequestRepository.findByIdentifier(systemName)).thenReturn(entities);
         when(mybatisSystemCoordinateRequestEntityMapper.map(mybatisSystemCoordinateRequestEntity)).thenReturn(mapped);
 
 
@@ -51,7 +51,7 @@ class LoadSystemCoordinateRequestBySystemNamePortTest {
 
 
         assertThat(result, contains(mapped));
-        verify(mybatisSystemCoordinateRequestRepository).findBySystemName(systemName);
+        verify(mybatisSystemCoordinateRequestRepository).findByIdentifier(systemName);
     }
 
 }

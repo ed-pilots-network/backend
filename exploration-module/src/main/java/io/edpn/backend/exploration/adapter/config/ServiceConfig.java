@@ -3,6 +3,7 @@ package io.edpn.backend.exploration.adapter.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
 import io.edpn.backend.exploration.adapter.web.dto.mapper.RestSystemDtoMapper;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.StationMaxLandingPadSizeResponseMapper;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEliteIdResponseMapper;
 import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoMapper;
@@ -10,6 +11,12 @@ import io.edpn.backend.exploration.application.port.outgoing.body.SaveOrUpdateBo
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.ring.SaveOrUpdateRingPort;
 import io.edpn.backend.exploration.application.port.outgoing.star.SaveOrUpdateStarPort;
+import io.edpn.backend.exploration.application.port.outgoing.station.LoadStationPort;
+import io.edpn.backend.exploration.application.port.outgoing.stationmaxlandingpadsizerequest.CreateIfNotExistsStationMaxLandingPadSizeRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.stationmaxlandingpadsizerequest.DeleteStationMaxLandingPadSizeRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.stationmaxlandingpadsizerequest.LoadAllStationMaxLandingPadSizeRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.stationmaxlandingpadsizerequest.LoadStationMaxLandingPadSizeRequestByIdentifierPort;
+import io.edpn.backend.exploration.application.port.outgoing.stationmaxlandingpadsizerequest.StationMaxLandingPadSizeResponseSender;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
@@ -24,6 +31,8 @@ import io.edpn.backend.exploration.application.port.outgoing.systemeliteidreques
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.SystemEliteIdResponseSender;
 import io.edpn.backend.exploration.application.service.ReceiveJournalScanService;
 import io.edpn.backend.exploration.application.service.ReceiveNavRouteService;
+import io.edpn.backend.exploration.application.service.StationMaxLandingPadSizeInterModuleCommunicationService;
+import io.edpn.backend.exploration.application.service.StationMaxLandingPadSizeResponseSenderService;
 import io.edpn.backend.exploration.application.service.SystemControllerService;
 import io.edpn.backend.exploration.application.service.SystemCoordinateInterModuleCommunicationService;
 import io.edpn.backend.exploration.application.service.SystemCoordinatesResponseSenderService;
@@ -31,13 +40,12 @@ import io.edpn.backend.exploration.application.service.SystemEliteIdInterModuleC
 import io.edpn.backend.exploration.application.service.SystemEliteIdResponseSenderService;
 import io.edpn.backend.exploration.application.validation.LoadByNameContainingValidator;
 import io.edpn.backend.util.IdGenerator;
+import java.util.concurrent.ExecutorService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.support.RetryTemplate;
-
-import java.util.concurrent.ExecutorService;
 
 @Configuration("ExplorationServiceConfig")
 public class ServiceConfig {
@@ -104,6 +112,23 @@ public class ServiceConfig {
                 createIfNotExistsSystemEliteIdRequestPort,
                 loadSystemPort,
                 systemEliteIdResponseSender,
+                executorService
+        );
+    }
+
+    @Bean(name = "explorationStationMaxLandingPadSizeInterModuleCommunicationService")
+    public StationMaxLandingPadSizeInterModuleCommunicationService stationMaxLandingPadSizeInterModuleCommunicationService(
+            LoadAllStationMaxLandingPadSizeRequestPort loadAllStationMaxLandingPadSizeRequestPort,
+            CreateIfNotExistsStationMaxLandingPadSizeRequestPort createIfNotExistsStationMaxLandingPadSizeRequestPort,
+            LoadStationPort loadStationPort,
+            StationMaxLandingPadSizeResponseSender stationMaxLandingPadSizeResponseSender,
+            @Qualifier("virtualThreadPerTaskExecutor") ExecutorService executorService
+    ) {
+        return new StationMaxLandingPadSizeInterModuleCommunicationService(
+                loadAllStationMaxLandingPadSizeRequestPort,
+                createIfNotExistsStationMaxLandingPadSizeRequestPort,
+                loadStationPort,
+                stationMaxLandingPadSizeResponseSender,
                 executorService
         );
     }
@@ -175,6 +200,31 @@ public class ServiceConfig {
                 deleteSystemEliteIdRequestPort,
                 sendMessagePort,
                 systemEliteIdResponseMapper,
+                messageMapper,
+                objectMapper,
+                retryTemplate,
+                executorService
+        );
+    }
+
+    @Bean("explorationStationMaxLandingPadSizeResponseSender")
+    public StationMaxLandingPadSizeResponseSender stationMaxLandingPadSizeResponseSender(
+            LoadStationPort loadStationPort,
+            LoadStationMaxLandingPadSizeRequestByIdentifierPort loadStationMaxLandingPadSizeRequestByIdentifierPort,
+            DeleteStationMaxLandingPadSizeRequestPort deleteStationMaxLandingPadSizeRequestPort,
+            SendMessagePort sendMessagePort,
+            StationMaxLandingPadSizeResponseMapper stationMaxLandingPadSizeResponseMapper,
+            MessageDtoMapper messageMapper,
+            ObjectMapper objectMapper,
+            @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
+            @Qualifier("virtualThreadPerTaskExecutor") ExecutorService executorService
+    ) {
+        return new StationMaxLandingPadSizeResponseSenderService(
+                loadStationPort,
+                loadStationMaxLandingPadSizeRequestByIdentifierPort,
+                deleteStationMaxLandingPadSizeRequestPort,
+                sendMessagePort,
+                stationMaxLandingPadSizeResponseMapper,
                 messageMapper,
                 objectMapper,
                 retryTemplate,

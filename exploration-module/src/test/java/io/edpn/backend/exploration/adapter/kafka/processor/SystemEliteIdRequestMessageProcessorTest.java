@@ -35,7 +35,7 @@ class SystemEliteIdRequestMessageProcessorTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new SystemEliteIdRequestMessageProcessor(receiveSystemDataRequestUseCase, objectMapper);
+        underTest = new SystemDataRequestMessageProcessor(receiveSystemDataRequestUseCase, objectMapper);
     }
 
     @Test

@@ -6,7 +6,7 @@ public interface StationMaxLandingPadSizeRequestEntity {
 
     String getSystemName();
 
-    String getStation();
+    String getStationName();
 
     Module getRequestingModule();
 

@@ -43,7 +43,7 @@ class LoadSystemEliteIdRequestBySystemNamePortTest {
         MybatisSystemEliteIdRequestEntity mybatisSystemEliteIdRequestEntity = mock(MybatisSystemEliteIdRequestEntity.class);
         List<MybatisSystemEliteIdRequestEntity> entities = List.of(mybatisSystemEliteIdRequestEntity);
         SystemEliteIdRequest mapped = mock(SystemEliteIdRequest.class);
-        when(mybatisSystemEliteIdRequestRepository.findBySystemName(systemName)).thenReturn(entities);
+        when(mybatisSystemEliteIdRequestRepository.findByIdentifier(systemName)).thenReturn(entities);
         when(mybatisSystemEliteIdRequestEntityMapper.map(mybatisSystemEliteIdRequestEntity)).thenReturn(mapped);
 
 
@@ -51,7 +51,7 @@ class LoadSystemEliteIdRequestBySystemNamePortTest {
 
 
         assertThat(result, contains(mapped));
-        verify(mybatisSystemEliteIdRequestRepository).findBySystemName(systemName);
+        verify(mybatisSystemEliteIdRequestRepository).findByIdentifier(systemName);
     }
 
 }
