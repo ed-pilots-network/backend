@@ -35,7 +35,7 @@ class SystemCoordinatesRequestMessageProcessorTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new SystemCoordinatesRequestMessageProcessor(receiveSystemDataRequestUseCase, objectMapper);
+        underTest = new SystemDataRequestMessageProcessor(receiveSystemDataRequestUseCase, objectMapper);
     }
 
     @Test
