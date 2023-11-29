@@ -10,11 +10,10 @@ import io.edpn.backend.exploration.application.port.outgoing.systemcoordinatereq
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.util.ConcurrencyUtil;
 import io.edpn.backend.util.Module;
+import java.util.concurrent.ExecutorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
-
-import java.util.concurrent.ExecutorService;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -33,9 +32,10 @@ public class SystemCoordinateInterModuleCommunicationService implements ReceiveK
         String systemName = message.systemName();
         Module requestingModule = message.requestingModule();
 
-        saveRequest(systemName, requestingModule);
+        SystemCoordinateRequest systemCoordinateDataRequest = new SystemCoordinateRequest(systemName, requestingModule);
+        createIfNotExistsSystemCoordinateRequestPort.createIfNotExists(systemCoordinateDataRequest);
         executorService.submit(ConcurrencyUtil.errorHandlingWrapper(
-                sendEventIfDataExists(systemName),
+                sendEventIfDataExists(systemCoordinateDataRequest),
                 exception -> log.error("Error while sending systemCoordinatesResponse for system: {}", systemName, exception)));
     }
 
@@ -44,21 +44,15 @@ public class SystemCoordinateInterModuleCommunicationService implements ReceiveK
     public void processPending() {
         loadAllSystemCoordinateRequestPort.loadAll()
                 .parallelStream()
-                .map(SystemCoordinateRequest::systemName)
                 .map(this::sendEventIfDataExists)
                 .map(runnable -> ConcurrencyUtil.errorHandlingWrapper(
                         runnable,
-                        exception -> log.error("Error while sending systemCoordinatesResponse for system while processing all pending requests", exception)))
+                        exception -> log.error("Error while sending systemCoordinatesResponse while processing all pending requests", exception)))
                 .forEach(executorService::submit);
     }
 
-    private void saveRequest(String systemName, Module requestingModule) {
-        SystemCoordinateRequest systemCoordinateDataRequest = new SystemCoordinateRequest(systemName, requestingModule);
-        createIfNotExistsSystemCoordinateRequestPort.createIfNotExists(systemCoordinateDataRequest);
-    }
-
-    private Runnable sendEventIfDataExists(String systemName) {
-        return () -> loadSystemPort.load(systemName)
+    private Runnable sendEventIfDataExists(SystemCoordinateRequest request) {
+        return () -> loadSystemPort.load(request.systemName())
                 .ifPresent(system -> systemCoordinatesResponseSender.sendResponsesForSystem(system.name()));
     }
 }
