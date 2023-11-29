@@ -2,8 +2,10 @@ package io.edpn.backend.exploration.adapter.config;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.edpn.backend.exploration.adapter.kafka.KafkaTopicHandler;
+import io.edpn.backend.exploration.adapter.kafka.processor.JournalDockedV1MessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.processor.JournalScanV1MessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.processor.NavRouteV1MessageProcessor;
+import io.edpn.backend.exploration.adapter.kafka.processor.StationDataRequestMessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.processor.SystemDataRequestMessageProcessor;
 import io.edpn.backend.util.Topic;
 import java.util.HashMap;
@@ -168,6 +170,24 @@ public interface KafkaConfig {
             return container;
         }
 
+        @Bean(name = "explorationStationMaxLandingPadSizeRequestListener")
+        public ConcurrentMessageListenerContainer<String, JsonNode> stationMaxLandingPadSizeRequestListener(
+                @Qualifier("explorationModuleKafkaListenerContainerFactory") ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory,
+                @Qualifier("explorationStationMaxLandingPadSizeRequestMessageProcessor") StationDataRequestMessageProcessor processor
+        ) {
+            String topicName = Topic.Request.STATION_MAX_LANDING_PAD_SIZE.getTopicName();
+            ContainerProperties containerProps = new ContainerProperties(topicName);
+            containerProps.setMessageListener(processor);
+
+            ConcurrentMessageListenerContainer<String, JsonNode> container = new ConcurrentMessageListenerContainer<>(
+                    kafkaListenerContainerFactory.getConsumerFactory(),
+                    containerProps
+            );
+
+            container.setBeanName("stationMaxLandingPadSizeRequestListenerContainer");
+            return container;
+        }
+
         @Bean(name = "explorationJournalV1ScanListener")
         public ConcurrentMessageListenerContainer<String, JsonNode> journalV1ScanListener(
                 @Qualifier("explorationModuleKafkaListenerContainerFactory") ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory,
@@ -183,6 +203,24 @@ public interface KafkaConfig {
             );
 
             container.setBeanName("journalV1ScanListenerContainer");
+            return container;
+        }
+
+        @Bean(name = "explorationJournalV1DockedListener")
+        public ConcurrentMessageListenerContainer<String, JsonNode> journalV1DockedListener(
+                @Qualifier("explorationModuleKafkaListenerContainerFactory") ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory,
+                @Qualifier("explorationJournalDockedV1MessageProcessor") JournalDockedV1MessageProcessor processor
+        ) {
+            String topicName = Topic.EDDN.JOURNAL_V1_DOCKED.getTopicName();
+            ContainerProperties containerProps = new ContainerProperties(topicName);
+            containerProps.setMessageListener(processor);
+
+            ConcurrentMessageListenerContainer<String, JsonNode> container = new ConcurrentMessageListenerContainer<>(
+                    kafkaListenerContainerFactory.getConsumerFactory(),
+                    containerProps
+            );
+
+            container.setBeanName("journalV1DockedListenerContainer");
             return container;
         }
 

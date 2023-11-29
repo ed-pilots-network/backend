@@ -20,6 +20,8 @@
     <include file="db/explorationmodule/changelog/add_unique_ring_constraint.xml"/>
     <include file="db/explorationmodule/changelog/add_unique_star_constraint.xml"/>
     <include file="db/explorationmodule/changelog/drop_system_coordinate_columns.xml"/>
+    <include file="db/explorationmodule/changelog/create_station_maxlandingpadsize_data_request_table.xml"/>
+    <include file="db/explorationmodule/changelog/create_station_table.xml"/>
 
     <!-- views always last as they might depend on new columns -->
 

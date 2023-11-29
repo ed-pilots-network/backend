@@ -2,6 +2,7 @@ package io.edpn.backend.exploration.adapter.config;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.edpn.backend.exploration.adapter.kafka.processor.JournalDockedV1MessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.processor.JournalScanV1MessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.processor.NavRouteV1MessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.processor.StationDataRequestMessageProcessor;
@@ -12,6 +13,7 @@ import io.edpn.backend.exploration.application.port.outgoing.topic.CreateTopicPo
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.journal.DockedMessage;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.journal.ScanMessage;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -38,6 +40,14 @@ public class MessageProcessorConfig {
         return new JournalScanV1MessageProcessor(receiveJournalScanMessageUseCase, objectMapper);
     }
 
+    @Bean(name = "explorationJournalDockedV1MessageProcessor")
+    public JournalDockedV1MessageProcessor journalDockedV1MessageProcessor(
+            ReceiveKafkaMessageUseCase<DockedMessage.V1> receiveJournalDockedMessageUseCase,
+            @Qualifier("explorationObjectMapper") ObjectMapper objectMapper
+    ) {
+        return new JournalDockedV1MessageProcessor(receiveJournalDockedMessageUseCase, objectMapper);
+    }
+
     @Bean(name = "explorationSystemCoordinatesRequestMessageProcessor")
     public SystemDataRequestMessageProcessor systemCoordinatesRequestMessageProcessor(
             @Qualifier("explorationSystemCoordinateInterModuleCommunicationService") ReceiveKafkaMessageUseCase<SystemDataRequest> receiveSystemDataRequestUseCase,
@@ -54,7 +64,7 @@ public class MessageProcessorConfig {
         return new SystemDataRequestMessageProcessor(receiveSystemDataRequestUseCase, objectMapper);
     }
 
-    @Bean(name = "explorationStationMaxLandingPadSizerRequestMessageProcessor")
+    @Bean(name = "explorationStationMaxLandingPadSizeRequestMessageProcessor")
     public StationDataRequestMessageProcessor stationMaxLandingPadSizerRequestMessageProcessor(
             @Qualifier("explorationStationMaxLandingPadSizeInterModuleCommunicationService") ReceiveKafkaMessageUseCase<StationDataRequest> receiveStationDataRequestUseCase,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper

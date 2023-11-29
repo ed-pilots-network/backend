@@ -12,6 +12,7 @@ import io.edpn.backend.exploration.application.port.outgoing.message.SendMessage
 import io.edpn.backend.exploration.application.port.outgoing.ring.SaveOrUpdateRingPort;
 import io.edpn.backend.exploration.application.port.outgoing.star.SaveOrUpdateStarPort;
 import io.edpn.backend.exploration.application.port.outgoing.station.LoadStationPort;
+import io.edpn.backend.exploration.application.port.outgoing.station.SaveOrUpdateStationPort;
 import io.edpn.backend.exploration.application.port.outgoing.stationmaxlandingpadsizerequest.CreateIfNotExistsStationMaxLandingPadSizeRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.stationmaxlandingpadsizerequest.DeleteStationMaxLandingPadSizeRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.stationmaxlandingpadsizerequest.LoadAllStationMaxLandingPadSizeRequestPort;
@@ -29,6 +30,7 @@ import io.edpn.backend.exploration.application.port.outgoing.systemeliteidreques
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestByIdentifierPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.SystemEliteIdResponseSender;
+import io.edpn.backend.exploration.application.service.ReceiveJournalDockedService;
 import io.edpn.backend.exploration.application.service.ReceiveJournalScanService;
 import io.edpn.backend.exploration.application.service.ReceiveNavRouteService;
 import io.edpn.backend.exploration.application.service.StationMaxLandingPadSizeInterModuleCommunicationService;
@@ -40,12 +42,13 @@ import io.edpn.backend.exploration.application.service.SystemEliteIdInterModuleC
 import io.edpn.backend.exploration.application.service.SystemEliteIdResponseSenderService;
 import io.edpn.backend.exploration.application.validation.LoadByNameContainingValidator;
 import io.edpn.backend.util.IdGenerator;
-import java.util.concurrent.ExecutorService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.support.RetryTemplate;
+
+import java.util.concurrent.ExecutorService;
 
 @Configuration("ExplorationServiceConfig")
 public class ServiceConfig {
@@ -80,6 +83,27 @@ public class ServiceConfig {
                 saveOrUpdateRingPort,
                 saveOrUpdateStarPort,
                 saveOrUpdateSystemPort);
+    }
+
+    @Bean(name = "explorationReceiveJournalDockedService")
+    public ReceiveJournalDockedService receiveJournalDockedService(
+            @Qualifier("explorationIdGenerator") IdGenerator idGenerator,
+
+            SystemCoordinatesResponseSender systemCoordinatesResponseSender,
+            SystemEliteIdResponseSender systemEliteIdResponseSender,
+            StationMaxLandingPadSizeResponseSender stationMaxLandingPadSizeResponseSender,
+            SaveOrUpdateStationPort saveOrUpdateStationPort,
+            SaveOrUpdateSystemPort saveOrUpdateSystemPort,
+            @Qualifier("virtualThreadPerTaskExecutor") ExecutorService executorService
+    ) {
+        return new ReceiveJournalDockedService(
+                idGenerator,
+                systemCoordinatesResponseSender,
+                systemEliteIdResponseSender,
+                stationMaxLandingPadSizeResponseSender,
+                saveOrUpdateStationPort,
+                saveOrUpdateSystemPort,
+                executorService);
     }
 
     @Bean(name = "explorationSystemCoordinateInterModuleCommunicationService")
