@@ -8,6 +8,7 @@ module edpn.backend.boot {
     requires spring.beans;
     requires edpn.backend.exploration;
     requires edpn.backend.trade;
+    requires spring.core;
 
     opens io.edpn.backend.application.controller to spring.core;
 }

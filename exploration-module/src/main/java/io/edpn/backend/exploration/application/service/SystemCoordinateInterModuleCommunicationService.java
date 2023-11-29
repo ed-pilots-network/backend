@@ -1,30 +1,20 @@
 package io.edpn.backend.exploration.application.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
-import io.edpn.backend.exploration.application.dto.web.object.MessageDto;
-import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoMapper;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.port.incomming.ProcessPendingDataRequestUseCase;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
-import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestPort;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.SystemCoordinatesResponseSender;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.util.ConcurrencyUtil;
 import io.edpn.backend.util.Module;
-import io.edpn.backend.util.Topic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -33,38 +23,33 @@ public class SystemCoordinateInterModuleCommunicationService implements ReceiveK
 
     private final LoadAllSystemCoordinateRequestPort loadAllSystemCoordinateRequestPort;
     private final CreateIfNotExistsSystemCoordinateRequestPort createIfNotExistsSystemCoordinateRequestPort;
-    private final DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
     private final LoadSystemPort loadSystemPort;
-    private final SendMessagePort sendMessagePort;
-    private final SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
-    private final MessageDtoMapper messageMapper;
-    private final ObjectMapper objectMapper;
-    private final RetryTemplate retryTemplate;
-    private final Executor executor;
+    private final SystemCoordinatesResponseSender systemCoordinatesResponseSender;
+    private final ExecutorService executorService;
+
 
     @Override
     public void receive(SystemDataRequest message) {
         String systemName = message.systemName();
         Module requestingModule = message.requestingModule();
 
-        loadSystemPort.load(systemName).ifPresentOrElse(
-                system -> {
-                    try {
-                        SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
-                        String stringJson = objectMapper.writeValueAsString(systemCoordinatesResponse);
-                        String topic = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(requestingModule);
-                        Message kafkaMessage = new Message(topic, stringJson);
-                        MessageDto messageDto = messageMapper.map(kafkaMessage);
+        saveRequest(systemName, requestingModule);
+        executorService.submit(ConcurrencyUtil.errorHandlingWrapper(
+                sendEventIfDataExists(systemName),
+                throwable -> log.error("Error while sending systemCoordinatesResponse for system: {}", systemName, throwable)));
+    }
 
-                        boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
-                        if (!sendSuccessful) {
-                            saveRequest(systemName, requestingModule);
-                        }
-                    } catch (JsonProcessingException jpe) {
-                        throw new RuntimeException(jpe);
-                    }
-                },
-                () -> saveRequest(systemName, requestingModule));
+    @Override
+    @Scheduled(cron = "0 0 0/12 * * *")
+    public void processPending() {
+        loadAllSystemCoordinateRequestPort.loadAll()
+                .parallelStream()
+                .map(SystemCoordinateRequest::systemName)
+                .map(this::sendEventIfDataExists)
+                .map(runnable -> ConcurrencyUtil.errorHandlingWrapper(
+                        runnable,
+                        throwable -> log.error("Error while sending systemCoordinatesResponse for system while processing all pending requests", throwable)))
+                .forEach(executorService::submit);
     }
 
     private void saveRequest(String systemName, Module requestingModule) {
@@ -72,27 +57,8 @@ public class SystemCoordinateInterModuleCommunicationService implements ReceiveK
         createIfNotExistsSystemCoordinateRequestPort.createIfNotExists(systemCoordinateDataRequest);
     }
 
-    @Override
-    @Scheduled(cron = "0 0 0/12 * * *")
-    public void processPending() {
-        loadAllSystemCoordinateRequestPort.loadAll().parallelStream()
-                .forEach(systemCoordinateRequest -> CompletableFuture.runAsync(() -> loadSystemPort.load(systemCoordinateRequest.systemName())
-                        .ifPresent(system -> {
-                            try {
-                                SystemCoordinatesResponse systemCoordinatesResponse = systemCoordinatesResponseMapper.map(system);
-                                String stringJson = objectMapper.writeValueAsString(systemCoordinatesResponse);
-                                String topic = Topic.Response.SYSTEM_COORDINATES.getFormattedTopicName(systemCoordinateRequest.requestingModule());
-                                Message message = new Message(topic, stringJson);
-                                MessageDto messageDto = messageMapper.map(message);
-
-                                boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
-                                if (sendSuccessful) {
-                                    deleteSystemCoordinateRequestPort.delete(systemCoordinateRequest.systemName(), systemCoordinateRequest.requestingModule());
-                                }
-                            } catch (JsonProcessingException jpe) {
-                                log.error("Error processing JSON", jpe);
-                                throw new RuntimeException(jpe);
-                            }
-                        }), executor));
+    private Runnable sendEventIfDataExists(String systemName) {
+        return () -> loadSystemPort.load(systemName)
+                .ifPresent(system -> systemCoordinatesResponseSender.sendResponsesForSystem(system.name()));
     }
 }
