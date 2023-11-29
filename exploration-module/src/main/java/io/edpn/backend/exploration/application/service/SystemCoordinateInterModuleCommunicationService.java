@@ -36,7 +36,7 @@ public class SystemCoordinateInterModuleCommunicationService implements ReceiveK
         saveRequest(systemName, requestingModule);
         executorService.submit(ConcurrencyUtil.errorHandlingWrapper(
                 sendEventIfDataExists(systemName),
-                throwable -> log.error("Error while sending systemCoordinatesResponse for system: {}", systemName, throwable)));
+                exception -> log.error("Error while sending systemCoordinatesResponse for system: {}", systemName, exception)));
     }
 
     @Override
@@ -48,7 +48,7 @@ public class SystemCoordinateInterModuleCommunicationService implements ReceiveK
                 .map(this::sendEventIfDataExists)
                 .map(runnable -> ConcurrencyUtil.errorHandlingWrapper(
                         runnable,
-                        throwable -> log.error("Error while sending systemCoordinatesResponse for system while processing all pending requests", throwable)))
+                        exception -> log.error("Error while sending systemCoordinatesResponse for system while processing all pending requests", exception)))
                 .forEach(executorService::submit);
     }
 

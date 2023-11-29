@@ -6,7 +6,7 @@ import io.edpn.backend.exploration.application.domain.SystemEliteIdRequest;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.CreateIfNotExistsSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestByIdentifierPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestPort;
 import io.edpn.backend.util.Module;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
-public class SystemEliteIdRequestRepository implements CreateIfNotExistsSystemEliteIdRequestPort, LoadSystemEliteIdRequestPort, LoadSystemEliteIdRequestBySystemNamePort, LoadAllSystemEliteIdRequestPort, DeleteSystemEliteIdRequestPort {
+public class SystemEliteIdRequestRepository implements CreateIfNotExistsSystemEliteIdRequestPort, LoadSystemEliteIdRequestPort, LoadSystemEliteIdRequestByIdentifierPort, LoadAllSystemEliteIdRequestPort, DeleteSystemEliteIdRequestPort {
 
     private final MybatisSystemEliteIdRequestRepository mybatisSystemEliteIdRequestRepository;
     private final MybatisSystemEliteIdRequestEntityMapper mybatisSystemEliteIdRequestEntityMapper;
@@ -33,7 +33,7 @@ public class SystemEliteIdRequestRepository implements CreateIfNotExistsSystemEl
     }
 
     @Override
-    public List<SystemEliteIdRequest> loadByName(String systemName) {
+    public List<SystemEliteIdRequest> loadByIdentifier(String systemName) {
         return mybatisSystemEliteIdRequestRepository.findBySystemName(systemName).stream()
                 .map(mybatisSystemEliteIdRequestEntityMapper::map)
                 .toList();

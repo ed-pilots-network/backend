@@ -4,7 +4,7 @@ import io.edpn.backend.exploration.application.domain.SystemEliteIdRequest;
 
 import java.util.List;
 
-public interface LoadSystemEliteIdRequestBySystemNamePort {
+public interface LoadSystemEliteIdRequestByIdentifierPort {
 
-    List<SystemEliteIdRequest> loadByName(String systemName);
+    List<SystemEliteIdRequest> loadByIdentifier(String systemName);
 }

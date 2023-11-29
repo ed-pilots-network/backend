@@ -15,12 +15,12 @@ import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdate
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestByIdentifierPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.SystemCoordinatesResponseSender;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.CreateIfNotExistsSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestByIdentifierPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.SystemEliteIdResponseSender;
 import io.edpn.backend.exploration.application.service.ReceiveJournalScanService;
 import io.edpn.backend.exploration.application.service.ReceiveNavRouteService;
@@ -135,7 +135,7 @@ public class ServiceConfig {
     @Bean("explorationSystemCoordinatesResponseSender")
     public SystemCoordinatesResponseSender systemCoordinatesResponseSender(
             LoadSystemPort loadSystemPort,
-            LoadSystemCoordinateRequestBySystemNamePort loadSystemCoordinateRequestBySystemNamePort,
+            LoadSystemCoordinateRequestByIdentifierPort loadSystemCoordinateRequestBySystemNamePort,
             DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort,
             SendMessagePort sendMessagePort,
             SystemCoordinatesResponseMapper systemCoordinatesResponseMapper,
@@ -160,7 +160,7 @@ public class ServiceConfig {
     @Bean("explorationSystemEliteIdResponseSender")
     public SystemEliteIdResponseSender systemEliteIdResponseSender(
             LoadSystemPort loadSystemPort,
-            LoadSystemEliteIdRequestBySystemNamePort loadSystemEliteIdRequestBySystemNamePort,
+            LoadSystemEliteIdRequestByIdentifierPort loadSystemEliteIdRequestBySystemNamePort,
             DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort,
             SendMessagePort sendMessagePort,
             SystemEliteIdResponseMapper systemEliteIdResponseMapper,

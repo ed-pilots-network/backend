@@ -6,7 +6,7 @@ import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestByIdentifierPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestPort;
 import io.edpn.backend.util.Module;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
-public class SystemCoordinateRequestRepository implements CreateIfNotExistsSystemCoordinateRequestPort, LoadSystemCoordinateRequestPort, LoadSystemCoordinateRequestBySystemNamePort, LoadAllSystemCoordinateRequestPort, DeleteSystemCoordinateRequestPort {
+public class SystemCoordinateRequestRepository implements CreateIfNotExistsSystemCoordinateRequestPort, LoadSystemCoordinateRequestPort, LoadSystemCoordinateRequestByIdentifierPort, LoadAllSystemCoordinateRequestPort, DeleteSystemCoordinateRequestPort {
 
     private final MybatisSystemCoordinateRequestRepository mybatisSystemCoordinateRequestRepository;
     private final MybatisSystemCoordinateRequestEntityMapper mybatisSystemCoordinateRequestEntityMapper;
@@ -33,7 +33,7 @@ public class SystemCoordinateRequestRepository implements CreateIfNotExistsSyste
     }
 
     @Override
-    public List<SystemCoordinateRequest> loadByName(String systemName) {
+    public List<SystemCoordinateRequest> loadByIdentifier(String systemName) {
         return mybatisSystemCoordinateRequestRepository.findBySystemName(systemName).stream()
                 .map(mybatisSystemCoordinateRequestEntityMapper::map)
                 .toList();

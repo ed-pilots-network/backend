@@ -10,7 +10,7 @@ import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoM
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestByIdentifierPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.SystemCoordinatesResponseSender;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.util.Module;
@@ -41,7 +41,7 @@ class SystemCoordinatesResponseSenderTest {
     @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
-    private LoadSystemCoordinateRequestBySystemNamePort loadSystemCoordinateRequestBySystemNamePort;
+    private LoadSystemCoordinateRequestByIdentifierPort loadSystemCoordinateRequestBySystemNamePort;
     @Mock
     private DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
     @Mock
@@ -81,7 +81,7 @@ class SystemCoordinatesResponseSenderTest {
         when(module.getName()).thenReturn("module");
         SystemCoordinateRequest request1 = mock(SystemCoordinateRequest.class);
         when(request1.requestingModule()).thenReturn(module);
-        when(loadSystemCoordinateRequestBySystemNamePort.loadByName(systemName)).thenReturn(List.of(request1));
+        when(loadSystemCoordinateRequestBySystemNamePort.loadByIdentifier(systemName)).thenReturn(List.of(request1));
         ArgumentCaptor<Runnable> runnableArgumentCaptor = ArgumentCaptor.forClass(Runnable.class);
         System mockSystem = mock(System.class);
         when(loadSystemPort.load(systemName)).thenReturn(Optional.of(mockSystem));
@@ -109,7 +109,7 @@ class SystemCoordinatesResponseSenderTest {
     void onEvent_shouldDoNothingWhenSystemNotFound() {
         String systemName = "systemName";
         SystemCoordinateRequest request = mock(SystemCoordinateRequest.class);
-        when(loadSystemCoordinateRequestBySystemNamePort.loadByName(systemName)).thenReturn(List.of(request));
+        when(loadSystemCoordinateRequestBySystemNamePort.loadByIdentifier(systemName)).thenReturn(List.of(request));
         when(loadSystemPort.load(systemName)).thenReturn(Optional.empty());
         ArgumentCaptor<Runnable> runnableArgumentCaptor = ArgumentCaptor.forClass(Runnable.class);
 
@@ -129,7 +129,7 @@ class SystemCoordinatesResponseSenderTest {
         Module module = mock(Module.class);
         when(module.getName()).thenReturn("module");
         when(request1.requestingModule()).thenReturn(module);
-        when(loadSystemCoordinateRequestBySystemNamePort.loadByName(systemName)).thenReturn(List.of(request1));
+        when(loadSystemCoordinateRequestBySystemNamePort.loadByIdentifier(systemName)).thenReturn(List.of(request1));
         ArgumentCaptor<Runnable> runnableArgumentCaptor = ArgumentCaptor.forClass(Runnable.class);
         System mockSystem = mock(System.class);
         when(loadSystemPort.load(systemName)).thenReturn(Optional.of(mockSystem));

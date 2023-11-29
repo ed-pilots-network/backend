@@ -36,7 +36,7 @@ public class SystemEliteIdInterModuleCommunicationService implements ReceiveKafk
         saveRequest(systemName, requestingModule);
         executorService.submit(ConcurrencyUtil.errorHandlingWrapper(
                 sendEventIfDataExists(systemName),
-                throwable -> log.error("Error while sending systemEliteIdResponse for system: {}", systemName, throwable)));
+                exception -> log.error("Error while sending systemEliteIdResponse for system: {}", systemName, exception)));
     }
 
     @Override
@@ -48,7 +48,7 @@ public class SystemEliteIdInterModuleCommunicationService implements ReceiveKafk
                 .map(this::sendEventIfDataExists)
                 .map(runnable -> ConcurrencyUtil.errorHandlingWrapper(
                         runnable,
-                        throwable -> log.error("Error while sending systemEliteIdResponse for system while processing all pending requests", throwable)))
+                        exception -> log.error("Error while sending systemEliteIdResponse for system while processing all pending requests", exception)))
                 .forEach(executorService::submit);
     }
 

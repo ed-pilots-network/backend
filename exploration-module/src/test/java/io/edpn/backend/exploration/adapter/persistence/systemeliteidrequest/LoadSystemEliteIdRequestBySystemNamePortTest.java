@@ -5,7 +5,7 @@ import io.edpn.backend.exploration.adapter.persistence.SystemEliteIdRequestRepos
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEliteIdRequestEntity;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemEliteIdRequestEntityMapper;
 import io.edpn.backend.exploration.application.domain.SystemEliteIdRequest;
-import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestByIdentifierPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +29,7 @@ class LoadSystemEliteIdRequestBySystemNamePortTest {
     @Mock
     private MybatisSystemEliteIdRequestEntityMapper mybatisSystemEliteIdRequestEntityMapper;
 
-    private LoadSystemEliteIdRequestBySystemNamePort underTest;
+    private LoadSystemEliteIdRequestByIdentifierPort underTest;
 
     @BeforeEach
     void setUp() {
@@ -47,7 +47,7 @@ class LoadSystemEliteIdRequestBySystemNamePortTest {
         when(mybatisSystemEliteIdRequestEntityMapper.map(mybatisSystemEliteIdRequestEntity)).thenReturn(mapped);
 
 
-        List<SystemEliteIdRequest> result = underTest.loadByName(systemName);
+        List<SystemEliteIdRequest> result = underTest.loadByIdentifier(systemName);
 
 
         assertThat(result, contains(mapped));

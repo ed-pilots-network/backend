@@ -10,7 +10,7 @@ import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoM
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestByIdentifierPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.SystemEliteIdResponseSender;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
 import io.edpn.backend.util.Module;
@@ -41,7 +41,7 @@ class SystemEliteIdResponseSenderTest {
     @Mock
     private LoadSystemPort loadSystemPort;
     @Mock
-    private LoadSystemEliteIdRequestBySystemNamePort loadSystemEliteIdRequestBySystemNamePort;
+    private LoadSystemEliteIdRequestByIdentifierPort loadSystemEliteIdRequestBySystemNamePort;
     @Mock
     private DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort;
     @Mock
@@ -81,7 +81,7 @@ class SystemEliteIdResponseSenderTest {
         when(module.getName()).thenReturn("module");
         SystemEliteIdRequest request1 = mock(SystemEliteIdRequest.class);
         when(request1.requestingModule()).thenReturn(module);
-        when(loadSystemEliteIdRequestBySystemNamePort.loadByName(systemName)).thenReturn(List.of(request1));
+        when(loadSystemEliteIdRequestBySystemNamePort.loadByIdentifier(systemName)).thenReturn(List.of(request1));
         ArgumentCaptor<Runnable> runnableArgumentCaptor = ArgumentCaptor.forClass(Runnable.class);
         System mockSystem = mock(System.class);
         when(loadSystemPort.load(systemName)).thenReturn(Optional.of(mockSystem));
@@ -109,7 +109,7 @@ class SystemEliteIdResponseSenderTest {
     void onEvent_shouldThrowErrorWhenSystemNotFound() {
         String systemName = "systemName";
         SystemEliteIdRequest request = mock(SystemEliteIdRequest.class);
-        when(loadSystemEliteIdRequestBySystemNamePort.loadByName(systemName)).thenReturn(List.of(request));
+        when(loadSystemEliteIdRequestBySystemNamePort.loadByIdentifier(systemName)).thenReturn(List.of(request));
         when(loadSystemPort.load(systemName)).thenReturn(Optional.empty());
         ArgumentCaptor<Runnable> runnableArgumentCaptor = ArgumentCaptor.forClass(Runnable.class);
 
@@ -130,7 +130,7 @@ class SystemEliteIdResponseSenderTest {
         Module module = mock(Module.class);
         when(module.getName()).thenReturn("module");
         when(request1.requestingModule()).thenReturn(module);
-        when(loadSystemEliteIdRequestBySystemNamePort.loadByName(systemName)).thenReturn(List.of(request1));
+        when(loadSystemEliteIdRequestBySystemNamePort.loadByIdentifier(systemName)).thenReturn(List.of(request1));
         ArgumentCaptor<Runnable> runnableArgumentCaptor = ArgumentCaptor.forClass(Runnable.class);
         System mockSystem = mock(System.class);
         when(loadSystemPort.load(systemName)).thenReturn(Optional.of(mockSystem));
