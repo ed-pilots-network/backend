@@ -42,10 +42,9 @@ public interface MybatisStationRepository {
                     ),
                 insert_new_station_economies AS (
                     INSERT INTO station_economies VALUES
-                                                      ('f4eac564-b7fe-4f76-9a37-9b89f5e2c39a', 'TEST_1', 0.30),
-                                                      ('f4eac564-b7fe-4f76-9a37-9b89f5e2c39a', 'TEST_2', 0.40),
-                                                      ('f4eac564-b7fe-4f76-9a37-9b89f5e2c39a', 'TEST_3', 0.20),
-                                                      ('f4eac564-b7fe-4f76-9a37-9b89f5e2c39a', 'TEST_4', 0.10)
+                            <#foreach entry in station.economies>
+                                (${id}, ${entry.key}, ${entry.value})<#if entry_has_next>,</#if>
+                            </#foreach>
                            ON CONFLICT (station_id, economy_type)
                         DO UPDATE SET
                            ratio = EXCLUDED.ratio
@@ -56,9 +55,9 @@ public interface MybatisStationRepository {
                     ),
                 insert_new_station_landingpads AS (
                     INSERT INTO station_landingpads VALUES
-                                                        ('f4eac564-b7fe-4f76-9a37-9b89f5e2c39a', 'LARGE', 20),
-                                                        ('f4eac564-b7fe-4f76-9a37-9b89f5e2c39a', 'MEDIUM', 10),
-                                                        ('f4eac564-b7fe-4f76-9a37-9b89f5e2c39a', 'SMALL', 1)
+                            <#foreach entry in station.landingPads>
+                                (${id}, ${entry.key}, ${entry.value})<#if entry_has_next>,</#if>
+                            </#foreach>
                            ON CONFLICT (station_id, pad_size)
                         DO UPDATE SET
                            quantity = EXCLUDED.quantity

@@ -7,12 +7,12 @@ import io.edpn.backend.exploration.application.domain.Station;
 import io.edpn.backend.exploration.application.dto.persistence.entity.StationEntity;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.StationEntityMapper;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEntityMapper;
-import lombok.RequiredArgsConstructor;
-
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class MybatisStationEntityMapper implements StationEntityMapper<MybatisStationEntity> {
@@ -54,13 +54,25 @@ public class MybatisStationEntityMapper implements StationEntityMapper<MybatisSt
                 .type(station.type())
                 .distanceFromStar(station.distanceFromStar())
                 .system(Optional.ofNullable(station.system()).map(systemEntityMapper::map).orElse(null))
-                .landingPads(station.landingPads().entrySet().stream()
-                        .collect(Collectors.toMap(k -> k.getKey().name(), Map.Entry::getValue)))
+                .landingPads(getLandingPads(station))
                 .economies(station.economies())
                 .economy(station.economy())
                 .government(station.government())
                 .odyssey(station.odyssey())
                 .updatedAt(station.updatedAt())
                 .build();
+    }
+
+    private static Map<String, Integer> getLandingPads(Station station) {
+        Map<String, Integer> landingPads = new HashMap<>();
+        for (LandingPadSize landingPadSize : LandingPadSize.values()) {
+            if (landingPadSize.equals(LandingPadSize.UNKNOWN)) {
+                continue;
+            }
+            int amount = Optional.ofNullable(station.landingPads().get(landingPadSize)).orElse(0);
+            landingPads.put(landingPadSize.name(), amount);
+        }
+
+        return landingPads;
     }
 }
