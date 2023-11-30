@@ -42,9 +42,9 @@ public interface MybatisStationRepository {
                     ),
                 insert_new_station_economies AS (
                     INSERT INTO station_economies VALUES
-                            <#foreach entry in station.economies>
-                                (${id}, ${entry.key}, ${entry.value})<#if entry_has_next>,</#if>
-                            </#foreach>
+                            <foreach item="key" index="key" collection="station.economies.keySet()" separator="," open="(" close=")">
+                                ${id}, #{key}, #{station.economies[key]}
+                            </foreach>
                            ON CONFLICT (station_id, economy_type)
                         DO UPDATE SET
                            ratio = EXCLUDED.ratio
@@ -55,9 +55,9 @@ public interface MybatisStationRepository {
                     ),
                 insert_new_station_landingpads AS (
                     INSERT INTO station_landingpads VALUES
-                            <#foreach entry in station.landingPads>
-                                (${id}, ${entry.key}, ${entry.value})<#if entry_has_next>,</#if>
-                            </#foreach>
+                            <foreach item="key" collection="station.landingPads.keySet()" separator="," open="(" close=")">
+                                ${id}, #{key}, #{station.landingPads[key]}
+                            </foreach>
                            ON CONFLICT (station_id, pad_size)
                         DO UPDATE SET
                            quantity = EXCLUDED.quantity
