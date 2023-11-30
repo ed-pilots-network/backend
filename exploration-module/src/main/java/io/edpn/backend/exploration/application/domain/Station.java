@@ -1,13 +1,12 @@
 package io.edpn.backend.exploration.application.domain;
 
+import lombok.With;
+
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
-import lombok.Builder;
-import lombok.With;
 
 @With
-@Builder
 public record Station(
         UUID id,
         Long marketId,
@@ -21,5 +20,14 @@ public record Station(
         String government,
         Boolean odyssey,
         LocalDateTime updatedAt
-        ) {
+) {
+    public Station {
+        if (landingPads == null) {
+            landingPads = Map.of();
+        }
+
+        if (economies == null) {
+            economies = Map.of();
+        }
+    }
 }

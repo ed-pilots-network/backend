@@ -19,6 +19,15 @@
             <column name="odyssey" type="boolean"/>
             <column name="updated_at" type="timestamp"/>
         </createTable>
+
+        <createIndex tableName="station" indexName="idx_station_name_system_id" unique="true">
+            <column name="name"/>
+            <column name="system_id"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseTableName="station" baseColumnNames="system_id"
+                                 constraintName="fk_station_system_id"
+                                 referencedTableName="system" referencedColumnNames="id"/>
     </changeSet>
 
     <changeSet id="create_station_landingpads_table" author="pveeckhout">
@@ -31,6 +40,12 @@
             </column>
             <column name="quantity" type="integer"/>
         </createTable>
+
+        <createIndex tableName="station_landingpads" indexName="idx_station_id_pad_size" unique="true">
+            <column name="station_id"/>
+            <column name="pad_size"/>
+        </createIndex>
+
         <addForeignKeyConstraint baseTableName="station_landingpads" baseColumnNames="station_id"
                                  constraintName="fk_station_landingpads_economy_id"
                                  referencedTableName="station" referencedColumnNames="id"/>
@@ -44,8 +59,14 @@
             <column name="economy_type" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="value" type="double"/>
+            <column name="ratio" type="double"/>
         </createTable>
+
+        <createIndex tableName="station_economies" indexName="idx_station_id_economy_type" unique="true">
+            <column name="station_id"/>
+            <column name="economy_type"/>
+        </createIndex>
+
         <addForeignKeyConstraint baseTableName="station_economies" baseColumnNames="station_id"
                               constraintName="fk_station_economies_economy_id"
                               referencedTableName="station" referencedColumnNames="id"/>

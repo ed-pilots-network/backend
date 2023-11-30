@@ -7,10 +7,12 @@ import io.edpn.backend.exploration.application.domain.Station;
 import io.edpn.backend.exploration.application.dto.persistence.entity.StationEntity;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.StationEntityMapper;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEntityMapper;
+import lombok.RequiredArgsConstructor;
+
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class MybatisStationEntityMapper implements StationEntityMapper<MybatisStationEntity> {
@@ -19,21 +21,28 @@ public class MybatisStationEntityMapper implements StationEntityMapper<MybatisSt
 
     @Override
     public Station map(StationEntity stationEntity) {
-        return Station.builder()
-                .id(stationEntity.getId())
-                .marketId(stationEntity.getMarketId())
-                .name(stationEntity.getName())
-                .type(stationEntity.getType())
-                .distanceFromStar(stationEntity.getDistanceFromStar())
-                .system(Optional.ofNullable(stationEntity.getSystem()).map(systemEntityMapper::map).orElse(null))
-                .landingPads(stationEntity.getLandingPads().entrySet().stream()
-                        .collect(Collectors.toMap(k -> LandingPadSize.valueOf(k.getKey()), Map.Entry::getValue)))
-                .economies(stationEntity.getEconomies())
-                .economy(stationEntity.getEconomy())
-                .government(stationEntity.getGovernment())
-                .odyssey(stationEntity.getOdyssey())
-                .updatedAt(stationEntity.getUpdatedAt())
-                .build();
+        return new Station(
+                stationEntity.getId(),
+                stationEntity.getMarketId(),
+                stationEntity.getName(),
+                stationEntity.getType(),
+                stationEntity.getDistanceFromStar(),
+                Optional.ofNullable(stationEntity.getSystem()).map(systemEntityMapper::map).orElse(null),
+                Optional.ofNullable(stationEntity.getLandingPads())
+                        .map(Map::entrySet)
+                        .map(Set::stream)
+                        .map(stream -> stream
+                                .collect(Collectors.toMap(
+                                        k -> LandingPadSize.valueOf(k.getKey()),
+                                        Map.Entry::getValue
+                                )))
+                        .orElse(null),
+                stationEntity.getEconomies(),
+                stationEntity.getEconomy(),
+                stationEntity.getGovernment(),
+                stationEntity.getOdyssey(),
+                stationEntity.getUpdatedAt()
+        );
     }
 
     @Override
