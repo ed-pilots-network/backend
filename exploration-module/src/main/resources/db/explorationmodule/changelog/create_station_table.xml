@@ -15,6 +15,8 @@
             <column name="distance_from_star" type="double"/>
             <column name="system_id" type="uuid"/>
             <column name="economy" type="varchar(255)"/>
+            <column name="economies" type="hstore"/>
+            <column name="landing_pads" type="hstore"/>
             <column name="government" type="varchar(255)"/>
             <column name="odyssey" type="boolean"/>
             <column name="updated_at" type="timestamp"/>
@@ -25,51 +27,13 @@
             <column name="system_id"/>
         </createIndex>
 
+        <sql>
+            CREATE INDEX idx_gin_station_economies ON station USING GIN(economies);
+            CREATE INDEX idx_gin_statin_landing_pads ON station USING GIN(landing_pads);
+        </sql>
+
         <addForeignKeyConstraint baseTableName="station" baseColumnNames="system_id"
                                  constraintName="fk_station_system_id"
                                  referencedTableName="system" referencedColumnNames="id"/>
     </changeSet>
-
-    <changeSet id="create_station_landingpads_table" author="pveeckhout">
-        <createTable tableName="station_landingpads">
-            <column name="station_id" type="uuid">
-                <constraints nullable="false"/>
-            </column>
-            <column name="pad_size" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="quantity" type="integer"/>
-        </createTable>
-
-        <createIndex tableName="station_landingpads" indexName="idx_station_id_pad_size" unique="true">
-            <column name="station_id"/>
-            <column name="pad_size"/>
-        </createIndex>
-
-        <addForeignKeyConstraint baseTableName="station_landingpads" baseColumnNames="station_id"
-                                 constraintName="fk_station_landingpads_economy_id"
-                                 referencedTableName="station" referencedColumnNames="id"/>
-    </changeSet>
-
-    <changeSet id="create_station_economies_table" author="pveeckhout">
-        <createTable tableName="station_economies">
-            <column name="station_id" type="uuid">
-                <constraints nullable="false"/>
-            </column>
-            <column name="economy_type" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="ratio" type="double"/>
-        </createTable>
-
-        <createIndex tableName="station_economies" indexName="idx_station_id_economy_type" unique="true">
-            <column name="station_id"/>
-            <column name="economy_type"/>
-        </createIndex>
-
-        <addForeignKeyConstraint baseTableName="station_economies" baseColumnNames="station_id"
-                              constraintName="fk_station_economies_economy_id"
-                              referencedTableName="station" referencedColumnNames="id"/>
-    </changeSet>
-
 </databaseChangeLog>

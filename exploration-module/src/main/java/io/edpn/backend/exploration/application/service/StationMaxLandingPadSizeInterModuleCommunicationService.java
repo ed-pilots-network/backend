@@ -10,6 +10,8 @@ import io.edpn.backend.exploration.application.port.outgoing.stationmaxlandingpa
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
 import io.edpn.backend.util.ConcurrencyUtil;
 import io.edpn.backend.util.Module;
+
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +58,8 @@ public class StationMaxLandingPadSizeInterModuleCommunicationService implements 
 
     private Runnable sendEventIfDataExists(StationMaxLandingPadSizeRequest request) {
         return () -> loadStationPort.load(request.systemName(), request.stationName())
+                .filter(station -> Objects.nonNull(station.landingPads()))
+                .filter(station -> station.landingPads().isEmpty())
                 .ifPresent(station -> stationMaxLandingPadSizeResponseSender.sendResponsesForStation(station.system().name(), station.name()));
     }
 }
