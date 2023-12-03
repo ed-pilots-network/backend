@@ -16,8 +16,8 @@ public class KafkaStationMaxLandingPadSizeResponseMapper implements StationMaxLa
     public StationMaxLandingPadSizeResponse map(Station station) {
 
         return new StationMaxLandingPadSizeResponse(
-                station.system().name(),
                 station.name(),
+                station.system().name(),
                 getMaxLandingPadSize(station.landingPads()).name());
     }
 

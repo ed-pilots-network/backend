@@ -59,7 +59,6 @@ public class ReceiveJournalDockedService implements ReceiveKafkaMessageUseCase<D
         executorService.submit(ConcurrencyUtil.errorHandlingWrapper(
                 () -> systemEliteIdResponseSender.sendResponsesForSystem(station.system().name()),
                 exception -> log.error("Error while sending systemEliteIdResponse for system: {}", station.system().name(), exception)));
-
         executorService.submit(ConcurrencyUtil.errorHandlingWrapper(
                 () -> stationMaxLandingPadSizeResponseSender.sendResponsesForStation(station.system().name(), station.name()),
                 exception -> log.error("Error while sending stationMaxLandingPadSizeResponse for station: {}", station.name(), exception)));

@@ -35,7 +35,6 @@ public class StationMaxLandingPadSizeInterModuleCommunicationService implements 
         String stationName = message.stationName();
         Module requestingModule = message.requestingModule();
 
-
         StationMaxLandingPadSizeRequest stationMaxLandingPadSizeRequest = new StationMaxLandingPadSizeRequest(systemName, stationName, requestingModule);
         createIfNotExistsStationMaxLandingPadSizeRequestPort.createIfNotExists(stationMaxLandingPadSizeRequest);
 
