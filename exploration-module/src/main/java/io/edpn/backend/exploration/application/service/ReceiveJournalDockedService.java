@@ -13,13 +13,14 @@ import io.edpn.backend.exploration.application.port.outgoing.systemeliteidreques
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.journal.DockedMessage;
 import io.edpn.backend.util.ConcurrencyUtil;
 import io.edpn.backend.util.IdGenerator;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -76,7 +77,8 @@ public class ReceiveJournalDockedService implements ReceiveKafkaMessageUseCase<D
         return payload.stationEconomies().stream().
                 collect(Collectors.toMap(
                         DockedMessage.V1.Payload.Economy::name,
-                        DockedMessage.V1.Payload.Economy::proportion
+                        DockedMessage.V1.Payload.Economy::proportion,
+                        (first, second) -> first
                 ));
     }
 

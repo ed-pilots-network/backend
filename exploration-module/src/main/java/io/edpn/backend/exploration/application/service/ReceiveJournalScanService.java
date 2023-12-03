@@ -11,45 +11,46 @@ import io.edpn.backend.exploration.application.port.outgoing.star.SaveOrUpdateSt
 import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.journal.ScanMessage;
 import io.edpn.backend.util.IdGenerator;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Slf4j
 public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<ScanMessage.V1> {
-    
+
     private final IdGenerator idGenerator;
     private final SaveOrUpdateBodyPort saveOrUpdateBodyPort;
     private final SaveOrUpdateRingPort saveOrUpdateRingPort;
     private final SaveOrUpdateStarPort saveOrUpdateStarPort;
     private final SaveOrUpdateSystemPort saveOrUpdateSystemPort;
-    
+
     @Transactional
     @Override
     public void receive(ScanMessage.V1 message) {
         long start = java.lang.System.nanoTime();
         log.debug("DefaultReceiveJournalScanMessageUseCase.receive -> BodyMessage: {}", message);
-        
+
         ScanMessage.V1.Payload payload = message.message();
-        
+
         createOrUpdateFromPayload(payload);
-        
+
         log.trace("DefaultReceiveJournalScanMessageUseCase.receive -> took {} nanosecond", java.lang.System.nanoTime() - start);
         log.info("DefaultReceiveJournalScanMessageUseCase.receive -> the message has been processed");
     }
-    
-    
+
+
     private void createOrUpdateFromPayload(ScanMessage.V1.Payload payload) {
-        
+
         if (isStarPayload(payload)) {
             UUID starId = idGenerator.generateId();
-            
+
             Star payloadStar = new Star(
                     starId,
                     payload.absoluteMagnitude(),
@@ -91,15 +92,15 @@ public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<Sca
                     payload.horizons(),
                     payload.odyssey(),
                     null);
-            
+
             for (Ring ring : payloadStar.rings()) {
                 saveOrUpdateRingPort.saveOrUpdate(ring);
             }
-            
+
             saveOrUpdateStarPort.saveOrUpdate(payloadStar);
         } else if (isBodyPayload(payload)) {
             UUID bodyId = idGenerator.generateId();
-            
+
             Body payloadBody = new Body(
                     bodyId,
                     payload.arrivalDistance(),
@@ -108,9 +109,11 @@ public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<Sca
                     Optional.ofNullable(payload.atmosphereComposition())
                             .orElse(new ArrayList<>())
                             .stream()
-                            .collect(Collectors.toMap(ScanMessage.V1.Payload.AtmosphericPercentage::name,
-                                    ScanMessage.V1.Payload.AtmosphericPercentage::percent)),
-                    
+                            .collect(Collectors.toMap(
+                                    ScanMessage.V1.Payload.AtmosphericPercentage::name,
+                                    ScanMessage.V1.Payload.AtmosphericPercentage::percent,
+                                    (first, second) -> first
+                            )),
                     payload.axialTilt(),
                     payload.bodyComposition(),
                     payload.discovered(),
@@ -123,8 +126,11 @@ public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<Sca
                     Optional.ofNullable(payload.materials())
                             .orElse(new ArrayList<>())
                             .stream()
-                            .collect(Collectors.toMap(ScanMessage.V1.Payload.MaterialsPercentage::name,
-                                    ScanMessage.V1.Payload.MaterialsPercentage::percent)),
+                            .collect(Collectors.toMap(
+                                    ScanMessage.V1.Payload.MaterialsPercentage::name,
+                                    ScanMessage.V1.Payload.MaterialsPercentage::percent,
+                                    (first, second) -> first
+                            )),
                     payload.meanAnomaly(),
                     payload.orbitalInclination(),
                     payload.orbitalPeriod(),
@@ -132,7 +138,11 @@ public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<Sca
                             .orElse(new ArrayList<>())
                             .stream()
                             .flatMap(map -> map.entrySet().stream())
-                            .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey)),
+                            .collect(Collectors.toMap(
+                                    Map.Entry::getValue,
+                                    Map.Entry::getKey,
+                                    (first, second) -> first
+                            )),
                     payload.periapsis(),
                     payload.planetClass(),
                     payload.radius(),
@@ -169,21 +179,21 @@ public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<Sca
                     payload.odyssey(),
                     null
             );
-            
+
             for (Ring ring : payloadBody.rings()) {
                 saveOrUpdateRingPort.saveOrUpdate(ring);
             }
-            
+
             saveOrUpdateBodyPort.saveOrUpdate(payloadBody);
         }
     }
-    
+
     private boolean isStarPayload(ScanMessage.V1.Payload payload) {
         return payload.stellarMass() != null;
     }
-    
+
     private boolean isBodyPayload(ScanMessage.V1.Payload payload) {
         return payload.planetClass() != null;
     }
-    
+
 }

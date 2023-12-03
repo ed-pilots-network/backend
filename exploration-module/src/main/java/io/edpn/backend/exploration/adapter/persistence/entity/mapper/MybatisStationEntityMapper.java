@@ -7,17 +7,31 @@ import io.edpn.backend.exploration.application.domain.Station;
 import io.edpn.backend.exploration.application.dto.persistence.entity.StationEntity;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.StationEntityMapper;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEntityMapper;
+import lombok.RequiredArgsConstructor;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class MybatisStationEntityMapper implements StationEntityMapper<MybatisStationEntity> {
 
     private final SystemEntityMapper<MybatisSystemEntity> systemEntityMapper;
+
+    private static Map<String, Integer> getLandingPads(Station station) {
+        Map<String, Integer> landingPads = new HashMap<>();
+        for (LandingPadSize landingPadSize : LandingPadSize.values()) {
+            if (landingPadSize.equals(LandingPadSize.UNKNOWN)) {
+                continue;
+            }
+            int amount = Optional.ofNullable(station.landingPads().get(landingPadSize)).orElse(0);
+            landingPads.put(landingPadSize.name(), amount);
+        }
+
+        return landingPads;
+    }
 
     @Override
     public Station map(StationEntity stationEntity) {
@@ -34,7 +48,8 @@ public class MybatisStationEntityMapper implements StationEntityMapper<MybatisSt
                         .map(stream -> stream
                                 .collect(Collectors.toMap(
                                         k -> LandingPadSize.valueOf(k.getKey()),
-                                        Map.Entry::getValue
+                                        Map.Entry::getValue,
+                                        (first, second) -> first
                                 )))
                         .orElse(null),
                 stationEntity.getEconomies(),
@@ -61,18 +76,5 @@ public class MybatisStationEntityMapper implements StationEntityMapper<MybatisSt
                 .odyssey(station.odyssey())
                 .updatedAt(station.updatedAt())
                 .build();
-    }
-
-    private static Map<String, Integer> getLandingPads(Station station) {
-        Map<String, Integer> landingPads = new HashMap<>();
-        for (LandingPadSize landingPadSize : LandingPadSize.values()) {
-            if (landingPadSize.equals(LandingPadSize.UNKNOWN)) {
-                continue;
-            }
-            int amount = Optional.ofNullable(station.landingPads().get(landingPadSize)).orElse(0);
-            landingPads.put(landingPadSize.name(), amount);
-        }
-
-        return landingPads;
     }
 }
