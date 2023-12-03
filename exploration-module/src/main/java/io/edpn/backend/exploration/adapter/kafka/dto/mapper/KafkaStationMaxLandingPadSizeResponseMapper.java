@@ -26,13 +26,13 @@ public class KafkaStationMaxLandingPadSizeResponseMapper implements StationMaxLa
             return LandingPadSize.UNKNOWN;
         }
 
-        if (landingPads.containsKey(LandingPadSize.LARGE)) {
+        if (landingPads.getOrDefault(LandingPadSize.LARGE, 0) > 0) {
             return LandingPadSize.LARGE;
         }
-        if (landingPads.containsKey(LandingPadSize.MEDIUM)) {
+        if (landingPads.getOrDefault(LandingPadSize.MEDIUM, 0) > 0) {
             return LandingPadSize.MEDIUM;
         }
-        if (landingPads.containsKey(LandingPadSize.SMALL)) {
+        if (landingPads.getOrDefault(LandingPadSize.SMALL, 0) > 0) {
             return LandingPadSize.SMALL;
         }
 

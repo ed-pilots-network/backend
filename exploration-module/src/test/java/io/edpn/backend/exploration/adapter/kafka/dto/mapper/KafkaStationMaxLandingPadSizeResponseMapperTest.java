@@ -41,7 +41,7 @@ class KafkaStationMaxLandingPadSizeResponseMapperTest {
                                 LandingPadSize.MEDIUM, 2,
                                 LandingPadSize.SMALL, 3
                         ),
-                        LandingPadSize.LARGE.name()
+                        LandingPadSize.MEDIUM.name()
                 ),
                 Arguments.of(
                         Map.of(
@@ -49,7 +49,15 @@ class KafkaStationMaxLandingPadSizeResponseMapperTest {
                                 LandingPadSize.MEDIUM, 0,
                                 LandingPadSize.SMALL, 3
                         ),
-                        LandingPadSize.LARGE.name()
+                        LandingPadSize.SMALL.name()
+                ),
+                Arguments.of(
+                        Map.of(
+                                LandingPadSize.LARGE, 0,
+                                LandingPadSize.MEDIUM, 0,
+                                LandingPadSize.SMALL, 0
+                        ),
+                        LandingPadSize.UNKNOWN.name()
                 ),
                 Arguments.of(
                         Map.of(),

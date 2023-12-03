@@ -2,6 +2,7 @@ package io.edpn.backend.exploration.application.service;
 
 import io.edpn.backend.exploration.application.domain.Station;
 import io.edpn.backend.exploration.application.domain.StationMaxLandingPadSizeRequest;
+import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.station.LoadStationPort;
 import io.edpn.backend.exploration.application.port.outgoing.stationmaxlandingpadsizerequest.CreateIfNotExistsStationMaxLandingPadSizeRequestPort;
@@ -35,7 +36,7 @@ public class ReceiveStationMaxLandingPadSizeRequestMessageServiceTest {
     @Mock
     private LoadStationPort loadStationPort;
     @Mock
-    private StationMaxLandingPadSizeResponseSender systemEliteIdResponseSender;
+    private StationMaxLandingPadSizeResponseSender stationMaxLandingPadSizeResponseSender;
     @Mock
     private ExecutorService executorService;
 
@@ -47,7 +48,7 @@ public class ReceiveStationMaxLandingPadSizeRequestMessageServiceTest {
                 loadAllStationMaxLandingPadSizeRequestPort,
                 createIfNotExistsStationMaxLandingPadSizeRequestPort,
                 loadStationPort,
-                systemEliteIdResponseSender,
+                stationMaxLandingPadSizeResponseSender,
                 executorService
         );
     }
@@ -58,8 +59,11 @@ public class ReceiveStationMaxLandingPadSizeRequestMessageServiceTest {
         StationDataRequest message = mock(StationDataRequest.class);
         String systemName = "system";
         String stationName = "station";
+        System system = mock(System.class);
+        when(system.name()).thenReturn(systemName);
         Station station = mock(Station.class);
-        when(station.name()).thenReturn(systemName);
+        when(station.name()).thenReturn(stationName);
+        when(station.system()).thenReturn(system);
         Module requestingModule = mock(Module.class);
         when(message.systemName()).thenReturn(systemName);
         when(message.stationName()).thenReturn(stationName);
@@ -74,7 +78,7 @@ public class ReceiveStationMaxLandingPadSizeRequestMessageServiceTest {
 
         runnableArgumentCaptor.getValue().run();
         verify(loadStationPort).load(systemName, stationName);
-        verify(systemEliteIdResponseSender).sendResponsesForStation(systemName, stationName);
+        verify(stationMaxLandingPadSizeResponseSender).sendResponsesForStation(systemName, stationName);
     }
 
     @Test
@@ -98,6 +102,6 @@ public class ReceiveStationMaxLandingPadSizeRequestMessageServiceTest {
         // execute the runnable
         runnableArgumentCaptor.getValue().run();
         verify(loadStationPort).load(systemName, stationName);
-        verify(systemEliteIdResponseSender, never()).sendResponsesForStation(any(), any());
+        verify(stationMaxLandingPadSizeResponseSender, never()).sendResponsesForStation(any(), any());
     }
 }
