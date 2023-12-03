@@ -53,9 +53,11 @@ public class MybatisStationEntityMapper implements StationEntityMapper<MybatisSt
                                 )))
                         .orElse(null),
                 stationEntity.getEconomies(),
+                stationEntity.getServices(),
                 stationEntity.getEconomy(),
                 stationEntity.getGovernment(),
                 stationEntity.getOdyssey(),
+                stationEntity.getHorizons(),
                 stationEntity.getUpdatedAt()
         );
     }
@@ -71,9 +73,11 @@ public class MybatisStationEntityMapper implements StationEntityMapper<MybatisSt
                 .system(Optional.ofNullable(station.system()).map(systemEntityMapper::map).orElse(null))
                 .landingPads(getLandingPads(station))
                 .economies(station.economies())
+                .services(station.services())
                 .economy(station.economy())
                 .government(station.government())
                 .odyssey(station.odyssey())
+                .horizons(station.horizons())
                 .updatedAt(station.updatedAt())
                 .build();
     }

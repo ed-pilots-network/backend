@@ -1,6 +1,7 @@
 package io.edpn.backend.exploration.application.dto.persistence.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -26,7 +27,11 @@ public interface StationEntity {
 
     Map<String, Double> getEconomies();
 
+    List<String> getServices();
+
     Boolean getOdyssey();
+
+    Boolean getHorizons();
 
     LocalDateTime getUpdatedAt();
 

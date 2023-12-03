@@ -16,6 +16,7 @@
             <column name="system_id" type="uuid"/>
             <column name="economy" type="varchar(255)"/>
             <column name="economies" type="hstore"/>
+            <column name="services" type="varchar(255) []"/>
             <column name="landing_pads" type="hstore"/>
             <column name="government" type="varchar(255)"/>
             <column name="odyssey" type="boolean"/>
@@ -29,7 +30,7 @@
 
         <sql>
             CREATE INDEX idx_gin_station_economies ON station USING GIN(economies);
-            CREATE INDEX idx_gin_statin_landing_pads ON station USING GIN(landing_pads);
+            CREATE INDEX idx_gin_station_landing_pads ON station USING GIN(landing_pads);
         </sql>
 
         <addForeignKeyConstraint baseTableName="station" baseColumnNames="system_id"

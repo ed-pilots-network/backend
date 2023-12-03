@@ -92,9 +92,11 @@ public class ReceiveJournalDockedService implements ReceiveKafkaMessageUseCase<D
                         saveOrUpdateSystemFromPayload(payload),
                         landingPadSizeFromPayload(payload),
                         stationEconomiesFromPayload(payload),
+                        payload.stationServices(),
                         payload.stationEconomy(),
                         payload.stationGovernment(),
                         payload.odyssey(),
+                        payload.horizons(),
                         messageTimeStamp));
     }
 

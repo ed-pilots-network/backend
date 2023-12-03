@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -64,8 +65,10 @@ class MybatisStationEntityMapperTest {
                         "economy1", 0.1,
                         "economy2", 0.9
                 ),
-                "economy2",
+                                "economy2",
+                List.of("service1", "service2"),
                 "government",
+                true,
                 true,
                 LocalDateTime.of(2020, 1, 1, 0, 0, 0)
         );
@@ -80,9 +83,11 @@ class MybatisStationEntityMapperTest {
         assertThat(result.system(), equalTo(system));
         assertThat(result.landingPads(), equalTo(expectedLandingPadSizes));
         assertThat(result.economies(), equalTo(stationEntity.getEconomies()));
+        assertThat(result.services(), equalTo(stationEntity.getServices()));
         assertThat(result.economy(), equalTo(stationEntity.getEconomy()));
         assertThat(result.government(), equalTo(stationEntity.getGovernment()));
         assertThat(result.odyssey(), equalTo(stationEntity.getOdyssey()));
+        assertThat(result.horizons(), equalTo(stationEntity.getHorizons()));
         assertThat(result.updatedAt(), equalTo(stationEntity.getUpdatedAt()));
     }
 
@@ -114,8 +119,10 @@ class MybatisStationEntityMapperTest {
                         "economy1", 0.1,
                         "economy2", 0.9
                 ),
+                List.of("service1", "service2"),
                 "economy2",
                 "government",
+                true,
                 true,
                 LocalDateTime.of(2020, 1, 1, 0, 0, 0)
         );
@@ -132,9 +139,11 @@ class MybatisStationEntityMapperTest {
         assertThat(result.getSystem(), equalTo(systemEntity));
         assertThat(result.getLandingPads(), equalTo(expectedLandingPadSizes));
         assertThat(result.getEconomies(), equalTo(station.economies()));
+        assertThat(result.getServices(), equalTo(station.services()));
         assertThat(result.getEconomy(), equalTo(station.economy()));
         assertThat(result.getGovernment(), equalTo(station.government()));
         assertThat(result.getOdyssey(), equalTo(station.odyssey()));
+        assertThat(result.getHorizons(), equalTo(station.horizons()));
         assertThat(result.getUpdatedAt(), equalTo(station.updatedAt()));
     }
 }

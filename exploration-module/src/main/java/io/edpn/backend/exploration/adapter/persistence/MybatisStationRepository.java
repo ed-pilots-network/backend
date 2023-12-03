@@ -4,6 +4,7 @@ import io.edpn.backend.exploration.adapter.persistence.entity.MybatisStationEnti
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.mybatisutil.StringDoubleMapTypeHandler;
 import io.edpn.backend.mybatisutil.StringIntegerMapTypeHandler;
+import io.edpn.backend.mybatisutil.StringListToArrayTypeHandler;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
@@ -12,16 +13,19 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.apache.ibatis.type.JdbcType.ARRAY;
 
 public interface MybatisStationRepository {
 
     @Select("""
             WITH upsert AS (
-                INSERT INTO station (id, market_id, name, type, distance_from_star, system_id, landing_pads, economy, economies, government, odyssey, updated_at)
-                    VALUES (#{id}, #{marketId}, #{name}, #{type}, #{distanceFromStar}, #{system.id}, #{landingPads}, #{economy}, #{economies}, #{government}, #{odyssey}, #{updatedAt})
+                INSERT INTO station (id, market_id, name, type, distance_from_star, system_id, landing_pads, economy, economies, services, government, odyssey, updated_at)
+                    VALUES (#{id}, #{marketId}, #{name}, #{type}, #{distanceFromStar}, #{system.id}, #{landingPads}, #{economy}, #{economies}, #{services}, #{government}, #{odyssey}, #{updatedAt})
                     ON CONFLICT (name, system_id)
                         DO UPDATE SET
                             market_id = COALESCE(EXCLUDED.market_id, station.market_id),
@@ -30,6 +34,7 @@ public interface MybatisStationRepository {
                             landing_pads = COALESCE(EXCLUDED.landing_pads, station.landing_pads),
                             economy = COALESCE(EXCLUDED.economy, station.economy),
                             economies = COALESCE(EXCLUDED.economies, station.economies),
+                            services = COALESCE(EXCLUDED.services, station.services),
                             government = COALESCE(EXCLUDED.government, station.government),
                             odyssey = COALESCE(EXCLUDED.odyssey, station.odyssey),
                             updated_at = COALESCE(EXCLUDED.updated_at, station.updated_at)
@@ -49,7 +54,7 @@ public interface MybatisStationRepository {
     MybatisStationEntity insertOrUpdateOnConflict(MybatisStationEntity station);
 
     @Select({
-            "SELECT s.id, s.market_id, s.name, s.type, s.distance_from_star, s.system_id, s.landing_pads, s.economy, s.economies, s.government, s.odyssey, s.updated_at ",
+            "SELECT s.id, s.market_id, s.name, s.type, s.distance_from_star, s.system_id, s.landing_pads, s.economy, s.economies, s.services, s.government, s.odyssey, s.updated_at ",
             "FROM station s ",
             "INNER JOIN system sys ON s.system_id = sys.id ",
             "WHERE sys.name = #{systemName} AND s.name = #{stationName}"
@@ -67,7 +72,8 @@ public interface MybatisStationRepository {
             @Result(property = "odyssey", column = "odyssey", javaType = Boolean.class),
             @Result(property = "updatedAt", column = "updated_at", javaType = LocalDateTime.class),
             @Result(property = "landingPads", column = "landing_pads", javaType = Map.class, typeHandler = StringIntegerMapTypeHandler.class),
-            @Result(property = "economies", column = "economies", javaType = Map.class, typeHandler = StringDoubleMapTypeHandler.class)
+            @Result(property = "economies", column = "economies", javaType = Map.class, typeHandler = StringDoubleMapTypeHandler.class),
+            @Result(property = "services", column = "services", javaType = List.class, jdbcType = ARRAY, typeHandler = StringListToArrayTypeHandler.class),
     })
     Optional<MybatisStationEntity> findByIdentifier(@Param("systemName") String systemName, @Param("stationName") String stationName);
 }

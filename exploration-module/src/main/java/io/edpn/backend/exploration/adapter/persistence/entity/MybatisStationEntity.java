@@ -2,6 +2,7 @@ package io.edpn.backend.exploration.adapter.persistence.entity;
 
 import io.edpn.backend.exploration.application.dto.persistence.entity.StationEntity;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -29,8 +30,10 @@ public class MybatisStationEntity implements StationEntity {
     private Map<String, Integer> landingPads;
     private Map<String, Double> economies;
     private String economy;
+    private List<String> services;
     private String government;
     private Boolean odyssey;
+    private Boolean horizons;
     private LocalDateTime updatedAt;
 }
 
