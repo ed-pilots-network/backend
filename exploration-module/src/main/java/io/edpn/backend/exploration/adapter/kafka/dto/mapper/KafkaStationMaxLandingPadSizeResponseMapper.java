@@ -4,8 +4,10 @@ import io.edpn.backend.exploration.application.domain.LandingPadSize;
 import io.edpn.backend.exploration.application.domain.Station;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.StationMaxLandingPadSizeResponseMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationMaxLandingPadSizeResponse;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Map;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 public class KafkaStationMaxLandingPadSizeResponseMapper implements StationMaxLandingPadSizeResponseMapper {
@@ -20,7 +22,20 @@ public class KafkaStationMaxLandingPadSizeResponseMapper implements StationMaxLa
     }
 
     private LandingPadSize getMaxLandingPadSize(Map<LandingPadSize, Integer> landingPads) {
-        landingPads.containsKey(LandingPadSize.LARGE); // TODO: fix and fix for mapping to save to DB
+        if (Objects.isNull(landingPads) || landingPads.isEmpty()) {
+            return LandingPadSize.UNKNOWN;
+        }
+
+        if (landingPads.containsKey(LandingPadSize.LARGE)) {
+            return LandingPadSize.LARGE;
+        }
+        if (landingPads.containsKey(LandingPadSize.MEDIUM)) {
+            return LandingPadSize.MEDIUM;
+        }
+        if (landingPads.containsKey(LandingPadSize.SMALL)) {
+            return LandingPadSize.SMALL;
+        }
+
         return LandingPadSize.UNKNOWN;
     }
 }
