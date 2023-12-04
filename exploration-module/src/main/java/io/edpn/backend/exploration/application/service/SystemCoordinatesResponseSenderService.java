@@ -10,7 +10,7 @@ import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoM
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestByIdentifierPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.SystemCoordinatesResponseSender;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.util.ConcurrencyUtil;
@@ -26,7 +26,7 @@ import java.util.concurrent.ExecutorService;
 public class SystemCoordinatesResponseSenderService implements SystemCoordinatesResponseSender {
 
     private final LoadSystemPort loadSystemPort;
-    private final LoadSystemCoordinateRequestBySystemNamePort loadSystemCoordinateRequestBySystemNamePort;
+    private final LoadSystemCoordinateRequestByIdentifierPort loadSystemCoordinateRequestBySystemNamePort;
     private final DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
     private final SendMessagePort sendMessagePort;
     private final SystemCoordinatesResponseMapper systemCoordinatesResponseMapper;
@@ -38,7 +38,7 @@ public class SystemCoordinatesResponseSenderService implements SystemCoordinates
 
     @Override
     public void sendResponsesForSystem(String systemName) {
-        loadSystemCoordinateRequestBySystemNamePort.loadByName(systemName).parallelStream()
+        loadSystemCoordinateRequestBySystemNamePort.loadByIdentifier(systemName).parallelStream()
                 .forEach(systemCoordinateRequest -> executorService.submit(ConcurrencyUtil.errorHandlingWrapper(() -> {
                                     try {
                                         System system = loadSystemPort.load(systemName).orElseThrow(() -> new IllegalStateException("System with name %s not found when application event for it was triggered".formatted(systemName)));
@@ -56,7 +56,7 @@ public class SystemCoordinatesResponseSenderService implements SystemCoordinates
                                         throw new RuntimeException(jpe);
                                     }
                                 },
-                                throwable -> log.error("Error while processing systemCoordinatesResponse for system: {}", systemName, throwable))
+                                exception -> log.error("Error while processing systemCoordinatesResponse for system: {}", systemName, exception))
                 ));
     }
 }

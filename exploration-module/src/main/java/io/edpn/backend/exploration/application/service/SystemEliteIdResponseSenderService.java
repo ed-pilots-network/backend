@@ -10,7 +10,7 @@ import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoM
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
-import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestByIdentifierPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.SystemEliteIdResponseSender;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
 import io.edpn.backend.util.ConcurrencyUtil;
@@ -26,7 +26,7 @@ import java.util.concurrent.ExecutorService;
 public class SystemEliteIdResponseSenderService implements SystemEliteIdResponseSender {
 
     private final LoadSystemPort loadSystemPort;
-    private final LoadSystemEliteIdRequestBySystemNamePort loadSystemEliteIdRequestBySystemNamePort;
+    private final LoadSystemEliteIdRequestByIdentifierPort loadSystemEliteIdRequestBySystemNamePort;
     private final DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort;
     private final SendMessagePort sendMessagePort;
     private final SystemEliteIdResponseMapper systemEliteIdResponseMapper;
@@ -37,7 +37,7 @@ public class SystemEliteIdResponseSenderService implements SystemEliteIdResponse
 
     @Override
     public void sendResponsesForSystem(String systemName) {
-        loadSystemEliteIdRequestBySystemNamePort.loadByName(systemName).parallelStream()
+        loadSystemEliteIdRequestBySystemNamePort.loadByIdentifier(systemName).parallelStream()
                 .forEach(systemEliteIdRequest ->
                         executorService.submit(ConcurrencyUtil.errorHandlingWrapper(() -> {
                                     try {
@@ -56,6 +56,6 @@ public class SystemEliteIdResponseSenderService implements SystemEliteIdResponse
                                         throw new RuntimeException(jpe);
                                     }
                                 },
-                                throwable -> log.error("Error while processing systemEliteIdResponse for system: {}", systemName, throwable))));
+                                exception -> log.error("Error while processing systemEliteIdResponse for system: {}", systemName, exception))));
     }
 }

@@ -2,6 +2,8 @@ package io.edpn.backend.exploration.adapter.persistence;
 
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEliteIdRequestEntity;
 import io.edpn.backend.util.Module;
+import java.util.List;
+import java.util.Optional;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
@@ -9,9 +11,6 @@ import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
-
-import java.util.List;
-import java.util.Optional;
 
 public interface MybatisSystemEliteIdRequestRepository {
 
@@ -35,7 +34,7 @@ public interface MybatisSystemEliteIdRequestRepository {
             @Result(property = "systemName", column = "system_name"),
             @Result(property = "requestingModule", column = "requesting_module")
     })
-    List<MybatisSystemEliteIdRequestEntity> findBySystemName(String requestDataMessageEntity);
+    List<MybatisSystemEliteIdRequestEntity> findByIdentifier(@Param("systemName") String systemName);
 
     @Select("SELECT * FROM system_eliteId_data_request WHERE requesting_module = #{requestingModule} AND system_name = #{systemName}")
     @ResultMap("commodityMarketInfoResultMap")

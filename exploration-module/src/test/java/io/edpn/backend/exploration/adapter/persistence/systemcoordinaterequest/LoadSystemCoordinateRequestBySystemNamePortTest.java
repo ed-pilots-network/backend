@@ -5,7 +5,7 @@ import io.edpn.backend.exploration.adapter.persistence.SystemCoordinateRequestRe
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemCoordinateRequestEntity;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemCoordinateRequestEntityMapper;
 import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
-import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestBySystemNamePort;
+import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadSystemCoordinateRequestByIdentifierPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +29,7 @@ class LoadSystemCoordinateRequestBySystemNamePortTest {
     @Mock
     private MybatisSystemCoordinateRequestEntityMapper mybatisSystemCoordinateRequestEntityMapper;
 
-    private LoadSystemCoordinateRequestBySystemNamePort underTest;
+    private LoadSystemCoordinateRequestByIdentifierPort underTest;
 
     @BeforeEach
     void setUp() {
@@ -43,15 +43,15 @@ class LoadSystemCoordinateRequestBySystemNamePortTest {
         MybatisSystemCoordinateRequestEntity mybatisSystemCoordinateRequestEntity = mock(MybatisSystemCoordinateRequestEntity.class);
         List<MybatisSystemCoordinateRequestEntity> entities = List.of(mybatisSystemCoordinateRequestEntity);
         SystemCoordinateRequest mapped = mock(SystemCoordinateRequest.class);
-        when(mybatisSystemCoordinateRequestRepository.findBySystemName(systemName)).thenReturn(entities);
+        when(mybatisSystemCoordinateRequestRepository.findByIdentifier(systemName)).thenReturn(entities);
         when(mybatisSystemCoordinateRequestEntityMapper.map(mybatisSystemCoordinateRequestEntity)).thenReturn(mapped);
 
 
-        List<SystemCoordinateRequest> result = underTest.loadByName(systemName);
+        List<SystemCoordinateRequest> result = underTest.loadByIdentifier(systemName);
 
 
         assertThat(result, contains(mapped));
-        verify(mybatisSystemCoordinateRequestRepository).findBySystemName(systemName);
+        verify(mybatisSystemCoordinateRequestRepository).findByIdentifier(systemName);
     }
 
 }

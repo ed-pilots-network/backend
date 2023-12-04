@@ -10,11 +10,10 @@ import io.edpn.backend.exploration.application.port.outgoing.systemeliteidreques
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.util.ConcurrencyUtil;
 import io.edpn.backend.util.Module;
+import java.util.concurrent.ExecutorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
-
-import java.util.concurrent.ExecutorService;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -33,10 +32,12 @@ public class SystemEliteIdInterModuleCommunicationService implements ReceiveKafk
         String systemName = message.systemName();
         Module requestingModule = message.requestingModule();
 
-        saveRequest(systemName, requestingModule);
+        SystemEliteIdRequest systemEliteIdRequest = new SystemEliteIdRequest(systemName, requestingModule);
+        createIfNotExistsSystemEliteIdRequestPort.createIfNotExists(systemEliteIdRequest);
+
         executorService.submit(ConcurrencyUtil.errorHandlingWrapper(
-                sendEventIfDataExists(systemName),
-                throwable -> log.error("Error while sending systemEliteIdResponse for system: {}", systemName, throwable)));
+                sendEventIfDataExists(systemEliteIdRequest),
+                exception -> log.error("Error while sending systemEliteIdResponse for system: {}", systemName, exception)));
     }
 
     @Override
@@ -44,21 +45,15 @@ public class SystemEliteIdInterModuleCommunicationService implements ReceiveKafk
     public void processPending() {
         loadAllSystemEliteIdRequestPort.loadAll()
                 .parallelStream()
-                .map(SystemEliteIdRequest::systemName)
                 .map(this::sendEventIfDataExists)
                 .map(runnable -> ConcurrencyUtil.errorHandlingWrapper(
                         runnable,
-                        throwable -> log.error("Error while sending systemEliteIdResponse for system while processing all pending requests", throwable)))
+                        exception -> log.error("Error while sending systemEliteIdResponse while processing all pending requests", exception)))
                 .forEach(executorService::submit);
     }
 
-    private void saveRequest(String systemName, Module requestingModule) {
-        SystemEliteIdRequest systemEliteIdRequest = new SystemEliteIdRequest(systemName, requestingModule);
-        createIfNotExistsSystemEliteIdRequestPort.createIfNotExists(systemEliteIdRequest);
-    }
-
-    private Runnable sendEventIfDataExists(String systemName) {
-        return () -> loadSystemPort.load(systemName)
+    private Runnable sendEventIfDataExists(SystemEliteIdRequest request) {
+        return () -> loadSystemPort.load(request.systemName())
                 .ifPresent(system -> systemEliteIdResponseSender.sendResponsesForSystem(system.name()));
     }
 }

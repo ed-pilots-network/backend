@@ -12,7 +12,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.mock;
 
-class MybatisMybatisSystemCoordinateRequestEntityMapperTest {
+class MybatisSystemCoordinateRequestEntityMapperTest {
 
     private SystemCoordinateRequestEntityMapper<MybatisSystemCoordinateRequestEntity> underTest;
 

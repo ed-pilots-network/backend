@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
 import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.MessageProcessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,34 +23,34 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class SystemEliteIdRequestMessageProcessorTest {
+class StationDataRequestMessageProcessorTest {
 
     @Mock
-    private ReceiveKafkaMessageUseCase<SystemDataRequest> receiveSystemDataRequestUseCase;
+    private ReceiveKafkaMessageUseCase<StationDataRequest> receiveStationDataRequestUseCase;
 
     @Mock
     private ObjectMapper objectMapper;
 
-    private MessageProcessor<SystemDataRequest> underTest;
+    private MessageProcessor<StationDataRequest> underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new SystemEliteIdRequestMessageProcessor(receiveSystemDataRequestUseCase, objectMapper);
+        underTest = new StationDataRequestMessageProcessor(receiveStationDataRequestUseCase, objectMapper);
     }
 
     @Test
-    void listen_shouldInvokeUseCaseWithCorrectSystemDataRequest() throws JsonProcessingException {
+    void listen_shouldInvokeUseCaseWithCorrectStationDataRequest() throws JsonProcessingException {
 
         JsonNode jsonNode = mock(JsonNode.class);
-        SystemDataRequest systemDataRequest = mock(SystemDataRequest.class);
+        StationDataRequest systemDataRequest = mock(StationDataRequest.class);
 
-        when(objectMapper.treeToValue(jsonNode, SystemDataRequest.class)).thenReturn(systemDataRequest);
+        when(objectMapper.treeToValue(jsonNode, StationDataRequest.class)).thenReturn(systemDataRequest);
 
 
         underTest.listen(jsonNode);
 
 
-        verify(receiveSystemDataRequestUseCase, times(1)).receive(any(SystemDataRequest.class));
+        verify(receiveStationDataRequestUseCase, times(1)).receive(any(StationDataRequest.class));
     }
 
     @Test
@@ -61,16 +61,19 @@ class SystemEliteIdRequestMessageProcessorTest {
 
         ObjectNode jsonNode = new ObjectNode(JsonNodeFactory.instance);
         jsonNode.put("requestingModule", requestingModule);
-        SystemDataRequest systemDataRequest = mock(SystemDataRequest.class);
+        StationDataRequest systemDataRequest = mock(StationDataRequest.class);
 
         // Set up mocks
-        when(objectMapper.treeToValue(jsonNode, SystemDataRequest.class)).thenReturn(systemDataRequest);
+        when(objectMapper.treeToValue(jsonNode, StationDataRequest.class)).thenReturn(systemDataRequest);
 
         // Call the method under test
-        SystemDataRequest result = underTest.processJson(jsonNode);
+        StationDataRequest result = underTest.processJson(jsonNode);
 
         // Assert results
         assertThat(systemDataRequest, is(result));
         assertThat(requestingModuleUpperCase, is(jsonNode.get("requestingModule").asText()));
+
+        // Verify interactions
+        verify(objectMapper).treeToValue(jsonNode, StationDataRequest.class);
     }
 }

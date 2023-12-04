@@ -9,18 +9,17 @@ import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataR
 import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.MessageProcessor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.annotation.KafkaListener;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.listener.MessageListener;
 
 @RequiredArgsConstructor
 @Slf4j
-public class SystemCoordinatesRequestMessageProcessor implements MessageProcessor<SystemDataRequest>, MessageListener<String, JsonNode> {
+public class SystemDataRequestMessageProcessor implements MessageProcessor<SystemDataRequest>, MessageListener<String, JsonNode> {
 
     private final ReceiveKafkaMessageUseCase<SystemDataRequest> receiveSystemDataRequestUseCase;
     private final ObjectMapper objectMapper;
 
     @Override
-    @KafkaListener(topics = "systemCoordinatesRequest", groupId = "explorationModule", containerFactory = "explorationModuleKafkaListenerContainerFactory")
     public void listen(JsonNode json) throws JsonProcessingException {
         handle(processJson(json));
     }
@@ -41,7 +40,7 @@ public class SystemCoordinatesRequestMessageProcessor implements MessageProcesso
     }
 
     @Override
-    public void onMessage(org.apache.kafka.clients.consumer.ConsumerRecord<String, JsonNode> data) {
+    public void onMessage(ConsumerRecord<String, JsonNode> data) {
         try {
             this.listen(data.value());
         } catch (JsonProcessingException e) {
