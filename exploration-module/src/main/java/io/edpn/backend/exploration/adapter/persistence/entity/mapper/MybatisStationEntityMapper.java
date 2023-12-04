@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -21,16 +20,22 @@ public class MybatisStationEntityMapper implements StationEntityMapper<MybatisSt
     private final SystemEntityMapper<MybatisSystemEntity> systemEntityMapper;
 
     private static Map<String, Integer> getLandingPads(Station station) {
-        Map<String, Integer> landingPads = new HashMap<>();
-        for (LandingPadSize landingPadSize : LandingPadSize.values()) {
-            if (landingPadSize.equals(LandingPadSize.UNKNOWN)) {
-                continue;
-            }
-            int amount = Optional.ofNullable(station.landingPads().get(landingPadSize)).orElse(0);
-            landingPads.put(landingPadSize.name(), amount);
+        return LandingPadSize.KNOWN_LANDING_PAD_SIZES.stream()
+                .collect(Collectors.toMap(
+                        LandingPadSize::name,
+                        landingPadSize -> station.landingPads().getOrDefault(landingPadSize, 0)));
+    }
+
+    private static Map<LandingPadSize, Integer> getLandingPads(StationEntity stationEntity) {
+        if (stationEntity.getLandingPads() == null) {
+            return new HashMap<>();
         }
 
-        return landingPads;
+        return stationEntity.getLandingPads().entrySet().stream()
+                .collect(Collectors.toMap(
+                        k -> LandingPadSize.fromString(k.getKey()),
+                        Map.Entry::getValue,
+                        (first, second) -> first));
     }
 
     @Override
@@ -42,16 +47,7 @@ public class MybatisStationEntityMapper implements StationEntityMapper<MybatisSt
                 stationEntity.getType(),
                 stationEntity.getDistanceFromStar(),
                 Optional.ofNullable(stationEntity.getSystem()).map(systemEntityMapper::map).orElse(null),
-                Optional.ofNullable(stationEntity.getLandingPads())
-                        .map(Map::entrySet)
-                        .map(Set::stream)
-                        .map(stream -> stream
-                                .collect(Collectors.toMap(
-                                        k -> LandingPadSize.valueOf(k.getKey()),
-                                        Map.Entry::getValue,
-                                        (first, second) -> first
-                                )))
-                        .orElse(null),
+                getLandingPads(stationEntity),
                 stationEntity.getEconomies(),
                 stationEntity.getServices(),
                 stationEntity.getEconomy(),
