@@ -44,7 +44,7 @@ services:
     volumes:
       - "trademodule_postgis:/var/lib/postgresql/data"
     ports:
-      - "54321:5432"
+      - "27730:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d trademodule -U edpn_trademodule"]
       interval: 10s
@@ -60,7 +60,7 @@ services:
     volumes:
       - "explorationmodule_postgis:/var/lib/postgresql/data"
     ports:
-      - "54322:5432"
+      - "28302:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d explorationmodule -U edpn_explorationmodule"]
       interval: 10s
