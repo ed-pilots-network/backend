@@ -1,8 +1,9 @@
 exploration:
-  liquibase:
-    enabled: true
-    change-log: classpath:db/explorationmodule/changelog/explorationmodule-changelog.xml
   spring:
+    liquibase:
+      enabled: true
+      change-log: classpath:db/explorationmodule/changelog/explorationmodule-changelog.xml
+
     datasource:
       url: jdbc:postgresql://localhost:54322/explorationmodule
       username: edpn_explorationmodule
