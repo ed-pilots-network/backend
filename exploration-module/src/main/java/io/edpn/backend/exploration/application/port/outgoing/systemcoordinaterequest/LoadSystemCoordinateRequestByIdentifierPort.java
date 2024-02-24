@@ -4,7 +4,7 @@ import io.edpn.backend.exploration.application.domain.SystemCoordinateRequest;
 
 import java.util.List;
 
-public interface LoadSystemCoordinateRequestBySystemNamePort {
+public interface LoadSystemCoordinateRequestByIdentifierPort {
 
-    List<SystemCoordinateRequest> loadByName(String systemName);
+    List<SystemCoordinateRequest> loadByIdentifier(String systemName);
 }

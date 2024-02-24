@@ -36,7 +36,7 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
         Arrays.stream(routeItems).parallel()
                 .forEach(item -> executorService.submit(ConcurrencyUtil.errorHandlingWrapper(
                         () -> process(item),
-                        throwable -> log.error("Error while processing NavRouteMessage: {}", message, throwable))));
+                        exception -> log.error("Error while processing NavRouteMessage: {}", message, exception))));
 
         log.trace("DefaultReceiveNavRouteMessageUseCase.receive -> took {} nanosecond", java.lang.System.nanoTime() - start);
         log.info("DefaultReceiveNavRouteMessageUseCase.receive -> the message has been processed");
@@ -47,10 +47,10 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
 
         executorService.submit(ConcurrencyUtil.errorHandlingWrapper(
                 () -> systemCoordinatesResponseSender.sendResponsesForSystem(system.name()),
-                throwable -> log.error("Error while sending systemCoordinatesResponse for system: {}", system.name(), throwable)));
+                exception -> log.error("Error while sending systemCoordinatesResponse for system: {}", system.name(), exception)));
         executorService.submit(ConcurrencyUtil.errorHandlingWrapper(
                 () -> systemEliteIdResponseSender.sendResponsesForSystem(system.name()),
-                throwable -> log.error("Error while sending systemEliteIdResponse for system: {}", system.name(), throwable)));
+                exception -> log.error("Error while sending systemEliteIdResponse for system: {}", system.name(), exception)));
     }
 
     private System createOrUpdateFromItem(NavRouteMessage.V1.Item item) {

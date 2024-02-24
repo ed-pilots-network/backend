@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create_station_table" author="pveeckhout">
+        <createTable tableName="station">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="market_id" type="bigint"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="type" type="varchar(255)"/>
+            <column name="distance_from_star" type="double"/>
+            <column name="system_id" type="uuid"/>
+            <column name="economy" type="varchar(255)"/>
+            <column name="economies" type="hstore"/>
+            <column name="services" type="varchar(255) []"/>
+            <column name="landing_pads" type="hstore"/>
+            <column name="government" type="varchar(255)"/>
+            <column name="odyssey" type="boolean"/>
+            <column name="updated_at" type="timestamp"/>
+        </createTable>
+
+        <createIndex tableName="station" indexName="idx_station_name_system_id" unique="true">
+            <column name="name"/>
+            <column name="system_id"/>
+        </createIndex>
+
+        <sql>
+            CREATE INDEX idx_gin_station_economies ON station USING GIN(economies);
+            CREATE INDEX idx_gin_station_landing_pads ON station USING GIN(landing_pads);
+        </sql>
+
+        <addForeignKeyConstraint baseTableName="station" baseColumnNames="system_id"
+                                 constraintName="fk_station_system_id"
+                                 referencedTableName="system" referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

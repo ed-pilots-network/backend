@@ -3,6 +3,8 @@ package io.edpn.backend.exploration.adapter.config;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisBodyEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisRingEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisStarEntityMapper;
+import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisStationEntityMapper;
+import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisStationMaxLandingPadSizeRequestEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemCoordinateRequestEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemEliteIdRequestEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemEntityMapper;
@@ -17,6 +19,13 @@ public class PersistenceEntityMapperConfig {
         return new MybatisSystemEntityMapper();
     }
 
+    @Bean(name = "explorationStationEntityMapper")
+    public MybatisStationEntityMapper stationEntityMapper(
+            MybatisSystemEntityMapper systemEntityMapper
+    ) {
+        return new MybatisStationEntityMapper(systemEntityMapper);
+    }
+
     @Bean(name = "explorationSystemCoordinateRequestEntityMapper")
     public MybatisSystemCoordinateRequestEntityMapper systemCoordinateRequestEntityMapper() {
         return new MybatisSystemCoordinateRequestEntityMapper();
@@ -25,6 +34,11 @@ public class PersistenceEntityMapperConfig {
     @Bean(name = "explorationSystemEliteIdRequestEntityMapper")
     public MybatisSystemEliteIdRequestEntityMapper systemEliteIdRequestEntityMapper() {
         return new MybatisSystemEliteIdRequestEntityMapper();
+    }
+
+    @Bean(name = "explorationStationMaxLandingPadSizeRequestEntityMapper")
+    public MybatisStationMaxLandingPadSizeRequestEntityMapper stationMaxLandingPadSizeRequestEntityMapper() {
+        return new MybatisStationMaxLandingPadSizeRequestEntityMapper();
     }
     
     @Bean(name = "explorationRingEntityMapper")
