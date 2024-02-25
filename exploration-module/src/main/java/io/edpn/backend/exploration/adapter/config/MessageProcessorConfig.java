@@ -8,6 +8,7 @@ import io.edpn.backend.exploration.adapter.kafka.processor.NavRouteV1MessageProc
 import io.edpn.backend.exploration.adapter.kafka.processor.StationDataRequestMessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.processor.SystemDataRequestMessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.sender.KafkaMessageSender;
+import io.edpn.backend.exploration.application.domain.StationArrivalDistanceRequest;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.topic.CreateTopicPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
@@ -63,7 +64,15 @@ public class MessageProcessorConfig {
     ) {
         return new SystemDataRequestMessageProcessor(receiveSystemDataRequestUseCase, objectMapper);
     }
-
+    
+    @Bean(name = "explorationStationArrivalDistanceRequestMessageProcessor")
+    public StationDataRequestMessageProcessor stationArrivalDistanceRequestMessageProcessor(
+            @Qualifier("explorationStationArrivalDistanceInterModuleCommunicationService") ReceiveKafkaMessageUseCase<StationDataRequest> receiveStationDataRequestUseCase,
+            @Qualifier("explorationObjectMapper") ObjectMapper objectMapper
+    ) {
+        return new StationDataRequestMessageProcessor(receiveStationDataRequestUseCase, objectMapper);
+    }
+    
     @Bean(name = "explorationStationMaxLandingPadSizeRequestMessageProcessor")
     public StationDataRequestMessageProcessor stationMaxLandingPadSizerRequestMessageProcessor(
             @Qualifier("explorationStationMaxLandingPadSizeInterModuleCommunicationService") ReceiveKafkaMessageUseCase<StationDataRequest> receiveStationDataRequestUseCase,

@@ -3,6 +3,7 @@ package io.edpn.backend.exploration.adapter.config;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisBodyEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisRingEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisStarEntityMapper;
+import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisStationArrivalDistanceRequestEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisStationEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisStationMaxLandingPadSizeRequestEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemCoordinateRequestEntityMapper;
@@ -34,6 +35,11 @@ public class PersistenceEntityMapperConfig {
     @Bean(name = "explorationSystemEliteIdRequestEntityMapper")
     public MybatisSystemEliteIdRequestEntityMapper systemEliteIdRequestEntityMapper() {
         return new MybatisSystemEliteIdRequestEntityMapper();
+    }
+    
+    @Bean(name = "explorationStationArrivalDistanceRequestEntityMapper")
+    public MybatisStationArrivalDistanceRequestEntityMapper stationArrivalDistanceRequestEntityMapper() {
+        return new MybatisStationArrivalDistanceRequestEntityMapper();
     }
 
     @Bean(name = "explorationStationMaxLandingPadSizeRequestEntityMapper")

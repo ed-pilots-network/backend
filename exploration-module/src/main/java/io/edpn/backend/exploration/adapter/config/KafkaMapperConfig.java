@@ -1,6 +1,7 @@
 package io.edpn.backend.exploration.adapter.config;
 
 import io.edpn.backend.exploration.adapter.kafka.dto.mapper.KafkaMessageMapper;
+import io.edpn.backend.exploration.adapter.kafka.dto.mapper.KafkaStationArrivalDistanceResponseMapper;
 import io.edpn.backend.exploration.adapter.kafka.dto.mapper.KafkaStationMaxLandingPadSizeResponseMapper;
 import io.edpn.backend.exploration.adapter.kafka.dto.mapper.KafkaSystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.adapter.kafka.dto.mapper.KafkaSystemEliteIdResponseMapper;
@@ -19,6 +20,11 @@ public class KafkaMapperConfig {
     @Bean(name = "explorationSystemEliteIdResponseMapper")
     public KafkaSystemEliteIdResponseMapper systemEliteIdResponseMapper() {
         return new KafkaSystemEliteIdResponseMapper();
+    }
+    
+    @Bean(name = "explorationStationArrivalDistanceResponseMapper")
+    public KafkaStationArrivalDistanceResponseMapper stationArrivalDistanceResponseMapper(){
+        return new KafkaStationArrivalDistanceResponseMapper();
     }
 
     @Bean(name = "explorationStationMaxLandingPadSizeResponseMapper")
