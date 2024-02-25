@@ -7,6 +7,7 @@ import io.edpn.backend.exploration.application.port.outgoing.station.LoadStation
 import io.edpn.backend.exploration.application.port.outgoing.stationarrivaldistancerequest.CreateIfNotExistsStationArrivalDistanceRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.stationarrivaldistancerequest.LoadAllStationArrivalDistanceRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.stationarrivaldistancerequest.StationArrivalDistanceResponseSender;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
 import io.edpn.backend.util.ConcurrencyUtil;
 import io.edpn.backend.util.Module;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ import java.util.concurrent.ExecutorService;
 
 @RequiredArgsConstructor
 @Slf4j
-public class StationArrivalDistanceInterModuleCommunicationService implements ReceiveKafkaMessageUseCase<StationArrivalDistanceRequest>, ProcessPendingDataRequestUseCase<StationArrivalDistanceRequest> {
+public class StationArrivalDistanceInterModuleCommunicationService implements ReceiveKafkaMessageUseCase<StationDataRequest>, ProcessPendingDataRequestUseCase<StationArrivalDistanceRequest> {
     private final LoadAllStationArrivalDistanceRequestPort loadAllStationArrivalDistanceRequestPort;
     private final CreateIfNotExistsStationArrivalDistanceRequestPort createIfNotExistsStationArrivalDistanceRequestPort;
     private final LoadStationPort loadStationPort;
@@ -25,7 +26,7 @@ public class StationArrivalDistanceInterModuleCommunicationService implements Re
     private final ExecutorService executorService;
     
     @Override
-    public void receive(StationArrivalDistanceRequest message) {
+    public void receive(StationDataRequest message) {
         String systemName = message.systemName();
         String stationName = message.stationName();
         Module requestingModule = message.requestingModule();
