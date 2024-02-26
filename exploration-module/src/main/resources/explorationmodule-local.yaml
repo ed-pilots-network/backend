@@ -12,3 +12,6 @@ exploration:
 
     kafka:
       bootstrap-servers: localhost:9092
+
+  json:
+    ignoreUnknownProperties: false
