@@ -1,7 +1,9 @@
 package io.edpn.backend.exploration.adapter.config;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.util.IdGenerator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
@@ -11,6 +13,9 @@ import org.springframework.retry.support.RetryTemplate;
 @Configuration("ExplorationModuleBeanConfig")
 public class BeanConfig {
 
+    @Value("${exploration.json.ignoreUnknownProperties:true}")
+    private boolean ignoreUnknownProperties;
+
     @Bean(name = "explorationIdGenerator")
     public IdGenerator idGenerator() {
         return new IdGenerator();
@@ -18,7 +23,9 @@ public class BeanConfig {
 
     @Bean(name = "explorationObjectMapper")
     public ObjectMapper objectMapper() {
-        return new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, !ignoreUnknownProperties);
+        return mapper;
     }
 
     @Bean(name = "explorationRetryTemplate")

@@ -1,10 +1,12 @@
 package io.edpn.backend.trade.adapter.config;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.edpn.backend.util.IdGenerator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -18,6 +20,8 @@ import java.time.format.DateTimeFormatter;
 @Configuration("TradeModuleBeanConfig")
 public class BeanConfig {
 
+    @Value("${trade.json.ignoreUnknownProperties:true}")
+    private boolean ignoreUnknownProperties;
 
     @Bean(name = "tradeIdGenerator")
     public IdGenerator idGenerator() {
@@ -31,6 +35,7 @@ public class BeanConfig {
         mapper.registerModule(new Jdk8Module());
         JavaTimeModule javaTimeModule = new JavaTimeModule();
         javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, !ignoreUnknownProperties);
         mapper.registerModule(javaTimeModule);
         return mapper;
     }
