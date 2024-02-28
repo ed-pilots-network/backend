@@ -3,7 +3,6 @@ package io.edpn.backend.exploration.adapter.persistence;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisStationArrivalDistanceRequestEntity;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisStationArrivalDistanceRequestEntityMapper;
 import io.edpn.backend.exploration.application.domain.StationArrivalDistanceRequest;
-import io.edpn.backend.exploration.application.domain.StationMaxLandingPadSizeRequest;
 import io.edpn.backend.exploration.application.port.outgoing.stationarrivaldistancerequest.CreateIfNotExistsStationArrivalDistanceRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.stationarrivaldistancerequest.DeleteStationArrivalDistanceRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.stationarrivaldistancerequest.LoadAllStationArrivalDistanceRequestPort;
@@ -42,7 +41,9 @@ public class StationArrivalDistanceRequestRepository implements
     
     @Override
     public List<StationArrivalDistanceRequest> loadAll() {
-        return null;
+        return mybatisStationArrivalDistanceRequestRepository.findAll().stream()
+                .map(mybatisStationArrivalDistanceRequestEntityMapper::map)
+                .toList();
     }
     
     @Override
@@ -53,8 +54,8 @@ public class StationArrivalDistanceRequestRepository implements
     }
     
     @Override
-    public Optional<StationArrivalDistanceRequest> load(StationMaxLandingPadSizeRequest stationMaxLandingPadSizeRequest) {
-        return mybatisStationArrivalDistanceRequestRepository.find(stationMaxLandingPadSizeRequest.requestingModule(), stationMaxLandingPadSizeRequest.systemName(), stationMaxLandingPadSizeRequest.stationName())
+    public Optional<StationArrivalDistanceRequest> load(StationArrivalDistanceRequest stationArrivalDistanceRequest) {
+        return mybatisStationArrivalDistanceRequestRepository.find(stationArrivalDistanceRequest.requestingModule(), stationArrivalDistanceRequest.systemName(), stationArrivalDistanceRequest.stationName())
                 .map(mybatisStationArrivalDistanceRequestEntityMapper::map);
     }
 }

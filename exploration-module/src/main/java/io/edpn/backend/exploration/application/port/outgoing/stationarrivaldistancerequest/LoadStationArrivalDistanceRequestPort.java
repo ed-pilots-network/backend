@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface LoadStationArrivalDistanceRequestPort {
 
-    Optional<StationArrivalDistanceRequest> load(StationMaxLandingPadSizeRequest stationMaxLandingPadSizeRequest);
+    Optional<StationArrivalDistanceRequest> load(StationArrivalDistanceRequest stationArrivalDistanceRequest);
 }
