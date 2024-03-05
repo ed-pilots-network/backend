@@ -2,8 +2,8 @@ package io.edpn.backend.trade.adapter.persistence.stationplanetaryrequest;
 
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
 import io.edpn.backend.trade.adapter.persistence.StationPlanetaryRequestRepository;
-import io.edpn.backend.trade.adapter.persistence.entity.StationDataRequestEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.StationDataRequestEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationDataRequestEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationPlanetaryRequestRepository;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.LoadAllStationPlanetaryRequestsPort;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,25 +27,25 @@ public class LoadAllStationPlanetaryRequestsPortTest {
     @Mock
     private MybatisStationPlanetaryRequestRepository mybatisStationPlanetaryRequestRepository;
     @Mock
-    private StationDataRequestEntityMapper stationDataRequestEntityMapper;
+    private MybatisStationDataRequestEntityMapper mybatisStationDataRequestEntityMapper;
 
     private LoadAllStationPlanetaryRequestsPort underTest;
 
     @BeforeEach
     public void setup() {
-        underTest = new StationPlanetaryRequestRepository(mybatisStationPlanetaryRequestRepository, stationDataRequestEntityMapper);
+        underTest = new StationPlanetaryRequestRepository(mybatisStationPlanetaryRequestRepository, mybatisStationDataRequestEntityMapper);
     }
 
     @Test
     public void testFindAll() {
-        StationDataRequestEntity entity1 = mock(StationDataRequestEntity.class);
-        StationDataRequestEntity entity2 = mock(StationDataRequestEntity.class);
+        MybatisStationDataRequestEntity entity1 = mock(MybatisStationDataRequestEntity.class);
+        MybatisStationDataRequestEntity entity2 = mock(MybatisStationDataRequestEntity.class);
         StationDataRequest request1 = mock(StationDataRequest.class);
         StationDataRequest request2 = mock(StationDataRequest.class);
 
         when(mybatisStationPlanetaryRequestRepository.findAll()).thenReturn(List.of(entity1, entity2));
-        when(stationDataRequestEntityMapper.map(entity1)).thenReturn(request1);
-        when(stationDataRequestEntityMapper.map(entity2)).thenReturn(request2);
+        when(mybatisStationDataRequestEntityMapper.map(entity1)).thenReturn(request1);
+        when(mybatisStationDataRequestEntityMapper.map(entity2)).thenReturn(request2);
 
         List<StationDataRequest> result = underTest.loadAll();
 

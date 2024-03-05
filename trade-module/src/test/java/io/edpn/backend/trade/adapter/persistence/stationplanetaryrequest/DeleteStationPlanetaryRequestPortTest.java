@@ -1,7 +1,7 @@
 package io.edpn.backend.trade.adapter.persistence.stationplanetaryrequest;
 
 import io.edpn.backend.trade.adapter.persistence.StationPlanetaryRequestRepository;
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.StationDataRequestEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationPlanetaryRequestRepository;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,13 +18,13 @@ public class DeleteStationPlanetaryRequestPortTest {
     @Mock
     private MybatisStationPlanetaryRequestRepository mybatisStationPlanetaryRequestRepository;
     @Mock
-    private StationDataRequestEntityMapper stationDataRequestEntityMapper;
+    private MybatisStationDataRequestEntityMapper mybatisStationDataRequestEntityMapper;
 
     private DeleteStationPlanetaryRequestPort underTest;
 
     @BeforeEach
     public void setup() {
-        underTest = new StationPlanetaryRequestRepository(mybatisStationPlanetaryRequestRepository, stationDataRequestEntityMapper);
+        underTest = new StationPlanetaryRequestRepository(mybatisStationPlanetaryRequestRepository, mybatisStationDataRequestEntityMapper);
     }
 
     @Test

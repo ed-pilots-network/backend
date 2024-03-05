@@ -1,7 +1,7 @@
 package io.edpn.backend.trade.adapter.persistence.repository;
 
-import io.edpn.backend.trade.adapter.persistence.filter.FindCommodityFilter;
-import io.edpn.backend.trade.adapter.persistence.entity.ValidatedCommodityEntity;
+import io.edpn.backend.trade.adapter.persistence.filter.MybatisFindCommodityFilter;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisValidatedCommodityEntity;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
@@ -19,15 +19,15 @@ public interface MybatisValidatedCommodityRepository {
             @Result(property = "type", column = "type", javaType = String.class),
             @Result(property = "isRare", column = "is_rare", javaType = Boolean.class)
     })
-    Optional<ValidatedCommodityEntity> findById(UUID id);
+    Optional<MybatisValidatedCommodityEntity> findById(UUID id);
     
     @Select("SELECT * FROM validated_commodity_view WHERE display_name = #{displayName}")
     @ResultMap("validatedCommodityResultMap")
-    Optional<ValidatedCommodityEntity> findByName(String displayName);
+    Optional<MybatisValidatedCommodityEntity> findByName(String displayName);
     
     @Select("SELECT * FROM validated_commodity_view")
     @ResultMap("validatedCommodityResultMap")
-    List<ValidatedCommodityEntity> findAll();
+    List<MybatisValidatedCommodityEntity> findAll();
     
     @Select("""
             <script>
@@ -40,6 +40,6 @@ public interface MybatisValidatedCommodityRepository {
             </script>
             """)
     @ResultMap("validatedCommodityResultMap")
-    List<ValidatedCommodityEntity> findByFilter(FindCommodityFilter findCommodityFilter);
+    List<MybatisValidatedCommodityEntity> findByFilter(MybatisFindCommodityFilter mybatisFindCommodityFilter);
     
 }

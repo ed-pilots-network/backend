@@ -1,7 +1,7 @@
 package io.edpn.backend.trade.adapter.persistence;
 
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.SystemEntityMapper;
-import io.edpn.backend.trade.adapter.persistence.filter.mapper.FindSystemFilterMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisSystemEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisFindSystemFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemRepository;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindSystemFilter;
@@ -21,24 +21,24 @@ import java.util.UUID;
 @Slf4j
 public class SystemRepository implements CreateOrLoadSystemPort, LoadSystemByIdPort, UpdateSystemPort, LoadSystemsByFilterPort {
 
-    private final SystemEntityMapper systemEntityMapper;
-    private final FindSystemFilterMapper persistenceFindSystemFilter;
+    private final MybatisSystemEntityMapper mybatisSystemEntityMapper;
+    private final MybatisFindSystemFilterMapper persistenceFindSystemFilter;
     private final MybatisSystemRepository mybatisSystemRepository;
 
     @Override
     public System createOrLoad(System system) {
-        return systemEntityMapper.map(mybatisSystemRepository.createOrUpdateOnConflict(systemEntityMapper.map(system)));
+        return mybatisSystemEntityMapper.map(mybatisSystemRepository.createOrUpdateOnConflict(mybatisSystemEntityMapper.map(system)));
     }
 
     @Override
     public Optional<System> loadById(UUID uuid) {
         return mybatisSystemRepository.findById(uuid)
-                .map(systemEntityMapper::map);
+                .map(mybatisSystemEntityMapper::map);
     }
 
     @Override
     public System update(System system) {
-        var entity = systemEntityMapper.map(system);
+        var entity = mybatisSystemEntityMapper.map(system);
 
         mybatisSystemRepository.update(entity);
         return loadById(entity.getId())
@@ -49,7 +49,7 @@ public class SystemRepository implements CreateOrLoadSystemPort, LoadSystemByIdP
     public List<System> loadByFilter(FindSystemFilter findSystemFilter) {
         return mybatisSystemRepository.findByFilter(persistenceFindSystemFilter.map(findSystemFilter))
                 .stream()
-                .map(systemEntityMapper::map)
+                .map(mybatisSystemEntityMapper::map)
                 .toList();
     }
 }

@@ -1,9 +1,9 @@
 package io.edpn.backend.trade.adapter.persistence.repository;
 
 import io.edpn.backend.mybatisutil.UuidTypeHandler;
-import io.edpn.backend.trade.adapter.persistence.entity.StationEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.SystemEntity;
-import io.edpn.backend.trade.adapter.persistence.filter.FindStationFilter;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
+import io.edpn.backend.trade.adapter.persistence.filter.MybatisFindStationFilter;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
@@ -25,7 +25,7 @@ public interface MybatisStationRepository {
             @Result(property = "marketId", column = "market_id", javaType = Long.class),
             @Result(property = "name", column = "name", javaType = String.class),
             @Result(property = "arrivalDistance", column = "arrival_distance", javaType = Double.class),
-            @Result(property = "system", column = "system_id", javaType = SystemEntity.class,
+            @Result(property = "system", column = "system_id", javaType = MybatisSystemEntity.class,
                     one = @One(select = "io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemRepository.findById")),
             @Result(property = "planetary", column = "planetary", javaType = boolean.class),
             @Result(property = "requireOdyssey", column = "require_odyssey", javaType = boolean.class),
@@ -33,12 +33,12 @@ public interface MybatisStationRepository {
             @Result(property = "maxLandingPadSize", column = "max_landing_pad_size", javaType = String.class),
             @Result(property = "marketUpdatedAt", column = "market_updated_at", javaType = LocalDateTime.class)
     })
-    Optional<StationEntity> findById(@Param("id") UUID id);
+    Optional<MybatisStationEntity> findById(@Param("id") UUID id);
 
     @Update("UPDATE station SET market_id = #{marketId}, name = #{name}, arrival_distance = #{arrivalDistance}, system_id = #{system.id}, planetary = #{planetary}, " +
             "require_odyssey = #{requireOdyssey}, fleet_carrier = #{fleetCarrier}, max_landing_pad_size = #{maxLandingPadSize}, " +
             "market_updated_at = #{marketUpdatedAt} WHERE id = #{id}")
-    void update(StationEntity station);
+    void update(MybatisStationEntity station);
 
     @Select("""
             <script>
@@ -51,7 +51,7 @@ public interface MybatisStationRepository {
             </script>
             """)
     @ResultMap("stationResultMap")
-    List<StationEntity> findByFilter(FindStationFilter filter);
+    List<MybatisStationEntity> findByFilter(MybatisFindStationFilter filter);
 
     @Select({
             "INSERT INTO station (id, market_id, name, arrival_distance, system_id, planetary, require_odyssey, fleet_carrier, max_landing_pad_size, market_updated_at) ",
@@ -68,5 +68,5 @@ public interface MybatisStationRepository {
             "RETURNING *"
     })
     @ResultMap("stationResultMap")
-    StationEntity createOrUpdateOnConflict(StationEntity station);
+    MybatisStationEntity createOrUpdateOnConflict(MybatisStationEntity station);
 }

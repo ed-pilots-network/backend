@@ -1,6 +1,6 @@
 package io.edpn.backend.trade.adapter.persistence;
 
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.MarketDatumEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisMarketDatumEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRepository;
 import io.edpn.backend.trade.application.domain.MarketDatum;
 import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateWhenNotExistsMarketDatumPort;
@@ -14,10 +14,10 @@ import java.util.UUID;
 public class MarketDatumRepository implements CreateWhenNotExistsMarketDatumPort {
 
     private final MybatisMarketDatumRepository marketDatumRepository;
-    private final MarketDatumEntityMapper marketDatumEntityMapper;
+    private final MybatisMarketDatumEntityMapper mybatisMarketDatumEntityMapper;
 
     @Override
     public void createWhenNotExists(@NotBlank @NotNull UUID stationId, @NotNull MarketDatum marketDatum) {
-        marketDatumRepository.insertWhenNotExists(stationId, marketDatumEntityMapper.map(marketDatum));
+        marketDatumRepository.insertWhenNotExists(stationId, mybatisMarketDatumEntityMapper.map(marketDatum));
     }
 }

@@ -1,7 +1,7 @@
 package io.edpn.backend.trade.adapter.persistence.repository;
 
 import io.edpn.backend.mybatisutil.UuidTypeHandler;
-import io.edpn.backend.trade.adapter.persistence.entity.CommodityEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisCommodityEntity;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
@@ -20,18 +20,18 @@ public interface MybatisCommodityRepository {
             @Result(property = "id", column = "id", javaType = UUID.class, typeHandler = UuidTypeHandler.class),
             @Result(property = "name", column = "name", javaType = String.class)
     })
-    List<CommodityEntity> findAll();
+    List<MybatisCommodityEntity> findAll();
 
     @Select("SELECT * FROM commodity WHERE id = #{id}")
     @ResultMap("commodityResultMap")
-    Optional<CommodityEntity> findById(@Param("id") UUID id);
+    Optional<MybatisCommodityEntity> findById(@Param("id") UUID id);
 
     @Select("SELECT * FROM commodity WHERE name = #{name}")
     @ResultMap("commodityResultMap")
-    Optional<CommodityEntity> findByName(@Param("name") String name);
+    Optional<MybatisCommodityEntity> findByName(@Param("name") String name);
 
     @Insert("INSERT INTO commodity (id, name) VALUES (#{id}, #{name})")
-    void insert(CommodityEntity commodity);
+    void insert(MybatisCommodityEntity commodity);
 
     @Select({
             "INSERT INTO commodity (id, name)",
@@ -41,5 +41,5 @@ public interface MybatisCommodityRepository {
             "name = COALESCE(commodity.name, EXCLUDED.name)",
             "RETURNING *"
     })
-    CommodityEntity createOrUpdateOnConflict(CommodityEntity commodity);
+    MybatisCommodityEntity createOrUpdateOnConflict(MybatisCommodityEntity commodity);
 }

@@ -1,10 +1,10 @@
 package io.edpn.backend.trade.adapter.persistence.validatedcommodity;
 
 import io.edpn.backend.trade.adapter.persistence.ValidatedCommodityRepository;
-import io.edpn.backend.trade.adapter.persistence.entity.ValidatedCommodityEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.ValidatedCommodityEntityMapper;
-import io.edpn.backend.trade.adapter.persistence.filter.FindCommodityFilter;
-import io.edpn.backend.trade.adapter.persistence.filter.mapper.FindCommodityFilterMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisValidatedCommodityEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisValidatedCommodityEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.MybatisFindCommodityFilter;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisFindCommodityFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisValidatedCommodityRepository;
 import io.edpn.backend.trade.application.domain.ValidatedCommodity;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadValidatedCommodityByFilterPort;
@@ -30,36 +30,36 @@ public class LoadValidatedCommodityByFilterPortTest {
     private MybatisValidatedCommodityRepository mybatisValidatedCommodityRepository;
 
     @Mock
-    private ValidatedCommodityEntityMapper validatedCommodityEntityMapper;
+    private MybatisValidatedCommodityEntityMapper mybatisValidatedCommodityEntityMapper;
 
     @Mock
-    private FindCommodityFilterMapper findCommodityFilterMapper;
+    private MybatisFindCommodityFilterMapper mybatisFindCommodityFilterMapper;
 
     private LoadValidatedCommodityByFilterPort underTest;
 
     @BeforeEach
     public void setUp() {
-        underTest = new ValidatedCommodityRepository(mybatisValidatedCommodityRepository, validatedCommodityEntityMapper, findCommodityFilterMapper);
+        underTest = new ValidatedCommodityRepository(mybatisValidatedCommodityRepository, mybatisValidatedCommodityEntityMapper, mybatisFindCommodityFilterMapper);
     }
 
     @Test
     void findCommodityByFilter() {
-        FindCommodityFilter findCommodityFilterPersistence = mock(FindCommodityFilter.class);
-        ValidatedCommodityEntity validatedCommodityEntity = mock(ValidatedCommodityEntity.class);
+        MybatisFindCommodityFilter mybatisFindCommodityFilterPersistence = mock(MybatisFindCommodityFilter.class);
+        MybatisValidatedCommodityEntity mybatisValidatedCommodityEntity = mock(MybatisValidatedCommodityEntity.class);
         io.edpn.backend.trade.application.domain.filter.FindCommodityFilter findCommodityFilter = mock(io.edpn.backend.trade.application.domain.filter.FindCommodityFilter.class);
         ValidatedCommodity validatedCommodity = mock(ValidatedCommodity.class);
 
 
-        when(findCommodityFilterMapper.map(findCommodityFilter)).thenReturn(findCommodityFilterPersistence);
-        when(mybatisValidatedCommodityRepository.findByFilter(findCommodityFilterPersistence)).thenReturn(List.of(validatedCommodityEntity));
-        when(validatedCommodityEntityMapper.map(validatedCommodityEntity)).thenReturn(validatedCommodity);
+        when(mybatisFindCommodityFilterMapper.map(findCommodityFilter)).thenReturn(mybatisFindCommodityFilterPersistence);
+        when(mybatisValidatedCommodityRepository.findByFilter(mybatisFindCommodityFilterPersistence)).thenReturn(List.of(mybatisValidatedCommodityEntity));
+        when(mybatisValidatedCommodityEntityMapper.map(mybatisValidatedCommodityEntity)).thenReturn(validatedCommodity);
 
         List<ValidatedCommodity> result = underTest.loadByFilter(findCommodityFilter);
 
-        verify(findCommodityFilterMapper).map(findCommodityFilter);
-        verify(mybatisValidatedCommodityRepository).findByFilter(findCommodityFilterPersistence);
-        verify(validatedCommodityEntityMapper).map(validatedCommodityEntity);
-        verifyNoMoreInteractions(findCommodityFilterMapper, mybatisValidatedCommodityRepository, validatedCommodityEntityMapper);
+        verify(mybatisFindCommodityFilterMapper).map(findCommodityFilter);
+        verify(mybatisValidatedCommodityRepository).findByFilter(mybatisFindCommodityFilterPersistence);
+        verify(mybatisValidatedCommodityEntityMapper).map(mybatisValidatedCommodityEntity);
+        verifyNoMoreInteractions(mybatisFindCommodityFilterMapper, mybatisValidatedCommodityRepository, mybatisValidatedCommodityEntityMapper);
 
         assertThat(result, equalTo(List.of(validatedCommodity)));
     }

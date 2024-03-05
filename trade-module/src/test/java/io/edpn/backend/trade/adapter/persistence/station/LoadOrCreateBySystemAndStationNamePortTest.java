@@ -1,9 +1,9 @@
 package io.edpn.backend.trade.adapter.persistence.station;
 
 import io.edpn.backend.trade.adapter.persistence.StationRepository;
-import io.edpn.backend.trade.adapter.persistence.entity.StationEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.StationEntityMapper;
-import io.edpn.backend.trade.adapter.persistence.filter.mapper.FindStationFilterMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisFindStationFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
@@ -22,32 +22,32 @@ import static org.mockito.Mockito.when;
 public class LoadOrCreateBySystemAndStationNamePortTest {
 
     @Mock
-    private StationEntityMapper stationEntityMapper;
+    private MybatisStationEntityMapper mybatisStationEntityMapper;
 
     @Mock
     private MybatisStationRepository mybatisStationRepository;
 
     @Mock
-    private FindStationFilterMapper persistenceFindStationFilterMapper;
+    private MybatisFindStationFilterMapper persistenceMybatisFindStationFilterMapper;
 
     private CreateOrLoadStationPort underTest;
 
     @BeforeEach
     public void setUp() {
-        underTest = new StationRepository(stationEntityMapper, mybatisStationRepository, persistenceFindStationFilterMapper);
+        underTest = new StationRepository(mybatisStationEntityMapper, mybatisStationRepository, persistenceMybatisFindStationFilterMapper);
     }
 
     @Test
     void findOrCreateByNameNew() {
         Station inputStation = mock(Station.class);
-        StationEntity inputStationEntity = mock(StationEntity.class);
-        when(stationEntityMapper.map(inputStation)).thenReturn(inputStationEntity);
+        MybatisStationEntity inputMybatisStationEntity = mock(MybatisStationEntity.class);
+        when(mybatisStationEntityMapper.map(inputStation)).thenReturn(inputMybatisStationEntity);
 
-        StationEntity outputStationEntity = mock(StationEntity.class);
+        MybatisStationEntity outputMybatisStationEntity = mock(MybatisStationEntity.class);
         Station expectedStation = mock(Station.class);
-        when(stationEntityMapper.map(outputStationEntity)).thenReturn(expectedStation);
+        when(mybatisStationEntityMapper.map(outputMybatisStationEntity)).thenReturn(expectedStation);
 
-        when(mybatisStationRepository.createOrUpdateOnConflict(inputStationEntity)).thenReturn(outputStationEntity);
+        when(mybatisStationRepository.createOrUpdateOnConflict(inputMybatisStationEntity)).thenReturn(outputMybatisStationEntity);
 
         Station result = underTest.createOrLoad(inputStation);
         assertThat(result, is(expectedStation));

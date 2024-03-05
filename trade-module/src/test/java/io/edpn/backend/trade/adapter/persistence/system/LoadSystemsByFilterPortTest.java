@@ -1,10 +1,10 @@
 package io.edpn.backend.trade.adapter.persistence.system;
 
 import io.edpn.backend.trade.adapter.persistence.SystemRepository;
-import io.edpn.backend.trade.adapter.persistence.entity.SystemEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.SystemEntityMapper;
-import io.edpn.backend.trade.adapter.persistence.filter.FindSystemFilter;
-import io.edpn.backend.trade.adapter.persistence.filter.mapper.FindSystemFilterMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisSystemEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.MybatisFindSystemFilter;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisFindSystemFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemRepository;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
@@ -25,10 +25,10 @@ import static org.mockito.Mockito.when;
 public class LoadSystemsByFilterPortTest {
 
     @Mock
-    private SystemEntityMapper systemEntityMapper;
+    private MybatisSystemEntityMapper mybatisSystemEntityMapper;
 
     @Mock
-    private FindSystemFilterMapper persistenceFindSystemFilterMapper;
+    private MybatisFindSystemFilterMapper persistenceMybatisFindSystemFilterMapper;
 
     @Mock
     private MybatisSystemRepository mybatisSystemRepository;
@@ -37,19 +37,19 @@ public class LoadSystemsByFilterPortTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new SystemRepository(systemEntityMapper, persistenceFindSystemFilterMapper, mybatisSystemRepository);
+        underTest = new SystemRepository(mybatisSystemEntityMapper, persistenceMybatisFindSystemFilterMapper, mybatisSystemRepository);
     }
 
     @Test
     void testFindByFilter() {
         io.edpn.backend.trade.application.domain.filter.FindSystemFilter findSystemFilter = mock(io.edpn.backend.trade.application.domain.filter.FindSystemFilter.class);
-        FindSystemFilter persistenceFindSystemFilter = mock(FindSystemFilter.class);
-        SystemEntity systemEntity = mock(SystemEntity.class);
+        MybatisFindSystemFilter mybatisFindSystemFilter = mock(MybatisFindSystemFilter.class);
+        MybatisSystemEntity mybatisSystemEntity = mock(MybatisSystemEntity.class);
         System system = mock(System.class);
 
-        when(persistenceFindSystemFilterMapper.map(findSystemFilter)).thenReturn(persistenceFindSystemFilter);
-        when(mybatisSystemRepository.findByFilter(persistenceFindSystemFilter)).thenReturn(List.of(systemEntity));
-        when(systemEntityMapper.map(systemEntity)).thenReturn(system);
+        when(persistenceMybatisFindSystemFilterMapper.map(findSystemFilter)).thenReturn(mybatisFindSystemFilter);
+        when(mybatisSystemRepository.findByFilter(mybatisFindSystemFilter)).thenReturn(List.of(mybatisSystemEntity));
+        when(mybatisSystemEntityMapper.map(mybatisSystemEntity)).thenReturn(system);
 
         List<System> result = underTest.loadByFilter(findSystemFilter);
 

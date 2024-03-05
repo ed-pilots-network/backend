@@ -1,9 +1,9 @@
 package io.edpn.backend.trade.adapter.persistence.station;
 
 import io.edpn.backend.trade.adapter.persistence.StationRepository;
-import io.edpn.backend.trade.adapter.persistence.entity.StationEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.StationEntityMapper;
-import io.edpn.backend.trade.adapter.persistence.filter.mapper.FindStationFilterMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisFindStationFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRepository;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository;
 import io.edpn.backend.trade.application.domain.Station;
@@ -35,7 +35,7 @@ public class LoadStationByIdPortTest {
     private IdGenerator idGenerator;
 
     @Mock
-    private StationEntityMapper stationEntityMapper;
+    private MybatisStationEntityMapper mybatisStationEntityMapper;
 
     @Mock
     private MybatisStationRepository mybatisStationRepository;
@@ -44,29 +44,29 @@ public class LoadStationByIdPortTest {
     private MybatisMarketDatumRepository mybatisMarketDatumRepository;
 
     @Mock
-    private FindStationFilterMapper persistenceFindStationFilterMapper;
+    private MybatisFindStationFilterMapper persistenceMybatisFindStationFilterMapper;
 
     private LoadStationByIdPort underTest;
 
     @BeforeEach
     public void setUp() {
-        underTest = new StationRepository(stationEntityMapper, mybatisStationRepository, persistenceFindStationFilterMapper);
+        underTest = new StationRepository(mybatisStationEntityMapper, mybatisStationRepository, persistenceMybatisFindStationFilterMapper);
     }
 
     @Test
     void findById() {
         UUID id = UUID.randomUUID();
-        StationEntity mockStationEntity = mock(StationEntity.class);
+        MybatisStationEntity mockMybatisStationEntity = mock(MybatisStationEntity.class);
         Station mockStation = mock(Station.class);
 
-        when(mybatisStationRepository.findById(id)).thenReturn(Optional.of(mockStationEntity));
-        when(stationEntityMapper.map(mockStationEntity)).thenReturn(mockStation);
+        when(mybatisStationRepository.findById(id)).thenReturn(Optional.of(mockMybatisStationEntity));
+        when(mybatisStationEntityMapper.map(mockMybatisStationEntity)).thenReturn(mockStation);
 
         Optional<Station> results = underTest.loadById(id);
 
         verify(mybatisStationRepository).findById(id);
-        verify(stationEntityMapper).map(mockStationEntity);
-        verifyNoMoreInteractions(mybatisStationRepository, stationEntityMapper, idGenerator, mybatisMarketDatumRepository);
+        verify(mybatisStationEntityMapper).map(mockMybatisStationEntity);
+        verifyNoMoreInteractions(mybatisStationRepository, mybatisStationEntityMapper, idGenerator, mybatisMarketDatumRepository);
 
         assertThat(results.isPresent(), is(true));
         assertThat(results.get(), equalTo(mockStation));
@@ -80,8 +80,8 @@ public class LoadStationByIdPortTest {
         Optional<Station> result = underTest.loadById(id);
 
         verify(mybatisStationRepository).findById(id);
-        verify(stationEntityMapper, never()).map(any(StationEntity.class));
-        verifyNoMoreInteractions(mybatisStationRepository, stationEntityMapper, idGenerator, mybatisMarketDatumRepository);
+        verify(mybatisStationEntityMapper, never()).map(any(MybatisStationEntity.class));
+        verifyNoMoreInteractions(mybatisStationRepository, mybatisStationEntityMapper, idGenerator, mybatisMarketDatumRepository);
 
         assertThat(result, equalTo(Optional.empty()));
     }

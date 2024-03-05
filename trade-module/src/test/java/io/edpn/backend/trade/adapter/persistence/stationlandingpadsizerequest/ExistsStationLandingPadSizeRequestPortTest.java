@@ -1,7 +1,7 @@
 package io.edpn.backend.trade.adapter.persistence.stationlandingpadsizerequest;
 
 import io.edpn.backend.trade.adapter.persistence.StationLandingPadSizeRequestRepository;
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.StationDataRequestEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationLandingPadSizeRequestRepository;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.ExistsStationLandingPadSizeRequestPort;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,13 +20,13 @@ public class ExistsStationLandingPadSizeRequestPortTest {
     @Mock
     private MybatisStationLandingPadSizeRequestRepository mybatisStationLandingPadSizeRequestRepository;
     @Mock
-    private StationDataRequestEntityMapper stationDataRequestEntityMapper;
+    private MybatisStationDataRequestEntityMapper mybatisStationDataRequestEntityMapper;
 
     private ExistsStationLandingPadSizeRequestPort underTest;
 
     @BeforeEach
     public void setup() {
-        underTest = new StationLandingPadSizeRequestRepository(mybatisStationLandingPadSizeRequestRepository, stationDataRequestEntityMapper);
+        underTest = new StationLandingPadSizeRequestRepository(mybatisStationLandingPadSizeRequestRepository, mybatisStationDataRequestEntityMapper);
     }
 
     @Test

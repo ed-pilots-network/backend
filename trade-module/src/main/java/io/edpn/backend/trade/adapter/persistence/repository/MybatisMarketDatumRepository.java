@@ -1,8 +1,8 @@
 package io.edpn.backend.trade.adapter.persistence.repository;
 
 import io.edpn.backend.mybatisutil.StringListToArrayTypeHandler;
-import io.edpn.backend.trade.adapter.persistence.entity.CommodityEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.MarketDatumEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisCommodityEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisMarketDatumEntity;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Param;
@@ -21,7 +21,7 @@ public interface MybatisMarketDatumRepository {
 
     @Select("SELECT * FROM market_datum WHERE station_id = #{stationId} AND commodity_id = #{commodityId} AND timestamp = #{timestamp}")
     @Results(id = "marketDatumResultMap", value = {
-            @Result(property = "commodity", column = "commodity_id", javaType = CommodityEntity.class,
+            @Result(property = "commodity", column = "commodity_id", javaType = MybatisCommodityEntity.class,
                     one = @One(select = "io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityRepository.findById")),
             @Result(property = "timestamp", column = "timestamp", javaType = LocalDateTime.class),
             @Result(property = "meanPrice", column = "mean_price", javaType = long.class),
@@ -34,7 +34,7 @@ public interface MybatisMarketDatumRepository {
             @Result(property = "statusFlags", column = "status_flags", javaType = List.class, jdbcType = ARRAY, typeHandler = StringListToArrayTypeHandler.class),
             @Result(property = "prohibited", column = "prohibited", javaType = boolean.class)
     })
-    Optional<MarketDatumEntity> findById(@Param("stationId") UUID stationId, @Param("commodityId") UUID commodityId, @Param("timestamp") LocalDateTime timestamp);
+    Optional<MybatisMarketDatumEntity> findById(@Param("stationId") UUID stationId, @Param("commodityId") UUID commodityId, @Param("timestamp") LocalDateTime timestamp);
 
     @Select({
             "SELECT EXISTS(",
@@ -55,6 +55,6 @@ public interface MybatisMarketDatumRepository {
             "ON CONFLICT (station_id, commodity_id, timestamp)",
             "DO NOTHING"
     })
-    void insertWhenNotExists(@Param("stationId") UUID stationId, @Param("marketDatum") MarketDatumEntity marketDatum);
+    void insertWhenNotExists(@Param("stationId") UUID stationId, @Param("marketDatum") MybatisMarketDatumEntity marketDatum);
 
 }

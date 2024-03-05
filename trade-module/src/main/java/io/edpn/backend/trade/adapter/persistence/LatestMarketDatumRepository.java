@@ -1,6 +1,6 @@
 package io.edpn.backend.trade.adapter.persistence;
 
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.MarketDatumEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisMarketDatumEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisLatestMarketDatumRepository;
 import io.edpn.backend.trade.application.domain.MarketDatum;
 import io.edpn.backend.trade.application.port.outgoing.marketdatum.createOrUpdateExistingWhenNewerLatestMarketDatumPort;
@@ -14,10 +14,10 @@ import java.util.UUID;
 public class LatestMarketDatumRepository implements createOrUpdateExistingWhenNewerLatestMarketDatumPort {
 
     private final MybatisLatestMarketDatumRepository mybatisLatestMarketDatumRepository;
-    private final MarketDatumEntityMapper marketDatumEntityMapper;
+    private final MybatisMarketDatumEntityMapper mybatisMarketDatumEntityMapper;
 
     @Override
     public void createOrUpdateWhenNewer(@NotBlank @NotNull UUID stationId, @NotNull MarketDatum marketDatum) {
-        mybatisLatestMarketDatumRepository.createOrUpdateExistingWhenNewer(stationId, marketDatumEntityMapper.map(marketDatum));
+        mybatisLatestMarketDatumRepository.createOrUpdateExistingWhenNewer(stationId, mybatisMarketDatumEntityMapper.map(marketDatum));
     }
 }

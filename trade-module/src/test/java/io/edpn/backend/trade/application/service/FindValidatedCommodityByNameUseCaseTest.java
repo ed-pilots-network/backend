@@ -1,6 +1,5 @@
 package io.edpn.backend.trade.application.service;
 
-import io.edpn.backend.trade.adapter.web.dto.object.ValidatedCommodityDto;
 import io.edpn.backend.trade.application.domain.ValidatedCommodity;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindValidatedCommodityByNameUseCase;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadAllValidatedCommodityPort;
@@ -41,13 +40,12 @@ public class FindValidatedCommodityByNameUseCaseTest {
     @Test
     public void testValidatedCommodityFoundByDisplayName() {
         ValidatedCommodity mockValidatedCommodity = mock(ValidatedCommodity.class);
-        ValidatedCommodityDto mockValidatedCommodityDto = mock(ValidatedCommodityDto.class);
         String displayName = "Commodity Name";
 
         when(loadValidatedCommodityByNamePort.loadByName(displayName)).thenReturn(Optional.ofNullable(mockValidatedCommodity));
 
         Optional<ValidatedCommodity> response = underTest.findByName(displayName);
 
-        assertThat(response, equalTo(Optional.ofNullable(mockValidatedCommodityDto)));
+        assertThat(response, equalTo(Optional.ofNullable(mockValidatedCommodity)));
     }
 }

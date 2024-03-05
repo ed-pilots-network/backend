@@ -1,6 +1,6 @@
 package io.edpn.backend.trade.adapter.persistence.repository;
 
-import io.edpn.backend.trade.adapter.persistence.entity.StationDataRequestEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationDataRequestEntity;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
@@ -26,5 +26,5 @@ public interface MybatisStationArrivalDistanceRequestRepository {
             @Result(property = "stationName", column = "station_name", javaType = String.class),
             @Result(property = "systemName", column = "system_name", javaType = String.class)
     })
-    List<StationDataRequestEntity> findAll();
+    List<MybatisStationDataRequestEntity> findAll();
 }

@@ -1,10 +1,10 @@
 package io.edpn.backend.trade.adapter.persistence.locatecommodity;
 
 import io.edpn.backend.trade.adapter.persistence.LocateCommodityRepository;
-import io.edpn.backend.trade.adapter.persistence.entity.LocateCommodityEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.LocateCommodityEntityMapper;
-import io.edpn.backend.trade.adapter.persistence.filter.LocateCommodityFilter;
-import io.edpn.backend.trade.adapter.persistence.filter.mapper.LocateCommodityFilterMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisLocateCommodityEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisLocateCommodityEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.MybatisLocateCommodityFilter;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisLocateCommodityFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisLocateCommodityRepository;
 import io.edpn.backend.trade.application.domain.LocateCommodity;
 import io.edpn.backend.trade.application.port.outgoing.locatecommodity.LocateCommodityByFilterPort;
@@ -31,37 +31,37 @@ public class LocateCommodityByFilterPortTest {
     private MybatisLocateCommodityRepository mybatisLocateCommodityRepository;
 
     @Mock
-    private LocateCommodityEntityMapper locateCommodityEntityMapper;
+    private MybatisLocateCommodityEntityMapper mybatisLocateCommodityEntityMapper;
 
     @Mock
-    private LocateCommodityFilterMapper locateCommodityFilterMapper;
+    private MybatisLocateCommodityFilterMapper mybatisLocateCommodityFilterMapper;
 
     private LocateCommodityByFilterPort underTest;
 
     @BeforeEach
     public void setUp() {
-        underTest = new LocateCommodityRepository(mybatisLocateCommodityRepository, locateCommodityEntityMapper, locateCommodityFilterMapper);
+        underTest = new LocateCommodityRepository(mybatisLocateCommodityRepository, mybatisLocateCommodityEntityMapper, mybatisLocateCommodityFilterMapper);
     }
 
     @Test
     void locateCommodityByFilter() {
         //mock objects
-        LocateCommodityFilter locateCommodityFilterPersistence = mock(LocateCommodityFilter.class);
-        LocateCommodityEntity locateCommodityEntity = mock(LocateCommodityEntity.class);
+        MybatisLocateCommodityFilter mybatisLocateCommodityFilterPersistence = mock(MybatisLocateCommodityFilter.class);
+        MybatisLocateCommodityEntity mybatisLocateCommodityEntity = mock(MybatisLocateCommodityEntity.class);
         io.edpn.backend.trade.application.domain.filter.LocateCommodityFilter locateCommodityFilter = mock(io.edpn.backend.trade.application.domain.filter.LocateCommodityFilter.class);
         LocateCommodity locateCommodity = mock(LocateCommodity.class);
 
-        when(locateCommodityFilterMapper.map(locateCommodityFilter)).thenReturn(locateCommodityFilterPersistence);
-        when(mybatisLocateCommodityRepository.locateCommodityByFilter(locateCommodityFilterPersistence)).thenReturn(Collections.singletonList(locateCommodityEntity));
-        when(locateCommodityEntityMapper.map(locateCommodityEntity)).thenReturn(locateCommodity);
+        when(mybatisLocateCommodityFilterMapper.map(locateCommodityFilter)).thenReturn(mybatisLocateCommodityFilterPersistence);
+        when(mybatisLocateCommodityRepository.locateCommodityByFilter(mybatisLocateCommodityFilterPersistence)).thenReturn(Collections.singletonList(mybatisLocateCommodityEntity));
+        when(mybatisLocateCommodityEntityMapper.map(mybatisLocateCommodityEntity)).thenReturn(locateCommodity);
 
 
         List<LocateCommodity> result = underTest.locateCommodityByFilter(locateCommodityFilter);
 
-        verify(locateCommodityFilterMapper).map(locateCommodityFilter);
-        verify(mybatisLocateCommodityRepository).locateCommodityByFilter(locateCommodityFilterPersistence);
-        verify(locateCommodityEntityMapper).map(locateCommodityEntity);
-        verifyNoMoreInteractions(locateCommodityFilterMapper, mybatisLocateCommodityRepository, locateCommodityEntityMapper);
+        verify(mybatisLocateCommodityFilterMapper).map(locateCommodityFilter);
+        verify(mybatisLocateCommodityRepository).locateCommodityByFilter(mybatisLocateCommodityFilterPersistence);
+        verify(mybatisLocateCommodityEntityMapper).map(mybatisLocateCommodityEntity);
+        verifyNoMoreInteractions(mybatisLocateCommodityFilterMapper, mybatisLocateCommodityRepository, mybatisLocateCommodityEntityMapper);
 
         assertThat(result, equalTo(Collections.singletonList(locateCommodity)));
 

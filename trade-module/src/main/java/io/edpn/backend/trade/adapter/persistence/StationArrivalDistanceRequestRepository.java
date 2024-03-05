@@ -2,7 +2,7 @@ package io.edpn.backend.trade.adapter.persistence;
 
 
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.StationDataRequestEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationArrivalDistanceRequestRepository;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.DeleteStationArrivalDistanceRequestPort;
@@ -18,7 +18,7 @@ import java.util.List;
 public class StationArrivalDistanceRequestRepository implements CreateStationArrivalDistanceRequestPort, ExistsStationArrivalDistanceRequestPort, DeleteStationArrivalDistanceRequestPort, LoadAllStationArrivalDistanceRequestsPort {
 
     private final MybatisStationArrivalDistanceRequestRepository mybatisStationArrivalDistanceRequestRepository;
-    private final StationDataRequestEntityMapper stationDataRequestEntityMapper;
+    private final MybatisStationDataRequestEntityMapper mybatisStationDataRequestEntityMapper;
 
     @Override
     public void create(String systemName, String stationName) {
@@ -38,7 +38,7 @@ public class StationArrivalDistanceRequestRepository implements CreateStationArr
     @Override
     public List<StationDataRequest> loadAll() {
         return mybatisStationArrivalDistanceRequestRepository.findAll().stream()
-                .map(stationDataRequestEntityMapper::map)
+                .map(mybatisStationDataRequestEntityMapper::map)
                 .toList();
     }
 }

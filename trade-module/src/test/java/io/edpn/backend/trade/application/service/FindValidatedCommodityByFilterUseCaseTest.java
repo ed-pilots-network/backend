@@ -1,6 +1,5 @@
 package io.edpn.backend.trade.application.service;
 
-import io.edpn.backend.trade.adapter.web.dto.object.ValidatedCommodityDto;
 import io.edpn.backend.trade.application.domain.ValidatedCommodity;
 import io.edpn.backend.trade.application.domain.filter.FindCommodityFilter;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindValidatedCommodityByFilterUseCase;
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -44,13 +42,11 @@ public class FindValidatedCommodityByFilterUseCaseTest {
     public void testValidatedCommoditiesFoundByFilter() {
         FindCommodityFilter mockFindCommodityFilter = mock(FindCommodityFilter.class);
         ValidatedCommodity mockValidatedCommodity = mock(ValidatedCommodity.class);
-        ValidatedCommodityDto mockValidatedCommodityDto = mock(ValidatedCommodityDto.class);
-        List<ValidatedCommodityDto> findCommodityResponseList = Collections.singletonList(mockValidatedCommodityDto);
 
         when(loadValidatedCommodityByFilterPort.loadByFilter(mockFindCommodityFilter)).thenReturn(List.of(mockValidatedCommodity));
 
         List<ValidatedCommodity> responseList = underTest.findByFilter(mockFindCommodityFilter);
 
-        assertThat(responseList, equalTo(findCommodityResponseList));
+        assertThat(responseList, equalTo(mockValidatedCommodity));
     }
 }

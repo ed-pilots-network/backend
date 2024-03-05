@@ -2,8 +2,8 @@ package io.edpn.backend.trade.adapter.persistence.stationrequireodysseyrequest;
 
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
 import io.edpn.backend.trade.adapter.persistence.StationRequireOdysseyRequestRepository;
-import io.edpn.backend.trade.adapter.persistence.entity.StationDataRequestEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.StationDataRequestEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationDataRequestEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRequireOdysseyRequestRepository;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.LoadAllStationRequireOdysseyRequestsPort;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,25 +26,25 @@ public class LoadAllStationRequireOdysseyRequestsPortTest {
     @Mock
     private MybatisStationRequireOdysseyRequestRepository mybatisStationRequireOdysseyRequestRepository;
     @Mock
-    private StationDataRequestEntityMapper stationDataRequestEntityMapper;
+    private MybatisStationDataRequestEntityMapper mybatisStationDataRequestEntityMapper;
 
     private LoadAllStationRequireOdysseyRequestsPort underTest;
 
     @BeforeEach
     public void setup() {
-        underTest = new StationRequireOdysseyRequestRepository(mybatisStationRequireOdysseyRequestRepository, stationDataRequestEntityMapper);
+        underTest = new StationRequireOdysseyRequestRepository(mybatisStationRequireOdysseyRequestRepository, mybatisStationDataRequestEntityMapper);
     }
 
     @Test
     public void testFindAll() {
-        StationDataRequestEntity entity1 = mock(StationDataRequestEntity.class);
-        StationDataRequestEntity entity2 = mock(StationDataRequestEntity.class);
+        MybatisStationDataRequestEntity entity1 = mock(MybatisStationDataRequestEntity.class);
+        MybatisStationDataRequestEntity entity2 = mock(MybatisStationDataRequestEntity.class);
         StationDataRequest request1 = mock(StationDataRequest.class);
         StationDataRequest request2 = mock(StationDataRequest.class);
 
         when(mybatisStationRequireOdysseyRequestRepository.findAll()).thenReturn(List.of(entity1, entity2));
-        when(stationDataRequestEntityMapper.map(entity1)).thenReturn(request1);
-        when(stationDataRequestEntityMapper.map(entity2)).thenReturn(request2);
+        when(mybatisStationDataRequestEntityMapper.map(entity1)).thenReturn(request1);
+        when(mybatisStationDataRequestEntityMapper.map(entity2)).thenReturn(request2);
 
         List<StationDataRequest> result = underTest.loadAll();
 

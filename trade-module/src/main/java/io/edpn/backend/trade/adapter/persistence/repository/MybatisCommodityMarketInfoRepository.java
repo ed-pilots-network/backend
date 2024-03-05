@@ -1,8 +1,8 @@
 package io.edpn.backend.trade.adapter.persistence.repository;
 
-import io.edpn.backend.trade.adapter.persistence.entity.CommodityMarketInfoEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.StationEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.ValidatedCommodityEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisCommodityMarketInfoEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisValidatedCommodityEntity;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
@@ -21,7 +21,7 @@ public interface MybatisCommodityMarketInfoRepository {
             FROM commodity_market_info_view
             WHERE commodity_id = #{commodityId}"""})
     @Results(id = "commodityMarketInfoResultMap", value = {
-            @Result(property = "validatedCommodity", column = "commodity_id", javaType = ValidatedCommodityEntity.class,
+            @Result(property = "validatedCommodity", column = "commodity_id", javaType = MybatisValidatedCommodityEntity.class,
                     one = @One(select = "io.edpn.backend.trade.adapter.persistence.repository.MybatisValidatedCommodityRepository.findById")),
             @Result(column="max_buy_price", property="maxBuyPrice"),
             @Result(column="min_buy_price", property="minBuyPrice"),
@@ -39,15 +39,15 @@ public interface MybatisCommodityMarketInfoRepository {
             @Result(column="stations_with_sell_price", property="stationsWithSellPrice"),
             @Result(column="stations_with_buy_price_lower_than_average", property="stationsWithBuyPriceLowerThanAverage"),
             @Result(column="stations_with_sell_price_higher_than_average", property="stationsWithSellPriceHigherThanAverage"),
-            @Result(column="highest_selling_to_station", property="highestSellingToStation", javaType = StationEntity.class,
+            @Result(column="highest_selling_to_station", property="highestSellingToStation", javaType = MybatisStationEntity.class,
                     one = @One(select = "io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository.findById")),
-            @Result(column="lowest_buying_from_station", property="lowestBuyingFromStation", javaType = StationEntity.class,
+            @Result(column="lowest_buying_from_station", property="lowestBuyingFromStation", javaType = MybatisStationEntity.class,
                     one = @One(select = "io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository.findById"))
     })
-    Optional<CommodityMarketInfoEntity> findByCommodityId(@Param("commodityId") UUID commodityId);
+    Optional<MybatisCommodityMarketInfoEntity> findByCommodityId(@Param("commodityId") UUID commodityId);
 
     @Select({"SELECT * FROM commodity_market_info_view"})
     @ResultMap("commodityMarketInfoResultMap")
-    List<CommodityMarketInfoEntity> findAll();
+    List<MybatisCommodityMarketInfoEntity> findAll();
 
 }

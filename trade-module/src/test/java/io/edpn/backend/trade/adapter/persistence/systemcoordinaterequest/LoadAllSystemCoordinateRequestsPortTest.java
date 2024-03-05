@@ -2,8 +2,8 @@ package io.edpn.backend.trade.adapter.persistence.systemcoordinaterequest;
 
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.trade.adapter.persistence.SystemCoordinateRequestRepository;
-import io.edpn.backend.trade.adapter.persistence.entity.SystemDataRequestEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.SystemDataRequestEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemDataRequestEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisSystemDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemCoordinateRequestRepository;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestsPort;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,25 +26,25 @@ public class LoadAllSystemCoordinateRequestsPortTest {
     @Mock
     private MybatisSystemCoordinateRequestRepository mybatisSystemCoordinateRequestRepository;
     @Mock
-    private SystemDataRequestEntityMapper systemDataRequestEntityMapper;
+    private MybatisSystemDataRequestEntityMapper mybatisSystemDataRequestEntityMapper;
 
     private LoadAllSystemCoordinateRequestsPort underTest;
 
     @BeforeEach
     public void setup() {
-        underTest = new SystemCoordinateRequestRepository(mybatisSystemCoordinateRequestRepository, systemDataRequestEntityMapper);
+        underTest = new SystemCoordinateRequestRepository(mybatisSystemCoordinateRequestRepository, mybatisSystemDataRequestEntityMapper);
     }
 
     @Test
     public void testFindAll() {
-        SystemDataRequestEntity entity1 = mock(SystemDataRequestEntity.class);
-        SystemDataRequestEntity entity2 = mock(SystemDataRequestEntity.class);
+        MybatisSystemDataRequestEntity entity1 = mock(MybatisSystemDataRequestEntity.class);
+        MybatisSystemDataRequestEntity entity2 = mock(MybatisSystemDataRequestEntity.class);
         SystemDataRequest request1 = mock(SystemDataRequest.class);
         SystemDataRequest request2 = mock(SystemDataRequest.class);
 
         when(mybatisSystemCoordinateRequestRepository.findAll()).thenReturn(List.of(entity1, entity2));
-        when(systemDataRequestEntityMapper.map(entity1)).thenReturn(request1);
-        when(systemDataRequestEntityMapper.map(entity2)).thenReturn(request2);
+        when(mybatisSystemDataRequestEntityMapper.map(entity1)).thenReturn(request1);
+        when(mybatisSystemDataRequestEntityMapper.map(entity2)).thenReturn(request2);
 
         List<SystemDataRequest> result = underTest.loadAll();
 

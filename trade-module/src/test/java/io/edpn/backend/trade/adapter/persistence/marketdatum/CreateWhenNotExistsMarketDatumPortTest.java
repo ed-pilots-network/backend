@@ -1,8 +1,8 @@
 package io.edpn.backend.trade.adapter.persistence.marketdatum;
 
 import io.edpn.backend.trade.adapter.persistence.MarketDatumRepository;
-import io.edpn.backend.trade.adapter.persistence.entity.MarketDatumEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.MarketDatumEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisMarketDatumEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisMarketDatumEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRepository;
 import io.edpn.backend.trade.application.domain.MarketDatum;
 import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateWhenNotExistsMarketDatumPort;
@@ -26,26 +26,26 @@ public class CreateWhenNotExistsMarketDatumPortTest {
     private MybatisMarketDatumRepository mybatisMarketDatumRepository;
 
     @Mock
-    private MarketDatumEntityMapper marketDatumEntityMapper;
+    private MybatisMarketDatumEntityMapper mybatisMarketDatumEntityMapper;
 
     private CreateWhenNotExistsMarketDatumPort underTest;
 
     @BeforeEach
     public void setUp() {
-        underTest = new MarketDatumRepository(mybatisMarketDatumRepository, marketDatumEntityMapper);
+        underTest = new MarketDatumRepository(mybatisMarketDatumRepository, mybatisMarketDatumEntityMapper);
     }
 
     @Test
     void testCreateWhenNotExists() {
         UUID uuid = UUID.randomUUID();
         MarketDatum inputMarketDatum = mock(MarketDatum.class);
-        MarketDatumEntity inputMarketDatumEntity = mock(MarketDatumEntity.class);
+        MybatisMarketDatumEntity inputMybatisMarketDatumEntity = mock(MybatisMarketDatumEntity.class);
 
-        when(marketDatumEntityMapper.map(inputMarketDatum)).thenReturn(inputMarketDatumEntity);
+        when(mybatisMarketDatumEntityMapper.map(inputMarketDatum)).thenReturn(inputMybatisMarketDatumEntity);
 
         underTest.createWhenNotExists(uuid, inputMarketDatum);
 
-        verify(marketDatumEntityMapper, times(1)).map(inputMarketDatum);
-        verify(mybatisMarketDatumRepository, times(1)).insertWhenNotExists(uuid, inputMarketDatumEntity);
+        verify(mybatisMarketDatumEntityMapper, times(1)).map(inputMarketDatum);
+        verify(mybatisMarketDatumRepository, times(1)).insertWhenNotExists(uuid, inputMybatisMarketDatumEntity);
     }
 }

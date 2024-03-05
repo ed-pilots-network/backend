@@ -1,9 +1,9 @@
 package io.edpn.backend.trade.adapter.persistence.repository;
 
-import io.edpn.backend.trade.adapter.persistence.entity.LocateCommodityEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.StationEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.ValidatedCommodityEntity;
-import io.edpn.backend.trade.adapter.persistence.filter.LocateCommodityFilter;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisLocateCommodityEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisValidatedCommodityEntity;
+import io.edpn.backend.trade.adapter.persistence.filter.MybatisLocateCommodityFilter;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
@@ -39,9 +39,9 @@ public interface MybatisLocateCommodityRepository {
     )
     @Results(id = "findCommodityResultMap", value = {
             @Result(property = "priceUpdatedAt", column = "timestamp", javaType = LocalDateTime.class),
-            @Result(property = "validatedCommodity", column = "commodity_id", javaType = ValidatedCommodityEntity.class,
+            @Result(property = "validatedCommodity", column = "commodity_id", javaType = MybatisValidatedCommodityEntity.class,
                     one = @One(select = "io.edpn.backend.trade.adapter.persistence.repository.MybatisValidatedCommodityRepository.findById")),
-            @Result(property = "station", column = "station_id", javaType = StationEntity.class,
+            @Result(property = "station", column = "station_id", javaType = MybatisStationEntity.class,
                     one = @One(select = "io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository.findById")),
             @Result(property = "supply", column = "stock", javaType = Long.class),
             @Result(property = "demand", column = "demand", javaType = Long.class),
@@ -50,6 +50,6 @@ public interface MybatisLocateCommodityRepository {
             @Result(property = "distance", column = "distance", javaType = Double.class)
 
     })
-    List<LocateCommodityEntity> locateCommodityByFilter(LocateCommodityFilter locateCommodityFilterPersistence);
+    List<MybatisLocateCommodityEntity> locateCommodityByFilter(MybatisLocateCommodityFilter mybatisLocateCommodityFilterPersistence);
     
 }

@@ -1,8 +1,8 @@
 package io.edpn.backend.trade.adapter.persistence.marketdatum;
 
 import io.edpn.backend.trade.adapter.persistence.LatestMarketDatumRepository;
-import io.edpn.backend.trade.adapter.persistence.entity.MarketDatumEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.MarketDatumEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisMarketDatumEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisMarketDatumEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisLatestMarketDatumRepository;
 import io.edpn.backend.trade.application.domain.MarketDatum;
 import io.edpn.backend.trade.application.port.outgoing.marketdatum.createOrUpdateExistingWhenNewerLatestMarketDatumPort;
@@ -26,26 +26,26 @@ public class CreateOrUpdateOnConflictWhenNewerLatestMarketDatumPortTest {
     private MybatisLatestMarketDatumRepository mybatisLatestMarketDatumRepository;
 
     @Mock
-    private MarketDatumEntityMapper marketDatumEntityMapper;
+    private MybatisMarketDatumEntityMapper mybatisMarketDatumEntityMapper;
 
     private createOrUpdateExistingWhenNewerLatestMarketDatumPort underTest;
 
     @BeforeEach
     public void setUp() {
-        underTest = new LatestMarketDatumRepository(mybatisLatestMarketDatumRepository, marketDatumEntityMapper);
+        underTest = new LatestMarketDatumRepository(mybatisLatestMarketDatumRepository, mybatisMarketDatumEntityMapper);
     }
 
     @Test
     void testCreateWhenNotExists() {
         UUID uuid = UUID.randomUUID();
         MarketDatum inputMarketDatum = mock(MarketDatum.class);
-        MarketDatumEntity inputMarketDatumEntity = mock(MarketDatumEntity.class);
+        MybatisMarketDatumEntity inputMybatisMarketDatumEntity = mock(MybatisMarketDatumEntity.class);
 
-        when(marketDatumEntityMapper.map(inputMarketDatum)).thenReturn(inputMarketDatumEntity);
+        when(mybatisMarketDatumEntityMapper.map(inputMarketDatum)).thenReturn(inputMybatisMarketDatumEntity);
 
         underTest.createOrUpdateWhenNewer(uuid, inputMarketDatum);
 
-        verify(marketDatumEntityMapper, times(1)).map(inputMarketDatum);
-        verify(mybatisLatestMarketDatumRepository, times(1)).createOrUpdateExistingWhenNewer(uuid, inputMarketDatumEntity);
+        verify(mybatisMarketDatumEntityMapper, times(1)).map(inputMarketDatum);
+        verify(mybatisLatestMarketDatumRepository, times(1)).createOrUpdateExistingWhenNewer(uuid, inputMybatisMarketDatumEntity);
     }
 }

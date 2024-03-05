@@ -1,9 +1,9 @@
 package io.edpn.backend.trade.adapter.persistence.system;
 
 import io.edpn.backend.trade.adapter.persistence.SystemRepository;
-import io.edpn.backend.trade.adapter.persistence.entity.SystemEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.SystemEntityMapper;
-import io.edpn.backend.trade.adapter.persistence.filter.mapper.FindSystemFilterMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisSystemEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisFindSystemFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemRepository;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemByIdPort;
@@ -30,10 +30,10 @@ import static org.mockito.Mockito.when;
 public class LoadSystemByIdPortNameTest {
 
     @Mock
-    private SystemEntityMapper systemEntityMapper;
+    private MybatisSystemEntityMapper mybatisSystemEntityMapper;
 
     @Mock
-    private FindSystemFilterMapper persistenceFindSystemFilterMapper;
+    private MybatisFindSystemFilterMapper persistenceMybatisFindSystemFilterMapper;
 
     @Mock
     private MybatisSystemRepository mybatisSystemRepository;
@@ -42,23 +42,23 @@ public class LoadSystemByIdPortNameTest {
 
     @BeforeEach
     public void setUp() {
-        underTest = new SystemRepository(systemEntityMapper, persistenceFindSystemFilterMapper, mybatisSystemRepository);
+        underTest = new SystemRepository(mybatisSystemEntityMapper, persistenceMybatisFindSystemFilterMapper, mybatisSystemRepository);
     }
 
     @Test
     void findById() {
         UUID id = UUID.randomUUID();
-        SystemEntity mockSystemEntity = mock(SystemEntity.class);
+        MybatisSystemEntity mockMybatisSystemEntity = mock(MybatisSystemEntity.class);
         System mockSystem = mock(System.class);
 
-        when(mybatisSystemRepository.findById(id)).thenReturn(Optional.of(mockSystemEntity));
-        when(systemEntityMapper.map(mockSystemEntity)).thenReturn(mockSystem);
+        when(mybatisSystemRepository.findById(id)).thenReturn(Optional.of(mockMybatisSystemEntity));
+        when(mybatisSystemEntityMapper.map(mockMybatisSystemEntity)).thenReturn(mockSystem);
 
         Optional<System> results = underTest.loadById(id);
 
         verify(mybatisSystemRepository).findById(id);
-        verify(systemEntityMapper).map(mockSystemEntity);
-        verifyNoMoreInteractions(mybatisSystemRepository, systemEntityMapper);
+        verify(mybatisSystemEntityMapper).map(mockMybatisSystemEntity);
+        verifyNoMoreInteractions(mybatisSystemRepository, mybatisSystemEntityMapper);
 
         assertThat(results.isPresent(), is(true));
         assertThat(results.get(), equalTo(mockSystem));
@@ -72,8 +72,8 @@ public class LoadSystemByIdPortNameTest {
         Optional<System> result = underTest.loadById(id);
 
         verify(mybatisSystemRepository).findById(id);
-        verify(systemEntityMapper, never()).map(any(SystemEntity.class));
-        verifyNoMoreInteractions(mybatisSystemRepository, systemEntityMapper);
+        verify(mybatisSystemEntityMapper, never()).map(any(MybatisSystemEntity.class));
+        verifyNoMoreInteractions(mybatisSystemRepository, mybatisSystemEntityMapper);
 
         assertThat(result, equalTo(Optional.empty()));
     }

@@ -1,12 +1,12 @@
 package io.edpn.backend.trade.adapter.config;
 
-import io.edpn.backend.trade.adapter.web.dto.filter.mapper.FindCommodityFilterDtoMapper;
-import io.edpn.backend.trade.adapter.web.dto.filter.mapper.LocateCommodityFilterDtoMapper;
-import io.edpn.backend.trade.adapter.web.dto.object.mapper.CommodityMarketInfoDtoMapper;
-import io.edpn.backend.trade.adapter.web.dto.object.mapper.LocateCommodityDtoMapper;
-import io.edpn.backend.trade.adapter.web.dto.object.mapper.StationDtoMapper;
-import io.edpn.backend.trade.adapter.web.dto.object.mapper.SystemDtoMapper;
-import io.edpn.backend.trade.adapter.web.dto.object.mapper.ValidatedCommodityDtoMapper;
+import io.edpn.backend.trade.adapter.web.dto.filter.mapper.RestFindCommodityFilterDtoMapper;
+import io.edpn.backend.trade.adapter.web.dto.filter.mapper.RestLocateCommodityFilterDtoMapper;
+import io.edpn.backend.trade.adapter.web.dto.object.mapper.RestCommodityMarketInfoDtoMapper;
+import io.edpn.backend.trade.adapter.web.dto.object.mapper.RestLocateCommodityDtoMapper;
+import io.edpn.backend.trade.adapter.web.dto.object.mapper.RestStationDtoMapper;
+import io.edpn.backend.trade.adapter.web.dto.object.mapper.RestSystemDtoMapper;
+import io.edpn.backend.trade.adapter.web.dto.object.mapper.RestValidatedCommodityDtoMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,42 +14,42 @@ import org.springframework.context.annotation.Configuration;
 public class WebDtoMapperConfig {
 
     @Bean(name = "tradeFindCommodityDTOMapper")
-    public FindCommodityFilterDtoMapper findCommodityDTOMapper() {
-        return new FindCommodityFilterDtoMapper();
+    public RestFindCommodityFilterDtoMapper findCommodityDTOMapper() {
+        return new RestFindCommodityFilterDtoMapper();
     }
 
     @Bean(name = "tradeValidatedCommodityDTOMapper")
-    public ValidatedCommodityDtoMapper validatedCommodityDTOMapper() {
-        return new ValidatedCommodityDtoMapper();
+    public RestValidatedCommodityDtoMapper validatedCommodityDTOMapper() {
+        return new RestValidatedCommodityDtoMapper();
     }
 
     @Bean(name = "tradeSystemDtoMapper")
-    public SystemDtoMapper systemDtoMapper() {
-        return new SystemDtoMapper();
+    public RestSystemDtoMapper systemDtoMapper() {
+        return new RestSystemDtoMapper();
     }
 
     @Bean(name = "tradeStationDtoMapper")
-    public StationDtoMapper stationDtoMapper(
-            SystemDtoMapper systemDtoMapper) {
-        return new StationDtoMapper(systemDtoMapper);
+    public RestStationDtoMapper stationDtoMapper(
+            RestSystemDtoMapper restSystemDtoMapper) {
+        return new RestStationDtoMapper(restSystemDtoMapper);
     }
 
     @Bean(name = "tradeLocateCommodityDtoMapper")
-    public LocateCommodityDtoMapper locateCommodityDtoMapper(
-            StationDtoMapper stationDtoMapper,
-            ValidatedCommodityDtoMapper validatedCommodityDtoMapper) {
-        return new LocateCommodityDtoMapper(stationDtoMapper, validatedCommodityDtoMapper);
+    public RestLocateCommodityDtoMapper locateCommodityDtoMapper(
+            RestStationDtoMapper restStationDtoMapper,
+            RestValidatedCommodityDtoMapper restValidatedCommodityDtoMapper) {
+        return new RestLocateCommodityDtoMapper(restStationDtoMapper, restValidatedCommodityDtoMapper);
     }
 
     @Bean(name = "tradeCommodityMarketInfoDtoMapper")
-    public CommodityMarketInfoDtoMapper commodityMarketInfoDtoMapper(
-            ValidatedCommodityDtoMapper validatedCommodityDtoMapper,
-            StationDtoMapper stationDtoMapper) {
-        return new CommodityMarketInfoDtoMapper(validatedCommodityDtoMapper, stationDtoMapper);
+    public RestCommodityMarketInfoDtoMapper commodityMarketInfoDtoMapper(
+            RestValidatedCommodityDtoMapper restValidatedCommodityDtoMapper,
+            RestStationDtoMapper restStationDtoMapper) {
+        return new RestCommodityMarketInfoDtoMapper(restValidatedCommodityDtoMapper, restStationDtoMapper);
     }
 
     @Bean(name = "tradeLocateCommodityFilterDtoMapper")
-    public LocateCommodityFilterDtoMapper locateCommodityFilterDtoMapper() {
-        return new LocateCommodityFilterDtoMapper();
+    public RestLocateCommodityFilterDtoMapper locateCommodityFilterDtoMapper() {
+        return new RestLocateCommodityFilterDtoMapper();
     }
 }

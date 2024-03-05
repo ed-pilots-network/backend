@@ -1,7 +1,7 @@
 package io.edpn.backend.trade.adapter.persistence.systemeliteidrequest;
 
 import io.edpn.backend.trade.adapter.persistence.SystemEliteIdRequestRepository;
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.SystemDataRequestEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisSystemDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemEliteIdRequestRepository;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,13 +18,13 @@ public class DeleteSystemEliteIdRequestPortTest {
     @Mock
     private MybatisSystemEliteIdRequestRepository mybatisSystemEliteIdRequestRepository;
     @Mock
-    private SystemDataRequestEntityMapper systemDataRequestEntityMapper;
+    private MybatisSystemDataRequestEntityMapper mybatisSystemDataRequestEntityMapper;
 
     private DeleteSystemEliteIdRequestPort underTest;
 
     @BeforeEach
     public void setup() {
-        underTest = new SystemEliteIdRequestRepository(mybatisSystemEliteIdRequestRepository, systemDataRequestEntityMapper);
+        underTest = new SystemEliteIdRequestRepository(mybatisSystemEliteIdRequestRepository, mybatisSystemDataRequestEntityMapper);
     }
 
     @Test
