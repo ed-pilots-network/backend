@@ -19,9 +19,7 @@ import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancereq
 import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Module;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Executor;
+import io.edpn.backend.util.Topic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,6 +27,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.RetryCallback;
 import org.springframework.retry.support.RetryTemplate;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Executor;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -44,6 +46,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class RequestMissingStationArrivalDistanceUseCaseTest {
 
+    private final Executor executor = Runnable::run;
     @Mock
     private IdGenerator idGenerator;
     @Mock
@@ -68,10 +71,7 @@ public class RequestMissingStationArrivalDistanceUseCaseTest {
     private RetryTemplate retryTemplate;
     @Mock
     private ObjectMapper objectMapper;
-
     private RequestMissingStationArrivalDistanceUseCase underTest;
-
-    private final Executor executor = Runnable::run;
 
     @BeforeEach
     public void setUp() {
@@ -126,8 +126,9 @@ public class RequestMissingStationArrivalDistanceUseCaseTest {
                 return false;
             }
         }))).thenReturn(jsonNode);
-        when(jsonNode.toString()).thenReturn("jsonNodeString");
-        Message message = mock(Message.class);
+        String jsonNodeString = "jsonNodeString";
+        when(jsonNode.toString()).thenReturn(jsonNodeString);
+        Message message = new Message(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName(), jsonNodeString);
         when(sendKafkaMessagePort.send(message)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
@@ -168,8 +169,8 @@ public class RequestMissingStationArrivalDistanceUseCaseTest {
         }))).thenReturn(jsonNode2);
         when(jsonNode1.toString()).thenReturn("jsonNodeString1");
         when(jsonNode2.toString()).thenReturn("jsonNodeString2");
-        Message message1 = mock(Message.class);
-        Message message2 = mock(Message.class);
+        Message message1 = new Message(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName(), "jsonNodeString1");
+        Message message2 = new Message(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName(), "jsonNodeString2");
         when(sendKafkaMessagePort.send(message1)).thenReturn(true);
         when(sendKafkaMessagePort.send(message2)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());

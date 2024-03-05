@@ -140,8 +140,9 @@ public class StationLandingPadSizeInterModuleCommunicationService implements Req
                 .forEach(station ->
                         CompletableFuture.runAsync(() -> {
                             StationDataRequest stationDataRequest = new StationDataRequest(Module.TRADE, station.name(), station.system().name());
+                            JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
                             boolean sendSuccessful = retryTemplate.execute(
-                                    retryContext -> sendKafkaMessagePort.send(new Message(Topic.Request.STATION_MAX_LANDING_PAD_SIZE.getTopicName(), objectMapper.valueToTree(stationDataRequest).toString())));
+                                    retryContext -> sendKafkaMessagePort.send(new Message(Topic.Request.STATION_MAX_LANDING_PAD_SIZE.getTopicName(), jsonNode.toString())));
                             if (sendSuccessful) {
                                 createStationLandingPadSizeRequestPort.create(station.system().name(), station.name());
                             }

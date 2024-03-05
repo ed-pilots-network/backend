@@ -19,6 +19,7 @@ import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequ
 import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Module;
+import io.edpn.backend.util.Topic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -127,7 +128,7 @@ public class RequestMissingStationRequireOdysseyUseCaseTest {
             }
         }))).thenReturn(jsonNode);
         when(jsonNode.toString()).thenReturn("jsonNodeString");
-        Message message = mock(Message.class);
+        Message message = new Message(Topic.Request.STATION_REQUIRE_ODYSSEY.getTopicName(), "jsonNodeString");
         when(sendKafkaMessagePort.send(message)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
@@ -168,8 +169,8 @@ public class RequestMissingStationRequireOdysseyUseCaseTest {
         }))).thenReturn(jsonNode2);
         when(jsonNode1.toString()).thenReturn("jsonNodeString1");
         when(jsonNode2.toString()).thenReturn("jsonNodeString2");
-        Message message1 = mock(Message.class);
-        Message message2 = mock(Message.class);
+        Message message1 = new Message(Topic.Request.STATION_REQUIRE_ODYSSEY.getTopicName(), "jsonNodeString1");
+        Message message2 = new Message(Topic.Request.STATION_REQUIRE_ODYSSEY.getTopicName(), "jsonNodeString2");
         when(sendKafkaMessagePort.send(message1)).thenReturn(true);
         when(sendKafkaMessagePort.send(message2)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());

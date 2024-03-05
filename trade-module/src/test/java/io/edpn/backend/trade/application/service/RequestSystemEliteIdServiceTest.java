@@ -17,25 +17,25 @@ import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.Load
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Module;
 import io.edpn.backend.util.Topic;
-import java.util.concurrent.Executor;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.support.RetryTemplate;
 
+import java.util.concurrent.Executor;
+import java.util.stream.Stream;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -110,28 +110,6 @@ public class RequestSystemEliteIdServiceTest {
         assertThat(underTest.isApplicable(systemWithEliteId), is(expected));
     }
 
-    /*@Test
-    void shouldSendRequest() {
-        System system = System.builder()
-                .name("Test System")
-                .build();
-
-        underTest.request(system);
-
-        ArgumentCaptor<Message> argumentCaptor = ArgumentCaptor.forClass(Message.class);
-        verify(messageMapper, times(1)).map(argumentCaptor.capture());
-        verify(sendKafkaMessagePort, times(1)).send(messageMapper.map(argumentCaptor.capture()));
-
-        Message message = argumentCaptor.getValue();
-        assertThat(message, is(notNullValue()));
-        assertThat(message.getTopic(), is(Topic.Request.SYSTEM_ELITE_ID.getTopicName()));
-        assertThat(message.getMessage(), is(notNullValue()));
-
-        //TODO: below
-        //SystemDataRequest actualSystemDataRequest = objectMapper.treeToValue(message.getMessage(), SystemDataRequest.class);
-        assertThat(message.getMessage(), containsString(system.getName()));
-    }*/
-
     @Test
     public void testRequestWhenIdExists() {
         String systemName = "Test System";
@@ -153,16 +131,11 @@ public class RequestSystemEliteIdServiceTest {
     @Test
     public void testRequestWhenIdDoesNotExist() {
         String systemName = "Test System";
-        System system = new System(
-                null,
-                null,
-                systemName,
-                null
-        );
+        System system = mock(System.class);
+        when(system.name()).thenReturn(systemName);
 
         JsonNode mockJsonNode = mock(JsonNode.class);
         String mockJsonString = "jsonString";
-        Message mockMessage = mock(Message.class);
 
         when(existsSystemEliteIdRequestPort.exists(systemName)).thenReturn(false);
         when(objectMapper.valueToTree(argThat(arg -> {
@@ -174,15 +147,9 @@ public class RequestSystemEliteIdServiceTest {
         }))).thenReturn(mockJsonNode);
         when(mockJsonNode.toString()).thenReturn(mockJsonString);
 
-        ArgumentCaptor<Message> argumentCaptor = ArgumentCaptor.forClass(Message.class);
-
         underTest.request(system);
 
-        verify(sendKafkaMessagePort).send(mockMessage);
+        verify(sendKafkaMessagePort).send(eq(new Message(Topic.Request.SYSTEM_ELITE_ID.getTopicName(), mockJsonString)));
         verify(createSystemEliteIdRequestPort).create(systemName);
-        Message message = argumentCaptor.getValue();
-        assertThat(message, is(notNullValue()));
-        assertThat(message.topic(), is(Topic.Request.SYSTEM_ELITE_ID.getTopicName()));
-        assertThat(message.message(), is("jsonString"));
     }
 }

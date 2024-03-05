@@ -20,22 +20,21 @@ import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystem
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Module;
 import io.edpn.backend.util.Topic;
-import java.util.concurrent.Executor;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.support.RetryTemplate;
 
+import java.util.concurrent.Executor;
+import java.util.stream.Stream;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -175,7 +174,7 @@ public class RequestStationLandingPadSizeServiceTest {
 
         JsonNode mockJsonNode = mock(JsonNode.class);
         String mockJsonString = "jsonString";
-        Message mockMessage = mock(Message.class);
+        Message message = new Message(Topic.Request.STATION_MAX_LANDING_PAD_SIZE.getTopicName(), "jsonString");
 
         when(existsStationLandingPadSizeRequestPort.exists(systemName, stationName)).thenReturn(false);
         when(objectMapper.valueToTree(argThat(arg -> {
@@ -187,15 +186,10 @@ public class RequestStationLandingPadSizeServiceTest {
         }))).thenReturn(mockJsonNode);
         when(mockJsonNode.toString()).thenReturn(mockJsonString);
 
-        ArgumentCaptor<Message> argumentCaptor = ArgumentCaptor.forClass(Message.class);
 
         underTest.request(station);
 
-        verify(sendKafkaMessagePort).send(mockMessage);
+        verify(sendKafkaMessagePort).send(message);
         verify(createStationLandingPadSizeRequestPort).create(systemName, stationName);
-        Message message = argumentCaptor.getValue();
-        assertThat(message, is(notNullValue()));
-        assertThat(message.topic(), is(Topic.Request.STATION_MAX_LANDING_PAD_SIZE.getTopicName()));
-        assertThat(message.message(), is("jsonString"));
     }
 }
