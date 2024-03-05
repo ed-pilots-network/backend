@@ -34,4 +34,6 @@ module edpn.backend.trade {
     exports io.edpn.backend.trade.application.port.incomming.commoditymarketinfo;
     exports io.edpn.backend.trade.adapter.web.dto.object;
     exports io.edpn.backend.trade.adapter.web.dto.filter;
+    exports io.edpn.backend.trade.adapter.web.dto.object.mapper;
+    exports io.edpn.backend.trade.adapter.web.dto.filter.mapper;
 }
