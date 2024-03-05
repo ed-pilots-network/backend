@@ -3,6 +3,7 @@ package io.edpn.backend.exploration.adapter.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
 import io.edpn.backend.exploration.adapter.web.dto.mapper.RestSystemDtoMapper;
+import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.StationArrivalDistanceResponseMapper;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.StationMaxLandingPadSizeResponseMapper;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemCoordinatesResponseMapper;
 import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEliteIdResponseMapper;
@@ -13,6 +14,11 @@ import io.edpn.backend.exploration.application.port.outgoing.ring.SaveOrUpdateRi
 import io.edpn.backend.exploration.application.port.outgoing.star.SaveOrUpdateStarPort;
 import io.edpn.backend.exploration.application.port.outgoing.station.LoadStationPort;
 import io.edpn.backend.exploration.application.port.outgoing.station.SaveOrUpdateStationPort;
+import io.edpn.backend.exploration.application.port.outgoing.stationarrivaldistancerequest.CreateIfNotExistsStationArrivalDistanceRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.stationarrivaldistancerequest.DeleteStationArrivalDistanceRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.stationarrivaldistancerequest.LoadAllStationArrivalDistanceRequestPort;
+import io.edpn.backend.exploration.application.port.outgoing.stationarrivaldistancerequest.LoadStationArrivalDistanceRequestByIdentifierPort;
+import io.edpn.backend.exploration.application.port.outgoing.stationarrivaldistancerequest.StationArrivalDistanceResponseSender;
 import io.edpn.backend.exploration.application.port.outgoing.stationmaxlandingpadsizerequest.CreateIfNotExistsStationMaxLandingPadSizeRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.stationmaxlandingpadsizerequest.DeleteStationMaxLandingPadSizeRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.stationmaxlandingpadsizerequest.LoadAllStationMaxLandingPadSizeRequestPort;
@@ -33,6 +39,8 @@ import io.edpn.backend.exploration.application.port.outgoing.systemeliteidreques
 import io.edpn.backend.exploration.application.service.ReceiveJournalDockedService;
 import io.edpn.backend.exploration.application.service.ReceiveJournalScanService;
 import io.edpn.backend.exploration.application.service.ReceiveNavRouteService;
+import io.edpn.backend.exploration.application.service.StationArrivalDistanceInterModuleCommunicationService;
+import io.edpn.backend.exploration.application.service.StationArrivalDistanceResponseSenderService;
 import io.edpn.backend.exploration.application.service.StationMaxLandingPadSizeInterModuleCommunicationService;
 import io.edpn.backend.exploration.application.service.StationMaxLandingPadSizeResponseSenderService;
 import io.edpn.backend.exploration.application.service.SystemControllerService;
@@ -139,6 +147,23 @@ public class ServiceConfig {
                 executorService
         );
     }
+    
+    @Bean(name = "explorationStationArrivalDistanceInterModuleCommunicationService")
+    public StationArrivalDistanceInterModuleCommunicationService stationArrivalDistanceInterModuleCommunicationService(
+            LoadAllStationArrivalDistanceRequestPort loadAllStationArrivalDistanceRequestPort,
+            CreateIfNotExistsStationArrivalDistanceRequestPort createIfNotExistsStationArrivalDistanceRequestPort,
+            LoadStationPort loadStationPort,
+            StationArrivalDistanceResponseSender stationArrivalDistanceResponseSender,
+            @Qualifier("virtualThreadPerTaskExecutor") ExecutorService executorService
+    ) {
+        return new StationArrivalDistanceInterModuleCommunicationService(
+                loadAllStationArrivalDistanceRequestPort,
+                createIfNotExistsStationArrivalDistanceRequestPort,
+                loadStationPort,
+                stationArrivalDistanceResponseSender,
+                executorService
+        );
+    }
 
     @Bean(name = "explorationStationMaxLandingPadSizeInterModuleCommunicationService")
     public StationMaxLandingPadSizeInterModuleCommunicationService stationMaxLandingPadSizeInterModuleCommunicationService(
@@ -224,6 +249,31 @@ public class ServiceConfig {
                 deleteSystemEliteIdRequestPort,
                 sendMessagePort,
                 systemEliteIdResponseMapper,
+                messageMapper,
+                objectMapper,
+                retryTemplate,
+                executorService
+        );
+    }
+    
+    @Bean("explorationStationArrivalDistanceResponseSender")
+    public StationArrivalDistanceResponseSender stationArrivalDistanceResponseSender(
+            LoadStationPort loadStationPort,
+            LoadStationArrivalDistanceRequestByIdentifierPort loadStationArrivalDistanceRequestByIdentifierPort,
+            DeleteStationArrivalDistanceRequestPort deleteStationArrivalDistanceRequestPort,
+            SendMessagePort sendMessagePort,
+            StationArrivalDistanceResponseMapper stationArrivalDistanceResponseMapper,
+            MessageDtoMapper messageMapper,
+            ObjectMapper objectMapper,
+            @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
+            @Qualifier("virtualThreadPerTaskExecutor") ExecutorService executorService
+    ) {
+        return new StationArrivalDistanceResponseSenderService(
+                loadStationPort,
+                loadStationArrivalDistanceRequestByIdentifierPort,
+                deleteStationArrivalDistanceRequestPort,
+                sendMessagePort,
+                stationArrivalDistanceResponseMapper,
                 messageMapper,
                 objectMapper,
                 retryTemplate,

@@ -3,11 +3,13 @@ package io.edpn.backend.exploration.adapter.config;
 import io.edpn.backend.exploration.adapter.persistence.MybatisBodyRepository;
 import io.edpn.backend.exploration.adapter.persistence.MybatisRingRepository;
 import io.edpn.backend.exploration.adapter.persistence.MybatisStarRepository;
+import io.edpn.backend.exploration.adapter.persistence.MybatisStationArrivalDistanceRequestRepository;
 import io.edpn.backend.exploration.adapter.persistence.MybatisStationMaxLandingPadSizeRequestRepository;
 import io.edpn.backend.exploration.adapter.persistence.MybatisStationRepository;
 import io.edpn.backend.exploration.adapter.persistence.MybatisSystemCoordinateRequestRepository;
 import io.edpn.backend.exploration.adapter.persistence.MybatisSystemEliteIdRequestRepository;
 import io.edpn.backend.exploration.adapter.persistence.MybatisSystemRepository;
+import io.edpn.backend.exploration.adapter.persistence.entity.MybatisStationArrivalDistanceRequestEntity;
 import io.edpn.backend.mybatisutil.IntegerStringMapTypeHandler;
 import io.edpn.backend.mybatisutil.StringDoubleMapTypeHandler;
 import io.edpn.backend.mybatisutil.StringListToArrayTypeHandler;
@@ -20,6 +22,7 @@ import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.RequestAttribute;
 
 @Configuration("ExplorationModuleMyBatisConfiguration")
 public class MyBatisConfiguration {
@@ -61,6 +64,13 @@ public class MyBatisConfiguration {
         return factoryBean;
     }
 
+    @Bean(name = "explorationMybatisStationArrivalDistanceRequestRepository")
+    public MapperFactoryBean<MybatisStationArrivalDistanceRequestRepository> mybatisStationArrivalDistanceRequestRepository(@Qualifier("explorationSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+        MapperFactoryBean<MybatisStationArrivalDistanceRequestRepository> factoryBean = new MapperFactoryBean<>(MybatisStationArrivalDistanceRequestRepository.class);
+        factoryBean.setSqlSessionFactory(sqlSessionFactory);
+        return factoryBean;
+    }
+    
     @Bean(name = "explorationMybatisStationMaxLandingPadSizeRequestRepository")
     public MapperFactoryBean<MybatisStationMaxLandingPadSizeRequestRepository> mybatisStationMaxLandingPadSizeRequestRepository(@Qualifier("explorationSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         MapperFactoryBean<MybatisStationMaxLandingPadSizeRequestRepository> factoryBean = new MapperFactoryBean<>(MybatisStationMaxLandingPadSizeRequestRepository.class);

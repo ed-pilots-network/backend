@@ -4,6 +4,7 @@ import io.edpn.backend.exploration.adapter.persistence.BodyRepository;
 import io.edpn.backend.exploration.adapter.persistence.MybatisBodyRepository;
 import io.edpn.backend.exploration.adapter.persistence.MybatisRingRepository;
 import io.edpn.backend.exploration.adapter.persistence.MybatisStarRepository;
+import io.edpn.backend.exploration.adapter.persistence.MybatisStationArrivalDistanceRequestRepository;
 import io.edpn.backend.exploration.adapter.persistence.MybatisStationMaxLandingPadSizeRequestRepository;
 import io.edpn.backend.exploration.adapter.persistence.MybatisStationRepository;
 import io.edpn.backend.exploration.adapter.persistence.MybatisSystemCoordinateRequestRepository;
@@ -11,6 +12,7 @@ import io.edpn.backend.exploration.adapter.persistence.MybatisSystemEliteIdReque
 import io.edpn.backend.exploration.adapter.persistence.MybatisSystemRepository;
 import io.edpn.backend.exploration.adapter.persistence.RingRepository;
 import io.edpn.backend.exploration.adapter.persistence.StarRepository;
+import io.edpn.backend.exploration.adapter.persistence.StationArrivalDistanceRequestRepository;
 import io.edpn.backend.exploration.adapter.persistence.StationMaxLandingPadSizeRequestRepository;
 import io.edpn.backend.exploration.adapter.persistence.StationRepository;
 import io.edpn.backend.exploration.adapter.persistence.SystemCoordinateRequestRepository;
@@ -19,6 +21,7 @@ import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisBodyEntity;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisRingEntity;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisStarEntity;
+import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisStationArrivalDistanceRequestEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisStationEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisStationMaxLandingPadSizeRequestEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemCoordinateRequestEntityMapper;
@@ -63,6 +66,14 @@ public class RepositoryConfig {
             MybatisSystemEliteIdRequestEntityMapper mybatisSystemEliteIdRequestEntityMapper
     ) {
         return new SystemEliteIdRequestRepository(mybatisSystemEliteIdRequestRepository, mybatisSystemEliteIdRequestEntityMapper);
+    }
+    
+    @Bean(name = "explorationStationArrivalDistanceRequestRepository")
+    public StationArrivalDistanceRequestRepository stationArrivalDistanceRequestRepository(
+            MybatisStationArrivalDistanceRequestRepository mybatisStationArrivalDistanceRequestRepository,
+            MybatisStationArrivalDistanceRequestEntityMapper mybatisStationArrivalDistanceRequestEntityMapper
+    ) {
+        return new StationArrivalDistanceRequestRepository(mybatisStationArrivalDistanceRequestRepository, mybatisStationArrivalDistanceRequestEntityMapper);
     }
 
     @Bean(name = "explorationStationMaxLandingPadSizeRequestRepository")

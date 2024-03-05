@@ -11,7 +11,10 @@ public class MybatisStationMaxLandingPadSizeRequestEntityMapper implements Stati
 
     @Override
     public StationMaxLandingPadSizeRequest map(StationMaxLandingPadSizeRequestEntity stationMaxLandingPadSizeRequestEntity) {
-        return new StationMaxLandingPadSizeRequest(stationMaxLandingPadSizeRequestEntity.getSystemName(), stationMaxLandingPadSizeRequestEntity.getStationName(), stationMaxLandingPadSizeRequestEntity.getRequestingModule());
+        return new StationMaxLandingPadSizeRequest(
+                stationMaxLandingPadSizeRequestEntity.getSystemName(),
+                stationMaxLandingPadSizeRequestEntity.getStationName(),
+                stationMaxLandingPadSizeRequestEntity.getRequestingModule());
     }
 
     @Override
