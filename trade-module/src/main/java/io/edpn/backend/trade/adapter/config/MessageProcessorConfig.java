@@ -8,6 +8,7 @@ import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationMaxL
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationRequireOdysseyResponse;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemCoordinatesResponse;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
+import io.edpn.backend.trade.adapter.kafka.dto.mapper.KafkaMessageMapper;
 import io.edpn.backend.trade.adapter.kafka.processor.CommodityV3MessageProcessor;
 import io.edpn.backend.trade.adapter.kafka.processor.StationArrivalDistanceResponseMessageProcessor;
 import io.edpn.backend.trade.adapter.kafka.processor.StationMaxLandingPadSizeResponseMessageProcessor;
@@ -64,10 +65,11 @@ public class MessageProcessorConfig {
     @Bean(name = "tradeKafkaMessageSender")
     public KafkaMessageSender kafkaMessageSender(
             CreateTopicPort createTopicPort,
+            @Qualifier("tradeMessageMapper") KafkaMessageMapper messageMapper,
             @Qualifier("tradeObjectMapper") ObjectMapper objectMapper,
             @Qualifier("tradeJsonNodekafkaTemplate") KafkaTemplate<String, JsonNode> jsonNodekafkaTemplate
     ) {
-        return new KafkaMessageSender(createTopicPort, objectMapper, jsonNodekafkaTemplate);
+        return new KafkaMessageSender(createTopicPort, messageMapper, objectMapper, jsonNodekafkaTemplate);
     }
 
     @Bean(name = "tradeStationRequireOdysseyResponseMessageProcessor")

@@ -1,8 +1,6 @@
 package io.edpn.backend.trade.adapter.persistence.filter.mapper;
 
-import io.edpn.backend.trade.application.domain.filter.FindSystemFilter;
-import io.edpn.backend.trade.application.dto.persistence.filter.PersistenceFindSystemFilter;
-import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindSystemFilterMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.FindSystemFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,23 +12,23 @@ import static org.hamcrest.Matchers.is;
 @ExtendWith(MockitoExtension.class)
 class PersistenceFindSystemFilterMapperTest {
 
-    private PersistenceFindSystemFilterMapper underTest;
+    private FindSystemFilterMapper underTest;
 
     @BeforeEach
     public void setUp() {
-        underTest = new MybatisPersistenceFindSystemFilterMapper();
+        underTest = new FindSystemFilterMapper();
     }
 
     @Test
     public void testMap_givenDomainObject_shouldReturnEntity() {
 
-        FindSystemFilter domainObject = FindSystemFilter.builder()
+        io.edpn.backend.trade.application.domain.filter.FindSystemFilter domainObject = io.edpn.backend.trade.application.domain.filter.FindSystemFilter.builder()
                 .name("Name")
                 .hasEliteId(true)
                 .hasCoordinates(false)
                 .build();
 
-        PersistenceFindSystemFilter entity = underTest.map(domainObject);
+        FindSystemFilter entity = underTest.map(domainObject);
 
         assertThat(entity.getName(), is("Name"));
         assertThat(entity.getHasCoordinates(), is(false));

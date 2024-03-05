@@ -5,7 +5,6 @@ import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationMaxL
 import io.edpn.backend.trade.application.domain.LandingPadSize;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
-import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
@@ -59,8 +58,6 @@ public class ReceiveStationMaxLandingPadSizeResponseUseCaseTest {
     private Executor executor;
     @Mock
     private ObjectMapper objectMapper;
-    @Mock
-    private MessageMapper messageMapper;
 
     private ReceiveKafkaMessageUseCase<StationMaxLandingPadSizeResponse> underTest;
 
@@ -79,8 +76,7 @@ public class ReceiveStationMaxLandingPadSizeResponseUseCaseTest {
                 sendKafkaMessagePort,
                 retryTemplate,
                 executor,
-                objectMapper,
-                messageMapper
+                objectMapper
         );
     }
 

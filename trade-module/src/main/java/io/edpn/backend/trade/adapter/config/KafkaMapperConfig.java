@@ -1,7 +1,6 @@
 package io.edpn.backend.trade.adapter.config;
 
 import io.edpn.backend.trade.adapter.kafka.dto.mapper.KafkaMessageMapper;
-import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class KafkaMapperConfig {
     
     @Bean(name = "tradeMessageMapper")
-    public MessageMapper messageMapper() {
+    public KafkaMessageMapper messageMapper() {
         return new KafkaMessageMapper();
     }
 }

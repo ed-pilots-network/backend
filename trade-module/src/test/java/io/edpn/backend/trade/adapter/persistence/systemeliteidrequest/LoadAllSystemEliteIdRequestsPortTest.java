@@ -2,16 +2,17 @@ package io.edpn.backend.trade.adapter.persistence.systemeliteidrequest;
 
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.trade.adapter.persistence.SystemEliteIdRequestRepository;
-import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemDataRequestEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.SystemDataRequestEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.SystemDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemEliteIdRequestRepository;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemDataRequestEntityMapper;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestsPort;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -21,7 +22,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class LoadAllSystemEliteIdRequestsPortTest {
-
 
     @Mock
     private MybatisSystemEliteIdRequestRepository mybatisSystemEliteIdRequestRepository;
@@ -37,8 +37,8 @@ public class LoadAllSystemEliteIdRequestsPortTest {
 
     @Test
     public void testFindAll() {
-        MybatisSystemDataRequestEntity entity1 = mock(MybatisSystemDataRequestEntity.class);
-        MybatisSystemDataRequestEntity entity2 = mock(MybatisSystemDataRequestEntity.class);
+        SystemDataRequestEntity entity1 = mock(SystemDataRequestEntity.class);
+        SystemDataRequestEntity entity2 = mock(SystemDataRequestEntity.class);
         SystemDataRequest request1 = mock(SystemDataRequest.class);
         SystemDataRequest request2 = mock(SystemDataRequest.class);
 

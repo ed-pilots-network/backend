@@ -29,10 +29,6 @@ module edpn.backend.trade {
     exports io.edpn.backend.trade.adapter.web;
     exports io.edpn.backend.trade.application.domain;
     exports io.edpn.backend.trade.application.domain.filter;
-    exports io.edpn.backend.trade.application.dto.persistence.entity;
-    exports io.edpn.backend.trade.application.dto.persistence.filter;
-    exports io.edpn.backend.trade.application.dto.web.filter;
-    exports io.edpn.backend.trade.application.dto.web.object;
     exports io.edpn.backend.trade.application.port.incomming.validatedcommodity;
     exports io.edpn.backend.trade.application.port.incomming.locatecommodity;
     exports io.edpn.backend.trade.application.port.incomming.commoditymarketinfo;

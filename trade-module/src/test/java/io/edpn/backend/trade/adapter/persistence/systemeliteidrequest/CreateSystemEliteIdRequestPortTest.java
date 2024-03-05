@@ -1,8 +1,8 @@
 package io.edpn.backend.trade.adapter.persistence.systemeliteidrequest;
 
 import io.edpn.backend.trade.adapter.persistence.SystemEliteIdRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.SystemDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemEliteIdRequestRepository;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemDataRequestEntityMapper;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

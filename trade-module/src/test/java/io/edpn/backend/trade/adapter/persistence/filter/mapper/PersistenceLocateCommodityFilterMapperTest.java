@@ -1,8 +1,7 @@
 package io.edpn.backend.trade.adapter.persistence.filter.mapper;
 
-import io.edpn.backend.trade.adapter.persistence.filter.MybatisLocateCommodityFilter;
+import io.edpn.backend.trade.adapter.persistence.filter.LocateCommodityFilter;
 import io.edpn.backend.trade.application.domain.LandingPadSize;
-import io.edpn.backend.trade.application.domain.filter.LocateCommodityFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,17 +13,17 @@ import static org.hamcrest.Matchers.is;
 @ExtendWith(MockitoExtension.class)
 class PersistenceLocateCommodityFilterMapperTest {
     
-    private MybatisPersistenceLocateCommodityFilterMapper underTest;
+    private LocateCommodityFilterMapper underTest;
 
     @BeforeEach
     public void setUp(){
-        underTest = new MybatisPersistenceLocateCommodityFilterMapper();
+        underTest = new LocateCommodityFilterMapper();
     }
     
     @Test
     public void testMap_givenDomainObject_shouldReturnEntity() {
         
-        LocateCommodityFilter domainObject = LocateCommodityFilter.builder()
+        io.edpn.backend.trade.application.domain.filter.LocateCommodityFilter domainObject = io.edpn.backend.trade.application.domain.filter.LocateCommodityFilter.builder()
                 .commodityDisplayName("Display Name")
                 .xCoordinate(1.0)
                 .yCoordinate(2.0)
@@ -37,7 +36,7 @@ class PersistenceLocateCommodityFilterMapperTest {
                 .minDemand(321L)
                 .build();
         
-        MybatisLocateCommodityFilter entity = underTest.map(domainObject);
+        LocateCommodityFilter entity = underTest.map(domainObject);
         
         assertThat(entity.getCommodityDisplayName(), is("Display Name"));
         assertThat(entity.getXCoordinate(), is(1.0));

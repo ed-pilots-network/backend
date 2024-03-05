@@ -1,11 +1,11 @@
 package io.edpn.backend.trade.adapter.persistence.system;
 
 import io.edpn.backend.trade.adapter.persistence.SystemRepository;
-import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisSystemEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.SystemEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.SystemEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.FindSystemFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemRepository;
 import io.edpn.backend.trade.application.domain.System;
-import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindSystemFilterMapper;
 import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,10 +22,10 @@ import static org.mockito.Mockito.when;
 public class LoadOrCreateSystemByNamePortTest {
 
     @Mock
-    private MybatisSystemEntityMapper mybatisSystemEntityMapper;
+    private SystemEntityMapper systemEntityMapper;
 
     @Mock
-    private PersistenceFindSystemFilterMapper persistenceFindSystemFilterMapper;
+    private FindSystemFilterMapper persistenceFindSystemFilterMapper;
 
     @Mock
     private MybatisSystemRepository mybatisSystemRepository;
@@ -34,20 +34,20 @@ public class LoadOrCreateSystemByNamePortTest {
 
     @BeforeEach
     public void setUp() {
-        underTest = new SystemRepository(mybatisSystemEntityMapper, persistenceFindSystemFilterMapper, mybatisSystemRepository);
+        underTest = new SystemRepository(systemEntityMapper, persistenceFindSystemFilterMapper, mybatisSystemRepository);
     }
 
     @Test
     void createOrLoad() {
         System mockInputSystem = mock(System.class);
-        MybatisSystemEntity mockInputSystemEntity = mock(MybatisSystemEntity.class);
-        MybatisSystemEntity mockSavedSystemEntity = mock(MybatisSystemEntity.class);
+        SystemEntity mockInputSystemEntity = mock(SystemEntity.class);
+        SystemEntity mockSavedSystemEntity = mock(SystemEntity.class);
 
         System expected = mock(System.class);
 
-        when(mybatisSystemEntityMapper.map(mockInputSystem)).thenReturn(mockInputSystemEntity);
+        when(systemEntityMapper.map(mockInputSystem)).thenReturn(mockInputSystemEntity);
         when(mybatisSystemRepository.createOrUpdateOnConflict(mockInputSystemEntity)).thenReturn(mockSavedSystemEntity);
-        when(mybatisSystemEntityMapper.map(mockSavedSystemEntity)).thenReturn(expected);
+        when(systemEntityMapper.map(mockSavedSystemEntity)).thenReturn(expected);
 
         System result = underTest.createOrLoad(mockInputSystem);
 

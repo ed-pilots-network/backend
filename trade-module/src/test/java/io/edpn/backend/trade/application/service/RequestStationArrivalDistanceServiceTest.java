@@ -6,8 +6,6 @@ import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationData
 import io.edpn.backend.trade.application.domain.Message;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
-import io.edpn.backend.trade.application.dto.web.object.MessageDto;
-import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
@@ -42,7 +40,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -75,8 +72,6 @@ public class RequestStationArrivalDistanceServiceTest {
     private Executor executor;
     @Mock
     private ObjectMapper objectMapper;
-    @Mock
-    private MessageMapper messageMapper;
 
     private RequestDataUseCase<Station> underTest;
 
@@ -103,8 +98,7 @@ public class RequestStationArrivalDistanceServiceTest {
                 sendKafkaMessagePort,
                 retryTemplate,
                 executor,
-                objectMapper,
-                messageMapper);
+                objectMapper);
     }
 
     @ParameterizedTest
@@ -176,7 +170,7 @@ public class RequestStationArrivalDistanceServiceTest {
 
         JsonNode mockJsonNode = mock(JsonNode.class);
         String mockJsonString = "jsonString";
-        MessageDto mockMessageDto = mock(MessageDto.class);
+        Message mockMessage = mock(Message.class);
 
         when(existsStationArrivalDistanceRequestPort.exists(systemName, stationName)).thenReturn(false);
         when(objectMapper.valueToTree(argThat(arg -> {
@@ -187,18 +181,13 @@ public class RequestStationArrivalDistanceServiceTest {
             }
         }))).thenReturn(mockJsonNode);
         when(mockJsonNode.toString()).thenReturn(mockJsonString);
-        when(messageMapper.map(argThat(argument ->
-                argument.message().equals(mockJsonString) && argument.topic().equals(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName())
-        ))).thenReturn(mockMessageDto);
-
         ArgumentCaptor<Message> argumentCaptor = ArgumentCaptor.forClass(Message.class);
 
 
         underTest.request(station);
 
-        verify(sendKafkaMessagePort).send(mockMessageDto);
+        verify(sendKafkaMessagePort).send(mockMessage);
         verify(createStationArrivalDistanceRequestPort).create(systemName, stationName);
-        verify(messageMapper, times(1)).map(argumentCaptor.capture());
         Message message = argumentCaptor.getValue();
         assertThat(message, is(notNullValue()));
         assertThat(message.topic(), is(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName()));

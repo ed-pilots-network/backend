@@ -1,8 +1,8 @@
 package io.edpn.backend.trade.adapter.persistence.stationrequireodysseyrequest;
 
 import io.edpn.backend.trade.adapter.persistence.StationRequireOdysseyRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.StationDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRequireOdysseyRequestRepository;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationDataRequestEntityMapper;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

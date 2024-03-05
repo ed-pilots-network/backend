@@ -1,9 +1,7 @@
 package io.edpn.backend.trade.application.service;
 
-import io.edpn.backend.trade.application.dto.web.filter.FindCommodityFilterDto;
-import io.edpn.backend.trade.application.dto.web.filter.mapper.FindCommodityFilterDtoMapper;
-import io.edpn.backend.trade.application.dto.web.object.ValidatedCommodityDto;
-import io.edpn.backend.trade.application.dto.web.object.mapper.ValidatedCommodityDtoMapper;
+import io.edpn.backend.trade.application.domain.ValidatedCommodity;
+import io.edpn.backend.trade.application.domain.filter.FindCommodityFilter;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindAllValidatedCommodityUseCase;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindValidatedCommodityByFilterUseCase;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindValidatedCommodityByNameUseCase;
@@ -21,32 +19,19 @@ public class FindCommodityService implements FindAllValidatedCommodityUseCase, F
     private final LoadAllValidatedCommodityPort loadAllValidatedCommodityPort;
     private final LoadValidatedCommodityByNamePort loadValidatedCommodityByNamePort;
     private final LoadValidatedCommodityByFilterPort loadValidatedCommodityByFilterPort;
-    private final ValidatedCommodityDtoMapper validatedCommodityDTOMapper;
-    private final FindCommodityFilterDtoMapper findCommodityFilterDtoMapper;
-
 
     @Override
-    public List<ValidatedCommodityDto> findAll() {
-        return loadAllValidatedCommodityPort
-                .loadAll()
-                .stream()
-                .map(validatedCommodityDTOMapper::map)
-                .toList();
+    public List<ValidatedCommodity> findAll() {
+        return loadAllValidatedCommodityPort.loadAll();
     }
 
     @Override
-    public Optional<ValidatedCommodityDto> findByName(String displayName) {
-        return loadValidatedCommodityByNamePort
-                .loadByName(displayName)
-                .map(validatedCommodityDTOMapper::map);
+    public Optional<ValidatedCommodity> findByName(String displayName) {
+        return loadValidatedCommodityByNamePort.loadByName(displayName);
     }
 
     @Override
-    public List<ValidatedCommodityDto> findByFilter(FindCommodityFilterDto findCommodityRequest) {
-        return loadValidatedCommodityByFilterPort
-                .loadByFilter(findCommodityFilterDtoMapper.map(findCommodityRequest))
-                .stream()
-                .map(validatedCommodityDTOMapper::map)
-                .toList();
+    public List<ValidatedCommodity> findByFilter(FindCommodityFilter findCommodityRequest) {
+        return loadValidatedCommodityByFilterPort.loadByFilter(findCommodityRequest);
     }
 }

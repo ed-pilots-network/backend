@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.trade.application.domain.Message;
 import io.edpn.backend.trade.application.domain.System;
-import io.edpn.backend.trade.application.dto.web.object.MessageDto;
-import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
@@ -40,7 +38,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -71,8 +68,6 @@ public class RequestSystemEliteIdServiceTest {
     private Executor executor;
     @Mock
     private ObjectMapper objectMapper;
-    @Mock
-    private MessageMapper messageMapper;
 
     private RequestDataUseCase<System> underTest;
 
@@ -98,8 +93,7 @@ public class RequestSystemEliteIdServiceTest {
                 sendKafkaMessagePort,
                 retryTemplate,
                 executor,
-                objectMapper,
-                messageMapper
+                objectMapper
         );
     }
 
@@ -168,7 +162,7 @@ public class RequestSystemEliteIdServiceTest {
 
         JsonNode mockJsonNode = mock(JsonNode.class);
         String mockJsonString = "jsonString";
-        MessageDto mockMessageDto = mock(MessageDto.class);
+        Message mockMessage = mock(Message.class);
 
         when(existsSystemEliteIdRequestPort.exists(systemName)).thenReturn(false);
         when(objectMapper.valueToTree(argThat(arg -> {
@@ -179,18 +173,13 @@ public class RequestSystemEliteIdServiceTest {
             }
         }))).thenReturn(mockJsonNode);
         when(mockJsonNode.toString()).thenReturn(mockJsonString);
-        when(messageMapper.map(argThat(argument ->
-                argument.message().equals(mockJsonString) && argument.topic().equals(Topic.Request.SYSTEM_ELITE_ID.getTopicName())
-        ))).thenReturn(mockMessageDto);
 
         ArgumentCaptor<Message> argumentCaptor = ArgumentCaptor.forClass(Message.class);
 
-
         underTest.request(system);
 
-        verify(sendKafkaMessagePort).send(mockMessageDto);
+        verify(sendKafkaMessagePort).send(mockMessage);
         verify(createSystemEliteIdRequestPort).create(systemName);
-        verify(messageMapper, times(1)).map(argumentCaptor.capture());
         Message message = argumentCaptor.getValue();
         assertThat(message, is(notNullValue()));
         assertThat(message.topic(), is(Topic.Request.SYSTEM_ELITE_ID.getTopicName()));

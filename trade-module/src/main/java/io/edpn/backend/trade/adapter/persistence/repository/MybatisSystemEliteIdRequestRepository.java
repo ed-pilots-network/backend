@@ -1,6 +1,6 @@
 package io.edpn.backend.trade.adapter.persistence.repository;
 
-import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemDataRequestEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.SystemDataRequestEntity;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
@@ -25,5 +25,5 @@ public interface MybatisSystemEliteIdRequestRepository {
     @Results(id = "systemDataRequestResultMap", value = {
             @Result(property = "systemName", column = "system_name", javaType = String.class)
     })
-    List<MybatisSystemDataRequestEntity> findAll();
+    List<SystemDataRequestEntity> findAll();
 }

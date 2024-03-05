@@ -1,8 +1,8 @@
 package io.edpn.backend.trade.adapter.persistence.systemcoordinaterequest;
 
 import io.edpn.backend.trade.adapter.persistence.SystemCoordinateRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.SystemDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemCoordinateRequestRepository;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemDataRequestEntityMapper;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

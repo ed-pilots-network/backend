@@ -3,11 +3,10 @@ package io.edpn.backend.trade.application.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
+import io.edpn.backend.trade.application.domain.Message;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindStationFilter;
-import io.edpn.backend.trade.application.dto.web.object.MessageDto;
-import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
@@ -69,8 +68,6 @@ public class RequestMissingStationArrivalDistanceUseCaseTest {
     private RetryTemplate retryTemplate;
     @Mock
     private ObjectMapper objectMapper;
-    @Mock
-    private MessageMapper messageMapper;
 
     private RequestMissingStationArrivalDistanceUseCase underTest;
 
@@ -91,8 +88,7 @@ public class RequestMissingStationArrivalDistanceUseCaseTest {
                 sendKafkaMessagePort,
                 retryTemplate,
                 executor,
-                objectMapper,
-                messageMapper);
+                objectMapper);
     }
 
     @Test
@@ -131,9 +127,8 @@ public class RequestMissingStationArrivalDistanceUseCaseTest {
             }
         }))).thenReturn(jsonNode);
         when(jsonNode.toString()).thenReturn("jsonNodeString");
-        MessageDto messageDto = mock(MessageDto.class);
-        when(messageMapper.map(argThat(argument -> argument != null && argument.topic().equals("stationArrivalDistanceRequest") && argument.message().equals("jsonNodeString")))).thenReturn(messageDto);
-        when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
+        Message message = mock(Message.class);
+        when(sendKafkaMessagePort.send(message)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
         underTest.requestMissing();
@@ -173,12 +168,10 @@ public class RequestMissingStationArrivalDistanceUseCaseTest {
         }))).thenReturn(jsonNode2);
         when(jsonNode1.toString()).thenReturn("jsonNodeString1");
         when(jsonNode2.toString()).thenReturn("jsonNodeString2");
-        MessageDto messageDto1 = mock(MessageDto.class);
-        MessageDto messageDto2 = mock(MessageDto.class);
-        when(messageMapper.map(argThat(argument -> argument != null && argument.topic().equals("stationArrivalDistanceRequest") && argument.message().equals("jsonNodeString1")))).thenReturn(messageDto1);
-        when(messageMapper.map(argThat(argument -> argument != null && argument.topic().equals("stationArrivalDistanceRequest") && argument.message().equals("jsonNodeString2")))).thenReturn(messageDto2);
-        when(sendKafkaMessagePort.send(messageDto1)).thenReturn(true);
-        when(sendKafkaMessagePort.send(messageDto2)).thenReturn(true);
+        Message message1 = mock(Message.class);
+        Message message2 = mock(Message.class);
+        when(sendKafkaMessagePort.send(message1)).thenReturn(true);
+        when(sendKafkaMessagePort.send(message2)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
         underTest.requestMissing();

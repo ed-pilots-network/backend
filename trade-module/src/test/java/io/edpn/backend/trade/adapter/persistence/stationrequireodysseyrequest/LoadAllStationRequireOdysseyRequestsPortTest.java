@@ -2,16 +2,17 @@ package io.edpn.backend.trade.adapter.persistence.stationrequireodysseyrequest;
 
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
 import io.edpn.backend.trade.adapter.persistence.StationRequireOdysseyRequestRepository;
-import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationDataRequestEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.StationDataRequestEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.StationDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRequireOdysseyRequestRepository;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationDataRequestEntityMapper;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.LoadAllStationRequireOdysseyRequestsPort;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -21,7 +22,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class LoadAllStationRequireOdysseyRequestsPortTest {
-
 
     @Mock
     private MybatisStationRequireOdysseyRequestRepository mybatisStationRequireOdysseyRequestRepository;
@@ -37,8 +37,8 @@ public class LoadAllStationRequireOdysseyRequestsPortTest {
 
     @Test
     public void testFindAll() {
-        MybatisStationDataRequestEntity entity1 = mock(MybatisStationDataRequestEntity.class);
-        MybatisStationDataRequestEntity entity2 = mock(MybatisStationDataRequestEntity.class);
+        StationDataRequestEntity entity1 = mock(StationDataRequestEntity.class);
+        StationDataRequestEntity entity2 = mock(StationDataRequestEntity.class);
         StationDataRequest request1 = mock(StationDataRequest.class);
         StationDataRequest request2 = mock(StationDataRequest.class);
 

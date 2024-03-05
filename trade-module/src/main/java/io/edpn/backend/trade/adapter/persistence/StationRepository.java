@@ -1,11 +1,10 @@
 package io.edpn.backend.trade.adapter.persistence;
 
-import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.StationEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.FindStationFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.filter.FindStationFilter;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationEntityMapper;
-import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindStationFilterMapper;
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationByIdPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
@@ -22,24 +21,24 @@ import java.util.UUID;
 @Slf4j
 public class StationRepository implements CreateOrLoadStationPort, LoadStationByIdPort, UpdateStationPort, LoadStationsByFilterPort {
 
-    private final StationEntityMapper<MybatisStationEntity> mybatisStationEntityMapper;
+    private final StationEntityMapper stationEntityMapper;
     private final MybatisStationRepository mybatisStationRepository;
-    private final PersistenceFindStationFilterMapper mybatisPersistenceFindStationFilterMapper;
+    private final FindStationFilterMapper findStationFilterMapper;
 
     @Override
     public Station createOrLoad(Station station) {
-        return mybatisStationEntityMapper.map(mybatisStationRepository.createOrUpdateOnConflict(mybatisStationEntityMapper.map(station)));
+        return stationEntityMapper.map(mybatisStationRepository.createOrUpdateOnConflict(stationEntityMapper.map(station)));
     }
 
     @Override
     public Optional<Station> loadById(UUID uuid) {
         return mybatisStationRepository.findById(uuid)
-                .map(mybatisStationEntityMapper::map);
+                .map(stationEntityMapper::map);
     }
 
     @Override
     public Station update(Station station) {
-        var entity = mybatisStationEntityMapper.map(station);
+        var entity = stationEntityMapper.map(station);
         mybatisStationRepository.update(entity);
 
         return loadById(entity.getId())
@@ -48,9 +47,9 @@ public class StationRepository implements CreateOrLoadStationPort, LoadStationBy
 
     @Override
     public List<Station> loadByFilter(FindStationFilter findStationFilter) {
-        return mybatisStationRepository.findByFilter(mybatisPersistenceFindStationFilterMapper.map(findStationFilter))
+        return mybatisStationRepository.findByFilter(findStationFilterMapper.map(findStationFilter))
                 .stream()
-                .map(mybatisStationEntityMapper::map)
+                .map(stationEntityMapper::map)
                 .toList();
     }
 }

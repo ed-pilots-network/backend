@@ -1,8 +1,8 @@
 package io.edpn.backend.trade.adapter.persistence.marketdatum;
 
 import io.edpn.backend.trade.adapter.persistence.MarketDatumRepository;
-import io.edpn.backend.trade.adapter.persistence.entity.MybatisMarketDatumEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisMarketDatumEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.MarketDatumEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MarketDatumEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisMarketDatumRepository;
 import io.edpn.backend.trade.application.domain.MarketDatum;
 import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateWhenNotExistsMarketDatumPort;
@@ -26,7 +26,7 @@ public class CreateWhenNotExistsMarketDatumPortTest {
     private MybatisMarketDatumRepository mybatisMarketDatumRepository;
 
     @Mock
-    private MybatisMarketDatumEntityMapper marketDatumEntityMapper;
+    private MarketDatumEntityMapper marketDatumEntityMapper;
 
     private CreateWhenNotExistsMarketDatumPort underTest;
 
@@ -39,7 +39,7 @@ public class CreateWhenNotExistsMarketDatumPortTest {
     void testCreateWhenNotExists() {
         UUID uuid = UUID.randomUUID();
         MarketDatum inputMarketDatum = mock(MarketDatum.class);
-        MybatisMarketDatumEntity inputMarketDatumEntity = mock(MybatisMarketDatumEntity.class);
+        MarketDatumEntity inputMarketDatumEntity = mock(MarketDatumEntity.class);
 
         when(marketDatumEntityMapper.map(inputMarketDatum)).thenReturn(inputMarketDatumEntity);
 

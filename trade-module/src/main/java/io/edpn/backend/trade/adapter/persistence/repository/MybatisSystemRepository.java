@@ -2,8 +2,8 @@ package io.edpn.backend.trade.adapter.persistence.repository;
 
 
 import io.edpn.backend.mybatisutil.UuidTypeHandler;
-import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
-import io.edpn.backend.trade.application.dto.persistence.filter.PersistenceFindSystemFilter;
+import io.edpn.backend.trade.adapter.persistence.entity.SystemEntity;
+import io.edpn.backend.trade.adapter.persistence.filter.FindSystemFilter;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
@@ -32,22 +32,22 @@ public interface MybatisSystemRepository {
             @Result(property = "yCoordinate", column = "y_coordinate", javaType = Double.class),
             @Result(property = "zCoordinate", column = "z_coordinate", javaType = Double.class)
     })
-    Optional<MybatisSystemEntity> findById(UUID id);
+    Optional<SystemEntity> findById(UUID id);
 
     @Select("SELECT * FROM system WHERE name = #{name}")
     @ResultMap("systemResultMap")
-    Optional<MybatisSystemEntity> findByName(@Param("name") String name);
+    Optional<SystemEntity> findByName(@Param("name") String name);
 
     @Insert({"INSERT INTO system (id, name, elite_id, coordinates_geom) ",
             "VALUES (#{id}, #{name}, #{eliteId}, ST_MakePoint(#{xCoordinate}, #{yCoordinate}, #{zCoordinate}))"})
-    void insert(MybatisSystemEntity system);
+    void insert(SystemEntity system);
 
     @Update({"UPDATE system",
             "SET name = #{name},",
             "elite_id = #{eliteId},",
             "coordinates_geom = ST_MakePoint(#{xCoordinate}, #{yCoordinate}, #{zCoordinate})",
             "WHERE id = #{id}"})
-    void update(MybatisSystemEntity system);
+    void update(SystemEntity system);
 
     @Delete("DELETE FROM system WHERE id = #{id}")
     void delete(UUID id);
@@ -63,7 +63,7 @@ public interface MybatisSystemRepository {
             </script>
             """)
     @ResultMap("systemResultMap")
-    List<MybatisSystemEntity> findByFilter(PersistenceFindSystemFilter map);
+    List<SystemEntity> findByFilter(FindSystemFilter map);
 
     @Select({"INSERT INTO system (id, name, elite_id, coordinates_geom)",
             "VALUES (#{id}, #{name}, #{eliteId}, ST_MakePoint(#{xCoordinate}, #{yCoordinate}, #{zCoordinate}))",
@@ -74,5 +74,5 @@ public interface MybatisSystemRepository {
             "RETURNING *"
     })
     @ResultMap("systemResultMap")
-    MybatisSystemEntity createOrUpdateOnConflict(MybatisSystemEntity map);
+    SystemEntity createOrUpdateOnConflict(SystemEntity map);
 }

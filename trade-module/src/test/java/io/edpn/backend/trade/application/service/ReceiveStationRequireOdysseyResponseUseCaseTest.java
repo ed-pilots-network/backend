@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationRequireOdysseyResponse;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
-import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
@@ -60,8 +59,6 @@ public class ReceiveStationRequireOdysseyResponseUseCaseTest {
     private Executor executor;
     @Mock
     private ObjectMapper objectMapper;
-    @Mock
-    private MessageMapper messageMapper;
 
     private ReceiveKafkaMessageUseCase<StationRequireOdysseyResponse> underTest;
 
@@ -80,8 +77,7 @@ public class ReceiveStationRequireOdysseyResponseUseCaseTest {
                 sendKafkaMessagePort,
                 retryTemplate,
                 executor,
-                objectMapper,
-                messageMapper
+                objectMapper
         );
     }
 

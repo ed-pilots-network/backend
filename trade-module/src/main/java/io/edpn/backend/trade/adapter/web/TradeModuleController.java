@@ -1,10 +1,17 @@
 package io.edpn.backend.trade.adapter.web;
 
-import io.edpn.backend.trade.adapter.web.dto.filter.RestFindCommodityFilterDto;
-import io.edpn.backend.trade.adapter.web.dto.filter.RestLocateCommodityFilterDto;
-import io.edpn.backend.trade.adapter.web.dto.object.RestCommodityMarketInfoDto;
-import io.edpn.backend.trade.adapter.web.dto.object.RestLocateCommodityDto;
-import io.edpn.backend.trade.adapter.web.dto.object.RestValidatedCommodityDto;
+import io.edpn.backend.trade.adapter.web.dto.filter.FindCommodityFilterDto;
+import io.edpn.backend.trade.adapter.web.dto.filter.LocateCommodityFilterDto;
+import io.edpn.backend.trade.adapter.web.dto.filter.mapper.FindCommodityFilterDtoMapper;
+import io.edpn.backend.trade.adapter.web.dto.filter.mapper.LocateCommodityFilterDtoMapper;
+import io.edpn.backend.trade.adapter.web.dto.object.CommodityMarketInfoDto;
+import io.edpn.backend.trade.adapter.web.dto.object.LocateCommodityDto;
+import io.edpn.backend.trade.adapter.web.dto.object.ValidatedCommodityDto;
+import io.edpn.backend.trade.adapter.web.dto.object.mapper.CommodityMarketInfoDtoMapper;
+import io.edpn.backend.trade.adapter.web.dto.object.mapper.LocateCommodityDtoMapper;
+import io.edpn.backend.trade.adapter.web.dto.object.mapper.ValidatedCommodityDtoMapper;
+import io.edpn.backend.trade.application.domain.filter.FindCommodityFilter;
+import io.edpn.backend.trade.application.domain.filter.LocateCommodityFilter;
 import io.edpn.backend.trade.application.port.incomming.commoditymarketinfo.GetFullCommodityMarketInfoUseCase;
 import io.edpn.backend.trade.application.port.incomming.locatecommodity.LocateCommodityUseCase;
 import io.edpn.backend.trade.application.port.incomming.validatedcommodity.FindAllValidatedCommodityUseCase;
@@ -28,46 +35,56 @@ public class TradeModuleController {
     private final LocateCommodityUseCase locateCommodityUseCase;
     private final GetFullCommodityMarketInfoUseCase getFullCommodityMarketInfoUseCase;
 
+    private final ValidatedCommodityDtoMapper validatedCommodityDtoMapper;
+    private final LocateCommodityDtoMapper locateCommodityDtoMapper;
+    private final CommodityMarketInfoDtoMapper commodityMarketInfoDtoMapper;
+
+    private final FindCommodityFilterDtoMapper findCommodityFilterDtoMapper;
+    private final LocateCommodityFilterDtoMapper locateCommodityFilterDtoMapper;
 
     @GetMapping("/commodity")
-    public List<RestValidatedCommodityDto> findAll() {
+    public List<ValidatedCommodityDto> findAll() {
         return findAllValidatedCommodityUseCase.findAll()
                 .stream()
-                .map(x -> (RestValidatedCommodityDto)x)
+                .map(validatedCommodityDtoMapper::map)
                 .toList();
     }
 
     @GetMapping("/commodity/filter")
-    public List<RestValidatedCommodityDto> findByFilter(RestFindCommodityFilterDto findCommodityRequest) {
+    public List<ValidatedCommodityDto> findByFilter(FindCommodityFilterDto findCommodityRequest) {
+        FindCommodityFilter findCommodityFilter = findCommodityFilterDtoMapper.map(findCommodityRequest);
+
         return findValidatedCommodityByFilterUseCase
-                .findByFilter(findCommodityRequest)
+                .findByFilter(findCommodityFilter)
                 .stream()
-                .map(x -> (RestValidatedCommodityDto)x)
+                .map(validatedCommodityDtoMapper::map)
                 .toList();
     }
 
     @GetMapping("/commodity/{displayName}")
-    public Optional<RestValidatedCommodityDto> findByName(@PathVariable String displayName) {
+    public Optional<ValidatedCommodityDto> findByName(@PathVariable String displayName) {
         return findValidatedCommodityByNameUseCase
                 .findByName(displayName)
-                .map(x -> (RestValidatedCommodityDto)x);
+                .map(validatedCommodityDtoMapper::map);
     }
-    
+
     @GetMapping("/locate-commodity/filter")
-    public List<RestLocateCommodityDto> locateCommodityWithFilters(RestLocateCommodityFilterDto locateCommodityFilterDto){
+    public List<LocateCommodityDto> locateCommodityWithFilters(LocateCommodityFilterDto locateCommodityFilterDto) {
+        LocateCommodityFilter locateCommodityFilter = locateCommodityFilterDtoMapper.map(locateCommodityFilterDto);
+
         return locateCommodityUseCase
-                .locateCommodityOrderByDistance(locateCommodityFilterDto)
+                .locateCommodityOrderByDistance(locateCommodityFilter)
                 .stream()
-                .map(x -> (RestLocateCommodityDto)x)
+                .map(locateCommodityDtoMapper::map)
                 .toList();
     }
-    
+
     @GetMapping("/best-price")
-    List<RestCommodityMarketInfoDto> fullMarketInfo() {
+    List<CommodityMarketInfoDto> fullMarketInfo() {
         return getFullCommodityMarketInfoUseCase
                 .findAll()
                 .stream()
-                .map(x -> (RestCommodityMarketInfoDto)x)
+                .map(commodityMarketInfoDtoMapper::map)
                 .toList();
     }
 }

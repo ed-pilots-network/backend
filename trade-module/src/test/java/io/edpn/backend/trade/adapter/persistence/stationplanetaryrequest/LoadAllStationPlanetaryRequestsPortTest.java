@@ -2,16 +2,17 @@ package io.edpn.backend.trade.adapter.persistence.stationplanetaryrequest;
 
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
 import io.edpn.backend.trade.adapter.persistence.StationPlanetaryRequestRepository;
-import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationDataRequestEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.StationDataRequestEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.StationDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationPlanetaryRequestRepository;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationDataRequestEntityMapper;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.LoadAllStationPlanetaryRequestsPort;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -37,8 +38,8 @@ public class LoadAllStationPlanetaryRequestsPortTest {
 
     @Test
     public void testFindAll() {
-        MybatisStationDataRequestEntity entity1 = mock(MybatisStationDataRequestEntity.class);
-        MybatisStationDataRequestEntity entity2 = mock(MybatisStationDataRequestEntity.class);
+        StationDataRequestEntity entity1 = mock(StationDataRequestEntity.class);
+        StationDataRequestEntity entity2 = mock(StationDataRequestEntity.class);
         StationDataRequest request1 = mock(StationDataRequest.class);
         StationDataRequest request2 = mock(StationDataRequest.class);
 
