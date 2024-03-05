@@ -22,6 +22,7 @@
     <include file="db/explorationmodule/changelog/drop_system_coordinate_columns.xml"/>
     <include file="db/explorationmodule/changelog/create_station_maxlandingpadsize_data_request_table.xml"/>
     <include file="db/explorationmodule/changelog/create_station_table.xml"/>
+    <include file="db/explorationmodule/changelog/create_station_arrivaldistance_data_request_table.xml"/>
 
     <!-- views always last as they might depend on new columns -->
 

@@ -169,6 +169,24 @@ public interface KafkaConfig {
             container.setBeanName("systemCoordinatesRequestListenerContainer");
             return container;
         }
+        
+        @Bean(name = "explorationStationArrivalDistanceRequestListener")
+        public ConcurrentMessageListenerContainer<String, JsonNode> stationArrivalDistanceRequestListener(
+                @Qualifier("explorationModuleKafkaListenerContainerFactory") ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory,
+                @Qualifier("explorationStationArrivalDistanceRequestMessageProcessor") StationDataRequestMessageProcessor processor
+        ) {
+            String topicName = Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName();
+            ContainerProperties containerProperties = new ContainerProperties(topicName);
+            containerProperties.setMessageListener(processor);
+            
+            ConcurrentMessageListenerContainer<String, JsonNode> container = new ConcurrentMessageListenerContainer<>(
+                    kafkaListenerContainerFactory.getConsumerFactory(),
+                    containerProperties
+            );
+            
+            container.setBeanName("stationArrivalDistanceRequestListenerContainer");
+            return container;
+        }
 
         @Bean(name = "explorationStationMaxLandingPadSizeRequestListener")
         public ConcurrentMessageListenerContainer<String, JsonNode> stationMaxLandingPadSizeRequestListener(
