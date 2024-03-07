@@ -3,10 +3,9 @@ package io.edpn.backend.trade.application.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.trade.application.domain.Message;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindSystemFilter;
-import io.edpn.backend.trade.application.dto.web.object.MessageDto;
-import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
@@ -18,9 +17,7 @@ import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.Load
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.RequestMissingSystemEliteIdUseCase;
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Module;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Executor;
+import io.edpn.backend.util.Topic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +25,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.RetryCallback;
 import org.springframework.retry.support.RetryTemplate;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Executor;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -66,8 +67,6 @@ public class RequestMissingSystemEliteIdUseCaseTest {
     private RetryTemplate retryTemplate;
     @Mock
     private ObjectMapper objectMapper;
-    @Mock
-    private MessageMapper messageMapper;
     private RequestMissingSystemEliteIdUseCase underTest;
 
     @BeforeEach
@@ -84,8 +83,7 @@ public class RequestMissingSystemEliteIdUseCaseTest {
                 sendKafkaMessagePort,
                 retryTemplate,
                 executor,
-                objectMapper,
-                messageMapper
+                objectMapper
         );
     }
 
@@ -122,9 +120,8 @@ public class RequestMissingSystemEliteIdUseCaseTest {
             }
         }))).thenReturn(jsonNode);
         when(jsonNode.toString()).thenReturn("jsonNodeString");
-        MessageDto messageDto = mock(MessageDto.class);
-        when(messageMapper.map(argThat(argument -> argument != null && argument.topic().equals("systemEliteIdRequest") && argument.message().equals("jsonNodeString")))).thenReturn(messageDto);
-        when(sendKafkaMessagePort.send(messageDto)).thenReturn(true);
+        Message message = new Message(Topic.Request.SYSTEM_ELITE_ID.getTopicName(), "jsonNodeString");
+        when(sendKafkaMessagePort.send(message)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
         underTest.requestMissing();
@@ -158,12 +155,10 @@ public class RequestMissingSystemEliteIdUseCaseTest {
         }))).thenReturn(jsonNode2);
         when(jsonNode1.toString()).thenReturn("jsonNodeString1");
         when(jsonNode2.toString()).thenReturn("jsonNodeString2");
-        MessageDto messageDto1 = mock(MessageDto.class);
-        MessageDto messageDto2 = mock(MessageDto.class);
-        when(messageMapper.map(argThat(argument -> argument != null && argument.topic().equals("systemEliteIdRequest") && argument.message().equals("jsonNodeString1")))).thenReturn(messageDto1);
-        when(messageMapper.map(argThat(argument -> argument != null && argument.topic().equals("systemEliteIdRequest") && argument.message().equals("jsonNodeString2")))).thenReturn(messageDto2);
-        when(sendKafkaMessagePort.send(messageDto1)).thenReturn(true);
-        when(sendKafkaMessagePort.send(messageDto2)).thenReturn(true);
+        Message message1 = new Message(Topic.Request.SYSTEM_ELITE_ID.getTopicName(), "jsonNodeString1");
+        Message message2 = new Message(Topic.Request.SYSTEM_ELITE_ID.getTopicName(), "jsonNodeString2");
+        when(sendKafkaMessagePort.send(message1)).thenReturn(true);
+        when(sendKafkaMessagePort.send(message2)).thenReturn(true);
         doAnswer(invocation -> ((RetryCallback<?, ?>) invocation.getArgument(0)).doWithRetry(null)).when(retryTemplate).execute(any());
 
         underTest.requestMissing();

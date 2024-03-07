@@ -26,26 +26,26 @@ public class CreateWhenNotExistsMarketDatumPortTest {
     private MybatisMarketDatumRepository mybatisMarketDatumRepository;
 
     @Mock
-    private MybatisMarketDatumEntityMapper marketDatumEntityMapper;
+    private MybatisMarketDatumEntityMapper mybatisMarketDatumEntityMapper;
 
     private CreateWhenNotExistsMarketDatumPort underTest;
 
     @BeforeEach
     public void setUp() {
-        underTest = new MarketDatumRepository(mybatisMarketDatumRepository, marketDatumEntityMapper);
+        underTest = new MarketDatumRepository(mybatisMarketDatumRepository, mybatisMarketDatumEntityMapper);
     }
 
     @Test
     void testCreateWhenNotExists() {
         UUID uuid = UUID.randomUUID();
         MarketDatum inputMarketDatum = mock(MarketDatum.class);
-        MybatisMarketDatumEntity inputMarketDatumEntity = mock(MybatisMarketDatumEntity.class);
+        MybatisMarketDatumEntity inputMybatisMarketDatumEntity = mock(MybatisMarketDatumEntity.class);
 
-        when(marketDatumEntityMapper.map(inputMarketDatum)).thenReturn(inputMarketDatumEntity);
+        when(mybatisMarketDatumEntityMapper.map(inputMarketDatum)).thenReturn(inputMybatisMarketDatumEntity);
 
         underTest.createWhenNotExists(uuid, inputMarketDatum);
 
-        verify(marketDatumEntityMapper, times(1)).map(inputMarketDatum);
-        verify(mybatisMarketDatumRepository, times(1)).insertWhenNotExists(uuid, inputMarketDatumEntity);
+        verify(mybatisMarketDatumEntityMapper, times(1)).map(inputMarketDatum);
+        verify(mybatisMarketDatumRepository, times(1)).insertWhenNotExists(uuid, inputMybatisMarketDatumEntity);
     }
 }

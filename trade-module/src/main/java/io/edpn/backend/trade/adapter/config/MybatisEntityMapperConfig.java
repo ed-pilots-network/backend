@@ -9,19 +9,15 @@ import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationEnt
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisSystemDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisSystemEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisValidatedCommodityEntityMapper;
-import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceFindCommodityFilterMapper;
-import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceFindStationFilterMapper;
-import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceFindSystemFilterMapper;
-import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceLocateCommodityFilterMapper;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationDataRequestEntityMapper;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemDataRequestEntityMapper;
-import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindStationFilterMapper;
-import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindSystemFilterMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisFindCommodityFilterMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisFindStationFilterMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisFindSystemFilterMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisLocateCommodityFilterMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration("TradeModuleEntityMapperConfig")
-public class PersistenceEntityMapperConfig {
+public class MybatisEntityMapperConfig {
 
     @Bean(name = "tradeValidatedCommodityEntityMapper")
     public MybatisValidatedCommodityEntityMapper validatedCommodityEntityMapper() {
@@ -29,18 +25,18 @@ public class PersistenceEntityMapperConfig {
     }
 
     @Bean(name = "tradeFindCommodityEntityMapper")
-    public MybatisPersistenceFindCommodityFilterMapper findCommodityFilterMapper() {
-        return new MybatisPersistenceFindCommodityFilterMapper();
+    public MybatisFindCommodityFilterMapper findCommodityFilterMapper() {
+        return new MybatisFindCommodityFilterMapper();
     }
 
     @Bean(name = "tradeLocateCommodityEntityMapper")
-    public MybatisPersistenceLocateCommodityFilterMapper locateCommodityFilterMapper() {
-        return new MybatisPersistenceLocateCommodityFilterMapper();
+    public MybatisLocateCommodityFilterMapper locateCommodityFilterMapper() {
+        return new MybatisLocateCommodityFilterMapper();
     }
 
     @Bean(name = "tradePersistenceFindSystemFilterMapper")
-    public PersistenceFindSystemFilterMapper persistenceFindSystemFilterMapper() {
-        return new MybatisPersistenceFindSystemFilterMapper();
+    public MybatisFindSystemFilterMapper persistenceFindSystemFilterMapper() {
+        return new MybatisFindSystemFilterMapper();
     }
 
     @Bean(name = "tradeSystemEntityMapper")
@@ -81,17 +77,17 @@ public class PersistenceEntityMapperConfig {
     }
 
     @Bean(name = "tradePersistenceFindStationFilterMapper")
-    public PersistenceFindStationFilterMapper persistenceFindStationFilterMapper() {
-        return new MybatisPersistenceFindStationFilterMapper();
+    public MybatisFindStationFilterMapper persistenceFindStationFilterMapper() {
+        return new MybatisFindStationFilterMapper();
     }
 
     @Bean(name = "tradeStationDataRequestEntityMapper")
-    public StationDataRequestEntityMapper stationDataRequestEntityMapper() {
+    public MybatisStationDataRequestEntityMapper stationDataRequestEntityMapper() {
         return new MybatisStationDataRequestEntityMapper();
     }
 
     @Bean(name = "tradeSystemDataRequestEntityMapper")
-    public SystemDataRequestEntityMapper systemDataRequestEntityMapper() {
+    public MybatisSystemDataRequestEntityMapper systemDataRequestEntityMapper() {
         return new MybatisSystemDataRequestEntityMapper();
     }
 }

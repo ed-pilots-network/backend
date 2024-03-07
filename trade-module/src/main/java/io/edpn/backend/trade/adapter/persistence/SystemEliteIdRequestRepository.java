@@ -2,8 +2,8 @@ package io.edpn.backend.trade.adapter.persistence;
 
 
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisSystemDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemEliteIdRequestRepository;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemDataRequestEntityMapper;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.ExistsSystemEliteIdRequestPort;
@@ -18,7 +18,7 @@ import java.util.List;
 public class SystemEliteIdRequestRepository implements CreateSystemEliteIdRequestPort, ExistsSystemEliteIdRequestPort, DeleteSystemEliteIdRequestPort, LoadAllSystemEliteIdRequestsPort {
 
     private final MybatisSystemEliteIdRequestRepository mybatisSystemEliteIdRequestRepository;
-    private final SystemDataRequestEntityMapper systemDataRequestEntityMapper;
+    private final MybatisSystemDataRequestEntityMapper mybatisSystemDataRequestEntityMapper;
 
     @Override
     public void create(String systemName) {
@@ -38,7 +38,7 @@ public class SystemEliteIdRequestRepository implements CreateSystemEliteIdReques
     @Override
     public List<SystemDataRequest> loadAll() {
         return mybatisSystemEliteIdRequestRepository.findAll().stream()
-                .map(systemDataRequestEntityMapper::map)
+                .map(mybatisSystemDataRequestEntityMapper::map)
                 .toList();
     }
 }

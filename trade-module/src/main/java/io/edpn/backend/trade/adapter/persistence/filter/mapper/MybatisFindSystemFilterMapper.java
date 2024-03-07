@@ -1,13 +1,10 @@
 package io.edpn.backend.trade.adapter.persistence.filter.mapper;
 
 import io.edpn.backend.trade.adapter.persistence.filter.MybatisFindSystemFilter;
-import io.edpn.backend.trade.application.domain.filter.FindSystemFilter;
-import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindSystemFilterMapper;
 
-public class MybatisPersistenceFindSystemFilterMapper implements PersistenceFindSystemFilterMapper {
+public class MybatisFindSystemFilterMapper {
 
-    @Override
-    public MybatisFindSystemFilter map(FindSystemFilter findSystemFilter) {
+    public MybatisFindSystemFilter map(io.edpn.backend.trade.application.domain.filter.FindSystemFilter findSystemFilter) {
         return MybatisFindSystemFilter.builder()
                 .name(findSystemFilter.getName())
                 .hasCoordinates(findSystemFilter.getHasCoordinates())

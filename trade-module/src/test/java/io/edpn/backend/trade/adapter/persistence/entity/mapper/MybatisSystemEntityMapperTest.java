@@ -3,7 +3,6 @@ package io.edpn.backend.trade.adapter.persistence.entity.mapper;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.trade.application.domain.Coordinate;
 import io.edpn.backend.trade.application.domain.System;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemEntityMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +18,7 @@ import static org.hamcrest.Matchers.nullValue;
 @ExtendWith(MockitoExtension.class)
 class MybatisSystemEntityMapperTest {
 
-    private SystemEntityMapper<MybatisSystemEntity> underTest;
+    private MybatisSystemEntityMapper underTest;
 
     @BeforeEach
     public void setUp() {

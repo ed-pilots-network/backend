@@ -5,7 +5,6 @@ import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationData
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindStationFilter;
-import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
@@ -65,8 +64,6 @@ public class CleanUpObsoleteStationLandingPadSizeRequestsUseCaseTest {
     private Executor executor;
     @Mock
     private ObjectMapper objectMapper;
-    @Mock
-    private MessageMapper messageMapper;
 
     private CleanUpObsoleteStationLandingPadSizeRequestsUseCase underTest;
 
@@ -85,9 +82,7 @@ public class CleanUpObsoleteStationLandingPadSizeRequestsUseCaseTest {
                 sendKafkaMessagePort,
                 retryTemplate,
                 executor,
-                objectMapper,
-                messageMapper
-        );
+                objectMapper);
     }
 
     @Test

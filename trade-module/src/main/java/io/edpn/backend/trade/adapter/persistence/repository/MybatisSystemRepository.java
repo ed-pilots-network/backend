@@ -3,7 +3,7 @@ package io.edpn.backend.trade.adapter.persistence.repository;
 
 import io.edpn.backend.mybatisutil.UuidTypeHandler;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
-import io.edpn.backend.trade.application.dto.persistence.filter.PersistenceFindSystemFilter;
+import io.edpn.backend.trade.adapter.persistence.filter.MybatisFindSystemFilter;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
@@ -63,7 +63,7 @@ public interface MybatisSystemRepository {
             </script>
             """)
     @ResultMap("systemResultMap")
-    List<MybatisSystemEntity> findByFilter(PersistenceFindSystemFilter map);
+    List<MybatisSystemEntity> findByFilter(MybatisFindSystemFilter map);
 
     @Select({"INSERT INTO system (id, name, elite_id, coordinates_geom)",
             "VALUES (#{id}, #{name}, #{eliteId}, ST_MakePoint(#{xCoordinate}, #{yCoordinate}, #{zCoordinate}))",

@@ -1,11 +1,10 @@
 package io.edpn.backend.trade.adapter.persistence;
 
-import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisFindStationFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.filter.FindStationFilter;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationEntityMapper;
-import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindStationFilterMapper;
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationByIdPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
@@ -22,9 +21,9 @@ import java.util.UUID;
 @Slf4j
 public class StationRepository implements CreateOrLoadStationPort, LoadStationByIdPort, UpdateStationPort, LoadStationsByFilterPort {
 
-    private final StationEntityMapper<MybatisStationEntity> mybatisStationEntityMapper;
+    private final MybatisStationEntityMapper mybatisStationEntityMapper;
     private final MybatisStationRepository mybatisStationRepository;
-    private final PersistenceFindStationFilterMapper mybatisPersistenceFindStationFilterMapper;
+    private final MybatisFindStationFilterMapper mybatisFindStationFilterMapper;
 
     @Override
     public Station createOrLoad(Station station) {
@@ -48,7 +47,7 @@ public class StationRepository implements CreateOrLoadStationPort, LoadStationBy
 
     @Override
     public List<Station> loadByFilter(FindStationFilter findStationFilter) {
-        return mybatisStationRepository.findByFilter(mybatisPersistenceFindStationFilterMapper.map(findStationFilter))
+        return mybatisStationRepository.findByFilter(mybatisFindStationFilterMapper.map(findStationFilter))
                 .stream()
                 .map(mybatisStationEntityMapper::map)
                 .toList();

@@ -2,7 +2,6 @@ package io.edpn.backend.trade.adapter.persistence.entity.mapper;
 
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationDataRequestEntity;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationDataRequestEntityMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +14,7 @@ import static org.hamcrest.Matchers.is;
 class MybatisStationDataRequestEntityMapperTest {
 
 
-    private StationDataRequestEntityMapper underTest;
+    private MybatisStationDataRequestEntityMapper underTest;
 
     @BeforeEach
     public void setUp() {

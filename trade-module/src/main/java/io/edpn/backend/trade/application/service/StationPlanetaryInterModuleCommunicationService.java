@@ -8,7 +8,6 @@ import io.edpn.backend.trade.application.domain.Message;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindStationFilter;
-import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
@@ -56,7 +55,6 @@ public class StationPlanetaryInterModuleCommunicationService implements RequestD
     private final RetryTemplate retryTemplate;
     private final Executor executor;
     private final ObjectMapper objectMapper;
-    private final MessageMapper messageMapper;
 
     @Override
     public boolean isApplicable(Station station) {
@@ -76,7 +74,7 @@ public class StationPlanetaryInterModuleCommunicationService implements RequestD
             JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
             Message message = new Message(Topic.Request.STATION_IS_PLANETARY.getTopicName(), jsonNode.toString());
 
-            sendKafkaMessagePort.send(messageMapper.map(message));
+            sendKafkaMessagePort.send(message);
             createStationPlanetaryRequestPort.create(systemName, stationName);
         }
     }
@@ -146,7 +144,7 @@ public class StationPlanetaryInterModuleCommunicationService implements RequestD
                             Message message = new Message(Topic.Request.STATION_IS_PLANETARY.getTopicName(), jsonNode.toString());
 
                             boolean sendSuccessful = retryTemplate.execute(retryContext ->
-                                    sendKafkaMessagePort.send(messageMapper.map(message)));
+                                    sendKafkaMessagePort.send(message));
                             if (sendSuccessful) {
                                 createStationPlanetaryRequestPort.create(station.system().name(), station.name());
                             }

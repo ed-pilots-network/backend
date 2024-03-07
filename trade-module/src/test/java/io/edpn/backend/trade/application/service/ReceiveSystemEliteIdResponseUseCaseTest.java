@@ -3,7 +3,6 @@ package io.edpn.backend.trade.application.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
 import io.edpn.backend.trade.application.domain.System;
-import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
@@ -55,8 +54,6 @@ public class ReceiveSystemEliteIdResponseUseCaseTest {
     private Executor executor;
     @Mock
     private ObjectMapper objectMapper;
-    @Mock
-    private MessageMapper messageMapper;
 
     private ReceiveKafkaMessageUseCase<SystemEliteIdResponse> underTest;
 
@@ -74,8 +71,7 @@ public class ReceiveSystemEliteIdResponseUseCaseTest {
                 sendKafkaMessagePort,
                 retryTemplate,
                 executor,
-                objectMapper,
-                messageMapper
+                objectMapper
         );
     }
 

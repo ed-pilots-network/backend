@@ -3,8 +3,6 @@ package io.edpn.backend.trade.adapter.web.dto.filter.mapper;
 import io.edpn.backend.trade.adapter.web.dto.filter.RestLocateCommodityFilterDto;
 import io.edpn.backend.trade.application.domain.LandingPadSize;
 import io.edpn.backend.trade.application.domain.filter.LocateCommodityFilter;
-import io.edpn.backend.trade.application.dto.web.filter.LocateCommodityFilterDto;
-import io.edpn.backend.trade.application.dto.web.filter.mapper.LocateCommodityFilterDtoMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,17 +13,17 @@ import static org.hamcrest.Matchers.is;
 
 @ExtendWith(MockitoExtension.class)
 class RestLocateCommodityFilterDtoMapperTest {
-    
-    private LocateCommodityFilterDtoMapper underTest;
-    
+
+    private RestLocateCommodityFilterDtoMapper underTest;
+
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         underTest = new RestLocateCommodityFilterDtoMapper();
     }
-    
+
     @Test
     public void testMap_givenDto_shouldReturnDomainObject() {
-        LocateCommodityFilterDto dto = new RestLocateCommodityFilterDto(
+        RestLocateCommodityFilterDto dto = new RestLocateCommodityFilterDto(
                 "Display Name",
                 1.0,
                 2.0,
@@ -36,9 +34,9 @@ class RestLocateCommodityFilterDtoMapperTest {
                 String.valueOf(LandingPadSize.MEDIUM),
                 123L,
                 321L);
-        
+
         LocateCommodityFilter domainObject = underTest.map(dto);
-        
+
         assertThat(domainObject.getCommodityDisplayName(), is("Display Name"));
         assertThat(domainObject.getXCoordinate(), is(1.0));
         assertThat(domainObject.getYCoordinate(), is(2.0));

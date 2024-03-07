@@ -1,8 +1,8 @@
 package io.edpn.backend.trade.adapter.persistence.stationarrivaldistancerequest;
 
 import io.edpn.backend.trade.adapter.persistence.StationArrivalDistanceRequestRepository;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationArrivalDistanceRequestRepository;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationDataRequestEntityMapper;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateStationArrivalDistanceRequestPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,13 +18,13 @@ public class CreateStationArrivalDistanceRequestPortTest {
     @Mock
     private MybatisStationArrivalDistanceRequestRepository mybatisStationArrivalDistanceRequestRepository;
     @Mock
-    private StationDataRequestEntityMapper stationDataRequestEntityMapper;
+    private MybatisStationDataRequestEntityMapper mybatisStationDataRequestEntityMapper;
 
     private CreateStationArrivalDistanceRequestPort underTest;
 
     @BeforeEach
     public void setup() {
-        underTest = new StationArrivalDistanceRequestRepository(mybatisStationArrivalDistanceRequestRepository, stationDataRequestEntityMapper);
+        underTest = new StationArrivalDistanceRequestRepository(mybatisStationArrivalDistanceRequestRepository, mybatisStationDataRequestEntityMapper);
     }
 
     @Test

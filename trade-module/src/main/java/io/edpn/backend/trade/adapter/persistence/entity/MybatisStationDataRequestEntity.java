@@ -1,6 +1,5 @@
 package io.edpn.backend.trade.adapter.persistence.entity;
 
-import io.edpn.backend.trade.application.dto.persistence.entity.StationDataRequestEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +13,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MybatisStationDataRequestEntity implements StationDataRequestEntity {
+public class MybatisStationDataRequestEntity {
 
     private String stationName;
     private String systemName;

@@ -1,6 +1,5 @@
 package io.edpn.backend.trade.adapter.persistence.filter;
 
-import io.edpn.backend.trade.application.dto.persistence.filter.PersistenceLocateCommodityFilter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -16,8 +15,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class MybatisLocateCommodityFilter implements PersistenceLocateCommodityFilter {
-    
+public class MybatisLocateCommodityFilter {
+
     private String commodityDisplayName;
     private Double xCoordinate;
     private Double yCoordinate;

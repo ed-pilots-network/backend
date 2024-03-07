@@ -2,8 +2,8 @@ package io.edpn.backend.trade.adapter.persistence;
 
 
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisSystemDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemCoordinateRequestRepository;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemDataRequestEntityMapper;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.ExistsSystemCoordinateRequestPort;
@@ -18,7 +18,7 @@ import java.util.List;
 public class SystemCoordinateRequestRepository implements CreateSystemCoordinateRequestPort, ExistsSystemCoordinateRequestPort, DeleteSystemCoordinateRequestPort, LoadAllSystemCoordinateRequestsPort {
 
     private final MybatisSystemCoordinateRequestRepository mybatisSystemCoordinateRequestRepository;
-    private final SystemDataRequestEntityMapper systemDataRequestEntityMapper;
+    private final MybatisSystemDataRequestEntityMapper mybatisSystemDataRequestEntityMapper;
 
     @Override
     public void create(String systemName) {
@@ -38,7 +38,7 @@ public class SystemCoordinateRequestRepository implements CreateSystemCoordinate
     @Override
     public List<SystemDataRequest> loadAll() {
         return mybatisSystemCoordinateRequestRepository.findAll().stream()
-                .map(systemDataRequestEntityMapper::map)
+                .map(mybatisSystemDataRequestEntityMapper::map)
                 .toList();
     }
 }

@@ -1,42 +1,33 @@
 package io.edpn.backend.trade.adapter.persistence.entity.mapper;
 
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisLocateCommodityEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
-import io.edpn.backend.trade.adapter.persistence.entity.MybatisValidatedCommodityEntity;
 import io.edpn.backend.trade.application.domain.LocateCommodity;
-import io.edpn.backend.trade.application.dto.persistence.entity.LocateCommodityEntity;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.LocateCommodityEntityMapper;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationEntityMapper;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.ValidatedCommodityEntityMapper;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class MybatisLocateCommodityEntityMapper implements LocateCommodityEntityMapper<MybatisLocateCommodityEntity> {
-    
-    private final ValidatedCommodityEntityMapper<MybatisValidatedCommodityEntity> validatedCommodityEntityMapper;
-    private final StationEntityMapper<MybatisStationEntity> stationEntityMapper;
+public class MybatisLocateCommodityEntityMapper {
 
-    
-    @Override
-    public LocateCommodity map(LocateCommodityEntity locateCommodityEntity) {
+    private final MybatisValidatedCommodityEntityMapper mybatisValidatedCommodityEntityMapper;
+    private final MybatisStationEntityMapper mybatisStationEntityMapper;
+
+    public LocateCommodity map(MybatisLocateCommodityEntity mybatisLocateCommodityEntity) {
         return new LocateCommodity(
-                locateCommodityEntity.getPriceUpdatedAt(),
-                validatedCommodityEntityMapper.map(locateCommodityEntity.getValidatedCommodity()),
-                stationEntityMapper.map(locateCommodityEntity.getStation()),
-                locateCommodityEntity.getSupply(),
-                locateCommodityEntity.getDemand(),
-                locateCommodityEntity.getBuyPrice(),
-                locateCommodityEntity.getSellPrice(),
-                locateCommodityEntity.getDistance()
+                mybatisLocateCommodityEntity.getPriceUpdatedAt(),
+                mybatisValidatedCommodityEntityMapper.map(mybatisLocateCommodityEntity.getValidatedCommodity()),
+                mybatisStationEntityMapper.map(mybatisLocateCommodityEntity.getStation()),
+                mybatisLocateCommodityEntity.getSupply(),
+                mybatisLocateCommodityEntity.getDemand(),
+                mybatisLocateCommodityEntity.getBuyPrice(),
+                mybatisLocateCommodityEntity.getSellPrice(),
+                mybatisLocateCommodityEntity.getDistance()
         );
     }
-    
-    @Override
+
     public MybatisLocateCommodityEntity map(LocateCommodity locateCommodity) {
         return MybatisLocateCommodityEntity.builder()
                 .priceUpdatedAt(locateCommodity.priceUpdatedAt())
-                .validatedCommodity(validatedCommodityEntityMapper.map(locateCommodity.validatedCommodity()))
-                .station(stationEntityMapper.map(locateCommodity.station()))
+                .validatedCommodity(mybatisValidatedCommodityEntityMapper.map(locateCommodity.validatedCommodity()))
+                .station(mybatisStationEntityMapper.map(locateCommodity.station()))
                 .supply(locateCommodity.supply())
                 .demand(locateCommodity.demand())
                 .buyPrice(locateCommodity.buyPrice())

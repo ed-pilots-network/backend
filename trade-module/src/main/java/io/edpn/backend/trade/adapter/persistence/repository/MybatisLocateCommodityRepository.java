@@ -50,6 +50,6 @@ public interface MybatisLocateCommodityRepository {
             @Result(property = "distance", column = "distance", javaType = Double.class)
 
     })
-    List<MybatisLocateCommodityEntity> locateCommodityByFilter(MybatisLocateCommodityFilter locateCommodityFilterPersistence);
+    List<MybatisLocateCommodityEntity> locateCommodityByFilter(MybatisLocateCommodityFilter mybatisLocateCommodityFilterPersistence);
     
 }

@@ -14,10 +14,10 @@ import java.util.UUID;
 public class MarketDatumRepository implements CreateWhenNotExistsMarketDatumPort {
 
     private final MybatisMarketDatumRepository marketDatumRepository;
-    private final MybatisMarketDatumEntityMapper marketDatumEntityMapper;
+    private final MybatisMarketDatumEntityMapper mybatisMarketDatumEntityMapper;
 
     @Override
     public void createWhenNotExists(@NotBlank @NotNull UUID stationId, @NotNull MarketDatum marketDatum) {
-        marketDatumRepository.insertWhenNotExists(stationId, marketDatumEntityMapper.map(marketDatum));
+        marketDatumRepository.insertWhenNotExists(stationId, mybatisMarketDatumEntityMapper.map(marketDatum));
     }
 }

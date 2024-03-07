@@ -3,7 +3,7 @@ package io.edpn.backend.trade.adapter.persistence.repository;
 import io.edpn.backend.mybatisutil.UuidTypeHandler;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
-import io.edpn.backend.trade.application.dto.persistence.filter.PersistenceFindStationFilter;
+import io.edpn.backend.trade.adapter.persistence.filter.MybatisFindStationFilter;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
@@ -51,7 +51,7 @@ public interface MybatisStationRepository {
             </script>
             """)
     @ResultMap("stationResultMap")
-    List<MybatisStationEntity> findByFilter(PersistenceFindStationFilter filter);
+    List<MybatisStationEntity> findByFilter(MybatisFindStationFilter filter);
 
     @Select({
             "INSERT INTO station (id, market_id, name, arrival_distance, system_id, planetary, require_odyssey, fleet_carrier, max_landing_pad_size, market_updated_at) ",

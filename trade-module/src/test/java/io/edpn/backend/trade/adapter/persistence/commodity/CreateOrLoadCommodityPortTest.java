@@ -2,9 +2,9 @@ package io.edpn.backend.trade.adapter.persistence.commodity;
 
 import io.edpn.backend.trade.adapter.persistence.CommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisCommodityEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisCommodityEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityRepository;
 import io.edpn.backend.trade.application.domain.Commodity;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.CommodityEntityMapper;
 import io.edpn.backend.trade.application.port.outgoing.commodity.CreateOrLoadCommodityPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 public class CreateOrLoadCommodityPortTest {
 
     @Mock
-    private CommodityEntityMapper<MybatisCommodityEntity> mybatisCommodityEntityMapper;
+    private MybatisCommodityEntityMapper mybatisCommodityEntityMapper;
 
     @Mock
     private MybatisCommodityRepository mybatisCommodityRepository;
@@ -36,15 +36,15 @@ public class CreateOrLoadCommodityPortTest {
     @Test
     void findOrCreateByNameNew() {
         Commodity inputCommodity = mock(Commodity.class);
-        MybatisCommodityEntity inputCommodityEntity = mock(MybatisCommodityEntity.class);
-        when(mybatisCommodityEntityMapper.map(inputCommodity)).thenReturn(inputCommodityEntity);
+        MybatisCommodityEntity inputMybatisCommodityEntity = mock(MybatisCommodityEntity.class);
+        when(mybatisCommodityEntityMapper.map(inputCommodity)).thenReturn(inputMybatisCommodityEntity);
 
 
-        MybatisCommodityEntity outputCommodityEntity = mock(MybatisCommodityEntity.class);
+        MybatisCommodityEntity outputMybatisCommodityEntity = mock(MybatisCommodityEntity.class);
         Commodity expectedCommodity = mock(Commodity.class);
-        when(mybatisCommodityEntityMapper.map(outputCommodityEntity)).thenReturn(expectedCommodity);
+        when(mybatisCommodityEntityMapper.map(outputMybatisCommodityEntity)).thenReturn(expectedCommodity);
 
-        when(mybatisCommodityRepository.createOrUpdateOnConflict(inputCommodityEntity)).thenReturn(outputCommodityEntity);
+        when(mybatisCommodityRepository.createOrUpdateOnConflict(inputMybatisCommodityEntity)).thenReturn(outputMybatisCommodityEntity);
 
         Commodity result = underTest.createOrLoad(inputCommodity);
         assertThat(result, is(expectedCommodity));

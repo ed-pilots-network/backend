@@ -16,7 +16,6 @@ public class KafkaTopicHandler implements CreateTopicPort {
     private final int topicPartitions;
     private final short topicReplicationFactor;
 
-
     @Override
     public CompletableFuture<Void> createTopicIfNotExists(String topicName) {
         ListTopicsResult listTopicsResult = kafkaAdminClient.listTopics();

@@ -1,10 +1,11 @@
 package io.edpn.backend.trade.application.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.trade.application.domain.Coordinate;
 import io.edpn.backend.trade.application.domain.Message;
 import io.edpn.backend.trade.application.domain.System;
-import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
@@ -15,31 +16,36 @@ import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.D
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.ExistsSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestsPort;
 import io.edpn.backend.util.IdGenerator;
+import io.edpn.backend.util.Module;
 import io.edpn.backend.util.Topic;
-import java.util.concurrent.Executor;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.support.RetryTemplate;
 
+import java.util.concurrent.Executor;
+import java.util.stream.Stream;
+
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.mockito.Mockito.times;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class RequestSystemCoordinatesServiceTest {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    @Mock
+    private ObjectMapper objectMapper;
     @Mock
     private IdGenerator idGenerator;
     @Mock
@@ -62,8 +68,6 @@ public class RequestSystemCoordinatesServiceTest {
     private RetryTemplate retryTemplate;
     @Mock
     private Executor executor;
-    @Mock
-    private MessageMapper messageMapper;
     private RequestDataUseCase<System> underTest;
 
     public static Stream<Arguments> provideDoublesForCheckApplicability() {
@@ -91,8 +95,7 @@ public class RequestSystemCoordinatesServiceTest {
                 sendKafkaMessagePort,
                 retryTemplate,
                 executor,
-                objectMapper,
-                messageMapper
+                objectMapper
         );
     }
 
@@ -110,27 +113,46 @@ public class RequestSystemCoordinatesServiceTest {
     }
 
     @Test
-    void shouldSendRequest() {
+    public void testRequestWhenIdExists() {
+        String systemName = "Test System";
         System system = new System(
                 null,
                 null,
-                "Test System",
+                systemName,
                 null
         );
 
+        when(existsSystemCoordinateRequestPort.exists(systemName)).thenReturn(true);
+
         underTest.request(system);
 
-        ArgumentCaptor<Message> argumentCaptor = ArgumentCaptor.forClass(Message.class);
-        verify(messageMapper, times(1)).map(argumentCaptor.capture());
-        verify(sendKafkaMessagePort, times(1)).send(messageMapper.map(argumentCaptor.capture()));
+        verify(sendKafkaMessagePort, never()).send(any());
+        verify(createSystemCoordinateRequestPort, never()).create(anyString());
+    }
 
-        Message message = argumentCaptor.getValue();
-        assertThat(message, is(notNullValue()));
-        assertThat(message.topic(), is(Topic.Request.SYSTEM_COORDINATES.getTopicName()));
-        assertThat(message.message(), is(notNullValue()));
+    @Test
+    public void testRequestWhenIdDoesNotExist() {
+        String systemName = "Test System";
+        System system = mock(System.class);
+        when(system.name()).thenReturn(systemName);
 
-        //TODO: below
-        //SystemDataRequest actualSystemDataRequest = objectMapper.treeToValue(message.getMessage(), SystemDataRequest.class);
-        assertThat(message.message(), containsString(system.name()));
+        JsonNode mockJsonNode = mock(JsonNode.class);
+        String jsonString = "jsonString";
+
+        when(existsSystemCoordinateRequestPort.exists(systemName)).thenReturn(false);
+        when(objectMapper.valueToTree(argThat(argument -> {
+            if (argument instanceof SystemDataRequest systemDataRequest) {
+                return Module.TRADE == systemDataRequest.requestingModule() && systemDataRequest.systemName().equals(systemName);
+            } else {
+                return false;
+            }
+        }))).thenReturn(mockJsonNode);
+        when(mockJsonNode.toString()).thenReturn(jsonString);
+        Message message = new Message(Topic.Request.SYSTEM_COORDINATES.getTopicName(), jsonString);
+
+        underTest.request(system);
+
+        verify(sendKafkaMessagePort).send(message);
+        verify(createSystemCoordinateRequestPort).create(systemName);
     }
 }

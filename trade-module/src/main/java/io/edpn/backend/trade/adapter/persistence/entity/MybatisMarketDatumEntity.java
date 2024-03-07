@@ -1,6 +1,5 @@
 package io.edpn.backend.trade.adapter.persistence.entity;
 
-import io.edpn.backend.trade.application.dto.persistence.entity.MarketDatumEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,8 +17,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MybatisMarketDatumEntity implements MarketDatumEntity {
-    
+public class MybatisMarketDatumEntity {
+
     private MybatisCommodityEntity commodity;
     private LocalDateTime timestamp;
     private long meanPrice;

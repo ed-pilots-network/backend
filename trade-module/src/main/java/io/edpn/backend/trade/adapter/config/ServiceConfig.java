@@ -3,19 +3,13 @@ package io.edpn.backend.trade.adapter.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
-import io.edpn.backend.trade.application.dto.web.filter.mapper.FindCommodityFilterDtoMapper;
-import io.edpn.backend.trade.application.dto.web.filter.mapper.LocateCommodityFilterDtoMapper;
-import io.edpn.backend.trade.application.dto.web.object.mapper.CommodityMarketInfoDtoMapper;
-import io.edpn.backend.trade.application.dto.web.object.mapper.LocateCommodityDtoMapper;
-import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
-import io.edpn.backend.trade.application.dto.web.object.mapper.ValidatedCommodityDtoMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.commodity.CreateOrLoadCommodityPort;
 import io.edpn.backend.trade.application.port.outgoing.commoditymarketinfo.GetFullCommodityMarketInfoPort;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.locatecommodity.LocateCommodityByFilterPort;
-import io.edpn.backend.trade.application.port.outgoing.marketdatum.createOrUpdateExistingWhenNewerLatestMarketDatumPort;
 import io.edpn.backend.trade.application.port.outgoing.marketdatum.CreateWhenNotExistsMarketDatumPort;
+import io.edpn.backend.trade.application.port.outgoing.marketdatum.createOrUpdateExistingWhenNewerLatestMarketDatumPort;
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
@@ -75,25 +69,23 @@ public class ServiceConfig {
     public FindCommodityService findCommodityService(
             LoadAllValidatedCommodityPort loadAllValidatedCommodityPort,
             LoadValidatedCommodityByNamePort loadValidatedCommodityByNamePort,
-            LoadValidatedCommodityByFilterPort loadValidatedCommodityByFilterPort,
-            ValidatedCommodityDtoMapper validatedCommodityDTOMapper,
-            FindCommodityFilterDtoMapper findCommodityFilterDtoMapper) {
-        return new FindCommodityService(loadAllValidatedCommodityPort, loadValidatedCommodityByNamePort, loadValidatedCommodityByFilterPort, validatedCommodityDTOMapper, findCommodityFilterDtoMapper);
+            LoadValidatedCommodityByFilterPort loadValidatedCommodityByFilterPort
+    ) {
+        return new FindCommodityService(loadAllValidatedCommodityPort, loadValidatedCommodityByNamePort, loadValidatedCommodityByFilterPort);
     }
 
     @Bean(name = "tradeFindCommodityMarketInfoService")
     public FindCommodityMarketInfoService findCommodityMarketInfoService(
-            GetFullCommodityMarketInfoPort commodityMarketInfoPort,
-            CommodityMarketInfoDtoMapper commodityMarketInfoDtoMapper) {
-        return new FindCommodityMarketInfoService(commodityMarketInfoPort, commodityMarketInfoDtoMapper);
+            GetFullCommodityMarketInfoPort commodityMarketInfoPort
+    ) {
+        return new FindCommodityMarketInfoService(commodityMarketInfoPort);
     }
 
     @Bean(name = "tradeLocateCommodityService")
     public LocateCommodityService locateCommodityService(
-            LocateCommodityByFilterPort locateCommodityByFilterPort,
-            LocateCommodityFilterDtoMapper locateCommodityFilterDtoMapper,
-            LocateCommodityDtoMapper locateCommodityDtoMapper) {
-        return new LocateCommodityService(locateCommodityByFilterPort, locateCommodityFilterDtoMapper, locateCommodityDtoMapper);
+            LocateCommodityByFilterPort locateCommodityByFilterPort
+    ) {
+        return new LocateCommodityService(locateCommodityByFilterPort);
     }
 
     @Bean(name = "tradeRecieveCommodityMessageUsecase")
@@ -125,8 +117,7 @@ public class ServiceConfig {
             SendKafkaMessagePort sendKafkaMessagePort,
             @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("tradeForkJoinPool") Executor executor,
-            ObjectMapper objectMapper,
-            MessageMapper messageMapper) {
+            ObjectMapper objectMapper) {
         return new StationArrivalDistanceInterModuleCommunicationService(
                 idGenerator,
                 loadStationsByFilterPort,
@@ -140,8 +131,7 @@ public class ServiceConfig {
                 sendKafkaMessagePort,
                 retryTemplate,
                 executor,
-                objectMapper,
-                messageMapper);
+                objectMapper);
     }
 
     @Bean(name = "tradeSystemCoordinateInterModuleCommunicationService")
@@ -157,8 +147,7 @@ public class ServiceConfig {
             SendKafkaMessagePort sendKafkaMessagePort,
             @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("tradeForkJoinPool") Executor executor,
-            ObjectMapper objectMapper,
-            MessageMapper messageMapper
+            ObjectMapper objectMapper
     ) {
         return new SystemCoordinateInterModuleCommunicationService(
                 idGenerator,
@@ -172,8 +161,7 @@ public class ServiceConfig {
                 sendKafkaMessagePort,
                 retryTemplate,
                 executor,
-                objectMapper,
-                messageMapper
+                objectMapper
         );
     }
 
@@ -191,8 +179,7 @@ public class ServiceConfig {
             SendKafkaMessagePort sendKafkaMessagePort,
             @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("tradeForkJoinPool") Executor executor,
-            ObjectMapper objectMapper,
-            MessageMapper messageMapper
+            ObjectMapper objectMapper
     ) {
         return new StationLandingPadSizeInterModuleCommunicationService(
                 idGenerator,
@@ -207,8 +194,7 @@ public class ServiceConfig {
                 sendKafkaMessagePort,
                 retryTemplate,
                 executor,
-                objectMapper,
-                messageMapper
+                objectMapper
         );
     }
 
@@ -226,8 +212,7 @@ public class ServiceConfig {
             SendKafkaMessagePort sendKafkaMessagePort,
             @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("tradeForkJoinPool") Executor executor,
-            ObjectMapper objectMapper,
-            MessageMapper messageMapper
+            ObjectMapper objectMapper
     ) {
         return new StationPlanetaryInterModuleCommunicationService(
                 idGenerator,
@@ -242,8 +227,7 @@ public class ServiceConfig {
                 sendKafkaMessagePort,
                 retryTemplate,
                 executor,
-                objectMapper,
-                messageMapper
+                objectMapper
         );
     }
 
@@ -261,8 +245,7 @@ public class ServiceConfig {
             SendKafkaMessagePort sendKafkaMessagePort,
             @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("tradeForkJoinPool") Executor executor,
-            ObjectMapper objectMapper,
-            MessageMapper messageMapper
+            ObjectMapper objectMapper
     ) {
         return new StationRequireOdysseyInterModuleCommunicationService(
                 idGenerator,
@@ -277,8 +260,7 @@ public class ServiceConfig {
                 sendKafkaMessagePort,
                 retryTemplate,
                 executor,
-                objectMapper,
-                messageMapper
+                objectMapper
         );
     }
 
@@ -295,8 +277,8 @@ public class ServiceConfig {
             SendKafkaMessagePort sendKafkaMessagePort,
             @Qualifier("tradeRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("tradeForkJoinPool") Executor executor,
-            ObjectMapper objectMapper,
-            MessageMapper messageMapper) {
+            ObjectMapper objectMapper
+    ) {
         return new SystemEliteIdInterModuleCommunicationService(
                 idGenerator,
                 loadSystemsByFilterPort,
@@ -309,8 +291,7 @@ public class ServiceConfig {
                 sendKafkaMessagePort,
                 retryTemplate,
                 executor,
-                objectMapper,
-                messageMapper
+                objectMapper
         );
     }
 }

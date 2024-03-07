@@ -1,11 +1,10 @@
 package io.edpn.backend.trade.adapter.persistence;
 
-import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisSystemEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisFindSystemFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemRepository;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindSystemFilter;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemEntityMapper;
-import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindSystemFilterMapper;
 import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemByIdPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
@@ -22,8 +21,8 @@ import java.util.UUID;
 @Slf4j
 public class SystemRepository implements CreateOrLoadSystemPort, LoadSystemByIdPort, UpdateSystemPort, LoadSystemsByFilterPort {
 
-    private final SystemEntityMapper<MybatisSystemEntity> mybatisSystemEntityMapper;
-    private final PersistenceFindSystemFilterMapper persistenceFindSystemFilter;
+    private final MybatisSystemEntityMapper mybatisSystemEntityMapper;
+    private final MybatisFindSystemFilterMapper persistenceFindSystemFilter;
     private final MybatisSystemRepository mybatisSystemRepository;
 
     @Override

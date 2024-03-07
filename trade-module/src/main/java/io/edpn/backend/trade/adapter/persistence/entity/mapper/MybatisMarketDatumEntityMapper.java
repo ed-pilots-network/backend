@@ -1,40 +1,34 @@
 package io.edpn.backend.trade.adapter.persistence.entity.mapper;
 
-import io.edpn.backend.trade.adapter.persistence.entity.MybatisCommodityEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisMarketDatumEntity;
 import io.edpn.backend.trade.application.domain.MarketDatum;
-import io.edpn.backend.trade.application.dto.persistence.entity.MarketDatumEntity;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.CommodityEntityMapper;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.MarketDatumEntityMapper;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class MybatisMarketDatumEntityMapper implements MarketDatumEntityMapper<MybatisMarketDatumEntity> {
-    
-    private final CommodityEntityMapper<MybatisCommodityEntity> commodityEntityMapper;
-    
-    @Override
-    public MarketDatum map(MarketDatumEntity marketDatumEntity) {
+public class MybatisMarketDatumEntityMapper {
+
+    private final MybatisCommodityEntityMapper mybatisCommodityEntityMapper;
+
+    public MarketDatum map(MybatisMarketDatumEntity mybatisMarketDatumEntity) {
         return new MarketDatum(
                 //TODO: Remap to validatedCommodity?
-                commodityEntityMapper.map(marketDatumEntity.getCommodity()),
-                marketDatumEntity.getTimestamp(),
-                marketDatumEntity.getMeanPrice(),
-                marketDatumEntity.getBuyPrice(),
-                marketDatumEntity.getStock(),
-                marketDatumEntity.getStockBracket(),
-                marketDatumEntity.getSellPrice(),
-                marketDatumEntity.getDemand(),
-                marketDatumEntity.getDemandBracket(),
-                marketDatumEntity.getStatusFlags(),
-                marketDatumEntity.isProhibited()
+                mybatisCommodityEntityMapper.map(mybatisMarketDatumEntity.getCommodity()),
+                mybatisMarketDatumEntity.getTimestamp(),
+                mybatisMarketDatumEntity.getMeanPrice(),
+                mybatisMarketDatumEntity.getBuyPrice(),
+                mybatisMarketDatumEntity.getStock(),
+                mybatisMarketDatumEntity.getStockBracket(),
+                mybatisMarketDatumEntity.getSellPrice(),
+                mybatisMarketDatumEntity.getDemand(),
+                mybatisMarketDatumEntity.getDemandBracket(),
+                mybatisMarketDatumEntity.getStatusFlags(),
+                mybatisMarketDatumEntity.isProhibited()
         );
     }
-    
-    @Override
+
     public MybatisMarketDatumEntity map(MarketDatum marketDatum) {
         return MybatisMarketDatumEntity.builder()
-                .commodity(commodityEntityMapper.map(marketDatum.commodity()))
+                .commodity(mybatisCommodityEntityMapper.map(marketDatum.commodity()))
                 .timestamp(marketDatum.timestamp())
                 .meanPrice(marketDatum.meanPrice())
                 .buyPrice(marketDatum.buyPrice())

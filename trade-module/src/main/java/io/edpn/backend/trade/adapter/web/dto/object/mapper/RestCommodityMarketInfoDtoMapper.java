@@ -1,25 +1,18 @@
 package io.edpn.backend.trade.adapter.web.dto.object.mapper;
 
 import io.edpn.backend.trade.adapter.web.dto.object.RestCommodityMarketInfoDto;
-import io.edpn.backend.trade.adapter.web.dto.object.RestStationDto;
-import io.edpn.backend.trade.adapter.web.dto.object.RestValidatedCommodityDto;
 import io.edpn.backend.trade.application.domain.CommodityMarketInfo;
-import io.edpn.backend.trade.application.dto.web.object.CommodityMarketInfoDto;
-import io.edpn.backend.trade.application.dto.web.object.mapper.CommodityMarketInfoDtoMapper;
-import io.edpn.backend.trade.application.dto.web.object.mapper.StationDtoMapper;
-import io.edpn.backend.trade.application.dto.web.object.mapper.ValidatedCommodityDtoMapper;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class RestCommodityMarketInfoDtoMapper implements CommodityMarketInfoDtoMapper {
+public class RestCommodityMarketInfoDtoMapper {
 
-    private final ValidatedCommodityDtoMapper commodityDtoMapper;
-    private final StationDtoMapper stationDtoMapper;
+    private final RestValidatedCommodityDtoMapper commodityDtoMapper;
+    private final RestStationDtoMapper restStationDtoMapper;
 
-    @Override
-    public CommodityMarketInfoDto map(CommodityMarketInfo commodityMarketInfo) {
+    public RestCommodityMarketInfoDto map(CommodityMarketInfo commodityMarketInfo) {
         return new RestCommodityMarketInfoDto(
-                (RestValidatedCommodityDto) commodityDtoMapper.map(commodityMarketInfo.validatedCommodity()),
+                commodityDtoMapper.map(commodityMarketInfo.validatedCommodity()),
                 commodityMarketInfo.maxBuyPrice(),
                 commodityMarketInfo.minBuyPrice(),
                 commodityMarketInfo.avgBuyPrice(),
@@ -36,8 +29,8 @@ public class RestCommodityMarketInfoDtoMapper implements CommodityMarketInfoDtoM
                 commodityMarketInfo.stationsWithSellPrice(),
                 commodityMarketInfo.stationsWithBuyPriceLowerThanAverage(),
                 commodityMarketInfo.stationsWithSellPriceHigherThanAverage(),
-                (RestStationDto) stationDtoMapper.map(commodityMarketInfo.highestSellingToStation()),
-                (RestStationDto) stationDtoMapper.map(commodityMarketInfo.lowestBuyingFromStation())
+                restStationDtoMapper.map(commodityMarketInfo.highestSellingToStation()),
+                restStationDtoMapper.map(commodityMarketInfo.lowestBuyingFromStation())
         );
     }
 }

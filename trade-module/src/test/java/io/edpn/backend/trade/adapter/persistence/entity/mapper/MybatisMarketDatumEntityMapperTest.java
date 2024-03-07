@@ -4,17 +4,15 @@ import io.edpn.backend.trade.adapter.persistence.entity.MybatisCommodityEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisMarketDatumEntity;
 import io.edpn.backend.trade.application.domain.Commodity;
 import io.edpn.backend.trade.application.domain.MarketDatum;
-import io.edpn.backend.trade.application.dto.persistence.entity.MarketDatumEntity;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.CommodityEntityMapper;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.MarketDatumEntityMapper;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -25,27 +23,27 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class MybatisMarketDatumEntityMapperTest {
-    
+
     @Mock
-    private CommodityEntityMapper<MybatisCommodityEntity> mybatisCommodityEntityMapper;
-    
-    private MarketDatumEntityMapper<MybatisMarketDatumEntity> underTest;
-    
+    private MybatisCommodityEntityMapper mybatisCommodityEntityMapper;
+
+    private MybatisMarketDatumEntityMapper underTest;
+
     @BeforeEach
     public void setUp() {
         underTest = new MybatisMarketDatumEntityMapper(mybatisCommodityEntityMapper);
     }
-    
+
     @Test
     public void testMap_givenEntity_shouldReturnDomainObject() {
         // create mock objects
         Commodity mockCommodity = mock(Commodity.class);
-        
+
         LocalDateTime timestamp = LocalDateTime.now();
         List<String> statusFlags = Arrays.asList("status1", "status2");
-        
+
         // Setup the MarketDatum Entity with test data
-        MarketDatumEntity entity = MybatisMarketDatumEntity.builder()
+        MybatisMarketDatumEntity entity = MybatisMarketDatumEntity.builder()
                 .commodity(mock(MybatisCommodityEntity.class))
                 .timestamp(timestamp)
                 .meanPrice(100L)
@@ -58,12 +56,12 @@ class MybatisMarketDatumEntityMapperTest {
                 .statusFlags(statusFlags)
                 .prohibited(false)
                 .build();
-        
+
         when(mybatisCommodityEntityMapper.map(entity.getCommodity())).thenReturn(mockCommodity);
-        
+
         // Map the entity to a MarketDatum object
         MarketDatum domainObject = underTest.map(entity);
-        
+
         // Verify that the result matches the expected values
         assertThat(domainObject.commodity(), is(mockCommodity));
         assertThat(domainObject.timestamp(), is(timestamp));
@@ -76,18 +74,18 @@ class MybatisMarketDatumEntityMapperTest {
         assertThat(domainObject.demandBracket(), is(20L));
         assertThat(domainObject.statusFlags(), is(statusFlags));
         assertThat(domainObject.prohibited(), is(false));
-        
+
         verify(mybatisCommodityEntityMapper, times(1)).map(entity.getCommodity());
     }
-    
+
     @Test
     public void testMap_givenDomainObject_shouldReturnEntity() {
         // create mock objects
-        MybatisCommodityEntity mockCommodityEntity = mock(MybatisCommodityEntity.class);
-        
+        MybatisCommodityEntity mockMybatisCommodityEntity = mock(MybatisCommodityEntity.class);
+
         LocalDateTime timestamp = LocalDateTime.now();
         List<String> statusFlags = Arrays.asList("status1", "status2");
-        
+
         // Setup the MarketDatum object with test data
         MarketDatum domainObject = new MarketDatum(
                 mock(Commodity.class),
@@ -103,13 +101,13 @@ class MybatisMarketDatumEntityMapperTest {
                 false
         );
 
-        when(mybatisCommodityEntityMapper.map(domainObject.commodity())).thenReturn(mockCommodityEntity);
-        
+        when(mybatisCommodityEntityMapper.map(domainObject.commodity())).thenReturn(mockMybatisCommodityEntity);
+
         // Map the domainObject to a MarketDatum entity
-        MarketDatumEntity entity = underTest.map(domainObject);
-        
+        MybatisMarketDatumEntity entity = underTest.map(domainObject);
+
         // Verify that the result matches the expected values
-        assertThat(entity.getCommodity(), is(mockCommodityEntity));
+        assertThat(entity.getCommodity(), is(mockMybatisCommodityEntity));
         assertThat(entity.getTimestamp(), is(timestamp));
         assertThat(entity.getMeanPrice(), is(100L));
         assertThat(entity.getBuyPrice(), is(50L));

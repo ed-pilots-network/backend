@@ -1,6 +1,5 @@
 package io.edpn.backend.trade.adapter.persistence.entity;
 
-import io.edpn.backend.trade.application.dto.persistence.entity.CommodityEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,8 +15,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MybatisCommodityEntity implements CommodityEntity {
-    
+public class MybatisCommodityEntity {
+
     private UUID id;
     private String name;
 }

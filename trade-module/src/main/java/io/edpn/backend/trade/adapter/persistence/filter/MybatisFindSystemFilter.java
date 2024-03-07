@@ -1,6 +1,5 @@
 package io.edpn.backend.trade.adapter.persistence.filter;
 
-import io.edpn.backend.trade.application.dto.persistence.filter.PersistenceFindSystemFilter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -16,7 +15,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class MybatisFindSystemFilter implements PersistenceFindSystemFilter {
+public class MybatisFindSystemFilter {
 
     private String name;
     private Boolean hasEliteId;

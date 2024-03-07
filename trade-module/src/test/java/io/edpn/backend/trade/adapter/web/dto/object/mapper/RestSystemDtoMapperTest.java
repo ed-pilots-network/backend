@@ -1,9 +1,8 @@
 package io.edpn.backend.trade.adapter.web.dto.object.mapper;
 
+import io.edpn.backend.trade.adapter.web.dto.object.RestSystemDto;
 import io.edpn.backend.trade.application.domain.Coordinate;
 import io.edpn.backend.trade.application.domain.System;
-import io.edpn.backend.trade.application.dto.web.object.SystemDto;
-import io.edpn.backend.trade.application.dto.web.object.mapper.SystemDtoMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,14 +14,14 @@ import static org.hamcrest.Matchers.notNullValue;
 
 @ExtendWith(MockitoExtension.class)
 class RestSystemDtoMapperTest {
-    
-    private SystemDtoMapper underTest;
-    
+
+    private RestSystemDtoMapper underTest;
+
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         underTest = new RestSystemDtoMapper();
     }
-    
+
     @Test
     public void testMap_givenDomainObject_shouldReturnDto() {
         Long eliteId = 123456L;
@@ -38,8 +37,8 @@ class RestSystemDtoMapperTest {
                 coordinate
         );
 
-        SystemDto dto = underTest.map(domainObject);
-        
+        RestSystemDto dto = underTest.map(domainObject);
+
         assertThat(dto.eliteId(), is(eliteId));
         assertThat(dto.name(), is(name));
         assertThat(dto.coordinates(), notNullValue());

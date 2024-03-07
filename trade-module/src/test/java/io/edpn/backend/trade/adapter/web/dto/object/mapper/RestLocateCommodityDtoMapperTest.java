@@ -1,19 +1,18 @@
 package io.edpn.backend.trade.adapter.web.dto.object.mapper;
 
+import io.edpn.backend.trade.adapter.web.dto.object.RestLocateCommodityDto;
 import io.edpn.backend.trade.adapter.web.dto.object.RestStationDto;
 import io.edpn.backend.trade.adapter.web.dto.object.RestValidatedCommodityDto;
 import io.edpn.backend.trade.application.domain.LocateCommodity;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.ValidatedCommodity;
-import io.edpn.backend.trade.application.dto.web.object.LocateCommodityDto;
-import io.edpn.backend.trade.application.dto.web.object.mapper.StationDtoMapper;
-import io.edpn.backend.trade.application.dto.web.object.mapper.ValidatedCommodityDtoMapper;
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDateTime;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -24,24 +23,24 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class RestLocateCommodityDtoMapperTest {
-    
+
     @Mock
-    private StationDtoMapper stationDtoMapper;
-    
+    private RestStationDtoMapper restStationDtoMapper;
+
     @Mock
-    private ValidatedCommodityDtoMapper commodityDtoMapper;
-    
+    private RestValidatedCommodityDtoMapper commodityDtoMapper;
+
     private RestLocateCommodityDtoMapper underTest;
-    
+
     @BeforeEach
-    public void setUp(){
-        underTest = new RestLocateCommodityDtoMapper(stationDtoMapper, commodityDtoMapper);
+    public void setUp() {
+        underTest = new RestLocateCommodityDtoMapper(restStationDtoMapper, commodityDtoMapper);
     }
-    
+
     @Test
     public void testMap_givenDomainObject_shouldReturnDto() {
         RestValidatedCommodityDto mockCommodityDto = mock(RestValidatedCommodityDto.class);
-        RestStationDto mockStationDto = mock(RestStationDto.class);
+        RestStationDto mockRestStationDto = mock(RestStationDto.class);
         LocalDateTime pricesUpdatedAt = LocalDateTime.now();
 
         LocateCommodity domainObject = new LocateCommodity(
@@ -56,13 +55,13 @@ class RestLocateCommodityDtoMapperTest {
         );
 
         when(commodityDtoMapper.map(domainObject.validatedCommodity())).thenReturn(mockCommodityDto);
-        when(stationDtoMapper.map(domainObject.station())).thenReturn(mockStationDto);
-        
-        LocateCommodityDto result = underTest.map(domainObject);
-        
+        when(restStationDtoMapper.map(domainObject.station())).thenReturn(mockRestStationDto);
+
+        RestLocateCommodityDto result = underTest.map(domainObject);
+
         assertThat(result.priceUpdatedAt(), is(pricesUpdatedAt));
         assertThat(result.commodity(), is(mockCommodityDto));
-        assertThat(result.station(), is(mockStationDto));
+        assertThat(result.station(), is(mockRestStationDto));
         assertThat(result.supply(), is(100L));
         assertThat(result.demand(), is(200L));
         assertThat(result.buyPrice(), is(1234L));
@@ -70,7 +69,7 @@ class RestLocateCommodityDtoMapperTest {
         assertThat(result.distance(), is(63.5));
 
         verify(commodityDtoMapper, times(1)).map(domainObject.validatedCommodity());
-        verify(stationDtoMapper, times(1)).map(domainObject.station());
+        verify(restStationDtoMapper, times(1)).map(domainObject.station());
     }
-    
+
 }

@@ -2,10 +2,10 @@ package io.edpn.backend.trade.adapter.persistence.validatedcommodity;
 
 import io.edpn.backend.trade.adapter.persistence.ValidatedCommodityRepository;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisValidatedCommodityEntity;
-import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisPersistenceFindCommodityFilterMapper;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisValidatedCommodityEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisFindCommodityFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisValidatedCommodityRepository;
 import io.edpn.backend.trade.application.domain.ValidatedCommodity;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.ValidatedCommodityEntityMapper;
 import io.edpn.backend.trade.application.port.outgoing.validatedcommodity.LoadAllValidatedCommodityPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,38 +24,38 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class LoadAllValidatedCommodityPortTest {
-    
+
     @Mock
     private MybatisValidatedCommodityRepository mybatisValidatedCommodityRepository;
-    
+
     @Mock
-    private ValidatedCommodityEntityMapper<MybatisValidatedCommodityEntity> mybatisValidatedCommodityEntityMapper;
-    
+    private MybatisValidatedCommodityEntityMapper mybatisValidatedCommodityEntityMapper;
+
     @Mock
-    private MybatisPersistenceFindCommodityFilterMapper mybatisPersistenceFindCommodityFilterMapper;
-    
+    private MybatisFindCommodityFilterMapper mybatisFindCommodityFilterMapper;
+
     private LoadAllValidatedCommodityPort underTest;
-    
+
     @BeforeEach
-    public void setUp(){
-        underTest = new ValidatedCommodityRepository(mybatisValidatedCommodityRepository, mybatisValidatedCommodityEntityMapper, mybatisPersistenceFindCommodityFilterMapper);
+    public void setUp() {
+        underTest = new ValidatedCommodityRepository(mybatisValidatedCommodityRepository, mybatisValidatedCommodityEntityMapper, mybatisFindCommodityFilterMapper);
     }
-    
+
     @Test
     void findAll() {
-        MybatisValidatedCommodityEntity validatedCommodityEntity = mock(MybatisValidatedCommodityEntity.class);
+        MybatisValidatedCommodityEntity mybatisValidatedCommodityEntity = mock(MybatisValidatedCommodityEntity.class);
         ValidatedCommodity validatedCommodity = mock(ValidatedCommodity.class);
-        
-        
-        when(mybatisValidatedCommodityRepository.findAll()).thenReturn(List.of(validatedCommodityEntity));
-        when(mybatisValidatedCommodityEntityMapper.map(validatedCommodityEntity)).thenReturn(validatedCommodity);
-        
+
+
+        when(mybatisValidatedCommodityRepository.findAll()).thenReturn(List.of(mybatisValidatedCommodityEntity));
+        when(mybatisValidatedCommodityEntityMapper.map(mybatisValidatedCommodityEntity)).thenReturn(validatedCommodity);
+
         List<ValidatedCommodity> result = underTest.loadAll();
-        
+
         verify(mybatisValidatedCommodityRepository).findAll();
-        verify(mybatisValidatedCommodityEntityMapper).map(validatedCommodityEntity);
-        verifyNoMoreInteractions(mybatisPersistenceFindCommodityFilterMapper, mybatisValidatedCommodityRepository, mybatisValidatedCommodityEntityMapper);
-        
+        verify(mybatisValidatedCommodityEntityMapper).map(mybatisValidatedCommodityEntity);
+        verifyNoMoreInteractions(mybatisFindCommodityFilterMapper, mybatisValidatedCommodityRepository, mybatisValidatedCommodityEntityMapper);
+
         assertThat(result, equalTo(List.of(validatedCommodity)));
     }
 }

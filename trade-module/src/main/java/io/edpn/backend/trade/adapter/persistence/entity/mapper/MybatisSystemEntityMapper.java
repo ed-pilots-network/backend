@@ -3,27 +3,24 @@ package io.edpn.backend.trade.adapter.persistence.entity.mapper;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.trade.application.domain.Coordinate;
 import io.edpn.backend.trade.application.domain.System;
-import io.edpn.backend.trade.application.dto.persistence.entity.SystemEntity;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemEntityMapper;
 
 import java.util.Optional;
 
-public class MybatisSystemEntityMapper implements SystemEntityMapper<MybatisSystemEntity> {
-    @Override
-    public System map(SystemEntity systemEntity) {
+public class MybatisSystemEntityMapper {
+
+    public System map(MybatisSystemEntity mybatisSystemEntity) {
         return new System(
-                systemEntity.getId(),
-                systemEntity.getEliteId(),
-                systemEntity.getName(),
+                mybatisSystemEntity.getId(),
+                mybatisSystemEntity.getEliteId(),
+                mybatisSystemEntity.getName(),
                 new Coordinate(
-                        systemEntity.getXCoordinate(),
-                        systemEntity.getYCoordinate(),
-                        systemEntity.getZCoordinate()
+                        mybatisSystemEntity.getXCoordinate(),
+                        mybatisSystemEntity.getYCoordinate(),
+                        mybatisSystemEntity.getZCoordinate()
                 )
         );
     }
 
-    @Override
     public MybatisSystemEntity map(System system) {
         return MybatisSystemEntity.builder()
                 .id(system.id())

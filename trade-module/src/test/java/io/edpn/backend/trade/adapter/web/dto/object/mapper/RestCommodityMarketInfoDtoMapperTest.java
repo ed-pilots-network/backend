@@ -1,13 +1,11 @@
 package io.edpn.backend.trade.adapter.web.dto.object.mapper;
 
+import io.edpn.backend.trade.adapter.web.dto.object.RestCommodityMarketInfoDto;
 import io.edpn.backend.trade.adapter.web.dto.object.RestStationDto;
 import io.edpn.backend.trade.adapter.web.dto.object.RestValidatedCommodityDto;
 import io.edpn.backend.trade.application.domain.CommodityMarketInfo;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.ValidatedCommodity;
-import io.edpn.backend.trade.application.dto.web.object.CommodityMarketInfoDto;
-import io.edpn.backend.trade.application.dto.web.object.mapper.StationDtoMapper;
-import io.edpn.backend.trade.application.dto.web.object.mapper.ValidatedCommodityDtoMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,26 +21,26 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class RestCommodityMarketInfoDtoMapperTest {
-    
+
     @Mock
-    private ValidatedCommodityDtoMapper commodityDtoMapper;
-    
+    private RestValidatedCommodityDtoMapper commodityDtoMapper;
+
     @Mock
-    private StationDtoMapper stationDtoMapper;
-    
+    private RestStationDtoMapper restStationDtoMapper;
+
     private RestCommodityMarketInfoDtoMapper underTest;
-    
+
     @BeforeEach
-    public void setUp(){
-        underTest = new RestCommodityMarketInfoDtoMapper(commodityDtoMapper, stationDtoMapper);
+    public void setUp() {
+        underTest = new RestCommodityMarketInfoDtoMapper(commodityDtoMapper, restStationDtoMapper);
     }
-    
+
     @Test
     public void testMap_givenDomainObject_shouldReturnDto() {
-        
+
         RestValidatedCommodityDto mockCommodityDto = mock(RestValidatedCommodityDto.class);
-        RestStationDto mockHighestSellingStationDto = mock(RestStationDto.class);
-        RestStationDto mockLowestBuyingStationDto = mock(RestStationDto.class);
+        RestStationDto mockHighestSellingRestStationDto = mock(RestStationDto.class);
+        RestStationDto mockLowestBuyingRestStationDto = mock(RestStationDto.class);
 
         CommodityMarketInfo domainObject = new CommodityMarketInfo(
                 mock(ValidatedCommodity.class),
@@ -67,11 +65,11 @@ class RestCommodityMarketInfoDtoMapperTest {
         );
 
         when(commodityDtoMapper.map(domainObject.validatedCommodity())).thenReturn(mockCommodityDto);
-        when(stationDtoMapper.map(domainObject.highestSellingToStation())).thenReturn(mockHighestSellingStationDto);
-        when(stationDtoMapper.map(domainObject.lowestBuyingFromStation())).thenReturn(mockLowestBuyingStationDto);
-        
-        CommodityMarketInfoDto dto = underTest.map(domainObject);
-        
+        when(restStationDtoMapper.map(domainObject.highestSellingToStation())).thenReturn(mockHighestSellingRestStationDto);
+        when(restStationDtoMapper.map(domainObject.lowestBuyingFromStation())).thenReturn(mockLowestBuyingRestStationDto);
+
+        RestCommodityMarketInfoDto dto = underTest.map(domainObject);
+
         assertThat(dto.commodity(), is(mockCommodityDto));
         assertThat(dto.maxBuyPrice(), is(100.0));
         assertThat(dto.minBuyPrice(), is(50.0));
@@ -89,11 +87,11 @@ class RestCommodityMarketInfoDtoMapperTest {
         assertThat(dto.stationsWithSellPrice(), is(4));
         assertThat(dto.stationsWithBuyPriceLowerThanAverage(), is(2));
         assertThat(dto.stationsWithSellPriceHigherThanAverage(), is(1));
-        assertThat(dto.highestSellingToStation(), is(mockHighestSellingStationDto));
-        assertThat(dto.lowestBuyingFromStation(), is(mockLowestBuyingStationDto));
+        assertThat(dto.highestSellingToStation(), is(mockHighestSellingRestStationDto));
+        assertThat(dto.lowestBuyingFromStation(), is(mockLowestBuyingRestStationDto));
 
         verify(commodityDtoMapper, times(1)).map(domainObject.validatedCommodity());
-        verify(stationDtoMapper, times(1)).map(domainObject.highestSellingToStation());
-        verify(stationDtoMapper, times(1)).map(domainObject.lowestBuyingFromStation());
+        verify(restStationDtoMapper, times(1)).map(domainObject.highestSellingToStation());
+        verify(restStationDtoMapper, times(1)).map(domainObject.lowestBuyingFromStation());
     }
 }

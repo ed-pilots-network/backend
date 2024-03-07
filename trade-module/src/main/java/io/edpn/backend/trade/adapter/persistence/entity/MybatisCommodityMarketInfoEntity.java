@@ -1,6 +1,5 @@
 package io.edpn.backend.trade.adapter.persistence.entity;
 
-import io.edpn.backend.trade.application.dto.persistence.entity.CommodityMarketInfoEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,8 +13,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MybatisCommodityMarketInfoEntity implements CommodityMarketInfoEntity {
-    
+public class MybatisCommodityMarketInfoEntity {
+
     private MybatisValidatedCommodityEntity validatedCommodity;
     private Double maxBuyPrice;
     private Double minBuyPrice;

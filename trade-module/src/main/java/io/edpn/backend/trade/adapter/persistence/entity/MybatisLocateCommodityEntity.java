@@ -1,6 +1,5 @@
 package io.edpn.backend.trade.adapter.persistence.entity;
 
-import io.edpn.backend.trade.application.dto.persistence.entity.LocateCommodityEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,8 +15,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MybatisLocateCommodityEntity implements LocateCommodityEntity {
-    
+public class MybatisLocateCommodityEntity {
+
     private LocalDateTime priceUpdatedAt;
     private MybatisValidatedCommodityEntity validatedCommodity;
     private MybatisStationEntity station;

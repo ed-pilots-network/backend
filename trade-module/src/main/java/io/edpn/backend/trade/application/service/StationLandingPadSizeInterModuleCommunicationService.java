@@ -9,7 +9,6 @@ import io.edpn.backend.trade.application.domain.Message;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindStationFilter;
-import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
@@ -57,7 +56,6 @@ public class StationLandingPadSizeInterModuleCommunicationService implements Req
     private final RetryTemplate retryTemplate;
     private final Executor executor;
     private final ObjectMapper objectMapper;
-    private final MessageMapper messageMapper;
 
     @Override
     public boolean isApplicable(Station station) {
@@ -77,7 +75,7 @@ public class StationLandingPadSizeInterModuleCommunicationService implements Req
 
             Message message = new Message(Topic.Request.STATION_MAX_LANDING_PAD_SIZE.getTopicName(), jsonNode.toString());
 
-            sendKafkaMessagePort.send(messageMapper.map(message));
+            sendKafkaMessagePort.send(message);
             createStationLandingPadSizeRequestPort.create(systemName, stationName);
         }
     }
@@ -142,8 +140,9 @@ public class StationLandingPadSizeInterModuleCommunicationService implements Req
                 .forEach(station ->
                         CompletableFuture.runAsync(() -> {
                             StationDataRequest stationDataRequest = new StationDataRequest(Module.TRADE, station.name(), station.system().name());
+                            JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
                             boolean sendSuccessful = retryTemplate.execute(
-                                    retryContext -> sendKafkaMessagePort.send(messageMapper.map(new Message(Topic.Request.STATION_MAX_LANDING_PAD_SIZE.getTopicName(), objectMapper.valueToTree(stationDataRequest).toString()))));
+                                    retryContext -> sendKafkaMessagePort.send(new Message(Topic.Request.STATION_MAX_LANDING_PAD_SIZE.getTopicName(), jsonNode.toString())));
                             if (sendSuccessful) {
                                 createStationLandingPadSizeRequestPort.create(station.system().name(), station.name());
                             }

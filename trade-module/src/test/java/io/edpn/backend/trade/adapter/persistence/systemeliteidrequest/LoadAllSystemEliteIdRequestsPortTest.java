@@ -3,15 +3,16 @@ package io.edpn.backend.trade.adapter.persistence.systemeliteidrequest;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
 import io.edpn.backend.trade.adapter.persistence.SystemEliteIdRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemDataRequestEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisSystemDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemEliteIdRequestRepository;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.SystemDataRequestEntityMapper;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestsPort;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -22,17 +23,16 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class LoadAllSystemEliteIdRequestsPortTest {
 
-
     @Mock
     private MybatisSystemEliteIdRequestRepository mybatisSystemEliteIdRequestRepository;
     @Mock
-    private SystemDataRequestEntityMapper systemDataRequestEntityMapper;
+    private MybatisSystemDataRequestEntityMapper mybatisSystemDataRequestEntityMapper;
 
     private LoadAllSystemEliteIdRequestsPort underTest;
 
     @BeforeEach
     public void setup() {
-        underTest = new SystemEliteIdRequestRepository(mybatisSystemEliteIdRequestRepository, systemDataRequestEntityMapper);
+        underTest = new SystemEliteIdRequestRepository(mybatisSystemEliteIdRequestRepository, mybatisSystemDataRequestEntityMapper);
     }
 
     @Test
@@ -43,8 +43,8 @@ public class LoadAllSystemEliteIdRequestsPortTest {
         SystemDataRequest request2 = mock(SystemDataRequest.class);
 
         when(mybatisSystemEliteIdRequestRepository.findAll()).thenReturn(List.of(entity1, entity2));
-        when(systemDataRequestEntityMapper.map(entity1)).thenReturn(request1);
-        when(systemDataRequestEntityMapper.map(entity2)).thenReturn(request2);
+        when(mybatisSystemDataRequestEntityMapper.map(entity1)).thenReturn(request1);
+        when(mybatisSystemDataRequestEntityMapper.map(entity2)).thenReturn(request2);
 
         List<SystemDataRequest> result = underTest.loadAll();
 

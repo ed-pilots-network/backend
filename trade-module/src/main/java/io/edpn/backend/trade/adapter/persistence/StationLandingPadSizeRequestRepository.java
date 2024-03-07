@@ -2,8 +2,8 @@ package io.edpn.backend.trade.adapter.persistence;
 
 
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationLandingPadSizeRequestRepository;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationDataRequestEntityMapper;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CreateStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.DeleteStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.ExistsStationLandingPadSizeRequestPort;
@@ -18,7 +18,7 @@ import java.util.List;
 public class StationLandingPadSizeRequestRepository implements CreateStationLandingPadSizeRequestPort, ExistsStationLandingPadSizeRequestPort, DeleteStationLandingPadSizeRequestPort, LoadAllStationLandingPadSizeRequestsPort {
 
     private final MybatisStationLandingPadSizeRequestRepository mybatisStationLandingPadSizeRequestRepository;
-    private final StationDataRequestEntityMapper stationDataRequestEntityMapper;
+    private final MybatisStationDataRequestEntityMapper mybatisStationDataRequestEntityMapper;
 
     @Override
     public void create(String systemName, String stationName) {
@@ -38,7 +38,7 @@ public class StationLandingPadSizeRequestRepository implements CreateStationLand
     @Override
     public List<StationDataRequest> loadAll() {
         return mybatisStationLandingPadSizeRequestRepository.findAll().stream()
-                .map(stationDataRequestEntityMapper::map)
+                .map(mybatisStationDataRequestEntityMapper::map)
                 .toList();
     }
 }

@@ -1,13 +1,11 @@
 package io.edpn.backend.trade.adapter.web.dto.object.mapper;
 
+import io.edpn.backend.trade.adapter.web.dto.object.RestStationDto;
 import io.edpn.backend.trade.adapter.web.dto.object.RestSystemDto;
 import io.edpn.backend.trade.application.domain.LandingPadSize;
 import io.edpn.backend.trade.application.domain.MarketDatum;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
-import io.edpn.backend.trade.application.dto.web.object.StationDto;
-import io.edpn.backend.trade.application.dto.web.object.mapper.StationDtoMapper;
-import io.edpn.backend.trade.application.dto.web.object.mapper.SystemDtoMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,21 +25,21 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class RestStationDtoMapperTest {
-    
+
     @Mock
-    private SystemDtoMapper systemDtoMapper;
-    
-    private StationDtoMapper underTest;
-    
+    private RestSystemDtoMapper restSystemDtoMapper;
+
+    private RestStationDtoMapper underTest;
+
     @BeforeEach
-    public void setUp(){
-        underTest = new RestStationDtoMapper(systemDtoMapper);
+    public void setUp() {
+        underTest = new RestStationDtoMapper(restSystemDtoMapper);
     }
-    
+
     @Test
     public void testMap_givenDomainObject_shouldReturnDto() {
-        RestSystemDto mockSystemDto = mock(RestSystemDto.class);
-        
+        RestSystemDto mockRestSystemDto = mock(RestSystemDto.class);
+
         UUID id = UUID.randomUUID();
         Long marketId = 12345L;
         String name = "Station Name";
@@ -51,7 +49,7 @@ class RestStationDtoMapperTest {
         Boolean fleetCarrier = true;
         String maxLandingPadSize = "LARGE";
         LocalDateTime marketUpdatedAt = LocalDateTime.now();
-        
+
         Station domainObject = new Station(
                 id,
                 marketId,
@@ -66,10 +64,10 @@ class RestStationDtoMapperTest {
                 List.of(mock(MarketDatum.class))
         );
 
-        when(systemDtoMapper.map(domainObject.system())).thenReturn(mockSystemDto);
-        
-        StationDto dto = underTest.map(domainObject);
-        
+        when(restSystemDtoMapper.map(domainObject.system())).thenReturn(mockRestSystemDto);
+
+        RestStationDto dto = underTest.map(domainObject);
+
         assertThat(dto.marketId(), is(marketId));
         assertThat(dto.name(), is(name));
         assertThat(dto.arrivalDistance(), is(arrivalDistance));
@@ -78,7 +76,7 @@ class RestStationDtoMapperTest {
         assertThat(dto.fleetCarrier(), is(fleetCarrier));
         assertThat(dto.maxLandingPadSize(), is(maxLandingPadSize));
         assertThat(dto.marketUpdatedAt(), is(marketUpdatedAt));
-        
-        verify(systemDtoMapper, times(1)).map(domainObject.system());
+
+        verify(restSystemDtoMapper, times(1)).map(domainObject.system());
     }
 }

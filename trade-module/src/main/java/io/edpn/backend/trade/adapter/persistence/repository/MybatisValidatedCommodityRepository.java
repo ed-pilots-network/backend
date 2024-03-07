@@ -40,6 +40,6 @@ public interface MybatisValidatedCommodityRepository {
             </script>
             """)
     @ResultMap("validatedCommodityResultMap")
-    List<MybatisValidatedCommodityEntity> findByFilter(MybatisFindCommodityFilter findCommodityFilter);
+    List<MybatisValidatedCommodityEntity> findByFilter(MybatisFindCommodityFilter mybatisFindCommodityFilter);
     
 }

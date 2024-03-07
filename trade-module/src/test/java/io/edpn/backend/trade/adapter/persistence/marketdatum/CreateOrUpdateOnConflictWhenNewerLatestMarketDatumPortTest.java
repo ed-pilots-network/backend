@@ -26,26 +26,26 @@ public class CreateOrUpdateOnConflictWhenNewerLatestMarketDatumPortTest {
     private MybatisLatestMarketDatumRepository mybatisLatestMarketDatumRepository;
 
     @Mock
-    private MybatisMarketDatumEntityMapper marketDatumEntityMapper;
+    private MybatisMarketDatumEntityMapper mybatisMarketDatumEntityMapper;
 
     private createOrUpdateExistingWhenNewerLatestMarketDatumPort underTest;
 
     @BeforeEach
     public void setUp() {
-        underTest = new LatestMarketDatumRepository(mybatisLatestMarketDatumRepository, marketDatumEntityMapper);
+        underTest = new LatestMarketDatumRepository(mybatisLatestMarketDatumRepository, mybatisMarketDatumEntityMapper);
     }
 
     @Test
     void testCreateWhenNotExists() {
         UUID uuid = UUID.randomUUID();
         MarketDatum inputMarketDatum = mock(MarketDatum.class);
-        MybatisMarketDatumEntity inputMarketDatumEntity = mock(MybatisMarketDatumEntity.class);
+        MybatisMarketDatumEntity inputMybatisMarketDatumEntity = mock(MybatisMarketDatumEntity.class);
 
-        when(marketDatumEntityMapper.map(inputMarketDatum)).thenReturn(inputMarketDatumEntity);
+        when(mybatisMarketDatumEntityMapper.map(inputMarketDatum)).thenReturn(inputMybatisMarketDatumEntity);
 
         underTest.createOrUpdateWhenNewer(uuid, inputMarketDatum);
 
-        verify(marketDatumEntityMapper, times(1)).map(inputMarketDatum);
-        verify(mybatisLatestMarketDatumRepository, times(1)).createOrUpdateExistingWhenNewer(uuid, inputMarketDatumEntity);
+        verify(mybatisMarketDatumEntityMapper, times(1)).map(inputMarketDatum);
+        verify(mybatisLatestMarketDatumRepository, times(1)).createOrUpdateExistingWhenNewer(uuid, inputMybatisMarketDatumEntity);
     }
 }

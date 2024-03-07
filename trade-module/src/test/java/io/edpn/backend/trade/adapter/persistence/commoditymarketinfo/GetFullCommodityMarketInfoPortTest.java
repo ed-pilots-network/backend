@@ -2,9 +2,9 @@ package io.edpn.backend.trade.adapter.persistence.commoditymarketinfo;
 
 import io.edpn.backend.trade.adapter.persistence.CommodityMarketInfoRepository;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisCommodityMarketInfoEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisCommodityMarketInfoEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisCommodityMarketInfoRepository;
 import io.edpn.backend.trade.application.domain.CommodityMarketInfo;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.CommodityMarketInfoEntityMapper;
 import io.edpn.backend.trade.application.port.outgoing.commoditymarketinfo.GetFullCommodityMarketInfoPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,35 +24,35 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class GetFullCommodityMarketInfoPortTest {
-    
+
     @Mock
     private MybatisCommodityMarketInfoRepository mybatisCommodityMarketInfoRepository;
-    
+
     @Mock
-    private CommodityMarketInfoEntityMapper<MybatisCommodityMarketInfoEntity> commodityMarketInfoEntityMapper;
-    
+    private MybatisCommodityMarketInfoEntityMapper mybatisCommodityMarketInfoEntityMapper;
+
     private GetFullCommodityMarketInfoPort underTest;
-    
+
     @BeforeEach
-    public void setUp(){
-        underTest = new CommodityMarketInfoRepository(mybatisCommodityMarketInfoRepository, commodityMarketInfoEntityMapper);
+    public void setUp() {
+        underTest = new CommodityMarketInfoRepository(mybatisCommodityMarketInfoRepository, mybatisCommodityMarketInfoEntityMapper);
     }
-    
+
     @Test
     public void testFindAllCommodityMarketInfo() {
         // mock objects
         MybatisCommodityMarketInfoEntity marketInfoEntity = mock(MybatisCommodityMarketInfoEntity.class);
         CommodityMarketInfo marketInfo = mock(CommodityMarketInfo.class);
-        
+
         when(mybatisCommodityMarketInfoRepository.findAll()).thenReturn(Collections.singletonList(marketInfoEntity));
-        when(commodityMarketInfoEntityMapper.map(marketInfoEntity)).thenReturn(marketInfo);
-        
+        when(mybatisCommodityMarketInfoEntityMapper.map(marketInfoEntity)).thenReturn(marketInfo);
+
         List<CommodityMarketInfo> result = underTest.findAll();
-        
+
         verify(mybatisCommodityMarketInfoRepository).findAll();
-        verify(commodityMarketInfoEntityMapper).map(marketInfoEntity);
-        verifyNoMoreInteractions(mybatisCommodityMarketInfoRepository, commodityMarketInfoEntityMapper);
-        
+        verify(mybatisCommodityMarketInfoEntityMapper).map(marketInfoEntity);
+        verifyNoMoreInteractions(mybatisCommodityMarketInfoRepository, mybatisCommodityMarketInfoEntityMapper);
+
         assertThat(result, equalTo(Collections.singletonList(marketInfo)));
     }
 }

@@ -2,8 +2,8 @@ package io.edpn.backend.trade.adapter.persistence;
 
 
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRequireOdysseyRequestRepository;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationDataRequestEntityMapper;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.ExistsStationRequireOdysseyRequestPort;
@@ -18,7 +18,7 @@ import java.util.List;
 public class StationRequireOdysseyRequestRepository implements CreateStationRequireOdysseyRequestPort, ExistsStationRequireOdysseyRequestPort, DeleteStationRequireOdysseyRequestPort, LoadAllStationRequireOdysseyRequestsPort {
 
     private final MybatisStationRequireOdysseyRequestRepository mybatisStationRequireOdysseyRequestRepository;
-    private final StationDataRequestEntityMapper stationDataRequestEntityMapper;
+    private final MybatisStationDataRequestEntityMapper mybatisStationDataRequestEntityMapper;
 
     @Override
     public void create(String systemName, String stationName) {
@@ -38,7 +38,7 @@ public class StationRequireOdysseyRequestRepository implements CreateStationRequ
     @Override
     public List<StationDataRequest> loadAll() {
         return mybatisStationRequireOdysseyRequestRepository.findAll().stream()
-                .map(stationDataRequestEntityMapper::map)
+                .map(mybatisStationDataRequestEntityMapper::map)
                 .toList();
     }
 }

@@ -2,12 +2,11 @@ package io.edpn.backend.trade.adapter.persistence.station;
 
 import io.edpn.backend.trade.adapter.persistence.StationRepository;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationEntity;
+import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationEntityMapper;
+import io.edpn.backend.trade.adapter.persistence.filter.MybatisFindStationFilter;
+import io.edpn.backend.trade.adapter.persistence.filter.mapper.MybatisFindStationFilterMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRepository;
 import io.edpn.backend.trade.application.domain.Station;
-import io.edpn.backend.trade.application.domain.filter.FindStationFilter;
-import io.edpn.backend.trade.application.dto.persistence.entity.mapper.StationEntityMapper;
-import io.edpn.backend.trade.application.dto.persistence.filter.PersistenceFindStationFilter;
-import io.edpn.backend.trade.application.dto.persistence.filter.mapper.PersistenceFindStationFilterMapper;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,31 +25,31 @@ import static org.mockito.Mockito.when;
 public class LoadStationsByFilterPortTest {
 
     @Mock
-    private StationEntityMapper<MybatisStationEntity> mybatisStationEntityMapper;
+    private MybatisStationEntityMapper mybatisStationEntityMapper;
 
     @Mock
     private MybatisStationRepository mybatisStationRepository;
 
     @Mock
-    private PersistenceFindStationFilterMapper persistenceFindStationFilterMapper;
+    private MybatisFindStationFilterMapper persistenceMybatisFindStationFilterMapper;
 
     private LoadStationsByFilterPort underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new StationRepository(mybatisStationEntityMapper, mybatisStationRepository, persistenceFindStationFilterMapper);
+        underTest = new StationRepository(mybatisStationEntityMapper, mybatisStationRepository, persistenceMybatisFindStationFilterMapper);
     }
 
     @Test
     void testFindByFilter() {
-        FindStationFilter findStationFilter = mock(FindStationFilter.class);
-        PersistenceFindStationFilter persistenceFindStationFilter = mock(PersistenceFindStationFilter.class);
-        MybatisStationEntity StationEntity = mock(MybatisStationEntity.class);
+        io.edpn.backend.trade.application.domain.filter.FindStationFilter findStationFilter = mock(io.edpn.backend.trade.application.domain.filter.FindStationFilter.class);
+        MybatisFindStationFilter mybatisFindStationFilter = mock(MybatisFindStationFilter.class);
+        MybatisStationEntity MybatisStationEntity = mock(MybatisStationEntity.class);
         Station station = mock(Station.class);
 
-        when(persistenceFindStationFilterMapper.map(findStationFilter)).thenReturn(persistenceFindStationFilter);
-        when(mybatisStationRepository.findByFilter(persistenceFindStationFilter)).thenReturn(List.of(StationEntity));
-        when(mybatisStationEntityMapper.map(StationEntity)).thenReturn(station);
+        when(persistenceMybatisFindStationFilterMapper.map(findStationFilter)).thenReturn(mybatisFindStationFilter);
+        when(mybatisStationRepository.findByFilter(mybatisFindStationFilter)).thenReturn(List.of(MybatisStationEntity));
+        when(mybatisStationEntityMapper.map(MybatisStationEntity)).thenReturn(station);
 
         List<Station> result = underTest.loadByFilter(findStationFilter);
 

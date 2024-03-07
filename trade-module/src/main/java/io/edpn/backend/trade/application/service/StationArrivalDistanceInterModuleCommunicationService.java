@@ -8,7 +8,6 @@ import io.edpn.backend.trade.application.domain.Message;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindStationFilter;
-import io.edpn.backend.trade.application.dto.web.object.mapper.MessageMapper;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
@@ -55,8 +54,6 @@ public class StationArrivalDistanceInterModuleCommunicationService implements Re
     private final RetryTemplate retryTemplate;
     private final Executor executor;
     private final ObjectMapper objectMapper;
-    private final MessageMapper messageMapper;
-
 
     @Override
     public void receive(StationArrivalDistanceResponse message) {
@@ -119,8 +116,7 @@ public class StationArrivalDistanceInterModuleCommunicationService implements Re
                             JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
                             Message message = new Message(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName(), jsonNode.toString());
 
-                            boolean sendSuccessful = retryTemplate.execute(retryContext ->
-                                    sendKafkaMessagePort.send(messageMapper.map(message)));
+                            boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(message));
                             if (sendSuccessful) {
                                 createStationArrivalDistanceRequestPort.create(station.system().name(), station.name());
                             }
@@ -146,7 +142,7 @@ public class StationArrivalDistanceInterModuleCommunicationService implements Re
             JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
             Message message = new Message(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName(), jsonNode.toString());
 
-            sendKafkaMessagePort.send(messageMapper.map(message));
+            sendKafkaMessagePort.send(message);
             createStationArrivalDistanceRequestPort.create(systemName, stationName);
         }
     }
