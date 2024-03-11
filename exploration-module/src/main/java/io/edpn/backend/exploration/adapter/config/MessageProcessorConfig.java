@@ -2,18 +2,18 @@ package io.edpn.backend.exploration.adapter.config;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.edpn.backend.exploration.adapter.kafka.dto.mapper.KafkaMessageMapper;
 import io.edpn.backend.exploration.adapter.kafka.processor.JournalDockedV1MessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.processor.JournalScanV1MessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.processor.NavRouteV1MessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.processor.StationDataRequestMessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.processor.SystemDataRequestMessageProcessor;
 import io.edpn.backend.exploration.adapter.kafka.sender.KafkaMessageSender;
-import io.edpn.backend.exploration.application.domain.StationArrivalDistanceRequest;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.topic.CreateTopicPort;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.NavRouteMessage;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.exploration.application.domain.intermodulecommunication.StationDataRequest;
+import io.edpn.backend.exploration.application.domain.intermodulecommunication.SystemDataRequest;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.journal.DockedMessage;
 import io.edpn.backend.messageprocessorlib.application.dto.eddn.journal.ScanMessage;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,7 +32,7 @@ public class MessageProcessorConfig {
     ) {
         return new NavRouteV1MessageProcessor(receiveNavRouteMessageUseCase, objectMapper);
     }
-    
+
     @Bean(name = "explorationJournalScanV1MessageProcessor")
     public JournalScanV1MessageProcessor journalScanV1MessageProcessor(
             ReceiveKafkaMessageUseCase<ScanMessage.V1> receiveJournalScanMessageUseCase,
@@ -64,7 +64,7 @@ public class MessageProcessorConfig {
     ) {
         return new SystemDataRequestMessageProcessor(receiveSystemDataRequestUseCase, objectMapper);
     }
-    
+
     @Bean(name = "explorationStationArrivalDistanceRequestMessageProcessor")
     public StationDataRequestMessageProcessor stationArrivalDistanceRequestMessageProcessor(
             @Qualifier("explorationStationArrivalDistanceInterModuleCommunicationService") ReceiveKafkaMessageUseCase<StationDataRequest> receiveStationDataRequestUseCase,
@@ -72,7 +72,7 @@ public class MessageProcessorConfig {
     ) {
         return new StationDataRequestMessageProcessor(receiveStationDataRequestUseCase, objectMapper);
     }
-    
+
     @Bean(name = "explorationStationMaxLandingPadSizeRequestMessageProcessor")
     public StationDataRequestMessageProcessor stationMaxLandingPadSizerRequestMessageProcessor(
             @Qualifier("explorationStationMaxLandingPadSizeInterModuleCommunicationService") ReceiveKafkaMessageUseCase<StationDataRequest> receiveStationDataRequestUseCase,
@@ -84,9 +84,10 @@ public class MessageProcessorConfig {
     @Bean(name = "explorationKafkaMessageSender")
     public KafkaMessageSender kafkaMessageSender(
             CreateTopicPort createTopicPort,
+            KafkaMessageMapper messageMapper,
             @Qualifier("explorationObjectMapper") ObjectMapper objectMapper,
             @Qualifier("explorationJsonNodekafkaTemplate") KafkaTemplate<String, JsonNode> jsonNodekafkaTemplate
     ) {
-        return new KafkaMessageSender(createTopicPort, objectMapper, jsonNodekafkaTemplate);
+        return new KafkaMessageSender(createTopicPort, messageMapper, objectMapper, jsonNodekafkaTemplate);
     }
 }

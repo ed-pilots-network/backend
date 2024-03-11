@@ -1,7 +1,7 @@
 package io.edpn.backend.trade.adapter.persistence.entity.mapper;
 
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationDataRequestEntity;
+import io.edpn.backend.trade.application.domain.intermodulecommunication.StationDataRequest;
 
 public class MybatisStationDataRequestEntityMapper {
     public StationDataRequest map(MybatisStationDataRequestEntity mybatisStationDataRequestEntity) {

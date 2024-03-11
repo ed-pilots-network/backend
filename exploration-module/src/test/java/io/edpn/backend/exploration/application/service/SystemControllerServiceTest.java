@@ -2,8 +2,6 @@ package io.edpn.backend.exploration.application.service;
 
 import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.domain.exception.ValidationException;
-import io.edpn.backend.exploration.application.dto.web.object.SystemDto;
-import io.edpn.backend.exploration.application.dto.web.object.mapper.SystemDtoMapper;
 import io.edpn.backend.exploration.application.port.incomming.FindSystemsByNameContainingUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemsByNameContainingPort;
 import io.edpn.backend.exploration.application.validation.LoadByNameContainingValidator;
@@ -21,7 +19,6 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
@@ -32,14 +29,12 @@ class SystemControllerServiceTest {
     private LoadSystemsByNameContainingPort loadSystemsByNameContainingPort;
     @Mock
     private LoadByNameContainingValidator loadByNameContainingValidator;
-    @Mock
-    private SystemDtoMapper systemDtoMapper;
 
     private FindSystemsByNameContainingUseCase underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new SystemControllerService(loadSystemsByNameContainingPort, loadByNameContainingValidator, systemDtoMapper);
+        underTest = new SystemControllerService(loadSystemsByNameContainingPort, loadByNameContainingValidator);
     }
 
     @Test
@@ -51,8 +46,7 @@ class SystemControllerServiceTest {
 
         assertThrows(ValidationException.class, () -> underTest.findSystemsByNameContaining(subString, amount));
 
-        verify(loadByNameContainingValidator).validate(subString, amount);
-        verifyNoInteractions(loadSystemsByNameContainingPort, systemDtoMapper);
+        verifyNoInteractions(loadSystemsByNameContainingPort);
     }
 
     @Test
@@ -62,21 +56,12 @@ class SystemControllerServiceTest {
         int amount = 10;
         System system1 = mock(System.class);
         System system2 = mock(System.class);
-        SystemDto systemDto1 = mock(SystemDto.class);
-        SystemDto systemDto2 = mock(SystemDto.class);
         when(loadByNameContainingValidator.validate(subString, amount)).thenReturn(Optional.empty());
         when(loadSystemsByNameContainingPort.loadByNameContaining(subString, amount)).thenReturn(List.of(system1, system2));
-        when(systemDtoMapper.map(system1)).thenReturn(systemDto1);
-        when(systemDtoMapper.map(system2)).thenReturn(systemDto2);
 
+        List<System> result = underTest.findSystemsByNameContaining(subString, amount);
 
-        List<SystemDto> result = underTest.findSystemsByNameContaining(subString, amount);
-
-
-        verify(loadSystemsByNameContainingPort).loadByNameContaining(subString, amount);
-        verify(systemDtoMapper).map(system1);
-        verify(systemDtoMapper).map(system2);
         assertThat(result, hasSize(2));
-        assertThat(result, containsInAnyOrder(systemDto1, systemDto2));
+        assertThat(result, containsInAnyOrder(system1, system2));
     }
 }

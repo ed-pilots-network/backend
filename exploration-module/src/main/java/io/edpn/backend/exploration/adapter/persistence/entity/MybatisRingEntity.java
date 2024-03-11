@@ -1,6 +1,5 @@
 package io.edpn.backend.exploration.adapter.persistence.entity;
 
-import io.edpn.backend.exploration.application.dto.persistence.entity.RingEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -18,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class MybatisRingEntity implements RingEntity {
+public class MybatisRingEntity {
     private UUID id;
     private Long innerRadius;
     private Long mass;

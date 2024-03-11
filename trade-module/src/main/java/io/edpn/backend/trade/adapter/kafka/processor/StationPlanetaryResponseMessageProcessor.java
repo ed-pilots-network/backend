@@ -3,7 +3,7 @@ package io.edpn.backend.trade.adapter.kafka.processor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationPlanetaryResponse;
+import io.edpn.backend.trade.application.domain.intermodulecommunication.StationPlanetaryResponse;
 import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.MessageProcessor;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import lombok.RequiredArgsConstructor;

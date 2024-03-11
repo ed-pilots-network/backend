@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.exploration.application.domain.intermodulecommunication.SystemDataRequest;
 import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.MessageProcessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

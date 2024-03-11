@@ -1,43 +1,38 @@
 package io.edpn.backend.exploration.adapter.persistence.entity.mapper;
 
-import io.edpn.backend.exploration.adapter.persistence.entity.MybatisRingEntity;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisStarEntity;
-import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.exploration.application.domain.Star;
-import io.edpn.backend.exploration.application.dto.persistence.entity.StarEntity;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.RingEntityMapper;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.StarEntityMapper;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEntityMapper;
-import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.UUID;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 @ExtendWith(MockitoExtension.class)
 class MybatisStarEntityMapperTest {
-    
-    private StarEntityMapper<MybatisStarEntity> underTest;
-    
+
+    private MybatisStarEntityMapper underTest;
+
     @Mock
-    private RingEntityMapper<MybatisRingEntity> mockRingEntityMapper;
-    
+    private MybatisRingEntityMapper mockRingEntityMapper;
+
     @Mock
-    private SystemEntityMapper<MybatisSystemEntity> mockSystemEntityMapper;
-    
+    private MybatisSystemEntityMapper mockSystemEntityMapper;
+
     @BeforeEach
     public void setUp() {
         underTest = new MybatisStarEntityMapper(mockRingEntityMapper, mockSystemEntityMapper);
     }
-    
-    
+
+
     @Test
     public void testMap_givenDto_shouldReturnDomainObject() {
-        StarEntity entity = MybatisStarEntity.builder()
+        MybatisStarEntity entity = MybatisStarEntity.builder()
                 .id(UUID.randomUUID())
                 .absoluteMagnitude(12345.5)
                 .age(12345L)
@@ -59,7 +54,7 @@ class MybatisStarEntityMapperTest {
                 .odyssey(true)
                 .estimatedScanValue(987.5)
                 .build();
-        
+
         Star result = underTest.map(entity);
 
         assertThat(result.id(), equalTo(entity.getId()));
@@ -83,7 +78,7 @@ class MybatisStarEntityMapperTest {
         assertThat(result.odyssey(), equalTo(entity.getOdyssey()));
         assertThat(result.estimatedScanValue(), equalTo(entity.getEstimatedScanValue()));
     }
-    
+
     @Test
     public void testMap_givenDomainObject_shouldReturnEntity() {
         Star object = Star.builder()
@@ -108,8 +103,8 @@ class MybatisStarEntityMapperTest {
                 .odyssey(true)
                 .estimatedScanValue(987.5)
                 .build();
-        
-        StarEntity result = underTest.map(object);
+
+        MybatisStarEntity result = underTest.map(object);
 
         assertThat(result.getId(), equalTo(object.id()));
         assertThat(result.getAbsoluteMagnitude(), equalTo(object.absoluteMagnitude()));

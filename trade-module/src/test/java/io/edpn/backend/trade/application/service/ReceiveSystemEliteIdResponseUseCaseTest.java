@@ -1,8 +1,8 @@
 package io.edpn.backend.trade.application.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
 import io.edpn.backend.trade.application.domain.System;
+import io.edpn.backend.trade.application.domain.intermodulecommunication.SystemEliteIdResponse;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
@@ -13,13 +13,14 @@ import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.Dele
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.ExistsSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestsPort;
 import io.edpn.backend.util.IdGenerator;
-import java.util.concurrent.Executor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.support.RetryTemplate;
+
+import java.util.concurrent.Executor;
 
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;

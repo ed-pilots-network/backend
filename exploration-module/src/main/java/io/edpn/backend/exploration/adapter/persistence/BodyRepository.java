@@ -1,9 +1,8 @@
 package io.edpn.backend.exploration.adapter.persistence;
 
 
-import io.edpn.backend.exploration.adapter.persistence.entity.MybatisBodyEntity;
+import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisBodyEntityMapper;
 import io.edpn.backend.exploration.application.domain.Body;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.BodyEntityMapper;
 import io.edpn.backend.exploration.application.port.outgoing.body.LoadBodyPort;
 import io.edpn.backend.exploration.application.port.outgoing.body.SaveOrUpdateBodyPort;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,7 @@ import java.util.Optional;
 public class BodyRepository implements SaveOrUpdateBodyPort, LoadBodyPort {
 
     private final MybatisBodyRepository mybatisBodyRepository;
-    private final BodyEntityMapper<MybatisBodyEntity> bodyEntityMapper;
+    private final MybatisBodyEntityMapper bodyEntityMapper;
 
     @Override
     public Optional<Body> load(String name) {

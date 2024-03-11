@@ -3,9 +3,11 @@ package io.edpn.backend.exploration.adapter.kafka.sender;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.exploration.application.dto.web.object.MessageDto;
-import io.edpn.backend.exploration.application.port.outgoing.topic.CreateTopicPort;
+import io.edpn.backend.exploration.adapter.kafka.dto.KafkaMessageDto;
+import io.edpn.backend.exploration.adapter.kafka.dto.mapper.KafkaMessageMapper;
+import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
+import io.edpn.backend.exploration.application.port.outgoing.topic.CreateTopicPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -17,17 +19,19 @@ import java.util.concurrent.CompletableFuture;
 public class KafkaMessageSender implements SendMessagePort {
 
     private final CreateTopicPort createTopicPort;
+    private final KafkaMessageMapper messageMapper;
     private final ObjectMapper objectMapper;
     private final KafkaTemplate<String, JsonNode> jsonNodekafkaTemplate;
 
 
     @Override
-    public Boolean send(MessageDto messageDto) {
-        return createTopicPort.createTopicIfNotExists(messageDto.topic())
+    public Boolean send(Message message) {
+        KafkaMessageDto kafkaMessageDto = messageMapper.map(message);
+        return createTopicPort.createTopicIfNotExists(kafkaMessageDto.topic())
                 .thenCompose(v -> {
                     try {
-                        JsonNode jsonNodeMessage = objectMapper.readTree(messageDto.message());
-                        jsonNodekafkaTemplate.send(messageDto.topic(), jsonNodeMessage);
+                        JsonNode jsonNodeMessage = objectMapper.readTree(kafkaMessageDto.message());
+                        jsonNodekafkaTemplate.send(kafkaMessageDto.topic(), jsonNodeMessage);
                         return CompletableFuture.completedFuture(true);
                     } catch (JsonProcessingException e) {
                         log.error("Unable to send message to Kafka", e);

@@ -1,6 +1,6 @@
 package io.edpn.backend.trade.adapter.persistence.systemcoordinaterequest;
 
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.trade.application.domain.intermodulecommunication.SystemDataRequest;
 import io.edpn.backend.trade.adapter.persistence.SystemCoordinateRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisSystemDataRequestEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisSystemDataRequestEntityMapper;

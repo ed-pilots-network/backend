@@ -1,6 +1,6 @@
 package io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest;
 
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.trade.application.domain.intermodulecommunication.SystemDataRequest;
 
 import java.util.List;
 

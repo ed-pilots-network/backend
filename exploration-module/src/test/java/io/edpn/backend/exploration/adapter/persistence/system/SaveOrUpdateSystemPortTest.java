@@ -3,8 +3,8 @@ package io.edpn.backend.exploration.adapter.persistence.system;
 import io.edpn.backend.exploration.adapter.persistence.MybatisSystemRepository;
 import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
+import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemEntityMapper;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEntityMapper;
 import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ class SaveOrUpdateSystemPortTest {
     private MybatisSystemRepository mybatisSystemRepository;
 
     @Mock
-    private SystemEntityMapper<MybatisSystemEntity> systemEntityMapper;
+    private MybatisSystemEntityMapper systemEntityMapper;
 
     private SaveOrUpdateSystemPort underTest;
 

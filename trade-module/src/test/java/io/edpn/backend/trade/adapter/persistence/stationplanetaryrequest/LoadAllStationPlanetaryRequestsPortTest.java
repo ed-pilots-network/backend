@@ -1,6 +1,6 @@
 package io.edpn.backend.trade.adapter.persistence.stationplanetaryrequest;
 
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
+import io.edpn.backend.trade.application.domain.intermodulecommunication.StationDataRequest;
 import io.edpn.backend.trade.adapter.persistence.StationPlanetaryRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationDataRequestEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationDataRequestEntityMapper;

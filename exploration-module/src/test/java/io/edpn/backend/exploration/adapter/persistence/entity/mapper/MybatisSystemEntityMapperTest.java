@@ -3,8 +3,6 @@ package io.edpn.backend.exploration.adapter.persistence.entity.mapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.dto.persistence.entity.SystemEntity;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEntityMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +15,7 @@ import static org.hamcrest.Matchers.nullValue;
 
 class MybatisSystemEntityMapperTest {
 
-    private SystemEntityMapper<MybatisSystemEntity> underTest;
+    private MybatisSystemEntityMapper underTest;
 
     @BeforeEach
     public void setUp() {
@@ -26,7 +24,7 @@ class MybatisSystemEntityMapperTest {
 
     @Test
     public void testMap_givenSystemEntity_shouldReturnSystem() {
-        SystemEntity systemEntity = new MybatisSystemEntity(UUID.randomUUID(), "systemName", 123L, "starClass", 1.0, 2.0, 3.0);
+        MybatisSystemEntity systemEntity = new MybatisSystemEntity(UUID.randomUUID(), "systemName", 123L, "starClass", 1.0, 2.0, 3.0);
 
         System result = underTest.map(systemEntity);
 
@@ -47,7 +45,7 @@ class MybatisSystemEntityMapperTest {
         System system = new System(UUID.randomUUID(), 123L, "systemName", "starClass", coordinate);
 
 
-        SystemEntity result = underTest.map(system);
+        MybatisSystemEntity result = underTest.map(system);
 
 
         assertThat(result.getId(), equalTo(system.id()));
@@ -62,7 +60,7 @@ class MybatisSystemEntityMapperTest {
     @Test
     public void testMap_givenSystemEntityWithNullCoordinate_shouldReturnSystemWithNullCoordinate() {
 
-        SystemEntity systemEntity = new MybatisSystemEntity(UUID.randomUUID(), "systemName", 123L, "starClass", null, null, null);
+        MybatisSystemEntity systemEntity = new MybatisSystemEntity(UUID.randomUUID(), "systemName", 123L, "starClass", null, null, null);
 
 
         System result = underTest.map(systemEntity);
@@ -80,7 +78,7 @@ class MybatisSystemEntityMapperTest {
         System system = new System(UUID.randomUUID(), 123L, "systemName", "starClass", null);
 
 
-        SystemEntity result = underTest.map(system);
+        MybatisSystemEntity result = underTest.map(system);
 
 
         assertThat(result.getXCoordinate(), nullValue());

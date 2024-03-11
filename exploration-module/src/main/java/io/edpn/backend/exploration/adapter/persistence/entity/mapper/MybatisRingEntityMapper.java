@@ -2,15 +2,12 @@ package io.edpn.backend.exploration.adapter.persistence.entity.mapper;
 
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisRingEntity;
 import io.edpn.backend.exploration.application.domain.Ring;
-import io.edpn.backend.exploration.application.dto.persistence.entity.RingEntity;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.RingEntityMapper;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class MybatisRingEntityMapper implements RingEntityMapper<MybatisRingEntity> {
+public class MybatisRingEntityMapper {
     
-    @Override
-    public Ring map(RingEntity ringEntity) {
+    public Ring map(MybatisRingEntity ringEntity) {
         return new Ring(
                 ringEntity.getId(),
                 ringEntity.getInnerRadius(),
@@ -21,8 +18,7 @@ public class MybatisRingEntityMapper implements RingEntityMapper<MybatisRingEnti
                 ringEntity.getBodyId(),
                 ringEntity.getStarId());
     }
-    
-    @Override
+
     public MybatisRingEntity map(Ring ring) {
         return MybatisRingEntity.builder()
                 .id(ring.id())

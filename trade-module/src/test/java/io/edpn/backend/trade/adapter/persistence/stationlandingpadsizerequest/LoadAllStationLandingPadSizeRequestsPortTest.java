@@ -1,6 +1,6 @@
 package io.edpn.backend.trade.adapter.persistence.stationlandingpadsizerequest;
 
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
+import io.edpn.backend.trade.application.domain.intermodulecommunication.StationDataRequest;
 import io.edpn.backend.trade.adapter.persistence.StationLandingPadSizeRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.entity.MybatisStationDataRequestEntity;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationDataRequestEntityMapper;

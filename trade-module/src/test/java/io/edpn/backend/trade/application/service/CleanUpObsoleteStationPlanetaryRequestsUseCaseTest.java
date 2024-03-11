@@ -1,7 +1,7 @@
 package io.edpn.backend.trade.application.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
+import io.edpn.backend.trade.application.domain.intermodulecommunication.StationDataRequest;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindStationFilter;

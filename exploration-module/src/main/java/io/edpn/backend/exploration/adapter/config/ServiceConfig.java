@@ -2,12 +2,6 @@ package io.edpn.backend.exploration.adapter.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
-import io.edpn.backend.exploration.adapter.web.dto.mapper.RestSystemDtoMapper;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.StationArrivalDistanceResponseMapper;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.StationMaxLandingPadSizeResponseMapper;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemCoordinatesResponseMapper;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEliteIdResponseMapper;
-import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoMapper;
 import io.edpn.backend.exploration.application.port.outgoing.body.SaveOrUpdateBodyPort;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.ring.SaveOrUpdateRingPort;
@@ -147,7 +141,7 @@ public class ServiceConfig {
                 executorService
         );
     }
-    
+
     @Bean(name = "explorationStationArrivalDistanceInterModuleCommunicationService")
     public StationArrivalDistanceInterModuleCommunicationService stationArrivalDistanceInterModuleCommunicationService(
             LoadAllStationArrivalDistanceRequestPort loadAllStationArrivalDistanceRequestPort,
@@ -198,12 +192,10 @@ public class ServiceConfig {
     @Bean(name = "explorationSystemControllerService")
     public SystemControllerService systemControllerService(
             SystemRepository systemRepository,
-            LoadByNameContainingValidator loadByNameContainingValidator,
-            RestSystemDtoMapper restSystemDtoMapper) {
+            LoadByNameContainingValidator loadByNameContainingValidator) {
         return new SystemControllerService(
                 systemRepository,
-                loadByNameContainingValidator,
-                restSystemDtoMapper);
+                loadByNameContainingValidator);
     }
 
     @Bean("explorationSystemCoordinatesResponseSender")
@@ -212,8 +204,6 @@ public class ServiceConfig {
             LoadSystemCoordinateRequestByIdentifierPort loadSystemCoordinateRequestBySystemNamePort,
             DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort,
             SendMessagePort sendMessagePort,
-            SystemCoordinatesResponseMapper systemCoordinatesResponseMapper,
-            MessageDtoMapper messageMapper,
             ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("virtualThreadPerTaskExecutor") ExecutorService executorService
@@ -223,8 +213,6 @@ public class ServiceConfig {
                 loadSystemCoordinateRequestBySystemNamePort,
                 deleteSystemCoordinateRequestPort,
                 sendMessagePort,
-                systemCoordinatesResponseMapper,
-                messageMapper,
                 objectMapper,
                 retryTemplate,
                 executorService
@@ -237,8 +225,6 @@ public class ServiceConfig {
             LoadSystemEliteIdRequestByIdentifierPort loadSystemEliteIdRequestBySystemNamePort,
             DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort,
             SendMessagePort sendMessagePort,
-            SystemEliteIdResponseMapper systemEliteIdResponseMapper,
-            MessageDtoMapper messageMapper,
             ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("virtualThreadPerTaskExecutor") ExecutorService executorService
@@ -248,22 +234,18 @@ public class ServiceConfig {
                 loadSystemEliteIdRequestBySystemNamePort,
                 deleteSystemEliteIdRequestPort,
                 sendMessagePort,
-                systemEliteIdResponseMapper,
-                messageMapper,
                 objectMapper,
                 retryTemplate,
                 executorService
         );
     }
-    
+
     @Bean("explorationStationArrivalDistanceResponseSender")
     public StationArrivalDistanceResponseSender stationArrivalDistanceResponseSender(
             LoadStationPort loadStationPort,
             LoadStationArrivalDistanceRequestByIdentifierPort loadStationArrivalDistanceRequestByIdentifierPort,
             DeleteStationArrivalDistanceRequestPort deleteStationArrivalDistanceRequestPort,
             SendMessagePort sendMessagePort,
-            StationArrivalDistanceResponseMapper stationArrivalDistanceResponseMapper,
-            MessageDtoMapper messageMapper,
             ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("virtualThreadPerTaskExecutor") ExecutorService executorService
@@ -273,8 +255,6 @@ public class ServiceConfig {
                 loadStationArrivalDistanceRequestByIdentifierPort,
                 deleteStationArrivalDistanceRequestPort,
                 sendMessagePort,
-                stationArrivalDistanceResponseMapper,
-                messageMapper,
                 objectMapper,
                 retryTemplate,
                 executorService
@@ -287,8 +267,6 @@ public class ServiceConfig {
             LoadStationMaxLandingPadSizeRequestByIdentifierPort loadStationMaxLandingPadSizeRequestByIdentifierPort,
             DeleteStationMaxLandingPadSizeRequestPort deleteStationMaxLandingPadSizeRequestPort,
             SendMessagePort sendMessagePort,
-            StationMaxLandingPadSizeResponseMapper stationMaxLandingPadSizeResponseMapper,
-            MessageDtoMapper messageMapper,
             ObjectMapper objectMapper,
             @Qualifier("explorationRetryTemplate") RetryTemplate retryTemplate,
             @Qualifier("virtualThreadPerTaskExecutor") ExecutorService executorService
@@ -298,8 +276,6 @@ public class ServiceConfig {
                 loadStationMaxLandingPadSizeRequestByIdentifierPort,
                 deleteStationMaxLandingPadSizeRequestPort,
                 sendMessagePort,
-                stationMaxLandingPadSizeResponseMapper,
-                messageMapper,
                 objectMapper,
                 retryTemplate,
                 executorService

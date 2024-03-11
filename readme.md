@@ -55,7 +55,6 @@ src
 │   │              └── application
 │   │                  ├── domain
 │   │                  │   └── exception
-│   │                  ├── dto
 │   │                  ├── port
 │   │                  │   └── incomming
 │   │                  │   └── outgoing

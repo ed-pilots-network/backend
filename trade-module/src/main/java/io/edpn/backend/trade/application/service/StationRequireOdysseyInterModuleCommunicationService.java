@@ -2,12 +2,12 @@ package io.edpn.backend.trade.application.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationRequireOdysseyResponse;
 import io.edpn.backend.trade.application.domain.Message;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindStationFilter;
+import io.edpn.backend.trade.application.domain.intermodulecommunication.StationDataRequest;
+import io.edpn.backend.trade.application.domain.intermodulecommunication.StationRequireOdysseyResponse;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
