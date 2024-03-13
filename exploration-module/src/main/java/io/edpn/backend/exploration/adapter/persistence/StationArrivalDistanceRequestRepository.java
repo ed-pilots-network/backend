@@ -23,36 +23,36 @@ public class StationArrivalDistanceRequestRepository implements
         LoadStationArrivalDistanceRequestByIdentifierPort,
         LoadAllStationArrivalDistanceRequestPort,
         DeleteStationArrivalDistanceRequestPort {
-    
+
     private final MybatisStationArrivalDistanceRequestRepository mybatisStationArrivalDistanceRequestRepository;
     private final MybatisStationArrivalDistanceRequestEntityMapper mybatisStationArrivalDistanceRequestEntityMapper;
-    
-    
+
+
     @Override
     public void createIfNotExists(StationArrivalDistanceRequest stationArrivalDistanceRequest) {
         mybatisStationArrivalDistanceRequestRepository.insertIfNotExists(mybatisStationArrivalDistanceRequestEntityMapper.map(stationArrivalDistanceRequest));
-    
+
     }
-    
+
     @Override
     public void delete(String systemName, String stationName, Module requestingModule) {
         mybatisStationArrivalDistanceRequestRepository.delete(new MybatisStationArrivalDistanceRequestEntity(systemName, stationName, requestingModule));
     }
-    
+
     @Override
     public List<StationArrivalDistanceRequest> loadAll() {
         return mybatisStationArrivalDistanceRequestRepository.findAll().stream()
                 .map(mybatisStationArrivalDistanceRequestEntityMapper::map)
                 .toList();
     }
-    
+
     @Override
     public List<StationArrivalDistanceRequest> loadByIdentifier(String systemName, String stationName) {
         return mybatisStationArrivalDistanceRequestRepository.findByIdentifier(systemName, stationName).stream()
                 .map(mybatisStationArrivalDistanceRequestEntityMapper::map)
                 .toList();
     }
-    
+
     @Override
     public Optional<StationArrivalDistanceRequest> load(StationArrivalDistanceRequest stationArrivalDistanceRequest) {
         return mybatisStationArrivalDistanceRequestRepository.find(stationArrivalDistanceRequest.requestingModule(), stationArrivalDistanceRequest.systemName(), stationArrivalDistanceRequest.stationName())

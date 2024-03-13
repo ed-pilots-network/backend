@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MybatisStationArrivalDistanceRequestRepository {
-    
+
     @Insert({
             "INSERT INTO station_arrivaldistance_data_request (requesting_module, system_name, station_name)",
             "VALUES (#{requestingModule}, #{systemName}, #{stationName})",
@@ -22,14 +22,14 @@ public interface MybatisStationArrivalDistanceRequestRepository {
             "DO NOTHING"
     })
     void insertIfNotExists(MybatisStationArrivalDistanceRequestEntity stationArrivalDistanceRequestEntity);
-    
+
     @Delete("DELETE FROM station_arrivaldistance_data_request WHERE requesting_module = #{requestingModule} AND system_name = #{systemName} AND station_name = #{stationName}")
     void delete(MybatisStationArrivalDistanceRequestEntity stationArrivalDistanceRequestEntity);
-    
+
     @Select("SELECT * FROM station_arrivaldistance_data_request")
     @ResultMap("stationArrivalDistanceRequestResultMap")
     List<MybatisStationArrivalDistanceRequestEntity> findAll();
-    
+
     @Select("SELECT * FROM station_arrivaldistance_data_request WHERE system_name = #{systemName} AND station_name = #{stationName}")
     @Results(id = "stationArrivalDistanceRequestResultMap", value = {
             @Result(property = "systemName", column = "system_name"),
@@ -37,7 +37,7 @@ public interface MybatisStationArrivalDistanceRequestRepository {
             @Result(property = "requestingModule", column = "requesting_module")
     })
     List<MybatisStationArrivalDistanceRequestEntity> findByIdentifier(@Param("systemName") String systemName, @Param("stationName") String stationName);
-    
+
     @Select("SELECT * FROM station_arrivaldistance_data_request WHERE requesting_module = #{requestingModule} AND system_name = #{systemName} AND station_name = #{stationName}")
     @ResultMap("stationArrivalDistanceRequestResultMap")
     Optional<MybatisStationArrivalDistanceRequestEntity> find(@Param("requestingModule") Module requestingModule, @Param("systemName") String systemName, @Param("stationName") String stationName);

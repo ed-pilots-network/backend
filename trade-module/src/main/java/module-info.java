@@ -36,4 +36,5 @@ module edpn.backend.trade {
     exports io.edpn.backend.trade.adapter.web.dto.filter;
     exports io.edpn.backend.trade.adapter.web.dto.object.mapper;
     exports io.edpn.backend.trade.adapter.web.dto.filter.mapper;
+    exports io.edpn.backend.trade.application.domain.intermodulecommunication;
 }

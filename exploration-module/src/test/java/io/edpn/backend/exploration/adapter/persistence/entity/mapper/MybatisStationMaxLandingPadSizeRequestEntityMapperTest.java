@@ -2,8 +2,6 @@ package io.edpn.backend.exploration.adapter.persistence.entity.mapper;
 
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisStationMaxLandingPadSizeRequestEntity;
 import io.edpn.backend.exploration.application.domain.StationMaxLandingPadSizeRequest;
-import io.edpn.backend.exploration.application.dto.persistence.entity.StationMaxLandingPadSizeRequestEntity;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.StationMaxLandingPadSizeRequestEntityMapper;
 import io.edpn.backend.util.Module;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +12,7 @@ import static org.mockito.Mockito.mock;
 
 class MybatisStationMaxLandingPadSizeRequestEntityMapperTest {
 
-    private StationMaxLandingPadSizeRequestEntityMapper<MybatisStationMaxLandingPadSizeRequestEntity> underTest;
+    private MybatisStationMaxLandingPadSizeRequestEntityMapper underTest;
 
     @BeforeEach
     public void setUp() {
@@ -24,7 +22,7 @@ class MybatisStationMaxLandingPadSizeRequestEntityMapperTest {
     @Test
     public void testMap_givenDto_shouldReturnDomainObject() {
 
-        StationMaxLandingPadSizeRequestEntity dto = new MybatisStationMaxLandingPadSizeRequestEntity("systemName", "stationName", mock(Module.class));
+        MybatisStationMaxLandingPadSizeRequestEntity dto = new MybatisStationMaxLandingPadSizeRequestEntity("systemName", "stationName", mock(Module.class));
 
 
         StationMaxLandingPadSizeRequest result = underTest.map(dto);
@@ -38,10 +36,10 @@ class MybatisStationMaxLandingPadSizeRequestEntityMapperTest {
     @Test
     public void testMap_givenDomainObject_shouldReturnEntity() {
 
-        StationMaxLandingPadSizeRequest domainObject = new StationMaxLandingPadSizeRequest("systemName", "stationName",mock(Module.class));
+        StationMaxLandingPadSizeRequest domainObject = new StationMaxLandingPadSizeRequest("systemName", "stationName", mock(Module.class));
 
 
-        StationMaxLandingPadSizeRequestEntity result = underTest.map(domainObject);
+        MybatisStationMaxLandingPadSizeRequestEntity result = underTest.map(domainObject);
 
 
         assertThat(result.getSystemName(), equalTo(domainObject.systemName()));

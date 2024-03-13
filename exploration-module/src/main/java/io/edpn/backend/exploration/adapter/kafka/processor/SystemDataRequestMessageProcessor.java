@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.edpn.backend.exploration.application.port.incomming.ReceiveKafkaMessageUseCase;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.exploration.application.domain.intermodulecommunication.SystemDataRequest;
 import io.edpn.backend.messageprocessorlib.infrastructure.kafka.processor.MessageProcessor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -2,11 +2,11 @@ package io.edpn.backend.trade.application.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
 import io.edpn.backend.trade.application.domain.Message;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindSystemFilter;
+import io.edpn.backend.trade.application.domain.intermodulecommunication.SystemDataRequest;
+import io.edpn.backend.trade.application.domain.intermodulecommunication.SystemEliteIdResponse;
 import io.edpn.backend.trade.application.port.incomming.kafka.ReceiveKafkaMessageUseCase;
 import io.edpn.backend.trade.application.port.incomming.kafka.RequestDataUseCase;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;

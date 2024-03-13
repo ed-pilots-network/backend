@@ -1,7 +1,7 @@
 package io.edpn.backend.exploration.application.port.outgoing.message;
 
-import io.edpn.backend.exploration.application.dto.web.object.MessageDto;
+import io.edpn.backend.exploration.application.domain.Message;
 
 public interface SendMessagePort {
-    Boolean send(MessageDto messageDto);
+    Boolean send(Message messageDto);
 }

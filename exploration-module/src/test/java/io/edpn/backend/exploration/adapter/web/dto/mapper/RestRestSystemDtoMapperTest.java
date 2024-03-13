@@ -1,9 +1,8 @@
 package io.edpn.backend.exploration.adapter.web.dto.mapper;
 
+import io.edpn.backend.exploration.adapter.web.dto.RestSystemDto;
 import io.edpn.backend.exploration.application.domain.Coordinate;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.dto.web.object.SystemDto;
-import io.edpn.backend.exploration.application.dto.web.object.mapper.SystemDtoMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +15,7 @@ import static org.hamcrest.Matchers.nullValue;
 
 class RestRestSystemDtoMapperTest {
 
-    private SystemDtoMapper underTest;
+    private RestSystemDtoMapper underTest;
 
     @BeforeEach
     void setUp() {
@@ -25,7 +24,7 @@ class RestRestSystemDtoMapperTest {
 
     @Test
     void testMap_systemWithCoordinate_shouldReturnMappedSystemDto() {
-        
+
         UUID id = UUID.fromString("b85e6a0c-bc0f-447e-812e-9adf3b63cda9");
         String name = "system";
         Long eliteId = 123L;
@@ -37,7 +36,7 @@ class RestRestSystemDtoMapperTest {
         System system = new System(id, eliteId, name, starClass, coordinate);
 
 
-        SystemDto result = underTest.map(system);
+        RestSystemDto result = underTest.map(system);
 
 
         assertThat(result.name(), equalTo(name));
@@ -51,7 +50,7 @@ class RestRestSystemDtoMapperTest {
 
     @Test
     void testMap_systemWithoutCoordinate_shouldReturnMappedSystemDtoWithNullCoordinate() {
-        
+
         UUID id = UUID.fromString("b85e6a0c-bc0f-447e-812e-9adf3b63cda9");
         String name = "system";
         Long eliteId = 123L;
@@ -59,7 +58,7 @@ class RestRestSystemDtoMapperTest {
         System system = new System(id, eliteId, name, starClass, null);
 
 
-        SystemDto result = underTest.map(system);
+        RestSystemDto result = underTest.map(system);
 
 
         assertThat(result.name(), equalTo(name));

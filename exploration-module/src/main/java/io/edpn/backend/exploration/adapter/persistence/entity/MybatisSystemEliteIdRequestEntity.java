@@ -1,6 +1,5 @@
 package io.edpn.backend.exploration.adapter.persistence.entity;
 
-import io.edpn.backend.exploration.application.dto.persistence.entity.SystemEliteIdRequestEntity;
 import io.edpn.backend.util.Module;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +16,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class MybatisSystemEliteIdRequestEntity implements SystemEliteIdRequestEntity {
+public class MybatisSystemEliteIdRequestEntity {
     private String systemName;
     private Module requestingModule;
 }

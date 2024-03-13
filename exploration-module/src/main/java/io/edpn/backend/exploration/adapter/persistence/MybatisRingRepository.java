@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface MybatisRingRepository {
-    
+
     @Select({"INSERT INTO ring (id, inner_radius, mass, name, outer_radius, ring_class, body_id, star_id) " +
             "VALUES (#{id}, #{innerRadius}, #{mass}, #{name}, #{outerRadius}, #{ringClass}, #{bodyId}, #{starId}) " +
             "ON CONFLICT (name, body_id, star_id) " +
@@ -25,7 +25,7 @@ public interface MybatisRingRepository {
             "RETURNING *"})
     @ResultMap("ringResultMap")
     MybatisRingEntity insertOrUpdateOnConflict(MybatisRingEntity ring);
-    
+
     @Select("SELECT * FROM ring WHERE body_id = #{id}")
     @Results(id = "ringResultMap", value = {
             @Result(property = "id", column = "id", javaType = UUID.class),
@@ -38,7 +38,7 @@ public interface MybatisRingRepository {
             @Result(property = "starId", column = "star_id", javaType = UUID.class, typeHandler = UuidTypeHandler.class)
     })
     List<MybatisRingEntity> findRingsByBodyId(UUID id);
-    
+
     @Select("SELECT * FROM ring WHERE star_id = #{id}")
     @ResultMap("ringResultMap")
     List<MybatisRingEntity> findRingsByStarId(UUID id);

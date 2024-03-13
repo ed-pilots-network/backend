@@ -4,15 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.edpn.backend.exploration.application.domain.Message;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEliteIdResponseMapper;
-import io.edpn.backend.exploration.application.dto.web.object.MessageDto;
-import io.edpn.backend.exploration.application.dto.web.object.mapper.MessageDtoMapper;
+import io.edpn.backend.exploration.application.domain.intermodulecommunication.SystemEliteIdResponse;
 import io.edpn.backend.exploration.application.port.outgoing.message.SendMessagePort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.LoadSystemEliteIdRequestByIdentifierPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemeliteidrequest.SystemEliteIdResponseSender;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemEliteIdResponse;
 import io.edpn.backend.util.ConcurrencyUtil;
 import io.edpn.backend.util.Topic;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +26,6 @@ public class SystemEliteIdResponseSenderService implements SystemEliteIdResponse
     private final LoadSystemEliteIdRequestByIdentifierPort loadSystemEliteIdRequestBySystemNamePort;
     private final DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort;
     private final SendMessagePort sendMessagePort;
-    private final SystemEliteIdResponseMapper systemEliteIdResponseMapper;
-    private final MessageDtoMapper messageMapper;
     private final ObjectMapper objectMapper;
     private final RetryTemplate retryTemplate;
     private final ExecutorService executorService;
@@ -42,13 +37,12 @@ public class SystemEliteIdResponseSenderService implements SystemEliteIdResponse
                         executorService.submit(ConcurrencyUtil.errorHandlingWrapper(() -> {
                                     try {
                                         System system = loadSystemPort.load(systemName).orElseThrow(() -> new IllegalStateException("System with name %s not found when application event for it was triggered".formatted(systemName)));
-                                        SystemEliteIdResponse systemEliteIdResponse = systemEliteIdResponseMapper.map(system);
+                                        SystemEliteIdResponse systemEliteIdResponse = SystemEliteIdResponse.from(system);
                                         String stringJson = objectMapper.writeValueAsString(systemEliteIdResponse);
                                         String topic = Topic.Response.SYSTEM_ELITE_ID.getFormattedTopicName(systemEliteIdRequest.requestingModule());
                                         Message message = new Message(topic, stringJson);
-                                        MessageDto messageDto = messageMapper.map(message);
 
-                                        boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(messageDto));
+                                        boolean sendSuccessful = retryTemplate.execute(retryContext -> sendMessagePort.send(message));
                                         if (sendSuccessful) {
                                             deleteSystemEliteIdRequestPort.delete(systemName, systemEliteIdRequest.requestingModule());
                                         }

@@ -1,7 +1,7 @@
 package io.edpn.backend.trade.adapter.persistence;
 
 
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.trade.application.domain.intermodulecommunication.SystemDataRequest;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisSystemDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemEliteIdRequestRepository;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;

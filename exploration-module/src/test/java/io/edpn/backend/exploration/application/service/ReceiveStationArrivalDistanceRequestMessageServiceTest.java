@@ -8,7 +8,7 @@ import io.edpn.backend.exploration.application.port.outgoing.station.LoadStation
 import io.edpn.backend.exploration.application.port.outgoing.stationarrivaldistancerequest.CreateIfNotExistsStationArrivalDistanceRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.stationarrivaldistancerequest.LoadAllStationArrivalDistanceRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.stationarrivaldistancerequest.StationArrivalDistanceResponseSender;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
+import io.edpn.backend.exploration.application.domain.intermodulecommunication.StationDataRequest;
 import io.edpn.backend.util.Module;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

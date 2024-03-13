@@ -5,9 +5,6 @@ import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntit
 import io.edpn.backend.exploration.application.domain.LandingPadSize;
 import io.edpn.backend.exploration.application.domain.Station;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.dto.persistence.entity.StationEntity;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.StationEntityMapper;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEntityMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,8 +26,8 @@ import static org.mockito.Mockito.when;
 class MybatisStationEntityMapperTest {
 
     @Mock
-    private SystemEntityMapper<MybatisSystemEntity> systemEntityMapper;
-    private StationEntityMapper<MybatisStationEntity> underTest;
+    private MybatisSystemEntityMapper systemEntityMapper;
+    private MybatisStationEntityMapper underTest;
 
     @BeforeEach
     public void setUp() {
@@ -49,7 +46,7 @@ class MybatisStationEntityMapperTest {
                 LandingPadSize.SMALL, 3
         );
 
-        StationEntity stationEntity = new MybatisStationEntity(
+        MybatisStationEntity stationEntity = new MybatisStationEntity(
                 stationId,
                 123L,
                 "stationName",
@@ -65,7 +62,7 @@ class MybatisStationEntityMapperTest {
                         "economy1", 0.1,
                         "economy2", 0.9
                 ),
-                                "economy2",
+                "economy2",
                 List.of("service1", "service2"),
                 "government",
                 true,
@@ -128,7 +125,7 @@ class MybatisStationEntityMapperTest {
         );
 
 
-        StationEntity result = underTest.map(station);
+        MybatisStationEntity result = underTest.map(station);
 
 
         assertThat(result.getId(), equalTo(station.id()));

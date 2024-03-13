@@ -2,8 +2,8 @@ package io.edpn.backend.trade.application.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationPlanetaryResponse;
+import io.edpn.backend.trade.application.domain.intermodulecommunication.StationDataRequest;
+import io.edpn.backend.trade.application.domain.intermodulecommunication.StationPlanetaryResponse;
 import io.edpn.backend.trade.application.domain.Message;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;

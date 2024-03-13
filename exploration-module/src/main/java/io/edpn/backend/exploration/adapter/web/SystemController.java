@@ -1,6 +1,7 @@
 package io.edpn.backend.exploration.adapter.web;
 
-import io.edpn.backend.exploration.application.dto.web.object.SystemDto;
+import io.edpn.backend.exploration.adapter.web.dto.RestSystemDto;
+import io.edpn.backend.exploration.adapter.web.dto.mapper.RestSystemDtoMapper;
 import io.edpn.backend.exploration.application.port.incomming.FindSystemsByNameContainingUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,14 +20,18 @@ public class SystemController {
 
     final FindSystemsByNameContainingUseCase findSystemsByNameContainingUseCase;
     final FindSystemsByNameContainingInputValidator findSystemsByNameContainingInputValidator;
+    final RestSystemDtoMapper restSystemDtoMapper;
 
     @Operation(summary = "Find systems by name containing a specific substring, will give priority to return systems starting with the given substring")
     @GetMapping("/by-name-containing")
-    public List<SystemDto> findByNameContaining(
+    public List<RestSystemDto> findByNameContaining(
             @Parameter(description = "Substring to search for in the system name, minimal 3 characters", required = true) @RequestParam(name = "subString") String subString,
             @Parameter(description = "Amount of results to retrieve. values 1...100", required = false) @RequestParam(name = "amount", required = false, defaultValue = "10") Integer amount) {
         findSystemsByNameContainingInputValidator.validateSubString(subString);
         findSystemsByNameContainingInputValidator.validateAmount(amount);
-        return findSystemsByNameContainingUseCase.findSystemsByNameContaining(subString, amount);
+        return findSystemsByNameContainingUseCase.findSystemsByNameContaining(subString, amount)
+                .stream()
+                .map(restSystemDtoMapper::map)
+                .toList();
     }
 }

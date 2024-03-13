@@ -1,8 +1,7 @@
 package io.edpn.backend.exploration.application.service;
 
+import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.domain.exception.ValidationException;
-import io.edpn.backend.exploration.application.dto.web.object.SystemDto;
-import io.edpn.backend.exploration.application.dto.web.object.mapper.SystemDtoMapper;
 import io.edpn.backend.exploration.application.port.incomming.FindSystemsByNameContainingUseCase;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemsByNameContainingPort;
 import io.edpn.backend.exploration.application.validation.LoadByNameContainingValidator;
@@ -18,18 +17,14 @@ public class SystemControllerService implements FindSystemsByNameContainingUseCa
 
     private final LoadSystemsByNameContainingPort loadSystemsByNameContainingPort;
     private final LoadByNameContainingValidator loadByNameContainingValidator;
-    private final SystemDtoMapper systemDtoMapper;
 
     @Override
-    public List<SystemDto> findSystemsByNameContaining(String subString, int amount) {
+    public List<System> findSystemsByNameContaining(String subString, int amount) {
         Optional<ValidationException> validationResult = loadByNameContainingValidator.validate(subString, amount);
         if (validationResult.isPresent()) {
             throw validationResult.get();
         }
 
-        return loadSystemsByNameContainingPort.loadByNameContaining(subString, amount)
-                .stream()
-                .map(systemDtoMapper::map)
-                .toList();
+        return loadSystemsByNameContainingPort.loadByNameContaining(subString, amount);
     }
 }

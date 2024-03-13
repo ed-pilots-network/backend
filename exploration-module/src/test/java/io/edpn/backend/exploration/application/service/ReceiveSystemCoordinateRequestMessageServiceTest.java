@@ -7,7 +7,7 @@ import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPo
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.systemcoordinaterequest.SystemCoordinatesResponseSender;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.SystemDataRequest;
+import io.edpn.backend.exploration.application.domain.intermodulecommunication.SystemDataRequest;
 import io.edpn.backend.util.Module;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -2,29 +2,28 @@ package io.edpn.backend.exploration.adapter.persistence.entity.mapper;
 
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisRingEntity;
 import io.edpn.backend.exploration.application.domain.Ring;
-import io.edpn.backend.exploration.application.dto.persistence.entity.RingEntity;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.RingEntityMapper;
-import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 
 class MybatisRingEntityMapperTest {
-    
-    RingEntityMapper<MybatisRingEntity> underTest;
-    
+
+    private MybatisRingEntityMapper underTest;
+
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         underTest = new MybatisRingEntityMapper();
     }
-    
-    
+
+
     @Test
     public void testMap_givenDto_shouldReturnDomainObject() {
-        RingEntity entity = MybatisRingEntity.builder()
+        MybatisRingEntity entity = MybatisRingEntity.builder()
                 .id(UUID.randomUUID())
                 .innerRadius(465L)
                 .mass(123456L)
@@ -34,7 +33,7 @@ class MybatisRingEntityMapperTest {
                 .bodyId(UUID.randomUUID())
                 .starId(UUID.randomUUID())
                 .build();
-        
+
         Ring result = underTest.map(entity);
 
         assertThat(result.id(), equalTo(entity.getId()));
@@ -46,7 +45,7 @@ class MybatisRingEntityMapperTest {
         assertThat(result.bodyId(), equalTo(entity.getBodyId()));
         assertThat(result.starId(), equalTo(entity.getStarId()));
     }
-    
+
     @Test
     public void testMap_givenDomainObject_shouldReturnEntity() {
         Ring object = Ring.builder()
@@ -59,8 +58,8 @@ class MybatisRingEntityMapperTest {
                 .bodyId(UUID.randomUUID())
                 .starId(UUID.randomUUID())
                 .build();
-        
-        RingEntity result = underTest.map(object);
+
+        MybatisRingEntity result = underTest.map(object);
 
         assertThat(result.getId(), equalTo(object.id()));
         assertThat(result.getInnerRadius(), equalTo(object.innerRadius()));

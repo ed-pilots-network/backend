@@ -18,18 +18,15 @@ import io.edpn.backend.exploration.adapter.persistence.StationRepository;
 import io.edpn.backend.exploration.adapter.persistence.SystemCoordinateRequestRepository;
 import io.edpn.backend.exploration.adapter.persistence.SystemEliteIdRequestRepository;
 import io.edpn.backend.exploration.adapter.persistence.SystemRepository;
-import io.edpn.backend.exploration.adapter.persistence.entity.MybatisBodyEntity;
-import io.edpn.backend.exploration.adapter.persistence.entity.MybatisRingEntity;
-import io.edpn.backend.exploration.adapter.persistence.entity.MybatisStarEntity;
+import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisBodyEntityMapper;
+import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisRingEntityMapper;
+import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisStarEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisStationArrivalDistanceRequestEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisStationEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisStationMaxLandingPadSizeRequestEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemCoordinateRequestEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemEliteIdRequestEntityMapper;
 import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemEntityMapper;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.BodyEntityMapper;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.RingEntityMapper;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.StarEntityMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -67,7 +64,7 @@ public class RepositoryConfig {
     ) {
         return new SystemEliteIdRequestRepository(mybatisSystemEliteIdRequestRepository, mybatisSystemEliteIdRequestEntityMapper);
     }
-    
+
     @Bean(name = "explorationStationArrivalDistanceRequestRepository")
     public StationArrivalDistanceRequestRepository stationArrivalDistanceRequestRepository(
             MybatisStationArrivalDistanceRequestRepository mybatisStationArrivalDistanceRequestRepository,
@@ -83,27 +80,27 @@ public class RepositoryConfig {
     ) {
         return new StationMaxLandingPadSizeRequestRepository(mybatisStationMaxLandingPadSizeRequestRepository, mybatisStationMaxLandingPadSizeRequestEntityMapper);
     }
-    
+
     @Bean(name = "explorationBodyRepository")
     public BodyRepository bodyRepository(
             MybatisBodyRepository mybatisBodyRepository,
-            BodyEntityMapper<MybatisBodyEntity> bodyEntityMapper
+            MybatisBodyEntityMapper bodyEntityMapper
     ) {
         return new BodyRepository(mybatisBodyRepository, bodyEntityMapper);
     }
-    
+
     @Bean(name = "explorationStarRepository")
     public StarRepository starRepository(
             MybatisStarRepository mybatisStarRepository,
-            StarEntityMapper<MybatisStarEntity> starEntityMapper
+            MybatisStarEntityMapper starEntityMapper
     ) {
         return new StarRepository(mybatisStarRepository, starEntityMapper);
     }
-    
+
     @Bean(name = "explorationRingRepository")
     public RingRepository ringRepository(
             MybatisRingRepository mybatisRingRepository,
-            RingEntityMapper<MybatisRingEntity> ringEntityMapper
+            MybatisRingEntityMapper ringEntityMapper
     ) {
         return new RingRepository(mybatisRingRepository, ringEntityMapper);
     }

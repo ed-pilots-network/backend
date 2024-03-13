@@ -1,7 +1,8 @@
 package io.edpn.backend.application.controller;
 
-import io.edpn.backend.exploration.adapter.web.SystemController;
 import io.edpn.backend.exploration.adapter.web.FindSystemsByNameContainingInputValidator;
+import io.edpn.backend.exploration.adapter.web.SystemController;
+import io.edpn.backend.exploration.adapter.web.dto.mapper.RestSystemDtoMapper;
 import io.edpn.backend.exploration.application.port.incomming.FindSystemsByNameContainingUseCase;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,7 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BootExplorationModuleController extends SystemController {
 
-    public BootExplorationModuleController(FindSystemsByNameContainingUseCase findSystemsByNameContainingUseCase, FindSystemsByNameContainingInputValidator findSystemsByNameContainingInputValidator) {
-        super(findSystemsByNameContainingUseCase, findSystemsByNameContainingInputValidator);
+    public BootExplorationModuleController(
+            FindSystemsByNameContainingUseCase findSystemsByNameContainingUseCase,
+            FindSystemsByNameContainingInputValidator findSystemsByNameContainingInputValidator,
+            RestSystemDtoMapper restSystemDtoMapper
+    ) {
+        super(findSystemsByNameContainingUseCase, findSystemsByNameContainingInputValidator, restSystemDtoMapper);
     }
 }

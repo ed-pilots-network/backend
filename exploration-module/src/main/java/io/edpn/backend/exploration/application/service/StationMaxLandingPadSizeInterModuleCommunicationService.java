@@ -7,7 +7,7 @@ import io.edpn.backend.exploration.application.port.outgoing.station.LoadStation
 import io.edpn.backend.exploration.application.port.outgoing.stationmaxlandingpadsizerequest.CreateIfNotExistsStationMaxLandingPadSizeRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.stationmaxlandingpadsizerequest.LoadAllStationMaxLandingPadSizeRequestPort;
 import io.edpn.backend.exploration.application.port.outgoing.stationmaxlandingpadsizerequest.StationMaxLandingPadSizeResponseSender;
-import io.edpn.backend.messageprocessorlib.application.dto.eddn.data.StationDataRequest;
+import io.edpn.backend.exploration.application.domain.intermodulecommunication.StationDataRequest;
 import io.edpn.backend.util.ConcurrencyUtil;
 import io.edpn.backend.util.Module;
 

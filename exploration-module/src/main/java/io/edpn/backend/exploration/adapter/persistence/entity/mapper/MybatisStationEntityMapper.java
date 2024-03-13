@@ -1,12 +1,8 @@
 package io.edpn.backend.exploration.adapter.persistence.entity.mapper;
 
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisStationEntity;
-import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.exploration.application.domain.LandingPadSize;
 import io.edpn.backend.exploration.application.domain.Station;
-import io.edpn.backend.exploration.application.dto.persistence.entity.StationEntity;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.StationEntityMapper;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEntityMapper;
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
@@ -15,9 +11,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class MybatisStationEntityMapper implements StationEntityMapper<MybatisStationEntity> {
+public class MybatisStationEntityMapper {
 
-    private final SystemEntityMapper<MybatisSystemEntity> systemEntityMapper;
+    private final MybatisSystemEntityMapper systemEntityMapper;
 
     private static Map<String, Integer> getLandingPads(Station station) {
         return LandingPadSize.KNOWN_LANDING_PAD_SIZES.stream()
@@ -26,7 +22,7 @@ public class MybatisStationEntityMapper implements StationEntityMapper<MybatisSt
                         landingPadSize -> station.landingPads().getOrDefault(landingPadSize, 0)));
     }
 
-    private static Map<LandingPadSize, Integer> getLandingPads(StationEntity stationEntity) {
+    private static Map<LandingPadSize, Integer> getLandingPads(MybatisStationEntity stationEntity) {
         if (stationEntity.getLandingPads() == null) {
             return new HashMap<>();
         }
@@ -38,8 +34,7 @@ public class MybatisStationEntityMapper implements StationEntityMapper<MybatisSt
                         (first, second) -> first));
     }
 
-    @Override
-    public Station map(StationEntity stationEntity) {
+    public Station map(MybatisStationEntity stationEntity) {
         return new Station(
                 stationEntity.getId(),
                 stationEntity.getMarketId(),
@@ -58,7 +53,6 @@ public class MybatisStationEntityMapper implements StationEntityMapper<MybatisSt
         );
     }
 
-    @Override
     public MybatisStationEntity map(Station station) {
         return MybatisStationEntity.builder()
                 .id(station.id())

@@ -1,9 +1,8 @@
 package io.edpn.backend.exploration.adapter.persistence;
 
 
-import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
+import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisSystemEntityMapper;
 import io.edpn.backend.exploration.application.domain.System;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEntityMapper;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemPort;
 import io.edpn.backend.exploration.application.port.outgoing.system.LoadSystemsByNameContainingPort;
 import io.edpn.backend.exploration.application.port.outgoing.system.SaveOrUpdateSystemPort;
@@ -18,7 +17,7 @@ import java.util.Optional;
 public class SystemRepository implements SaveOrUpdateSystemPort, LoadSystemPort, LoadSystemsByNameContainingPort {
 
     private final MybatisSystemRepository mybatisSystemRepository;
-    private final SystemEntityMapper<MybatisSystemEntity> systemEntityMapper;
+    private final MybatisSystemEntityMapper systemEntityMapper;
 
     @Override
     public Optional<System> load(String name) {

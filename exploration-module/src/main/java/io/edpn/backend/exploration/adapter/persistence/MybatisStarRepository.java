@@ -1,6 +1,5 @@
 package io.edpn.backend.exploration.adapter.persistence;
 
-import io.edpn.backend.exploration.adapter.persistence.entity.MybatisRingEntity;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisStarEntity;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import org.apache.ibatis.annotations.Many;
@@ -16,7 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface MybatisStarRepository {
-    
+
     @Select({"INSERT INTO star (id, absolute_magnitude, age, arrival_distance, axial_tilt, discovered, local_id, luminosity, mapped, " +
             "name, radius, rotational_period, star_type, stellar_mass, subclass, surface_temperature, system_id, system_address, " +
             "horizons, odyssey) " +
@@ -47,7 +46,7 @@ public interface MybatisStarRepository {
     })
     @ResultMap("starResultMap")
     MybatisStarEntity insertOrUpdateOnConflict(MybatisStarEntity star);
-    
+
     @Select({"SELECT id, absolute_magnitude, age, arrival_distance, axial_tilt, discovered, local_id, luminosity, mapped, " +
             "name, radius, rings, rotational_period, star_type, stellar_mass, subclass, surface_temperature, system, system_address, " +
             "horizons, odyssey, estimated_scan_value ",
@@ -80,7 +79,7 @@ public interface MybatisStarRepository {
             @Result(property = "estimatedScanValue", column = "estimated_scan_value", javaType = Double.class),
     })
     Optional<MybatisStarEntity> findByName(@Param("name") String name);
-    
+
     @Select({"SELECT * FROM star WHERE id = #{id}"})
     @ResultMap("starResultMap")
     Optional<MybatisStarEntity> findById(UUID id);

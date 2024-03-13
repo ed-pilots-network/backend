@@ -1,6 +1,5 @@
 package io.edpn.backend.exploration.adapter.persistence.entity;
 
-import io.edpn.backend.exploration.application.dto.persistence.entity.SystemEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -18,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class MybatisSystemEntity implements SystemEntity {
+public class MybatisSystemEntity {
     private UUID id;
     private String name;
     private Long eliteId;

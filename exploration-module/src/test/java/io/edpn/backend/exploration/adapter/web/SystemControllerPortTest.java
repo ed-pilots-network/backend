@@ -1,6 +1,8 @@
 package io.edpn.backend.exploration.adapter.web;
 
-import io.edpn.backend.exploration.application.dto.web.object.SystemDto;
+import io.edpn.backend.exploration.adapter.web.dto.RestSystemDto;
+import io.edpn.backend.exploration.adapter.web.dto.mapper.RestSystemDtoMapper;
+import io.edpn.backend.exploration.application.domain.System;
 import io.edpn.backend.exploration.application.port.incomming.FindSystemsByNameContainingUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.contains;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -25,12 +27,14 @@ public class SystemControllerPortTest {
     private FindSystemsByNameContainingUseCase findSystemsByNameContainingUseCase;
     @Mock
     private FindSystemsByNameContainingInputValidator findSystemsByNameContainingInputValidator;
+    @Mock
+    private RestSystemDtoMapper restSystemDtoMapper;
 
     private SystemController underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new SystemController(findSystemsByNameContainingUseCase, findSystemsByNameContainingInputValidator);
+        underTest = new SystemController(findSystemsByNameContainingUseCase, findSystemsByNameContainingInputValidator, restSystemDtoMapper);
     }
 
     @Test
@@ -62,17 +66,17 @@ public class SystemControllerPortTest {
 
     @Test
     public void testFindSystemsFromSearchBar_shouldReturnSystems() {
-
         String subString = "test";
         int amount = 10;
-        SystemDto systemDto = mock(SystemDto.class);
-        List<SystemDto> expectedSystems = List.of(systemDto);
+        System system = mock(System.class);
+        RestSystemDto restSystemDto = mock(RestSystemDto.class);
+        List<System> expectedSystems = List.of(system);
         when(findSystemsByNameContainingUseCase.findSystemsByNameContaining(subString, amount)).thenReturn(expectedSystems);
+        when(restSystemDtoMapper.map(system)).thenReturn(restSystemDto);
 
-        List<SystemDto> actualSystems = underTest.findByNameContaining(subString, amount);
+        List<RestSystemDto> actualSystems = underTest.findByNameContaining(subString, amount);
 
-
-        assertThat(actualSystems, is(expectedSystems));
+        assertThat(actualSystems, contains(restSystemDto));
         verify(findSystemsByNameContainingUseCase).findSystemsByNameContaining(subString, amount);
     }
 }

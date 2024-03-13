@@ -1,25 +1,19 @@
 package io.edpn.backend.exploration.adapter.persistence.entity.mapper;
 
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisBodyEntity;
-import io.edpn.backend.exploration.adapter.persistence.entity.MybatisRingEntity;
-import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.exploration.application.domain.Body;
-import io.edpn.backend.exploration.application.dto.persistence.entity.BodyEntity;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.BodyEntityMapper;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.RingEntityMapper;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEntityMapper;
-import java.util.ArrayList;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.Optional;
+
 @RequiredArgsConstructor
-public class MybatisBodyEntityMapper implements BodyEntityMapper<MybatisBodyEntity> {
-    
-    private final RingEntityMapper<MybatisRingEntity> ringEntityMapper;
-    private final SystemEntityMapper<MybatisSystemEntity> systemEntityMapper;
-    
-    @Override
-    public Body map(BodyEntity bodyEntity) {
+public class MybatisBodyEntityMapper {
+
+    private final MybatisRingEntityMapper ringEntityMapper;
+    private final MybatisSystemEntityMapper systemEntityMapper;
+
+    public Body map(MybatisBodyEntity bodyEntity) {
         return new Body(
                 bodyEntity.getId(),
                 bodyEntity.getArrivalDistance(),
@@ -65,8 +59,7 @@ public class MybatisBodyEntityMapper implements BodyEntityMapper<MybatisBodyEnti
                 bodyEntity.getEstimatedScanValue()
         );
     }
-    
-    @Override
+
     public MybatisBodyEntity map(Body body) {
         return MybatisBodyEntity.builder()
                 .id(body.id())

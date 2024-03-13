@@ -2,8 +2,6 @@ package io.edpn.backend.exploration.adapter.persistence.entity.mapper;
 
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEliteIdRequestEntity;
 import io.edpn.backend.exploration.application.domain.SystemEliteIdRequest;
-import io.edpn.backend.exploration.application.dto.persistence.entity.SystemEliteIdRequestEntity;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.SystemEliteIdRequestEntityMapper;
 import io.edpn.backend.util.Module;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +12,7 @@ import static org.mockito.Mockito.mock;
 
 class MybatisSystemEliteIdRequestEntityMapperTest {
 
-    private SystemEliteIdRequestEntityMapper<MybatisSystemEliteIdRequestEntity> underTest;
+    private MybatisSystemEliteIdRequestEntityMapper underTest;
 
     @BeforeEach
     public void setUp() {
@@ -24,7 +22,7 @@ class MybatisSystemEliteIdRequestEntityMapperTest {
     @Test
     public void testMap_givenDto_shouldReturnDomainObject() {
 
-        SystemEliteIdRequestEntity dto = new MybatisSystemEliteIdRequestEntity("systemName", mock(Module.class));
+        MybatisSystemEliteIdRequestEntity dto = new MybatisSystemEliteIdRequestEntity("systemName", mock(Module.class));
 
 
         SystemEliteIdRequest result = underTest.map(dto);
@@ -40,7 +38,7 @@ class MybatisSystemEliteIdRequestEntityMapperTest {
         SystemEliteIdRequest domainObject = new SystemEliteIdRequest("systemName", mock(Module.class));
 
 
-        SystemEliteIdRequestEntity result = underTest.map(domainObject);
+        MybatisSystemEliteIdRequestEntity result = underTest.map(domainObject);
 
 
         assertThat(result.getSystemName(), equalTo(domainObject.systemName()));

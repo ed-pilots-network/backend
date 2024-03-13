@@ -42,7 +42,7 @@ public interface MybatisSystemRepository {
             @Result(property = "zCoordinate", column = "z_coordinate", javaType = Double.class)
     })
     Optional<MybatisSystemEntity> findByName(@Param("name") String name);
-    
+
     @Select({"SELECT id, name, star_class, elite_id, ST_X(coordinates_geom) as x_coordinate, ST_Y(coordinates_geom) as y_coordinate, ST_Z(coordinates_geom) as z_coordinate",
             "FROM system",
             "WHERE id = #{id}"}

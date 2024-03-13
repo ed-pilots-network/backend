@@ -1,7 +1,6 @@
 package io.edpn.backend.exploration.adapter.persistence;
 
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisBodyEntity;
-import io.edpn.backend.exploration.adapter.persistence.entity.MybatisRingEntity;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisSystemEntity;
 import io.edpn.backend.mybatisutil.IntegerStringMapTypeHandler;
 import io.edpn.backend.mybatisutil.StringDoubleMapTypeHandler;
@@ -20,7 +19,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface MybatisBodyRepository {
-    
+
     @Select({"INSERT INTO body (id, arrival_distance, ascending_node, atmosphere, atmospheric_composition, axial_tilt, body_composition," +
             "discovered, mapped, name, local_id, eccentricity, landable, mass, materials, mean_anomaly, orbital_inclination, orbital_period, " +
             "parents, periapsis, planet_class, radius, rotation_period, semi_major_axis, surface_gravity, surface_pressure, surface_temperature, system_id," +
@@ -67,8 +66,8 @@ public interface MybatisBodyRepository {
     })
     @ResultMap("bodyResultMap")
     MybatisBodyEntity insertOrUpdateOnConflict(MybatisBodyEntity body);
-    
-    
+
+
     @Select({"SELECT * " +
             "FROM body" +
             "WHERE name = #{name}"}
@@ -114,10 +113,10 @@ public interface MybatisBodyRepository {
             @Result(property = "estimatedScanValue", column = "estimated_scan_value", javaType = Double.class)
     })
     Optional<MybatisBodyEntity> findByName(@Param("name") String name);
-    
+
     @Select({"SELECT * FROM body WHERE id = #{id}"})
     @ResultMap("bodyResultMap")
     Optional<MybatisBodyEntity> findById(UUID id);
-    
-    
+
+
 }

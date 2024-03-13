@@ -3,8 +3,8 @@ package io.edpn.backend.exploration.adapter.persistence.station;
 import io.edpn.backend.exploration.adapter.persistence.MybatisStationRepository;
 import io.edpn.backend.exploration.adapter.persistence.StationRepository;
 import io.edpn.backend.exploration.adapter.persistence.entity.MybatisStationEntity;
+import io.edpn.backend.exploration.adapter.persistence.entity.mapper.MybatisStationEntityMapper;
 import io.edpn.backend.exploration.application.domain.Station;
-import io.edpn.backend.exploration.application.dto.persistence.entity.mapper.StationEntityMapper;
 import io.edpn.backend.exploration.application.port.outgoing.station.LoadStationPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class LoadStationPortTest {
     private MybatisStationRepository mybatisStationRepository;
 
     @Mock
-    private StationEntityMapper<MybatisStationEntity> systemEntityMapper;
+    private MybatisStationEntityMapper systemEntityMapper;
 
     private LoadStationPort underTest;
 
