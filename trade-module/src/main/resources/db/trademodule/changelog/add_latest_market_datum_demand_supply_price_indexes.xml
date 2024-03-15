@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="add_latest_market_datum_demand_supply_price_indexes" author="daniel-j-mason">
+        <createIndex indexName="idx_latest_market_datum_buy_price" tableName="latest_market_datum">
+            <column name="buy_price" />
+        </createIndex>
+
+        <createIndex indexName="idx_latest_market_datum_sell_price" tableName="latest_market_datum">
+            <column name="sell_price" />
+        </createIndex>
+
+        <createIndex indexName="idx_latest_market_datum_demand" tableName="latest_market_datum">
+            <column name="demand" />
+        </createIndex>
+
+        <createIndex indexName="idx_latest_market_datum_stock" tableName="latest_market_datum">
+            <column name="stock" />
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
