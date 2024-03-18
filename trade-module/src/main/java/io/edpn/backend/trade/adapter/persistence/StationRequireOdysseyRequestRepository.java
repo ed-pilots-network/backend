@@ -4,7 +4,7 @@ package io.edpn.backend.trade.adapter.persistence;
 import io.edpn.backend.trade.application.domain.intermodulecommunication.StationDataRequest;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationRequireOdysseyRequestRepository;
-import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateStationRequireOdysseyRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateIfNotExistsStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.ExistsStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.LoadAllStationRequireOdysseyRequestsPort;
@@ -15,14 +15,14 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
-public class StationRequireOdysseyRequestRepository implements CreateStationRequireOdysseyRequestPort, ExistsStationRequireOdysseyRequestPort, DeleteStationRequireOdysseyRequestPort, LoadAllStationRequireOdysseyRequestsPort {
+public class StationRequireOdysseyRequestRepository implements CreateIfNotExistsStationRequireOdysseyRequestPort, ExistsStationRequireOdysseyRequestPort, DeleteStationRequireOdysseyRequestPort, LoadAllStationRequireOdysseyRequestsPort {
 
     private final MybatisStationRequireOdysseyRequestRepository mybatisStationRequireOdysseyRequestRepository;
     private final MybatisStationDataRequestEntityMapper mybatisStationDataRequestEntityMapper;
 
     @Override
-    public void create(String systemName, String stationName) {
-        mybatisStationRequireOdysseyRequestRepository.insert(systemName, stationName);
+    public void createIfNotExists(String systemName, String stationName) {
+        mybatisStationRequireOdysseyRequestRepository.insertIfNotExists(systemName, stationName);
     }
 
     @Override

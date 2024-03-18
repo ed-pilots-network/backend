@@ -10,7 +10,7 @@ import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStati
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CleanUpObsoleteStationRequireOdysseyRequestsUseCase;
-import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateStationRequireOdysseyRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateIfNotExistsStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.ExistsStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.LoadAllStationRequireOdysseyRequestsPort;
@@ -51,7 +51,7 @@ public class CleanUpObsoleteStationRequireOdysseyRequestsUseCaseTest {
     @Mock
     private ExistsStationRequireOdysseyRequestPort existsStationRequireOdysseyRequestPort;
     @Mock
-    private CreateStationRequireOdysseyRequestPort createStationRequireOdysseyRequestPort;
+    private CreateIfNotExistsStationRequireOdysseyRequestPort createIfNotExistsStationRequireOdysseyRequestPort;
     @Mock
     private DeleteStationRequireOdysseyRequestPort deleteStationRequireOdysseyRequestPort;
     @Mock
@@ -76,7 +76,7 @@ public class CleanUpObsoleteStationRequireOdysseyRequestsUseCaseTest {
                 createOrLoadSystemPort,
                 createOrLoadStationPort,
                 existsStationRequireOdysseyRequestPort,
-                createStationRequireOdysseyRequestPort,
+                createIfNotExistsStationRequireOdysseyRequestPort,
                 deleteStationRequireOdysseyRequestPort,
                 updateStationPort,
                 sendKafkaMessagePort,

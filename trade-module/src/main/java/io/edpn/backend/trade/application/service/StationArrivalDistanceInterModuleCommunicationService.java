@@ -15,7 +15,7 @@ import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStati
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CleanUpObsoleteStationArrivalDistanceRequestsUseCase;
-import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateStationArrivalDistanceRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateIfNotExistsStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.DeleteStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.ExistsStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.LoadAllStationArrivalDistanceRequestsPort;
@@ -40,27 +40,27 @@ public class StationArrivalDistanceInterModuleCommunicationService implements Re
     public static final FindStationFilter FIND_STATION_FILTER = FindStationFilter.builder()
             .hasArrivalDistance(false)
             .build();
-
+    
     private final IdGenerator idGenerator;
     private final LoadStationsByFilterPort loadStationsByFilterPort;
     private final LoadAllStationArrivalDistanceRequestsPort loadAllStationArrivalDistanceRequestsPort;
     private final CreateOrLoadSystemPort createOrLoadSystemPort;
     private final CreateOrLoadStationPort createOrLoadStationPort;
     private final ExistsStationArrivalDistanceRequestPort existsStationArrivalDistanceRequestPort;
-    private final CreateStationArrivalDistanceRequestPort createStationArrivalDistanceRequestPort;
+    private final CreateIfNotExistsStationArrivalDistanceRequestPort createIfNotExistsStationArrivalDistanceRequestPort;
     private final DeleteStationArrivalDistanceRequestPort deleteStationArrivalDistanceRequestPort;
     private final UpdateStationPort updateStationPort;
     private final SendKafkaMessagePort sendKafkaMessagePort;
     private final RetryTemplate retryTemplate;
     private final Executor executor;
     private final ObjectMapper objectMapper;
-
+    
     @Override
     public void receive(StationArrivalDistanceResponse message) {
         String systemName = message.systemName();
         String stationName = message.stationName();
         double arrivalDistance = message.arrivalDistance();
-
+        
         CompletableFuture.supplyAsync(() ->
                         createOrLoadSystemPort.createOrLoad(
                                 new System(idGenerator.generateId(), null, systemName, null)))
@@ -89,7 +89,7 @@ public class StationArrivalDistanceInterModuleCommunicationService implements Re
                 })
                 .join();
     }
-
+    
     @Override
     @Scheduled(cron = "0 0 4 * * *")
     public synchronized void cleanUpObsolete() {
@@ -104,7 +104,7 @@ public class StationArrivalDistanceInterModuleCommunicationService implements Re
                 .forEach(dataRequest -> deleteStationArrivalDistanceRequestPort.delete(dataRequest.systemName(), dataRequest.stationName()));
         log.info("cleaned obsolete StationArrivalDistanceRequests");
     }
-
+    
     @Override
     @Scheduled(cron = "0 0 0/12 * * *")
     public synchronized void requestMissing() {
@@ -112,38 +112,36 @@ public class StationArrivalDistanceInterModuleCommunicationService implements Re
                 .forEach(station ->
                         CompletableFuture.runAsync(() -> {
                             StationDataRequest stationDataRequest = new StationDataRequest(Module.TRADE, station.name(), station.system().name());
-
+                            
                             JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
                             Message message = new Message(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName(), jsonNode.toString());
-
+                            
                             boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(message));
                             if (sendSuccessful) {
-                                createStationArrivalDistanceRequestPort.create(station.system().name(), station.name());
+                                createIfNotExistsStationArrivalDistanceRequestPort.createIfNotExists(station.system().name(), station.name());
                             }
                         }, executor));
         log.info("requested missing StationArrivalDistance");
     }
-
+    
     @Override
     public boolean isApplicable(Station station) {
         return Objects.isNull(station.arrivalDistance());
     }
-
+    
     @Override
     public synchronized void request(Station station) {
         String stationName = station.name();
         String systemName = station.system().name();
-        boolean shouldRequest = !existsStationArrivalDistanceRequestPort.exists(systemName, stationName);
-        if (shouldRequest) {
-            StationDataRequest stationDataRequest = new StationDataRequest(
-                    Module.TRADE, station.name(), station.system().name()
-            );
-
-            JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
-            Message message = new Message(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName(), jsonNode.toString());
-
-            sendKafkaMessagePort.send(message);
-            createStationArrivalDistanceRequestPort.create(systemName, stationName);
-        }
+        StationDataRequest stationDataRequest = new StationDataRequest(
+                Module.TRADE, station.name(), station.system().name()
+        );
+        
+        JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
+        Message message = new Message(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName(), jsonNode.toString());
+        
+        sendKafkaMessagePort.send(message);
+        createIfNotExistsStationArrivalDistanceRequestPort.createIfNotExists(systemName, stationName);
+        
     }
 }

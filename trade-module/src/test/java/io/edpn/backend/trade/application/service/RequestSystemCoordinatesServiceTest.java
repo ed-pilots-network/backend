@@ -11,7 +11,7 @@ import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePor
 import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
-import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.ExistsSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestsPort;
@@ -57,7 +57,7 @@ public class RequestSystemCoordinatesServiceTest {
     @Mock
     private ExistsSystemCoordinateRequestPort existsSystemCoordinateRequestPort;
     @Mock
-    private CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
+    private CreateIfNotExistsSystemCoordinateRequestPort createIfNotExistsSystemCoordinateRequestPort;
     @Mock
     private DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
     @Mock
@@ -89,7 +89,7 @@ public class RequestSystemCoordinatesServiceTest {
                 loadAllSystemCoordinateRequestsPort,
                 createOrLoadSystemPort,
                 existsSystemCoordinateRequestPort,
-                createSystemCoordinateRequestPort,
+                createIfNotExistsSystemCoordinateRequestPort,
                 deleteSystemCoordinateRequestPort,
                 updateSystemPort,
                 sendKafkaMessagePort,
@@ -127,7 +127,7 @@ public class RequestSystemCoordinatesServiceTest {
         underTest.request(system);
 
         verify(sendKafkaMessagePort, never()).send(any());
-        verify(createSystemCoordinateRequestPort, never()).create(anyString());
+        verify(createIfNotExistsSystemCoordinateRequestPort, never()).createIfNotExists(anyString());
     }
 
     @Test
@@ -153,6 +153,6 @@ public class RequestSystemCoordinatesServiceTest {
         underTest.request(system);
 
         verify(sendKafkaMessagePort).send(message);
-        verify(createSystemCoordinateRequestPort).create(systemName);
+        verify(createIfNotExistsSystemCoordinateRequestPort).createIfNotExists(systemName);
     }
 }

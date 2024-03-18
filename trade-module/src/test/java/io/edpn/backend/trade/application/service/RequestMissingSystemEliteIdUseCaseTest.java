@@ -10,7 +10,7 @@ import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePor
 import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
-import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateIfNotExistsSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.ExistsSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestsPort;
@@ -56,7 +56,7 @@ public class RequestMissingSystemEliteIdUseCaseTest {
     @Mock
     private ExistsSystemEliteIdRequestPort existsSystemEliteIdRequestPort;
     @Mock
-    private CreateSystemEliteIdRequestPort createSystemEliteIdRequestPort;
+    private CreateIfNotExistsSystemEliteIdRequestPort createIfNotExistsSystemEliteIdRequestPort;
     @Mock
     private DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort;
     @Mock
@@ -77,7 +77,7 @@ public class RequestMissingSystemEliteIdUseCaseTest {
                 loadAllSystemEliteIdRequestsPort,
                 createOrLoadSystemPort,
                 existsSystemEliteIdRequestPort,
-                createSystemEliteIdRequestPort,
+                createIfNotExistsSystemEliteIdRequestPort,
                 deleteSystemEliteIdRequestPort,
                 updateSystemPort,
                 sendKafkaMessagePort,
@@ -103,7 +103,7 @@ public class RequestMissingSystemEliteIdUseCaseTest {
         underTest.requestMissing();
 
         verify(sendKafkaMessagePort, never()).send(any());
-        verify(createSystemEliteIdRequestPort, never()).create(any());
+        verify(createIfNotExistsSystemEliteIdRequestPort, never()).createIfNotExists(any());
     }
 
     @Test
@@ -127,7 +127,7 @@ public class RequestMissingSystemEliteIdUseCaseTest {
         underTest.requestMissing();
 
         verify(sendKafkaMessagePort).send(any());
-        verify(createSystemEliteIdRequestPort).create(any());
+        verify(createIfNotExistsSystemEliteIdRequestPort).createIfNotExists(any());
     }
 
     @Test
@@ -164,7 +164,7 @@ public class RequestMissingSystemEliteIdUseCaseTest {
         underTest.requestMissing();
 
         verify(sendKafkaMessagePort, times(2)).send(any());
-        verify(createSystemEliteIdRequestPort, times(2)).create(any());
+        verify(createIfNotExistsSystemEliteIdRequestPort, times(2)).createIfNotExists(any());
     }
 
 }

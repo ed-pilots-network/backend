@@ -12,8 +12,11 @@ import java.util.List;
 
 public interface MybatisSystemCoordinateRequestRepository {
 
-    @Insert("INSERT INTO system_coordinate_data_request (system_name) VALUES (#{systemName})")
-    void insert(@Param("systemName") String systemName);
+    @Insert("INSERT INTO system_coordinate_data_request (system_name)" +
+            "VALUES (#{systemName})" +
+            "ON CONFLICT (system_name)" +
+            "DO NOTHING ")
+    void insertIfNotExists(@Param("systemName") String systemName);
 
     @Delete("DELETE FROM system_coordinate_data_request WHERE system_name = #{systemName}")
     void delete(@Param("systemName") String systemName);

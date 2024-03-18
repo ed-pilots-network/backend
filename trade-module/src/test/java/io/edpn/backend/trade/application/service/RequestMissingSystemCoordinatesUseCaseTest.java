@@ -2,25 +2,21 @@ package io.edpn.backend.trade.application.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.trade.application.domain.intermodulecommunication.SystemDataRequest;
 import io.edpn.backend.trade.application.domain.Message;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindSystemFilter;
+import io.edpn.backend.trade.application.domain.intermodulecommunication.SystemDataRequest;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
-import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.ExistsSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.RequestMissingSystemCoordinatesUseCase;
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Module;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Executor;
-
 import io.edpn.backend.util.Topic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +25,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.RetryCallback;
 import org.springframework.retry.support.RetryTemplate;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Executor;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -56,7 +56,7 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
     @Mock
     private ExistsSystemCoordinateRequestPort existsSystemCoordinateRequestPort;
     @Mock
-    private CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
+    private CreateIfNotExistsSystemCoordinateRequestPort createIfNotExistsSystemCoordinateRequestPort;
     @Mock
     private DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
     @Mock
@@ -77,7 +77,7 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
                 loadAllSystemCoordinateRequestsPort,
                 createOrLoadSystemPort,
                 existsSystemCoordinateRequestPort,
-                createSystemCoordinateRequestPort,
+                createIfNotExistsSystemCoordinateRequestPort,
                 deleteSystemCoordinateRequestPort,
                 updateSystemPort,
                 sendKafkaMessagePort,
@@ -103,7 +103,7 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
         underTest.requestMissing();
 
         verify(sendKafkaMessagePort, never()).send(any());
-        verify(createSystemCoordinateRequestPort, never()).create(any());
+        verify(createIfNotExistsSystemCoordinateRequestPort, never()).createIfNotExists(any());
     }
 
     @Test
@@ -127,7 +127,7 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
         underTest.requestMissing();
 
         verify(sendKafkaMessagePort).send(any());
-        verify(createSystemCoordinateRequestPort).create(any());
+        verify(createIfNotExistsSystemCoordinateRequestPort).createIfNotExists(any());
     }
 
     @Test
@@ -164,6 +164,6 @@ public class RequestMissingSystemCoordinatesUseCaseTest {
         underTest.requestMissing();
 
         verify(sendKafkaMessagePort, times(2)).send(any());
-        verify(createSystemCoordinateRequestPort, times(2)).create(any());
+        verify(createIfNotExistsSystemCoordinateRequestPort, times(2)).createIfNotExists(any());
     }
 }

@@ -11,7 +11,7 @@ import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePor
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
-import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateStationArrivalDistanceRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateIfNotExistsStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.DeleteStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.ExistsStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.LoadAllStationArrivalDistanceRequestsPort;
@@ -60,7 +60,7 @@ public class RequestStationArrivalDistanceServiceTest {
     @Mock
     private ExistsStationArrivalDistanceRequestPort existsStationArrivalDistanceRequestPort;
     @Mock
-    private CreateStationArrivalDistanceRequestPort createStationArrivalDistanceRequestPort;
+    private CreateIfNotExistsStationArrivalDistanceRequestPort createIfNotExistsStationArrivalDistanceRequestPort;
     @Mock
     private UpdateStationPort updateStationPort;
     @Mock
@@ -91,7 +91,7 @@ public class RequestStationArrivalDistanceServiceTest {
                 createOrLoadSystemPort,
                 createOrLoadStationPort,
                 existsStationArrivalDistanceRequestPort,
-                createStationArrivalDistanceRequestPort,
+                createIfNotExistsStationArrivalDistanceRequestPort,
                 deleteStationArrivalDistanceRequestPort,
                 updateStationPort,
                 sendKafkaMessagePort,
@@ -139,7 +139,7 @@ public class RequestStationArrivalDistanceServiceTest {
         underTest.request(station);
 
         verify(sendKafkaMessagePort, never()).send(any());
-        verify(createStationArrivalDistanceRequestPort, never()).create(anyString(), anyString());
+        verify(createIfNotExistsStationArrivalDistanceRequestPort, never()).createIfNotExists(anyString(), anyString());
     }
 
     @Test
@@ -184,6 +184,6 @@ public class RequestStationArrivalDistanceServiceTest {
         underTest.request(station);
 
         verify(sendKafkaMessagePort).send(message);
-        verify(createStationArrivalDistanceRequestPort).create(systemName, stationName);
+        verify(createIfNotExistsStationArrivalDistanceRequestPort).createIfNotExists(systemName, stationName);
     }
 }

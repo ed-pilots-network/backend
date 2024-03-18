@@ -9,18 +9,19 @@ import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePor
 import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
-import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.ExistsSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestsPort;
 import io.edpn.backend.util.IdGenerator;
-import java.util.concurrent.Executor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.support.RetryTemplate;
+
+import java.util.concurrent.Executor;
 
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
@@ -42,7 +43,7 @@ public class ReceiveSystemCoordinatesResponseUseCaseTest {
     @Mock
     private ExistsSystemCoordinateRequestPort existsSystemCoordinateRequestPort;
     @Mock
-    private CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
+    private CreateIfNotExistsSystemCoordinateRequestPort createIfNotExistsSystemCoordinateRequestPort;
     @Mock
     private DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
     @Mock
@@ -66,7 +67,7 @@ public class ReceiveSystemCoordinatesResponseUseCaseTest {
                 loadAllSystemCoordinateRequestsPort,
                 createOrLoadSystemPort,
                 existsSystemCoordinateRequestPort,
-                createSystemCoordinateRequestPort,
+                createIfNotExistsSystemCoordinateRequestPort,
                 deleteSystemCoordinateRequestPort,
                 updateSystemPort,
                 sendKafkaMessagePort,

@@ -14,7 +14,7 @@ import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystem
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CleanUpObsoleteSystemEliteIdRequestsUseCase;
-import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateIfNotExistsSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.ExistsSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestsPort;
@@ -38,41 +38,38 @@ public class SystemEliteIdInterModuleCommunicationService implements RequestData
     public static final FindSystemFilter FIND_SYSTEM_FILTER = FindSystemFilter.builder()
             .hasEliteId(false)
             .build();
-
+    
     private final IdGenerator idGenerator;
     private final LoadSystemsByFilterPort loadSystemsByFilterPort;
     private final LoadAllSystemEliteIdRequestsPort loadAllSystemEliteIdRequestsPort;
     private final CreateOrLoadSystemPort createOrLoadSystemPort;
     private final ExistsSystemEliteIdRequestPort existsSystemEliteIdRequestPort;
-    private final CreateSystemEliteIdRequestPort createSystemEliteIdRequestPort;
+    private final CreateIfNotExistsSystemEliteIdRequestPort createIfNotExistsSystemEliteIdRequestPort;
     private final DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort;
     private final UpdateSystemPort updateSystemPort;
     private final SendKafkaMessagePort sendKafkaMessagePort;
     private final RetryTemplate retryTemplate;
     private final Executor executor;
     private final ObjectMapper objectMapper;
-
+    
     @Override
     public boolean isApplicable(System system) {
         return Objects.isNull(system.eliteId());
     }
-
+    
     @Override
     public synchronized void request(System system) {
         String systemName = system.name();
-        boolean shouldRequest = !existsSystemEliteIdRequestPort.exists(systemName);
-        if (shouldRequest) {
-            SystemDataRequest systemDataRequest = new SystemDataRequest(
-                    Module.TRADE, systemName
-            );
-            JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
-            Message message = new Message(Topic.Request.SYSTEM_ELITE_ID.getTopicName(), jsonNode.toString());
-
-            sendKafkaMessagePort.send(message);
-            createSystemEliteIdRequestPort.create(systemName);
-        }
+        SystemDataRequest systemDataRequest = new SystemDataRequest(
+                Module.TRADE, systemName
+        );
+        JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
+        Message message = new Message(Topic.Request.SYSTEM_ELITE_ID.getTopicName(), jsonNode.toString());
+        
+        sendKafkaMessagePort.send(message);
+        createIfNotExistsSystemEliteIdRequestPort.createIfNotExists(systemName);
     }
-
+    
     @Override
     @Scheduled(cron = "0 0 0/12 * * *")
     public void requestMissing() {
@@ -80,18 +77,18 @@ public class SystemEliteIdInterModuleCommunicationService implements RequestData
                 .forEach(system ->
                         CompletableFuture.runAsync(() -> {
                             SystemDataRequest systemDataRequest = new SystemDataRequest(Module.TRADE, system.name());
-
+                            
                             JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
                             Message message = new Message(Topic.Request.SYSTEM_ELITE_ID.getTopicName(), jsonNode.toString());
-
+                            
                             boolean sendSuccessful = retryTemplate.execute(retryContext -> sendKafkaMessagePort.send(message));
                             if (sendSuccessful) {
-                                createSystemEliteIdRequestPort.create(system.name());
+                                createIfNotExistsSystemEliteIdRequestPort.createIfNotExists(system.name());
                             }
                         }, executor));
         log.info("requested missing SystemEliteId");
     }
-
+    
     @Override
     @Scheduled(cron = "0 0 4 * * *")
     public synchronized void cleanUpObsolete() {
@@ -106,12 +103,12 @@ public class SystemEliteIdInterModuleCommunicationService implements RequestData
                 .forEach(dataRequest -> deleteSystemEliteIdRequestPort.delete(dataRequest.systemName()));
         log.info("cleaned obsolete SystemEliteIdRequests");
     }
-
+    
     @Override
     public void receive(SystemEliteIdResponse message) {
         String systemName = message.systemName();
         long eliteId = message.eliteId();
-
+        
         CompletableFuture.supplyAsync(() ->
                         createOrLoadSystemPort.createOrLoad(
                                 new System(idGenerator.generateId(), null, systemName, null)))

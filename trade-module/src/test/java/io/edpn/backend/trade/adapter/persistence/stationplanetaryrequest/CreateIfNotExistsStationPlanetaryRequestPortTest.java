@@ -3,7 +3,7 @@ package io.edpn.backend.trade.adapter.persistence.stationplanetaryrequest;
 import io.edpn.backend.trade.adapter.persistence.StationPlanetaryRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationPlanetaryRequestRepository;
-import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateIfNotExistsStationPlanetaryRequestPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,14 +13,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class CreateStationPlanetaryRequestPortTest {
+public class CreateIfNotExistsStationPlanetaryRequestPortTest {
 
     @Mock
     private MybatisStationPlanetaryRequestRepository mybatisStationPlanetaryRequestRepository;
     @Mock
     private MybatisStationDataRequestEntityMapper mybatisStationDataRequestEntityMapper;
 
-    private CreateStationPlanetaryRequestPort underTest;
+    private CreateIfNotExistsStationPlanetaryRequestPort underTest;
 
     @BeforeEach
     public void setup() {
@@ -32,9 +32,9 @@ public class CreateStationPlanetaryRequestPortTest {
         String systemName = "someName";
         String stationName = "someName2";
 
-        underTest.create(systemName, stationName);
+        underTest.createIfNotExists(systemName, stationName);
 
-        verify(mybatisStationPlanetaryRequestRepository).insert(systemName, stationName);
+        verify(mybatisStationPlanetaryRequestRepository).insertIfNotExists(systemName, stationName);
     }
 
 

@@ -11,7 +11,7 @@ import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePor
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
-import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateStationRequireOdysseyRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateIfNotExistsStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.ExistsStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.LoadAllStationRequireOdysseyRequestsPort;
@@ -60,7 +60,7 @@ public class RequestMissingStationRequireOdysseyUseCaseTest {
     @Mock
     private ExistsStationRequireOdysseyRequestPort existsStationRequireOdysseyRequestPort;
     @Mock
-    private CreateStationRequireOdysseyRequestPort createStationRequireOdysseyRequestPort;
+    private CreateIfNotExistsStationRequireOdysseyRequestPort createIfNotExistsStationRequireOdysseyRequestPort;
     @Mock
     private DeleteStationRequireOdysseyRequestPort deleteStationRequireOdysseyRequestPort;
     @Mock
@@ -82,7 +82,7 @@ public class RequestMissingStationRequireOdysseyUseCaseTest {
                 createOrLoadSystemPort,
                 createOrLoadStationPort,
                 existsStationRequireOdysseyRequestPort,
-                createStationRequireOdysseyRequestPort,
+                createIfNotExistsStationRequireOdysseyRequestPort,
                 deleteStationRequireOdysseyRequestPort,
                 updateStationPort,
                 sendKafkaMessagePort,
@@ -108,7 +108,7 @@ public class RequestMissingStationRequireOdysseyUseCaseTest {
         underTest.requestMissing();
 
         verify(sendKafkaMessagePort, never()).send(any());
-        verify(createStationRequireOdysseyRequestPort, never()).create(any(), any());
+        verify(createIfNotExistsStationRequireOdysseyRequestPort, never()).createIfNotExists(any(), any());
     }
 
     @Test
@@ -135,7 +135,7 @@ public class RequestMissingStationRequireOdysseyUseCaseTest {
         underTest.requestMissing();
 
         verify(sendKafkaMessagePort).send(any());
-        verify(createStationRequireOdysseyRequestPort).create(any(), any());
+        verify(createIfNotExistsStationRequireOdysseyRequestPort).createIfNotExists(any(), any());
     }
 
     @Test
@@ -178,7 +178,7 @@ public class RequestMissingStationRequireOdysseyUseCaseTest {
         underTest.requestMissing();
 
         verify(sendKafkaMessagePort, times(2)).send(any());
-        verify(createStationRequireOdysseyRequestPort, times(2)).create(any(), any());
+        verify(createIfNotExistsStationRequireOdysseyRequestPort, times(2)).createIfNotExists(any(), any());
     }
 
 }

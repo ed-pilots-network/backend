@@ -2,16 +2,16 @@ package io.edpn.backend.trade.application.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.trade.application.domain.intermodulecommunication.StationDataRequest;
 import io.edpn.backend.trade.application.domain.Message;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindStationFilter;
+import io.edpn.backend.trade.application.domain.intermodulecommunication.StationDataRequest;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
-import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateIfNotExistsStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.LoadAllStationPlanetaryRequestsPort;
@@ -19,10 +19,6 @@ import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.R
 import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
 import io.edpn.backend.util.IdGenerator;
 import io.edpn.backend.util.Module;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Executor;
-
 import io.edpn.backend.util.Topic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +27,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.RetryCallback;
 import org.springframework.retry.support.RetryTemplate;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Executor;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -60,7 +60,7 @@ public class RequestMissingStationPlanetaryUseCaseTest {
     @Mock
     private ExistsStationPlanetaryRequestPort existsStationPlanetaryRequestPort;
     @Mock
-    private CreateStationPlanetaryRequestPort createStationPlanetaryRequestPort;
+    private CreateIfNotExistsStationPlanetaryRequestPort createIfNotExistsStationPlanetaryRequestPort;
     @Mock
     private DeleteStationPlanetaryRequestPort deleteStationPlanetaryRequestPort;
     @Mock
@@ -82,7 +82,7 @@ public class RequestMissingStationPlanetaryUseCaseTest {
                 createOrLoadSystemPort,
                 createOrLoadStationPort,
                 existsStationPlanetaryRequestPort,
-                createStationPlanetaryRequestPort,
+                createIfNotExistsStationPlanetaryRequestPort,
                 deleteStationPlanetaryRequestPort,
                 updateStationPort,
                 sendKafkaMessagePort,
@@ -108,7 +108,7 @@ public class RequestMissingStationPlanetaryUseCaseTest {
         underTest.requestMissing();
 
         verify(sendKafkaMessagePort, never()).send(any());
-        verify(createStationPlanetaryRequestPort, never()).create(any(), any());
+        verify(createIfNotExistsStationPlanetaryRequestPort, never()).createIfNotExists(any(), any());
     }
 
     @Test
@@ -135,7 +135,7 @@ public class RequestMissingStationPlanetaryUseCaseTest {
         underTest.requestMissing();
 
         verify(sendKafkaMessagePort).send(any());
-        verify(createStationPlanetaryRequestPort).create(any(), any());
+        verify(createIfNotExistsStationPlanetaryRequestPort).createIfNotExists(any(), any());
     }
 
     @Test
@@ -178,7 +178,7 @@ public class RequestMissingStationPlanetaryUseCaseTest {
         underTest.requestMissing();
 
         verify(sendKafkaMessagePort, times(2)).send(any());
-        verify(createStationPlanetaryRequestPort, times(2)).create(any(), any());
+        verify(createIfNotExistsStationPlanetaryRequestPort, times(2)).createIfNotExists(any(), any());
     }
 
 }

@@ -4,7 +4,7 @@ package io.edpn.backend.trade.adapter.persistence;
 import io.edpn.backend.trade.application.domain.intermodulecommunication.StationDataRequest;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationLandingPadSizeRequestRepository;
-import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CreateStationLandingPadSizeRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CreateIfNotExistsStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.DeleteStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.ExistsStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.LoadAllStationLandingPadSizeRequestsPort;
@@ -15,14 +15,14 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
-public class StationLandingPadSizeRequestRepository implements CreateStationLandingPadSizeRequestPort, ExistsStationLandingPadSizeRequestPort, DeleteStationLandingPadSizeRequestPort, LoadAllStationLandingPadSizeRequestsPort {
+public class StationLandingPadSizeRequestRepository implements CreateIfNotExistsStationLandingPadSizeRequestPort, ExistsStationLandingPadSizeRequestPort, DeleteStationLandingPadSizeRequestPort, LoadAllStationLandingPadSizeRequestsPort {
 
     private final MybatisStationLandingPadSizeRequestRepository mybatisStationLandingPadSizeRequestRepository;
     private final MybatisStationDataRequestEntityMapper mybatisStationDataRequestEntityMapper;
 
     @Override
-    public void create(String systemName, String stationName) {
-        mybatisStationLandingPadSizeRequestRepository.insert(systemName, stationName);
+    public void createIfNotExists(String systemName, String stationName) {
+        mybatisStationLandingPadSizeRequestRepository.insertIfNotExists(systemName, stationName);
     }
 
     @Override
