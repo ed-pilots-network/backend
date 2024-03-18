@@ -9,7 +9,7 @@ import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystem
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CleanUpObsoleteSystemEliteIdRequestsUseCase;
-import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateIfNotExistsSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.ExistsSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestsPort;
@@ -47,7 +47,7 @@ public class CleanUpObsoleteSystemEliteIdRequestsUseCaseTest {
     @Mock
     private ExistsSystemEliteIdRequestPort existsSystemEliteIdRequestPort;
     @Mock
-    private CreateSystemEliteIdRequestPort createSystemEliteIdRequestPort;
+    private CreateIfNotExistsSystemEliteIdRequestPort createIfNotExistsSystemEliteIdRequestPort;
     @Mock
     private DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort;
     @Mock
@@ -71,7 +71,7 @@ public class CleanUpObsoleteSystemEliteIdRequestsUseCaseTest {
                 loadAllSystemEliteIdRequestsPort,
                 createOrLoadSystemPort,
                 existsSystemEliteIdRequestPort,
-                createSystemEliteIdRequestPort,
+                createIfNotExistsSystemEliteIdRequestPort,
                 deleteSystemEliteIdRequestPort,
                 updateSystemPort,
                 sendKafkaMessagePort,

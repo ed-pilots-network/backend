@@ -11,7 +11,7 @@ import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePor
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
-import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CreateStationLandingPadSizeRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CreateIfNotExistsStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.DeleteStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.ExistsStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.LoadAllStationLandingPadSizeRequestsPort;
@@ -59,7 +59,7 @@ public class RequestMissingStationLandingPadSizeUseCaseTest {
     @Mock
     private ExistsStationLandingPadSizeRequestPort existsStationLandingPadSizeRequestPort;
     @Mock
-    private CreateStationLandingPadSizeRequestPort createStationLandingPadSizeRequestPort;
+    private CreateIfNotExistsStationLandingPadSizeRequestPort createIfNotExistsStationLandingPadSizeRequestPort;
     @Mock
     private DeleteStationLandingPadSizeRequestPort deleteStationLandingPadSizeRequestPort;
     @Mock
@@ -81,7 +81,7 @@ public class RequestMissingStationLandingPadSizeUseCaseTest {
                 createOrLoadSystemPort,
                 createOrLoadStationPort,
                 existsStationLandingPadSizeRequestPort,
-                createStationLandingPadSizeRequestPort,
+                createIfNotExistsStationLandingPadSizeRequestPort,
                 deleteStationLandingPadSizeRequestPort,
                 updateStationPort,
                 sendKafkaMessagePort,
@@ -107,7 +107,7 @@ public class RequestMissingStationLandingPadSizeUseCaseTest {
         underTest.requestMissing();
 
         verify(sendKafkaMessagePort, never()).send(any());
-        verify(createStationLandingPadSizeRequestPort, never()).create(any(), any());
+        verify(createIfNotExistsStationLandingPadSizeRequestPort, never()).createIfNotExists(any(), any());
     }
 
     @Test
@@ -134,7 +134,7 @@ public class RequestMissingStationLandingPadSizeUseCaseTest {
         underTest.requestMissing();
 
         verify(sendKafkaMessagePort).send(any());
-        verify(createStationLandingPadSizeRequestPort).create(any(), any());
+        verify(createIfNotExistsStationLandingPadSizeRequestPort).createIfNotExists(any(), any());
     }
 
     @Test
@@ -177,7 +177,7 @@ public class RequestMissingStationLandingPadSizeUseCaseTest {
         underTest.requestMissing();
 
         verify(sendKafkaMessagePort, times(2)).send(any());
-        verify(createStationLandingPadSizeRequestPort, times(2)).create(any(), any());
+        verify(createIfNotExistsStationLandingPadSizeRequestPort, times(2)).createIfNotExists(any(), any());
     }
 
 }

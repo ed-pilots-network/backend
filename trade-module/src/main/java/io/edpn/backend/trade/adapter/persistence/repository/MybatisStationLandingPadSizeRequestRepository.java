@@ -12,8 +12,11 @@ import java.util.List;
 
 public interface MybatisStationLandingPadSizeRequestRepository {
 
-    @Insert("INSERT INTO station_landing_pad_size_data_request (system_name, station_name) VALUES (#{systemName}, #{stationName})")
-    void insert(@Param("systemName") String systemName, @Param("stationName") String stationName);
+    @Insert("INSERT INTO station_landing_pad_size_data_request (system_name, station_name)" +
+            "VALUES (#{systemName}, #{stationName})" +
+            "ON CONFLICT (system_name, station_name)" +
+            "DO NOTHING ")
+    void insertIfNotExists(@Param("systemName") String systemName, @Param("stationName") String stationName);
 
     @Delete("DELETE FROM station_landing_pad_size_data_request WHERE system_name = #{systemName} AND station_Name = #{stationName}")
     void delete(@Param("systemName") String systemName, @Param("stationName") String stationName);

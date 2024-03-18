@@ -3,7 +3,7 @@ package io.edpn.backend.trade.adapter.persistence.stationarrivaldistancerequest;
 import io.edpn.backend.trade.adapter.persistence.StationArrivalDistanceRequestRepository;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationArrivalDistanceRequestRepository;
-import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateStationArrivalDistanceRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateIfNotExistsStationArrivalDistanceRequestPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +20,7 @@ public class CreateStationArrivalDistanceRequestPortTest {
     @Mock
     private MybatisStationDataRequestEntityMapper mybatisStationDataRequestEntityMapper;
 
-    private CreateStationArrivalDistanceRequestPort underTest;
+    private CreateIfNotExistsStationArrivalDistanceRequestPort underTest;
 
     @BeforeEach
     public void setup() {
@@ -32,9 +32,9 @@ public class CreateStationArrivalDistanceRequestPortTest {
         String systemName = "someName";
         String stationName = "someName2";
 
-        underTest.create(systemName, stationName);
+        underTest.createIfNotExists(systemName, stationName);
 
-        verify(mybatisStationArrivalDistanceRequestRepository).insert(systemName, stationName);
+        verify(mybatisStationArrivalDistanceRequestRepository).insertIfNotExists(systemName, stationName);
     }
 
 

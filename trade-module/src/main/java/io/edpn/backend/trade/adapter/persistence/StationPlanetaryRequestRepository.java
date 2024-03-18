@@ -4,7 +4,7 @@ package io.edpn.backend.trade.adapter.persistence;
 import io.edpn.backend.trade.application.domain.intermodulecommunication.StationDataRequest;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationPlanetaryRequestRepository;
-import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateIfNotExistsStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.LoadAllStationPlanetaryRequestsPort;
@@ -15,14 +15,14 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
-public class StationPlanetaryRequestRepository implements CreateStationPlanetaryRequestPort, ExistsStationPlanetaryRequestPort, DeleteStationPlanetaryRequestPort, LoadAllStationPlanetaryRequestsPort {
+public class StationPlanetaryRequestRepository implements CreateIfNotExistsStationPlanetaryRequestPort, ExistsStationPlanetaryRequestPort, DeleteStationPlanetaryRequestPort, LoadAllStationPlanetaryRequestsPort {
 
     private final MybatisStationPlanetaryRequestRepository mybatisStationPlanetaryRequestRepository;
     private final MybatisStationDataRequestEntityMapper mybatisStationDataRequestEntityMapper;
 
     @Override
-    public void create(String systemName, String stationName) {
-        mybatisStationPlanetaryRequestRepository.insert(systemName, stationName);
+    public void createIfNotExists(String systemName, String stationName) {
+        mybatisStationPlanetaryRequestRepository.insertIfNotExists(systemName, stationName);
     }
 
     @Override

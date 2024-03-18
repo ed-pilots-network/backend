@@ -10,7 +10,7 @@ import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStati
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CleanUpObsoleteStationPlanetaryRequestsUseCase;
-import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateIfNotExistsStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.LoadAllStationPlanetaryRequestsPort;
@@ -51,7 +51,7 @@ public class CleanUpObsoleteStationPlanetaryRequestsUseCaseTest {
     @Mock
     private ExistsStationPlanetaryRequestPort existsStationPlanetaryRequestPort;
     @Mock
-    private CreateStationPlanetaryRequestPort createStationPlanetaryRequestPort;
+    private CreateIfNotExistsStationPlanetaryRequestPort createIfNotExistsStationPlanetaryRequestPort;
     @Mock
     private DeleteStationPlanetaryRequestPort deleteStationPlanetaryRequestPort;
     @Mock
@@ -76,7 +76,7 @@ public class CleanUpObsoleteStationPlanetaryRequestsUseCaseTest {
                 createOrLoadSystemPort,
                 createOrLoadStationPort,
                 existsStationPlanetaryRequestPort,
-                createStationPlanetaryRequestPort,
+                createIfNotExistsStationPlanetaryRequestPort,
                 deleteStationPlanetaryRequestPort,
                 updateStationPort,
                 sendKafkaMessagePort,

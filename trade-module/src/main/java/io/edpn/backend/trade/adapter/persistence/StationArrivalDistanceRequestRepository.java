@@ -4,7 +4,7 @@ package io.edpn.backend.trade.adapter.persistence;
 import io.edpn.backend.trade.application.domain.intermodulecommunication.StationDataRequest;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisStationDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisStationArrivalDistanceRequestRepository;
-import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateStationArrivalDistanceRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateIfNotExistsStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.DeleteStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.ExistsStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.LoadAllStationArrivalDistanceRequestsPort;
@@ -15,14 +15,14 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
-public class StationArrivalDistanceRequestRepository implements CreateStationArrivalDistanceRequestPort, ExistsStationArrivalDistanceRequestPort, DeleteStationArrivalDistanceRequestPort, LoadAllStationArrivalDistanceRequestsPort {
+public class StationArrivalDistanceRequestRepository implements CreateIfNotExistsStationArrivalDistanceRequestPort, ExistsStationArrivalDistanceRequestPort, DeleteStationArrivalDistanceRequestPort, LoadAllStationArrivalDistanceRequestsPort {
 
     private final MybatisStationArrivalDistanceRequestRepository mybatisStationArrivalDistanceRequestRepository;
     private final MybatisStationDataRequestEntityMapper mybatisStationDataRequestEntityMapper;
 
     @Override
-    public void create(String systemName, String stationName) {
-        mybatisStationArrivalDistanceRequestRepository.insert(systemName, stationName);
+    public void createIfNotExists(String systemName, String stationName) {
+        mybatisStationArrivalDistanceRequestRepository.insertIfNotExists(systemName, stationName);
     }
 
     @Override

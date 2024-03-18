@@ -1,24 +1,19 @@
 package io.edpn.backend.trade.application.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.edpn.backend.trade.application.domain.intermodulecommunication.StationDataRequest;
 import io.edpn.backend.trade.application.domain.Station;
 import io.edpn.backend.trade.application.domain.System;
 import io.edpn.backend.trade.application.domain.filter.FindStationFilter;
+import io.edpn.backend.trade.application.domain.intermodulecommunication.StationDataRequest;
 import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePort;
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CleanUpObsoleteStationArrivalDistanceRequestsUseCase;
-import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateStationArrivalDistanceRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateIfNotExistsStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.DeleteStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.ExistsStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.LoadAllStationArrivalDistanceRequestsPort;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Executor;
-
 import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
 import io.edpn.backend.util.IdGenerator;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +22,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.support.RetryTemplate;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Executor;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -54,7 +53,7 @@ public class CleanUpObsoleteStationArrivalDistanceRequestsUseCaseTest {
     @Mock
     private ExistsStationArrivalDistanceRequestPort existsStationArrivalDistanceRequestPort;
     @Mock
-    private CreateStationArrivalDistanceRequestPort createStationArrivalDistanceRequestPort;
+    private CreateIfNotExistsStationArrivalDistanceRequestPort createIfNotExistsStationArrivalDistanceRequestPort;
     @Mock
     private UpdateStationPort updateStationPort;
     @Mock
@@ -77,7 +76,7 @@ public class CleanUpObsoleteStationArrivalDistanceRequestsUseCaseTest {
                 createOrLoadSystemPort,
                 createOrLoadStationPort,
                 existsStationArrivalDistanceRequestPort,
-                createStationArrivalDistanceRequestPort,
+                createIfNotExistsStationArrivalDistanceRequestPort,
                 deleteStationArrivalDistanceRequestPort,
                 updateStationPort,
                 sendKafkaMessagePort,

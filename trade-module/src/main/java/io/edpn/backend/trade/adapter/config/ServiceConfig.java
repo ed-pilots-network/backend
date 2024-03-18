@@ -13,30 +13,30 @@ import io.edpn.backend.trade.application.port.outgoing.marketdatum.createOrUpdat
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
-import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateStationArrivalDistanceRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateIfNotExistsStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.DeleteStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.ExistsStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.LoadAllStationArrivalDistanceRequestsPort;
-import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CreateStationLandingPadSizeRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CreateIfNotExistsStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.DeleteStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.ExistsStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.LoadAllStationLandingPadSizeRequestsPort;
-import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateIfNotExistsStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.LoadAllStationPlanetaryRequestsPort;
-import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateStationRequireOdysseyRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateIfNotExistsStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.ExistsStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.LoadAllStationRequireOdysseyRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
-import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.ExistsSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestsPort;
-import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateIfNotExistsSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.ExistsSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestsPort;
@@ -111,7 +111,7 @@ public class ServiceConfig {
             CreateOrLoadSystemPort createOrLoadSystemPort,
             CreateOrLoadStationPort createOrLoadStationPort,
             ExistsStationArrivalDistanceRequestPort existsStationArrivalDistanceRequestPort,
-            CreateStationArrivalDistanceRequestPort createStationArrivalDistanceRequestPort,
+            CreateIfNotExistsStationArrivalDistanceRequestPort createIfNotExistsStationArrivalDistanceRequestPort,
             DeleteStationArrivalDistanceRequestPort deleteStationArrivalDistanceRequestPort,
             UpdateStationPort updateStationPort,
             SendKafkaMessagePort sendKafkaMessagePort,
@@ -125,7 +125,7 @@ public class ServiceConfig {
                 createOrLoadSystemPort,
                 createOrLoadStationPort,
                 existsStationArrivalDistanceRequestPort,
-                createStationArrivalDistanceRequestPort,
+                createIfNotExistsStationArrivalDistanceRequestPort,
                 deleteStationArrivalDistanceRequestPort,
                 updateStationPort,
                 sendKafkaMessagePort,
@@ -141,7 +141,7 @@ public class ServiceConfig {
             LoadAllSystemCoordinateRequestsPort loadAllSystemCoordinateRequestsPort,
             CreateOrLoadSystemPort createOrLoadSystemPort,
             ExistsSystemCoordinateRequestPort existsSystemCoordinateRequestPort,
-            CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort,
+            CreateIfNotExistsSystemCoordinateRequestPort createIfNotExistsSystemCoordinateRequestPort,
             DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort,
             UpdateSystemPort updateSystemPort,
             SendKafkaMessagePort sendKafkaMessagePort,
@@ -155,7 +155,7 @@ public class ServiceConfig {
                 loadAllSystemCoordinateRequestsPort,
                 createOrLoadSystemPort,
                 existsSystemCoordinateRequestPort,
-                createSystemCoordinateRequestPort,
+                createIfNotExistsSystemCoordinateRequestPort,
                 deleteSystemCoordinateRequestPort,
                 updateSystemPort,
                 sendKafkaMessagePort,
@@ -173,7 +173,7 @@ public class ServiceConfig {
             CreateOrLoadSystemPort createOrLoadSystemPort,
             CreateOrLoadStationPort createOrLoadStationPort,
             ExistsStationLandingPadSizeRequestPort existsStationLandingPadSizeRequestPort,
-            CreateStationLandingPadSizeRequestPort createStationLandingPadSizeRequestPort,
+            CreateIfNotExistsStationLandingPadSizeRequestPort createIfNotExistsStationLandingPadSizeRequestPort,
             DeleteStationLandingPadSizeRequestPort deleteStationLandingPadSizeRequestPort,
             UpdateStationPort updateStationPort,
             SendKafkaMessagePort sendKafkaMessagePort,
@@ -188,7 +188,7 @@ public class ServiceConfig {
                 createOrLoadSystemPort,
                 createOrLoadStationPort,
                 existsStationLandingPadSizeRequestPort,
-                createStationLandingPadSizeRequestPort,
+                createIfNotExistsStationLandingPadSizeRequestPort,
                 deleteStationLandingPadSizeRequestPort,
                 updateStationPort,
                 sendKafkaMessagePort,
@@ -206,7 +206,7 @@ public class ServiceConfig {
             CreateOrLoadSystemPort createOrLoadSystemPort,
             CreateOrLoadStationPort createOrLoadStationPort,
             ExistsStationPlanetaryRequestPort existsStationPlanetaryRequestPort,
-            CreateStationPlanetaryRequestPort createStationPlanetaryRequestPort,
+            CreateIfNotExistsStationPlanetaryRequestPort createIfNotExistsStationPlanetaryRequestPort,
             DeleteStationPlanetaryRequestPort deleteStationPlanetaryRequestPort,
             UpdateStationPort updateStationPort,
             SendKafkaMessagePort sendKafkaMessagePort,
@@ -221,7 +221,7 @@ public class ServiceConfig {
                 createOrLoadSystemPort,
                 createOrLoadStationPort,
                 existsStationPlanetaryRequestPort,
-                createStationPlanetaryRequestPort,
+                createIfNotExistsStationPlanetaryRequestPort,
                 deleteStationPlanetaryRequestPort,
                 updateStationPort,
                 sendKafkaMessagePort,
@@ -239,7 +239,7 @@ public class ServiceConfig {
             CreateOrLoadSystemPort createOrLoadSystemPort,
             CreateOrLoadStationPort createOrLoadStationPort,
             ExistsStationRequireOdysseyRequestPort existsStationRequireOdysseyRequestPort,
-            CreateStationRequireOdysseyRequestPort createStationRequireOdysseyRequestPort,
+            CreateIfNotExistsStationRequireOdysseyRequestPort createIfNotExistsStationRequireOdysseyRequestPort,
             DeleteStationRequireOdysseyRequestPort deleteStationRequireOdysseyRequestPort,
             UpdateStationPort updateStationPort,
             SendKafkaMessagePort sendKafkaMessagePort,
@@ -254,7 +254,7 @@ public class ServiceConfig {
                 createOrLoadSystemPort,
                 createOrLoadStationPort,
                 existsStationRequireOdysseyRequestPort,
-                createStationRequireOdysseyRequestPort,
+                createIfNotExistsStationRequireOdysseyRequestPort,
                 deleteStationRequireOdysseyRequestPort,
                 updateStationPort,
                 sendKafkaMessagePort,
@@ -271,7 +271,7 @@ public class ServiceConfig {
             LoadAllSystemEliteIdRequestsPort loadAllSystemEliteIdRequestsPort,
             CreateOrLoadSystemPort createOrLoadSystemPort,
             ExistsSystemEliteIdRequestPort existsSystemEliteIdRequestPort,
-            CreateSystemEliteIdRequestPort createSystemEliteIdRequestPort,
+            CreateIfNotExistsSystemEliteIdRequestPort createIfNotExistsSystemEliteIdRequestPort,
             DeleteSystemEliteIdRequestPort deleteSystemEliteIdRequestPort,
             UpdateSystemPort updateSystemPort,
             SendKafkaMessagePort sendKafkaMessagePort,
@@ -285,7 +285,7 @@ public class ServiceConfig {
                 loadAllSystemEliteIdRequestsPort,
                 createOrLoadSystemPort,
                 existsSystemEliteIdRequestPort,
-                createSystemEliteIdRequestPort,
+                createIfNotExistsSystemEliteIdRequestPort,
                 deleteSystemEliteIdRequestPort,
                 updateSystemPort,
                 sendKafkaMessagePort,

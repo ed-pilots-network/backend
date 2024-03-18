@@ -15,7 +15,7 @@ import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStati
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CleanUpObsoleteStationRequireOdysseyRequestsUseCase;
-import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateStationRequireOdysseyRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateIfNotExistsStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.ExistsStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.LoadAllStationRequireOdysseyRequestsPort;
@@ -37,30 +37,30 @@ import java.util.concurrent.Executor;
 @RequiredArgsConstructor
 @Slf4j
 public class StationRequireOdysseyInterModuleCommunicationService implements RequestDataUseCase<Station>, RequestMissingStationRequireOdysseyUseCase, ReceiveKafkaMessageUseCase<StationRequireOdysseyResponse>, CleanUpObsoleteStationRequireOdysseyRequestsUseCase {
-
+    
     public static final FindStationFilter FIND_STATION_FILTER = FindStationFilter.builder()
             .hasRequiredOdyssey(false)
             .build();
-
+    
     private final IdGenerator idGenerator;
     private final LoadStationsByFilterPort loadStationsByFilterPort;
     private final LoadAllStationRequireOdysseyRequestsPort loadAllStationRequireOdysseyRequestsPort;
     private final CreateOrLoadSystemPort createOrLoadSystemPort;
     private final CreateOrLoadStationPort createOrLoadStationPort;
     private final ExistsStationRequireOdysseyRequestPort existsStationRequireOdysseyRequestPort;
-    private final CreateStationRequireOdysseyRequestPort createStationRequireOdysseyRequestPort;
+    private final CreateIfNotExistsStationRequireOdysseyRequestPort createIfNotExistsStationRequireOdysseyRequestPort;
     private final DeleteStationRequireOdysseyRequestPort deleteStationRequireOdysseyRequestPort;
     private final UpdateStationPort updateStationPort;
     private final SendKafkaMessagePort sendKafkaMessagePort;
     private final RetryTemplate retryTemplate;
     private final Executor executor;
     private final ObjectMapper objectMapper;
-
+    
     @Override
     public boolean isApplicable(Station station) {
         return Objects.isNull(station.requireOdyssey());
     }
-
+    
     @Override
     public synchronized void request(Station station) {
         String stationName = station.name();
@@ -74,10 +74,10 @@ public class StationRequireOdysseyInterModuleCommunicationService implements Req
             Message message = new Message(Topic.Request.STATION_REQUIRE_ODYSSEY.getTopicName(), jsonNode.toString());
 
             sendKafkaMessagePort.send(message);
-            createStationRequireOdysseyRequestPort.create(systemName, stationName);
+            createIfNotExistsStationRequireOdysseyRequestPort.createIfNotExists(systemName, stationName);
         }
     }
-
+    
     @Override
     @Scheduled(cron = "0 0 0/12 * * *")
     public void requestMissing() {
@@ -85,19 +85,19 @@ public class StationRequireOdysseyInterModuleCommunicationService implements Req
                 .forEach(station ->
                         CompletableFuture.runAsync(() -> {
                             StationDataRequest stationDataRequest = new StationDataRequest(Module.TRADE, station.name(), station.system().name());
-
+                            
                             JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
                             Message message = new Message(Topic.Request.STATION_REQUIRE_ODYSSEY.getTopicName(), jsonNode.toString());
-
+                            
                             boolean sendSuccessful = retryTemplate.execute(retryContext ->
                                     sendKafkaMessagePort.send(message));
                             if (sendSuccessful) {
-                                createStationRequireOdysseyRequestPort.create(station.system().name(), station.name());
+                                createIfNotExistsStationRequireOdysseyRequestPort.createIfNotExists(station.system().name(), station.name());
                             }
                         }, executor));
         log.info("requested missing StationRequireOdyssey");
     }
-
+    
     @Override
     @Scheduled(cron = "0 0 4 * * *")
     public synchronized void cleanUpObsolete() {
@@ -112,13 +112,13 @@ public class StationRequireOdysseyInterModuleCommunicationService implements Req
                 .forEach(dataRequest -> deleteStationRequireOdysseyRequestPort.delete(dataRequest.systemName(), dataRequest.stationName()));
         log.info("cleaned obsolete StationRequireOdysseyRequests");
     }
-
+    
     @Override
     public void receive(StationRequireOdysseyResponse message) {
         String systemName = message.systemName();
         String stationName = message.stationName();
         boolean requireOdyssey = message.requireOdyssey();
-
+        
         CompletableFuture.supplyAsync(() -> createOrLoadSystemPort.createOrLoad(
                         new System(
                                 idGenerator.generateId(),

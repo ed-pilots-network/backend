@@ -9,19 +9,20 @@ import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePor
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
-import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateStationArrivalDistanceRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.CreateIfNotExistsStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.DeleteStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.ExistsStationArrivalDistanceRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationarrivaldistancerequest.LoadAllStationArrivalDistanceRequestsPort;
 import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystemPort;
 import io.edpn.backend.util.IdGenerator;
-import java.util.concurrent.Executor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.retry.support.RetryTemplate;
+
+import java.util.concurrent.Executor;
 
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
@@ -47,7 +48,7 @@ public class ReceiveStationArrivalDistanceResponseUseCaseTest {
     @Mock
     private ExistsStationArrivalDistanceRequestPort existsStationArrivalDistanceRequestPort;
     @Mock
-    private CreateStationArrivalDistanceRequestPort createStationArrivalDistanceRequestPort;
+    private CreateIfNotExistsStationArrivalDistanceRequestPort createIfNotExistsStationArrivalDistanceRequestPort;
     @Mock
     private UpdateStationPort updateStationPort;
     @Mock
@@ -70,7 +71,7 @@ public class ReceiveStationArrivalDistanceResponseUseCaseTest {
                 createOrLoadSystemPort,
                 createOrLoadStationPort,
                 existsStationArrivalDistanceRequestPort,
-                createStationArrivalDistanceRequestPort,
+                createIfNotExistsStationArrivalDistanceRequestPort,
                 deleteStationArrivalDistanceRequestPort,
                 updateStationPort,
                 sendKafkaMessagePort,

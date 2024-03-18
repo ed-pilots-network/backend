@@ -9,7 +9,7 @@ import io.edpn.backend.trade.application.port.outgoing.system.CreateOrLoadSystem
 import io.edpn.backend.trade.application.port.outgoing.system.LoadSystemsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.system.UpdateSystemPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CleanUpObsoleteSystemCoordinateRequestsUseCase;
-import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateSystemCoordinateRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.CreateIfNotExistsSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.DeleteSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.ExistsSystemCoordinateRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemcoordinaterequest.LoadAllSystemCoordinateRequestsPort;
@@ -47,7 +47,7 @@ public class CleanUpObsoleteSystemCoordinateRequestsUseCaseTest {
     @Mock
     private ExistsSystemCoordinateRequestPort existsSystemCoordinateRequestPort;
     @Mock
-    private CreateSystemCoordinateRequestPort createSystemCoordinateRequestPort;
+    private CreateIfNotExistsSystemCoordinateRequestPort createIfNotExistsSystemCoordinateRequestPort;
     @Mock
     private DeleteSystemCoordinateRequestPort deleteSystemCoordinateRequestPort;
     @Mock
@@ -71,7 +71,7 @@ public class CleanUpObsoleteSystemCoordinateRequestsUseCaseTest {
                 loadAllSystemCoordinateRequestsPort,
                 createOrLoadSystemPort,
                 existsSystemCoordinateRequestPort,
-                createSystemCoordinateRequestPort,
+                createIfNotExistsSystemCoordinateRequestPort,
                 deleteSystemCoordinateRequestPort,
                 updateSystemPort,
                 sendKafkaMessagePort,

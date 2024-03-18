@@ -16,7 +16,7 @@ import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStati
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CleanUpObsoleteStationLandingPadSizeRequestsUseCase;
-import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CreateStationLandingPadSizeRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.CreateIfNotExistsStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.DeleteStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.ExistsStationLandingPadSizeRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationlandingpadsizerequest.LoadAllStationLandingPadSizeRequestsPort;
@@ -38,30 +38,30 @@ import java.util.concurrent.Executor;
 @RequiredArgsConstructor
 @Slf4j
 public class StationLandingPadSizeInterModuleCommunicationService implements RequestDataUseCase<Station>, RequestMissingStationLandingPadSizeUseCase, ReceiveKafkaMessageUseCase<StationMaxLandingPadSizeResponse>, CleanUpObsoleteStationLandingPadSizeRequestsUseCase {
-
+    
     public static final FindStationFilter FIND_STATION_FILTER = FindStationFilter.builder()
             .hasLandingPadSize(false)
             .build();
-
+    
     private final IdGenerator idGenerator;
     private final LoadStationsByFilterPort loadStationsByFilterPort;
     private final LoadAllStationLandingPadSizeRequestsPort loadAllStationLandingPadSizeRequestsPort;
     private final CreateOrLoadSystemPort createOrLoadSystemPort;
     private final CreateOrLoadStationPort createOrLoadStationPort;
     private final ExistsStationLandingPadSizeRequestPort existsStationLandingPadSizeRequestPort;
-    private final CreateStationLandingPadSizeRequestPort createStationLandingPadSizeRequestPort;
+    private final CreateIfNotExistsStationLandingPadSizeRequestPort createIfNotExistsStationLandingPadSizeRequestPort;
     private final DeleteStationLandingPadSizeRequestPort deleteStationLandingPadSizeRequestPort;
     private final UpdateStationPort updateStationPort;
     private final SendKafkaMessagePort sendKafkaMessagePort;
     private final RetryTemplate retryTemplate;
     private final Executor executor;
     private final ObjectMapper objectMapper;
-
+    
     @Override
     public boolean isApplicable(Station station) {
         return Objects.isNull(station.maxLandingPadSize()) || LandingPadSize.UNKNOWN == station.maxLandingPadSize();
     }
-
+    
     @Override
     public synchronized void request(Station station) {
         String stationName = station.name();
@@ -76,10 +76,10 @@ public class StationLandingPadSizeInterModuleCommunicationService implements Req
             Message message = new Message(Topic.Request.STATION_MAX_LANDING_PAD_SIZE.getTopicName(), jsonNode.toString());
 
             sendKafkaMessagePort.send(message);
-            createStationLandingPadSizeRequestPort.create(systemName, stationName);
+            createIfNotExistsStationLandingPadSizeRequestPort.createIfNotExists(systemName, stationName);
         }
     }
-
+    
     @Override
     @Scheduled(cron = "0 0 4 * * *")
     public synchronized void cleanUpObsolete() {
@@ -94,14 +94,14 @@ public class StationLandingPadSizeInterModuleCommunicationService implements Req
                 .forEach(dataRequest -> deleteStationLandingPadSizeRequestPort.delete(dataRequest.systemName(), dataRequest.stationName()));
         log.info("cleaned obsolete StationLandingPadSizeRequests");
     }
-
+    
     @Override
     public void receive(StationMaxLandingPadSizeResponse message) {
         String systemName = message.systemName();
         String stationName = message.stationName();
         LandingPadSize landingPadSize = LandingPadSize.valueOf(message.maxLandingPadSize());
-
-
+        
+        
         CompletableFuture.supplyAsync(() ->
                         createOrLoadSystemPort.createOrLoad(new System(
                                 idGenerator.generateId(),
@@ -132,7 +132,7 @@ public class StationLandingPadSizeInterModuleCommunicationService implements Req
                 })
                 .join();
     }
-
+    
     @Override
     @Scheduled(cron = "0 0 0/12 * * *")
     public void requestMissing() {
@@ -144,7 +144,7 @@ public class StationLandingPadSizeInterModuleCommunicationService implements Req
                             boolean sendSuccessful = retryTemplate.execute(
                                     retryContext -> sendKafkaMessagePort.send(new Message(Topic.Request.STATION_MAX_LANDING_PAD_SIZE.getTopicName(), jsonNode.toString())));
                             if (sendSuccessful) {
-                                createStationLandingPadSizeRequestPort.create(station.system().name(), station.name());
+                                createIfNotExistsStationLandingPadSizeRequestPort.createIfNotExists(station.system().name(), station.name());
                             }
                         }, executor));
         log.info("requested missing StationLandingPadSize");

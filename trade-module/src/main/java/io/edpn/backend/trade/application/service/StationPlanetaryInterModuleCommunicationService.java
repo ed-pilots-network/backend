@@ -15,7 +15,7 @@ import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStati
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CleanUpObsoleteStationPlanetaryRequestsUseCase;
-import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateStationPlanetaryRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.CreateIfNotExistsStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.DeleteStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.ExistsStationPlanetaryRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationplanetaryrequest.LoadAllStationPlanetaryRequestsPort;
@@ -37,30 +37,30 @@ import java.util.concurrent.Executor;
 @RequiredArgsConstructor
 @Slf4j
 public class StationPlanetaryInterModuleCommunicationService implements RequestDataUseCase<Station>, RequestMissingStationPlanetaryUseCase, ReceiveKafkaMessageUseCase<StationPlanetaryResponse>, CleanUpObsoleteStationPlanetaryRequestsUseCase {
-
+    
     public static final FindStationFilter FIND_STATION_FILTER = FindStationFilter.builder()
             .hasPlanetary(false)
             .build();
-
+    
     private final IdGenerator idGenerator;
     private final LoadStationsByFilterPort loadStationsByFilterPort;
     private final LoadAllStationPlanetaryRequestsPort loadAllStationPlanetaryRequestsPort;
     private final CreateOrLoadSystemPort createOrLoadSystemPort;
     private final CreateOrLoadStationPort createOrLoadStationPort;
     private final ExistsStationPlanetaryRequestPort existsStationPlanetaryRequestPort;
-    private final CreateStationPlanetaryRequestPort createStationPlanetaryRequestPort;
+    private final CreateIfNotExistsStationPlanetaryRequestPort createIfNotExistsStationPlanetaryRequestPort;
     private final DeleteStationPlanetaryRequestPort deleteStationPlanetaryRequestPort;
     private final UpdateStationPort updateStationPort;
     private final SendKafkaMessagePort sendKafkaMessagePort;
     private final RetryTemplate retryTemplate;
     private final Executor executor;
     private final ObjectMapper objectMapper;
-
+    
     @Override
     public boolean isApplicable(Station station) {
         return Objects.isNull(station.planetary());
     }
-
+    
     @Override
     public synchronized void request(Station station) {
         String stationName = station.name();
@@ -75,10 +75,10 @@ public class StationPlanetaryInterModuleCommunicationService implements RequestD
             Message message = new Message(Topic.Request.STATION_IS_PLANETARY.getTopicName(), jsonNode.toString());
 
             sendKafkaMessagePort.send(message);
-            createStationPlanetaryRequestPort.create(systemName, stationName);
+            createIfNotExistsStationPlanetaryRequestPort.createIfNotExists(systemName, stationName);
         }
     }
-
+    
     @Override
     @Scheduled(cron = "0 0 4 * * *")
     public synchronized void cleanUpObsolete() {
@@ -93,13 +93,13 @@ public class StationPlanetaryInterModuleCommunicationService implements RequestD
                 .forEach(dataRequest -> deleteStationPlanetaryRequestPort.delete(dataRequest.systemName(), dataRequest.stationName()));
         log.info("cleaned obsolete StationPlanetaryRequests");
     }
-
+    
     @Override
     public void receive(StationPlanetaryResponse message) {
         String systemName = message.systemName();
         String stationName = message.stationName();
         boolean planetary = message.planetary();
-
+        
         CompletableFuture.supplyAsync(() -> createOrLoadSystemPort.createOrLoad(
                         new System(
                                 idGenerator.generateId(),
@@ -131,7 +131,7 @@ public class StationPlanetaryInterModuleCommunicationService implements RequestD
                 })
                 .join();
     }
-
+    
     @Override
     @Scheduled(cron = "0 0 0/12 * * *")
     public void requestMissing() {
@@ -139,14 +139,14 @@ public class StationPlanetaryInterModuleCommunicationService implements RequestD
                 .forEach(station ->
                         CompletableFuture.runAsync(() -> {
                             StationDataRequest stationDataRequest = new StationDataRequest(Module.TRADE, station.name(), station.system().name());
-
+                            
                             JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
                             Message message = new Message(Topic.Request.STATION_IS_PLANETARY.getTopicName(), jsonNode.toString());
-
+                            
                             boolean sendSuccessful = retryTemplate.execute(retryContext ->
                                     sendKafkaMessagePort.send(message));
                             if (sendSuccessful) {
-                                createStationPlanetaryRequestPort.create(station.system().name(), station.name());
+                                createIfNotExistsStationPlanetaryRequestPort.createIfNotExists(station.system().name(), station.name());
                             }
                         }, executor));
         log.info("requested missing StationPlanetary");

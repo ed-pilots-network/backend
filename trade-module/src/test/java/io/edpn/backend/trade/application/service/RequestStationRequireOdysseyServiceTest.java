@@ -11,7 +11,7 @@ import io.edpn.backend.trade.application.port.outgoing.kafka.SendKafkaMessagePor
 import io.edpn.backend.trade.application.port.outgoing.station.CreateOrLoadStationPort;
 import io.edpn.backend.trade.application.port.outgoing.station.LoadStationsByFilterPort;
 import io.edpn.backend.trade.application.port.outgoing.station.UpdateStationPort;
-import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateStationRequireOdysseyRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.CreateIfNotExistsStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.DeleteStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.ExistsStationRequireOdysseyRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.stationrequireodysseyrequest.LoadAllStationRequireOdysseyRequestsPort;
@@ -58,7 +58,7 @@ public class RequestStationRequireOdysseyServiceTest {
     @Mock
     private ExistsStationRequireOdysseyRequestPort existsStationRequireOdysseyRequestPort;
     @Mock
-    private CreateStationRequireOdysseyRequestPort createStationRequireOdysseyRequestPort;
+    private CreateIfNotExistsStationRequireOdysseyRequestPort createIfNotExistsStationRequireOdysseyRequestPort;
     @Mock
     private DeleteStationRequireOdysseyRequestPort deleteStationRequireOdysseyRequestPort;
     @Mock
@@ -91,7 +91,7 @@ public class RequestStationRequireOdysseyServiceTest {
                 createOrLoadSystemPort,
                 createOrLoadStationPort,
                 existsStationRequireOdysseyRequestPort,
-                createStationRequireOdysseyRequestPort,
+                createIfNotExistsStationRequireOdysseyRequestPort,
                 deleteStationRequireOdysseyRequestPort,
                 updateStationPort,
                 sendKafkaMessagePort,
@@ -139,7 +139,7 @@ public class RequestStationRequireOdysseyServiceTest {
         underTest.request(station);
 
         verify(sendKafkaMessagePort, never()).send(any());
-        verify(createStationRequireOdysseyRequestPort, never()).create(anyString(), anyString());
+        verify(createIfNotExistsStationRequireOdysseyRequestPort, never()).createIfNotExists(anyString(), anyString());
     }
 
     @Test
@@ -184,6 +184,6 @@ public class RequestStationRequireOdysseyServiceTest {
         underTest.request(station);
 
         verify(sendKafkaMessagePort).send(message);
-        verify(createStationRequireOdysseyRequestPort).create(systemName, stationName);
+        verify(createIfNotExistsStationRequireOdysseyRequestPort).createIfNotExists(systemName, stationName);
     }
 }

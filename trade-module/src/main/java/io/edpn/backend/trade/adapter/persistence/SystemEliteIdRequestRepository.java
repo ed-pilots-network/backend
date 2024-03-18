@@ -4,7 +4,7 @@ package io.edpn.backend.trade.adapter.persistence;
 import io.edpn.backend.trade.application.domain.intermodulecommunication.SystemDataRequest;
 import io.edpn.backend.trade.adapter.persistence.entity.mapper.MybatisSystemDataRequestEntityMapper;
 import io.edpn.backend.trade.adapter.persistence.repository.MybatisSystemEliteIdRequestRepository;
-import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateSystemEliteIdRequestPort;
+import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.CreateIfNotExistsSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.DeleteSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.ExistsSystemEliteIdRequestPort;
 import io.edpn.backend.trade.application.port.outgoing.systemeliteidrequest.LoadAllSystemEliteIdRequestsPort;
@@ -15,14 +15,14 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
-public class SystemEliteIdRequestRepository implements CreateSystemEliteIdRequestPort, ExistsSystemEliteIdRequestPort, DeleteSystemEliteIdRequestPort, LoadAllSystemEliteIdRequestsPort {
+public class SystemEliteIdRequestRepository implements CreateIfNotExistsSystemEliteIdRequestPort, ExistsSystemEliteIdRequestPort, DeleteSystemEliteIdRequestPort, LoadAllSystemEliteIdRequestsPort {
 
     private final MybatisSystemEliteIdRequestRepository mybatisSystemEliteIdRequestRepository;
     private final MybatisSystemDataRequestEntityMapper mybatisSystemDataRequestEntityMapper;
 
     @Override
-    public void create(String systemName) {
-        mybatisSystemEliteIdRequestRepository.insert(systemName);
+    public void createIfNotExists(String systemName) {
+        mybatisSystemEliteIdRequestRepository.insertIfNotExists(systemName);
     }
 
     @Override
