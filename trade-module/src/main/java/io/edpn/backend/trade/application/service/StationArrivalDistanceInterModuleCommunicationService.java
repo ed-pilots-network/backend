@@ -133,15 +133,17 @@ public class StationArrivalDistanceInterModuleCommunicationService implements Re
     public synchronized void request(Station station) {
         String stationName = station.name();
         String systemName = station.system().name();
-        StationDataRequest stationDataRequest = new StationDataRequest(
-                Module.TRADE, station.name(), station.system().name()
-        );
-        
-        JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
-        Message message = new Message(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName(), jsonNode.toString());
-        
-        sendKafkaMessagePort.send(message);
-        createIfNotExistsStationArrivalDistanceRequestPort.createIfNotExists(systemName, stationName);
-        
+        boolean shouldRequest = !existsStationArrivalDistanceRequestPort.exists(systemName, stationName);
+        if (shouldRequest) {
+            StationDataRequest stationDataRequest = new StationDataRequest(
+                    Module.TRADE, station.name(), station.system().name()
+            );
+
+            JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
+            Message message = new Message(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName(), jsonNode.toString());
+
+            sendKafkaMessagePort.send(message);
+            createIfNotExistsStationArrivalDistanceRequestPort.createIfNotExists(systemName, stationName);
+        }
     }
 }

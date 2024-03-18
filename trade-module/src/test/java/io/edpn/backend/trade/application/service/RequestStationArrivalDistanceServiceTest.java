@@ -170,8 +170,7 @@ public class RequestStationArrivalDistanceServiceTest {
         JsonNode mockJsonNode = mock(JsonNode.class);
         String mockJsonString = "jsonString";
         Message message = new Message(Topic.Request.STATION_ARRIVAL_DISTANCE.getTopicName(), "jsonString");
-
-        when(existsStationArrivalDistanceRequestPort.exists(systemName, stationName)).thenReturn(false);
+        
         when(objectMapper.valueToTree(argThat(arg -> {
             if (arg instanceof StationDataRequest stationDataRequest) {
                 return systemName.equals(stationDataRequest.systemName()) && stationName.equals(stationDataRequest.stationName()) && Module.TRADE.equals(stationDataRequest.requestingModule());

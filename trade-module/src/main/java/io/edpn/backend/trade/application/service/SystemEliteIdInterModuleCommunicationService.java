@@ -60,14 +60,17 @@ public class SystemEliteIdInterModuleCommunicationService implements RequestData
     @Override
     public synchronized void request(System system) {
         String systemName = system.name();
-        SystemDataRequest systemDataRequest = new SystemDataRequest(
-                Module.TRADE, systemName
-        );
-        JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
-        Message message = new Message(Topic.Request.SYSTEM_ELITE_ID.getTopicName(), jsonNode.toString());
-        
-        sendKafkaMessagePort.send(message);
-        createIfNotExistsSystemEliteIdRequestPort.createIfNotExists(systemName);
+        boolean shouldRequest = !existsSystemEliteIdRequestPort.exists(systemName);
+        if (shouldRequest) {
+            SystemDataRequest systemDataRequest = new SystemDataRequest(
+                    Module.TRADE, systemName
+            );
+            JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
+            Message message = new Message(Topic.Request.SYSTEM_ELITE_ID.getTopicName(), jsonNode.toString());
+
+            sendKafkaMessagePort.send(message);
+            createIfNotExistsSystemEliteIdRequestPort.createIfNotExists(systemName);
+        }
     }
     
     @Override

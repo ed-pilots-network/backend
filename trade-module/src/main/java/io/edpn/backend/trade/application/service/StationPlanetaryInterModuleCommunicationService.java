@@ -65,16 +65,18 @@ public class StationPlanetaryInterModuleCommunicationService implements RequestD
     public synchronized void request(Station station) {
         String stationName = station.name();
         String systemName = station.system().name();
-        StationDataRequest stationDataRequest = new StationDataRequest(
-                Module.TRADE, stationName, systemName
-        );
-        
-        JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
-        Message message = new Message(Topic.Request.STATION_IS_PLANETARY.getTopicName(), jsonNode.toString());
-        
-        sendKafkaMessagePort.send(message);
-        createIfNotExistsStationPlanetaryRequestPort.createIfNotExists(systemName, stationName);
-        
+        boolean shouldRequest = !existsStationPlanetaryRequestPort.exists(systemName, stationName);
+        if (shouldRequest) {
+            StationDataRequest stationDataRequest = new StationDataRequest(
+                    Module.TRADE, stationName, systemName
+            );
+
+            JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
+            Message message = new Message(Topic.Request.STATION_IS_PLANETARY.getTopicName(), jsonNode.toString());
+
+            sendKafkaMessagePort.send(message);
+            createIfNotExistsStationPlanetaryRequestPort.createIfNotExists(systemName, stationName);
+        }
     }
     
     @Override

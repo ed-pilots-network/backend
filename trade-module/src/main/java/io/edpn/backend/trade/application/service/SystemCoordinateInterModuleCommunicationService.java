@@ -61,14 +61,16 @@ public class SystemCoordinateInterModuleCommunicationService implements RequestD
     @Override
     public synchronized void request(System system) {
         final String systemName = system.name();
-        SystemDataRequest systemDataRequest = new SystemDataRequest(Module.TRADE, systemName);
-        
-        JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
-        Message message = new Message(Topic.Request.SYSTEM_COORDINATES.getTopicName(), jsonNode.toString());
-        
-        sendKafkaMessagePort.send(message);
-        createIfNotExistsSystemCoordinateRequestPort.createIfNotExists(systemName);
-        
+        boolean shouldRequest = !existsSystemCoordinateRequestPort.exists(systemName);
+        if (shouldRequest) {
+            SystemDataRequest systemDataRequest = new SystemDataRequest(Module.TRADE, systemName);
+
+            JsonNode jsonNode = objectMapper.valueToTree(systemDataRequest);
+            Message message = new Message(Topic.Request.SYSTEM_COORDINATES.getTopicName(), jsonNode.toString());
+
+            sendKafkaMessagePort.send(message);
+            createIfNotExistsSystemCoordinateRequestPort.createIfNotExists(systemName);
+        }
     }
     
     @Override

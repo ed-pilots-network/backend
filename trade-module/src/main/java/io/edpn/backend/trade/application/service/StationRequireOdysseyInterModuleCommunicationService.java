@@ -65,15 +65,17 @@ public class StationRequireOdysseyInterModuleCommunicationService implements Req
     public synchronized void request(Station station) {
         String stationName = station.name();
         String systemName = station.system().name();
-        StationDataRequest stationDataRequest = new StationDataRequest(
-                Module.TRADE, stationName, systemName
-        );
-        JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
-        Message message = new Message(Topic.Request.STATION_REQUIRE_ODYSSEY.getTopicName(), jsonNode.toString());
-        
-        sendKafkaMessagePort.send(message);
-        createIfNotExistsStationRequireOdysseyRequestPort.createIfNotExists(systemName, stationName);
-        
+        boolean shouldRequest = !existsStationRequireOdysseyRequestPort.exists(systemName, stationName);
+        if (shouldRequest) {
+            StationDataRequest stationDataRequest = new StationDataRequest(
+                    Module.TRADE, stationName, systemName
+            );
+            JsonNode jsonNode = objectMapper.valueToTree(stationDataRequest);
+            Message message = new Message(Topic.Request.STATION_REQUIRE_ODYSSEY.getTopicName(), jsonNode.toString());
+
+            sendKafkaMessagePort.send(message);
+            createIfNotExistsStationRequireOdysseyRequestPort.createIfNotExists(systemName, stationName);
+        }
     }
     
     @Override
