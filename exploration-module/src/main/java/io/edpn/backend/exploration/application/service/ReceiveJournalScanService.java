@@ -42,7 +42,7 @@ public class ReceiveJournalScanService implements ReceiveKafkaMessageUseCase<Sca
         createOrUpdateFromPayload(payload);
 
         log.trace("DefaultReceiveJournalScanMessageUseCase.receive -> took {} nanosecond", java.lang.System.nanoTime() - start);
-        log.info("DefaultReceiveJournalScanMessageUseCase.receive -> the message has been processed");
+        log.debug("DefaultReceiveJournalScanMessageUseCase.receive -> the message has been processed");
     }
 
 

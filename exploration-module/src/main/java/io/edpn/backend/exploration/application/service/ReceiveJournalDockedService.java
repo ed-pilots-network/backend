@@ -46,7 +46,7 @@ public class ReceiveJournalDockedService implements ReceiveKafkaMessageUseCase<D
         createOrUpdateFromPayload(payload, messageTimeStamp);
 
         log.trace("DefaultReceiveJournalDockedMessageMessageUseCase.receive -> took {} nanosecond", java.lang.System.nanoTime() - start);
-        log.info("DefaultReceiveJournalDockedMessageMessageUseCase.receive -> the message has been processed");
+        log.debug("DefaultReceiveJournalDockedMessageMessageUseCase.receive -> the message has been processed");
     }
 
 

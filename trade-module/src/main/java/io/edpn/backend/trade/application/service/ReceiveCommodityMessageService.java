@@ -139,7 +139,7 @@ public class ReceiveCommodityMessageService implements ReceiveKafkaMessageUseCas
             log.trace("DefaultReceiveCommodityMessageUseCase.receive -> took " + (java.lang.System.nanoTime() - start) + " nanosecond");
         }
 
-        log.info("DefaultReceiveCommodityMessageUseCase.receive -> the message has been processed");
+        log.debug("DefaultReceiveCommodityMessageUseCase.receive -> the message has been processed");
     }
 
     private MarketDatum getMarketDatum(Commodity commodity1, CommodityMessage.V3.Commodity commodity, String[] prohibitedCommodities, LocalDateTime timestamp) {

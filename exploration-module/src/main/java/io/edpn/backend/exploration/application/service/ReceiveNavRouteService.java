@@ -39,7 +39,7 @@ public class ReceiveNavRouteService implements ReceiveKafkaMessageUseCase<NavRou
                         exception -> log.error("Error while processing NavRouteMessage: {}", message, exception))));
 
         log.trace("DefaultReceiveNavRouteMessageUseCase.receive -> took {} nanosecond", java.lang.System.nanoTime() - start);
-        log.info("DefaultReceiveNavRouteMessageUseCase.receive -> the message has been processed");
+        log.debug("DefaultReceiveNavRouteMessageUseCase.receive -> the message has been processed");
     }
 
     private void process(NavRouteMessage.V1.Item item) {
